@@ -1,0 +1,4 @@
+build/
+_corral/
+lock.json
+*.o
