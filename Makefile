@@ -74,4 +74,55 @@ $(BUILD_DIR):
 dependencies: corral.json
 	$(GET_DEPENDENCIES_WITH)
 
-.PHONY: all ci test unit-tests clean realclean dependencies docs
+.PHONY: all ci test unit-tests clean realclean dependencies docs ucd-build ucd-generate ucd-download
+
+# ---------- UCD codegen ----------
+# unicode-build is a separate Pony tool that reads UCD source files and
+# emits the per-property tables into unicode/_ucd_*.pony.
+
+UCD_DIR ?= ./ucd
+UCD_URL := https://www.unicode.org/Public/UCD/latest/ucd
+
+# Files we pull from the authoritative source. Split into top-level UCD,
+# auxiliary, and emoji subdirectories per unicode.org layout.
+UCD_TOPLEVEL := UnicodeData.txt CaseFolding.txt SpecialCasing.txt PropList.txt \
+                Scripts.txt ScriptExtensions.txt DerivedCoreProperties.txt \
+                DerivedNormalizationProps.txt CompositionExclusions.txt \
+                NameAliases.txt LineBreak.txt
+UCD_AUXILIARY := GraphemeBreakProperty.txt WordBreakProperty.txt \
+                 SentenceBreakProperty.txt \
+                 GraphemeBreakTest.txt WordBreakTest.txt \
+                 SentenceBreakTest.txt LineBreakTest.txt
+UCD_EMOJI := emoji-data.txt
+UCD_TESTS := NormalizationTest.txt
+
+ucd-download: $(UCD_DIR)
+	@echo "Fetching UCD files from $(UCD_URL)"
+	@for f in $(UCD_TOPLEVEL) $(UCD_TESTS); do \
+	  echo "  $$f"; \
+	  curl -sSfL "$(UCD_URL)/$$f" -o "$(UCD_DIR)/$$f"; \
+	done
+	@mkdir -p $(UCD_DIR)/auxiliary
+	@for f in $(UCD_AUXILIARY); do \
+	  echo "  auxiliary/$$f"; \
+	  curl -sSfL "$(UCD_URL)/auxiliary/$$f" -o "$(UCD_DIR)/auxiliary/$$f"; \
+	done
+	@mkdir -p $(UCD_DIR)/emoji
+	@for f in $(UCD_EMOJI); do \
+	  echo "  emoji/$$f"; \
+	  curl -sSfL "$(UCD_URL)/emoji/$$f" -o "$(UCD_DIR)/emoji/$$f"; \
+	done
+	@echo "Done. UCD files in $(UCD_DIR)/"
+
+$(UCD_DIR):
+	mkdir -p $(UCD_DIR)
+
+ucd_build_binary := $(BUILD_DIR)/unicode_build_main
+
+ucd-build: $(ucd_build_binary)
+
+$(ucd_build_binary): $(SOURCE_FILES) $(shell find unicode_build unicode_build_main -name '*.pony' 2>/dev/null) | $(BUILD_DIR) dependencies
+	$(PONYC) -o $(BUILD_DIR) unicode_build_main -b unicode_build_main
+
+ucd-generate: $(ucd_build_binary)
+	$(ucd_build_binary) $(UCD_DIR) ./unicode
