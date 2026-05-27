@@ -77,6 +77,21 @@ actor Main
     _write_file(auth, gb_path, consume gb_body)?
     env.out.print("  wrote " + gb_path)
 
+    // Emit composition tables (Full_Composition_Exclusion + canonical compose).
+    let dnp_lines = _read_lines(auth,
+      ucd_dir + "/DerivedNormalizationProps.txt")?
+    env.out.print("  read " + dnp_lines.size().string()
+      + " lines from DerivedNormalizationProps.txt")
+    let excl_body = CompositionTableEmitter.emit_exclusion(dnp_lines)?
+    let excl_path: String val = out_dir + "/_ucd_composition_exclusion.pony"
+    _write_file(auth, excl_path, consume excl_body)?
+    env.out.print("  wrote " + excl_path)
+    let comp_body = CompositionTableEmitter.emit_canonical_compose(
+      entries, dnp_lines)?
+    let comp_path: String val = out_dir + "/_ucd_canonical_compose.pony"
+    _write_file(auth, comp_path, consume comp_body)?
+    env.out.print("  wrote " + comp_path)
+
     env.out.print("")
     env.out.print("Done.")
 

@@ -70,6 +70,22 @@ primitive Codepoints
     """
     _UcdGraphemeBreak.of(u)
 
+  fun is_full_composition_excluded(u: U32): Bool =>
+    """
+    True iff `u` has the `Full_Composition_Exclusion` property per
+    DerivedNormalizationProps.txt. Used by NFC composition (M5).
+    """
+    _UcdCompositionExclusion.of(u)
+
+  fun compose_canonical(lhs: U32, rhs: U32): (U32 | None) =>
+    """
+    Canonical composition: `(lhs, rhs)` → `result` for primary
+    composites (entries whose target is not in the
+    Full_Composition_Exclusion set). Returns `None` if no composition
+    exists. Used by NFC (M5).
+    """
+    _UcdCanonicalCompose.of(lhs, rhs)
+
   fun is_letter(u: U32): Bool =>
     """
     True iff `u` is a scalar AND its General Category is one of the

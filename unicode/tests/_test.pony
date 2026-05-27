@@ -85,6 +85,11 @@ actor \nodoc\ Main is TestList
     test(_TestGraphemesCountInvalid)
     test(_TestGraphemesRanges)
     test(_TestGraphemesIter)
+    // M1.A: Composition exclusions + canonical compose
+    test(_TestCompositionExclusion)
+    test(_TestCanonicalCompose)
+    test(_TestCanonicalComposeExcluded)
+    test(_TestCanonicalComposeMiss)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -1137,6 +1142,56 @@ class \nodoc\ iso _TestCodepointByteIndex is UnitTest
       h.assert_eq[USize](7, b3.value())
     else
       h.fail("setup raised")
+    end
+
+// ---- M1.A: Composition exclusions + canonical compose ----
+
+class \nodoc\ iso _TestCompositionExclusion is UnitTest
+  fun name(): String => "is_full_composition_excluded sanity"
+
+  fun apply(h: TestHelper) =>
+    // 0x0958 (DEVANAGARI LETTER QA) is in Full_Composition_Exclusion.
+    h.assert_true(Codepoints.is_full_composition_excluded(0x0958))
+    // 0x00E1 (á) is a primary composite — its decomp is [0x61, 0x301]
+    // and 0x00E1 is NOT excluded.
+    h.assert_false(Codepoints.is_full_composition_excluded(0x00E1))
+    // ASCII never excluded.
+    h.assert_false(Codepoints.is_full_composition_excluded(U32('a')))
+
+class \nodoc\ iso _TestCanonicalCompose is UnitTest
+  fun name(): String => "compose_canonical hits and misses"
+
+  fun apply(h: TestHelper) =>
+    // 'a' + combining acute = á
+    match Codepoints.compose_canonical(0x0061, 0x0301)
+    | let u: U32 => h.assert_eq[U32](0x00E1, u)
+    | None => h.fail("expected 0x00E1 for (a, combining-acute)")
+    end
+    // 'e' + combining acute = é
+    match Codepoints.compose_canonical(0x0065, 0x0301)
+    | let u: U32 => h.assert_eq[U32](0x00E9, u)
+    | None => h.fail("expected 0x00E9 for (e, combining-acute)")
+    end
+
+class \nodoc\ iso _TestCanonicalComposeExcluded is UnitTest
+  fun name(): String => "compose_canonical excludes Full_Composition_Exclusion entries"
+
+  fun apply(h: TestHelper) =>
+    // 0x0958 (DEVANAGARI LETTER QA) decomposes to (0x0915, 0x093C)
+    // but is in the exclusion set — must NOT recompose.
+    match Codepoints.compose_canonical(0x0915, 0x093C)
+    | let _: U32 => h.fail("Devanagari QA must not recompose")
+    | None => None
+    end
+
+class \nodoc\ iso _TestCanonicalComposeMiss is UnitTest
+  fun name(): String => "compose_canonical returns None on miss"
+
+  fun apply(h: TestHelper) =>
+    // Two ASCII codepoints don't compose.
+    match Codepoints.compose_canonical(U32('a'), U32('b'))
+    | let _: U32 => h.fail("'a' + 'b' should not compose")
+    | None => None
     end
 
 // ---- M4f: Graphemes topical primitive ----
