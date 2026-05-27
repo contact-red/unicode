@@ -52,6 +52,18 @@ actor Main
     _write_file(auth, cat_path, consume cat_body)?
     env.out.print("  wrote " + cat_path)
 
+    // Emit combining-class table
+    let ccc_body = DecompTableEmitter.emit_combining_class(entries)
+    let ccc_path: String val = out_dir + "/_ucd_combining_class.pony"
+    _write_file(auth, ccc_path, consume ccc_body)?
+    env.out.print("  wrote " + ccc_path)
+
+    // Emit canonical decomposition table
+    let decomp_body = DecompTableEmitter.emit_canonical_decomposition(entries)
+    let decomp_path: String val = out_dir + "/_ucd_canonical_decomp.pony"
+    _write_file(auth, decomp_path, consume decomp_body)?
+    env.out.print("  wrote " + decomp_path)
+
     env.out.print("")
     env.out.print("Done.")
 

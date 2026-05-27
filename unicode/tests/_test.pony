@@ -16,6 +16,10 @@ actor \nodoc\ Main is TestList
     test(_TestCategoryUnassigned)
     test(_TestCategoryControl)
     test(_TestCategoryPrivateUse)
+    // M1: combining class table
+    test(_TestCombiningClass)
+    // M1: canonical decomposition table
+    test(_TestCanonicalDecomp)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -97,3 +101,55 @@ class \nodoc\ iso _TestCategoryPrivateUse is UnitTest
     h.assert_eq[String]("Co", Codepoints.category(0xF8FF).code())
     // U+F0000 — supplementary private use area A start
     h.assert_eq[String]("Co", Codepoints.category(0xF0000).code())
+
+class \nodoc\ iso _TestCombiningClass is UnitTest
+  fun name(): String => "combining class"
+
+  fun apply(h: TestHelper) =>
+    // Most codepoints have CCC=0.
+    h.assert_eq[U8](0, Codepoints.combining_class('A'))
+    h.assert_eq[U8](0, Codepoints.combining_class(0xE9))   // precomposed é (CCC=0)
+    h.assert_eq[U8](0, Codepoints.combining_class(0))      // NULL
+    // Combining marks have non-zero CCC.
+    // U+0300 COMBINING GRAVE ACCENT — CCC 230 (Above)
+    h.assert_eq[U8](230, Codepoints.combining_class(0x0300))
+    // U+0301 COMBINING ACUTE ACCENT — CCC 230
+    h.assert_eq[U8](230, Codepoints.combining_class(0x0301))
+    // U+0316 COMBINING GRAVE ACCENT BELOW — CCC 220 (Below)
+    h.assert_eq[U8](220, Codepoints.combining_class(0x0316))
+    // U+05B0 HEBREW POINT SHEVA — CCC 10
+    h.assert_eq[U8](10, Codepoints.combining_class(0x05B0))
+
+class \nodoc\ iso _TestCanonicalDecomp is UnitTest
+  fun name(): String => "canonical decomposition"
+
+  fun apply(h: TestHelper) =>
+    // ASCII chars have no decomposition.
+    h.assert_true(Codepoints.canonical_decomposition('A') is None)
+    h.assert_true(Codepoints.canonical_decomposition(0) is None)
+    // U+00E9 é → U+0065 (e) + U+0301 (combining acute)
+    try
+      let d = Codepoints.canonical_decomposition(0xE9) as Array[U32] val
+      h.assert_eq[USize](2, d.size())
+      h.assert_eq[U32](0x0065, d(0)?)
+      h.assert_eq[U32](0x0301, d(1)?)
+    else
+      h.fail("expected decomposition for U+00E9")
+    end
+    // U+00C5 Å → U+0041 (A) + U+030A (combining ring)
+    try
+      let d = Codepoints.canonical_decomposition(0xC5) as Array[U32] val
+      h.assert_eq[USize](2, d.size())
+      h.assert_eq[U32](0x0041, d(0)?)
+      h.assert_eq[U32](0x030A, d(1)?)
+    else
+      h.fail("expected decomposition for U+00C5")
+    end
+    // U+212B ANGSTROM SIGN → U+00C5 (Å) — single-codepoint canonical
+    try
+      let d = Codepoints.canonical_decomposition(0x212B) as Array[U32] val
+      h.assert_eq[USize](1, d.size())
+      h.assert_eq[U32](0x00C5, d(0)?)
+    else
+      h.fail("expected decomposition for U+212B")
+    end
