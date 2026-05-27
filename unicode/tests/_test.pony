@@ -126,6 +126,18 @@ actor \nodoc\ Main is TestList
     test(_TestNameLatin)
     test(_TestNameControl)
     test(_TestFromName)
+    // M5: Normalize
+    test(_TestNfdAscii)
+    test(_TestNfdLatinAcute)
+    test(_TestNfcLatinAcute)
+    test(_TestNfcIdempotent)
+    test(_TestNfdHangul)
+    test(_TestNfcHangul)
+    test(_TestNfkdLigature)
+    test(_TestNfdEmpty)
+    test(_TestNfdReorder)
+    test(_TestNfcRoundTripIdempotent)
+    test(_TestNfcInvalid)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -1178,6 +1190,178 @@ class \nodoc\ iso _TestCodepointByteIndex is UnitTest
       h.assert_eq[USize](7, b3.value())
     else
       h.fail("setup raised")
+    end
+
+// ---- M5: Normalize ----
+
+class \nodoc\ iso _TestNfdAscii is UnitTest
+  fun name(): String => "NFD: ASCII is unchanged"
+
+  fun apply(h: TestHelper) =>
+    match Normalize.nfd("hello")
+    | let s: String iso => h.assert_eq[String]("hello", consume s)
+    | let _: InvalidUtf8 => h.fail("ascii rejected")
+    end
+
+class \nodoc\ iso _TestNfdLatinAcute is UnitTest
+  fun name(): String => "NFD: 'é' (U+00E9) decomposes to 'e' + COMBINING ACUTE"
+
+  fun apply(h: TestHelper) =>
+    // U+00E9 → e (0x65) + U+0301 (combining acute, 0xCC 0x81 in UTF-8)
+    let bytes_in: Array[U8] val = recover val [as U8: 0xC3; 0xA9] end
+    let s_in = String.from_array(bytes_in)
+    match Normalize.nfd(s_in)
+    | let s: String iso =>
+      let result = consume s
+      h.assert_eq[USize](3, result.size())
+      try h.assert_eq[U8](0x65, result(0)?) end
+      try h.assert_eq[U8](0xCC, result(1)?) end
+      try h.assert_eq[U8](0x81, result(2)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestNfcLatinAcute is UnitTest
+  fun name(): String => "NFC: 'e' + COMBINING ACUTE composes to U+00E9"
+
+  fun apply(h: TestHelper) =>
+    // input: e + 0x0301 = 3 bytes
+    let bytes_in: Array[U8] val = recover val [as U8: 0x65; 0xCC; 0x81] end
+    let s_in = String.from_array(bytes_in)
+    match Normalize.nfc(s_in)
+    | let s: String iso =>
+      let result = consume s
+      h.assert_eq[USize](2, result.size())
+      try h.assert_eq[U8](0xC3, result(0)?) end
+      try h.assert_eq[U8](0xA9, result(1)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestNfcIdempotent is UnitTest
+  fun name(): String => "NFC: already-NFC string is unchanged"
+
+  fun apply(h: TestHelper) =>
+    // "café" precomposed
+    let bytes_in: Array[U8] val =
+      recover val [as U8: 0x63; 0x61; 0x66; 0xC3; 0xA9] end
+    let s_in = String.from_array(bytes_in)
+    match Normalize.nfc(s_in)
+    | let s: String iso =>
+      let result = consume s
+      h.assert_eq[USize](5, result.size())
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestNfdHangul is UnitTest
+  fun name(): String => "NFD: Hangul syllable algorithmic decomposition"
+
+  fun apply(h: TestHelper) =>
+    // U+AC00 (HANGUL SYLLABLE GA, LV) = L (U+1100) + V (U+1161)
+    let bytes_in: Array[U8] val = recover val [as U8: 0xEA; 0xB0; 0x80] end
+    let s_in = String.from_array(bytes_in)
+    match Normalize.nfd(s_in)
+    | let s: String iso =>
+      let result = consume s
+      // Expect 6 bytes: U+1100 (E1 84 80) + U+1161 (E1 85 A1)
+      h.assert_eq[USize](6, result.size())
+      try h.assert_eq[U8](0xE1, result(0)?) end
+      try h.assert_eq[U8](0x84, result(1)?) end
+      try h.assert_eq[U8](0x80, result(2)?) end
+      try h.assert_eq[U8](0xE1, result(3)?) end
+      try h.assert_eq[U8](0x85, result(4)?) end
+      try h.assert_eq[U8](0xA1, result(5)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestNfcHangul is UnitTest
+  fun name(): String => "NFC: Hangul L+V composes algorithmically"
+
+  fun apply(h: TestHelper) =>
+    // L (U+1100) + V (U+1161) → U+AC00
+    let bytes_in: Array[U8] val = recover val [as U8:
+      0xE1; 0x84; 0x80; 0xE1; 0x85; 0xA1] end
+    let s_in = String.from_array(bytes_in)
+    match Normalize.nfc(s_in)
+    | let s: String iso =>
+      let result = consume s
+      h.assert_eq[USize](3, result.size())
+      try h.assert_eq[U8](0xEA, result(0)?) end
+      try h.assert_eq[U8](0xB0, result(1)?) end
+      try h.assert_eq[U8](0x80, result(2)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestNfkdLigature is UnitTest
+  fun name(): String => "NFKD: ﬁ ligature decomposes to 'fi'"
+
+  fun apply(h: TestHelper) =>
+    // ﬁ (U+FB01) → "fi"
+    let bytes_in: Array[U8] val = recover val [as U8: 0xEF; 0xAC; 0x81] end
+    let s_in = String.from_array(bytes_in)
+    match Normalize.nfkd(s_in)
+    | let s: String iso =>
+      h.assert_eq[String]("fi", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestNfdEmpty is UnitTest
+  fun name(): String => "NFD: empty string round-trips"
+
+  fun apply(h: TestHelper) =>
+    match Normalize.nfd("")
+    | let s: String iso => h.assert_eq[String]("", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestNfdReorder is UnitTest
+  fun name(): String => "NFD: combining marks are canonically reordered"
+
+  fun apply(h: TestHelper) =>
+    // 'a' + U+0327 (cedilla, CCC=202) + U+0301 (acute, CCC=230)
+    // Already in CCC order — should be unchanged.
+    // Then test the reverse:
+    // 'a' + U+0301 (CCC=230) + U+0327 (CCC=202) — should reorder.
+    let bytes_in: Array[U8] val = recover val [as U8:
+      0x61; 0xCC; 0x81; 0xCC; 0xA7] end
+    let s_in = String.from_array(bytes_in)
+    match Normalize.nfd(s_in)
+    | let s: String iso =>
+      let result = consume s
+      // After NFD canonical-order: a (0x61) + 0x0327 (CC=202) + 0x0301 (CC=230)
+      // UTF-8: 0x61 0xCC 0xA7 0xCC 0x81
+      h.assert_eq[USize](5, result.size())
+      try h.assert_eq[U8](0x61, result(0)?) end
+      try h.assert_eq[U8](0xCC, result(1)?) end
+      try h.assert_eq[U8](0xA7, result(2)?) end
+      try h.assert_eq[U8](0xCC, result(3)?) end
+      try h.assert_eq[U8](0x81, result(4)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestNfcRoundTripIdempotent is UnitTest
+  fun name(): String => "NFC(NFC(x)) == NFC(x)"
+
+  fun apply(h: TestHelper) =>
+    // "Café 漢字"
+    let s_in: String val = "Café 漢字"
+    match Normalize.nfc(s_in)
+    | let s1: String iso =>
+      let r1 = consume s1
+      let r1_val: String val = consume r1
+      match Normalize.nfc(r1_val)
+      | let s2: String iso => h.assert_eq[String](r1_val, consume s2)
+      | let _: InvalidUtf8 => h.fail("second pass rejected")
+      end
+    | let _: InvalidUtf8 => h.fail("first pass rejected")
+    end
+
+class \nodoc\ iso _TestNfcInvalid is UnitTest
+  fun name(): String => "Normalize rejects ill-formed UTF-8"
+
+  fun apply(h: TestHelper) =>
+    let bad = String.from_array(recover val [as U8: 0x41; 0x80; 0x41] end)
+    match Normalize.nfc(bad)
+    | let _: String iso => h.fail("expected InvalidUtf8")
+    | let e: InvalidUtf8 => h.assert_eq[USize](1, e.offset)
     end
 
 // ---- M1.G: Names ----
