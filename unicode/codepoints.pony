@@ -61,6 +61,15 @@ primitive Codepoints
     """
     _UcdCanonicalDecomp.of(u)
 
+  fun compat_decomposition(u: U32): (Array[U32] val | None) =>
+    """
+    Compatibility Decomposition_Mapping per UAX #44. `None` if
+    absent. Compat decomps are 1..18 codepoints long. Used by NFKD
+    (M5). Codepoints with a canonical decomp do NOT also have a
+    compat decomp — call `canonical_decomposition` first.
+    """
+    _UcdCompatDecomp.of(u)
+
   fun grapheme_break(u: U32): GraphemeBreak =>
     """
     UAX #29 Grapheme_Cluster_Break property of `u`, including

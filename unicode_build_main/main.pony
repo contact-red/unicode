@@ -64,6 +64,12 @@ actor Main
     _write_file(auth, decomp_path, consume decomp_body)?
     env.out.print("  wrote " + decomp_path)
 
+    // Emit compatibility decomposition table
+    let compat_body = DecompTableEmitter.emit_compat_decomposition(entries)
+    let compat_path: String val = out_dir + "/_ucd_compat_decomp.pony"
+    _write_file(auth, compat_path, consume compat_body)?
+    env.out.print("  wrote " + compat_path)
+
     // Emit grapheme break property table
     let gbp_lines = _read_lines(auth,
       ucd_dir + "/auxiliary/GraphemeBreakProperty.txt")?

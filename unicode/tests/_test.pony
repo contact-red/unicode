@@ -90,6 +90,11 @@ actor \nodoc\ Main is TestList
     test(_TestCanonicalCompose)
     test(_TestCanonicalComposeExcluded)
     test(_TestCanonicalComposeMiss)
+    // M1.B: Compatibility decomposition
+    test(_TestCompatDecompFiLigature)
+    test(_TestCompatDecompCircledOne)
+    test(_TestCompatDecompFraction)
+    test(_TestCompatDecompAscii)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -1142,6 +1147,53 @@ class \nodoc\ iso _TestCodepointByteIndex is UnitTest
       h.assert_eq[USize](7, b3.value())
     else
       h.fail("setup raised")
+    end
+
+// ---- M1.B: Compat decomposition ----
+
+class \nodoc\ iso _TestCompatDecompFiLigature is UnitTest
+  fun name(): String => "compat_decomposition: 'ﬁ' → ['f', 'i']"
+
+  fun apply(h: TestHelper) =>
+    match Codepoints.compat_decomposition(0xFB01)
+    | let a: Array[U32] val =>
+      h.assert_eq[USize](2, a.size())
+      try h.assert_eq[U32](0x0066, a(0)?) end
+      try h.assert_eq[U32](0x0069, a(1)?) end
+    | None => h.fail("expected ['f', 'i']")
+    end
+
+class \nodoc\ iso _TestCompatDecompCircledOne is UnitTest
+  fun name(): String => "compat_decomposition: '①' → ['1']"
+
+  fun apply(h: TestHelper) =>
+    match Codepoints.compat_decomposition(0x2460)
+    | let a: Array[U32] val =>
+      h.assert_eq[USize](1, a.size())
+      try h.assert_eq[U32](0x0031, a(0)?) end
+    | None => h.fail("expected ['1']")
+    end
+
+class \nodoc\ iso _TestCompatDecompFraction is UnitTest
+  fun name(): String => "compat_decomposition: '½' → ['1', '⁄', '2']"
+
+  fun apply(h: TestHelper) =>
+    match Codepoints.compat_decomposition(0x00BD)
+    | let a: Array[U32] val =>
+      h.assert_eq[USize](3, a.size())
+      try h.assert_eq[U32](0x0031, a(0)?) end
+      try h.assert_eq[U32](0x2044, a(1)?) end
+      try h.assert_eq[U32](0x0032, a(2)?) end
+    | None => h.fail("expected ['1', '⁄', '2']")
+    end
+
+class \nodoc\ iso _TestCompatDecompAscii is UnitTest
+  fun name(): String => "compat_decomposition: ASCII has no compat decomp"
+
+  fun apply(h: TestHelper) =>
+    match Codepoints.compat_decomposition(U32('a'))
+    | let _: Array[U32] val => h.fail("ASCII has no compat decomp")
+    | None => None
     end
 
 // ---- M1.A: Composition exclusions + canonical compose ----
