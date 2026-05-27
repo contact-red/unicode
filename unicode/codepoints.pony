@@ -61,6 +61,15 @@ primitive Codepoints
     """
     _UcdCanonicalDecomp.of(u)
 
+  fun grapheme_break(u: U32): GraphemeBreak =>
+    """
+    UAX #29 Grapheme_Cluster_Break property of `u`, including
+    `Extended_Pictographic` for emoji per UTS #51. Used by the
+    grapheme-break state machine to decide cluster boundaries.
+    Codepoints with no assigned value default to `GBOther`.
+    """
+    _UcdGraphemeBreak.of(u)
+
   fun is_letter(u: U32): Bool =>
     """
     True iff `u` is a scalar AND its General Category is one of the

@@ -47,6 +47,12 @@ actor \nodoc\ Main is TestList
     test(_TestCodepointsStringCount)
     test(_TestCodepointsStringIsAll)
     test(_TestCodepointsStringInvalid)
+    // M4a: Grapheme_Cluster_Break property table
+    test(_TestGraphemeBreakAscii)
+    test(_TestGraphemeBreakCombining)
+    test(_TestGraphemeBreakHangul)
+    test(_TestGraphemeBreakEmoji)
+    test(_TestGraphemeBreakRegionalIndicator)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -578,3 +584,71 @@ class \nodoc\ iso _TestCodepointsStringInvalid is UnitTest
     | let _: USize => h.fail("expected InvalidUtf8")
     | let e: InvalidUtf8 => h.assert_eq[USize](2, e.offset)
     end
+
+// ---- M4a: Grapheme_Cluster_Break property table ----
+
+class \nodoc\ iso _TestGraphemeBreakAscii is UnitTest
+  fun name(): String => "GraphemeBreak: ASCII / common cases"
+
+  fun apply(h: TestHelper) =>
+    // Plain ASCII letters / digits: Other
+    h.assert_eq[String]("Other", Codepoints.grapheme_break('A').code())
+    h.assert_eq[String]("Other", Codepoints.grapheme_break('0').code())
+    // CR / LF
+    h.assert_eq[String]("CR", Codepoints.grapheme_break(0x0D).code())
+    h.assert_eq[String]("LF", Codepoints.grapheme_break(0x0A).code())
+    // Other ASCII control chars: Control
+    h.assert_eq[String]("Control", Codepoints.grapheme_break(0).code())
+    h.assert_eq[String]("Control", Codepoints.grapheme_break(0x09).code())  // TAB
+
+class \nodoc\ iso _TestGraphemeBreakCombining is UnitTest
+  fun name(): String => "GraphemeBreak: combining marks / ZWJ"
+
+  fun apply(h: TestHelper) =>
+    // U+0300 COMBINING GRAVE ACCENT — Extend
+    h.assert_eq[String]("Extend", Codepoints.grapheme_break(0x0300).code())
+    // U+0301 COMBINING ACUTE ACCENT — Extend
+    h.assert_eq[String]("Extend", Codepoints.grapheme_break(0x0301).code())
+    // U+200D ZERO WIDTH JOINER — ZWJ
+    h.assert_eq[String]("ZWJ", Codepoints.grapheme_break(0x200D).code())
+    // U+0903 DEVANAGARI SIGN VISARGA — SpacingMark
+    h.assert_eq[String]("SpacingMark", Codepoints.grapheme_break(0x0903).code())
+
+class \nodoc\ iso _TestGraphemeBreakHangul is UnitTest
+  fun name(): String => "GraphemeBreak: Hangul jamo L / V / T"
+
+  fun apply(h: TestHelper) =>
+    // U+1100 HANGUL CHOSEONG KIYEOK — L (leading jamo)
+    h.assert_eq[String]("L", Codepoints.grapheme_break(0x1100).code())
+    // U+1161 HANGUL JUNGSEONG A — V (vowel jamo)
+    h.assert_eq[String]("V", Codepoints.grapheme_break(0x1161).code())
+    // U+11A8 HANGUL JONGSEONG KIYEOK — T (trailing jamo)
+    h.assert_eq[String]("T", Codepoints.grapheme_break(0x11A8).code())
+    // U+AC00 HANGUL SYLLABLE GA — LV (LV-type precomposed syllable)
+    h.assert_eq[String]("LV", Codepoints.grapheme_break(0xAC00).code())
+    // U+AC01 HANGUL SYLLABLE GAG — LVT (LVT-type)
+    h.assert_eq[String]("LVT", Codepoints.grapheme_break(0xAC01).code())
+
+class \nodoc\ iso _TestGraphemeBreakEmoji is UnitTest
+  fun name(): String => "GraphemeBreak: emoji are Extended_Pictographic"
+
+  fun apply(h: TestHelper) =>
+    // U+1F600 GRINNING FACE
+    h.assert_eq[String]("Extended_Pictographic",
+      Codepoints.grapheme_break(0x1F600).code())
+    // U+1F1FA REGIONAL INDICATOR SYMBOL LETTER U
+    h.assert_eq[String]("Regional_Indicator",
+      Codepoints.grapheme_break(0x1F1FA).code())
+
+class \nodoc\ iso _TestGraphemeBreakRegionalIndicator is UnitTest
+  fun name(): String => "GraphemeBreak: Regional_Indicator range"
+
+  fun apply(h: TestHelper) =>
+    // U+1F1E6 (A) through U+1F1FF (Z) — Regional_Indicator
+    h.assert_eq[String]("Regional_Indicator",
+      Codepoints.grapheme_break(0x1F1E6).code())
+    h.assert_eq[String]("Regional_Indicator",
+      Codepoints.grapheme_break(0x1F1FF).code())
+    // Just above the range: U+1F200 is Other.
+    h.assert_eq[String]("Other",
+      Codepoints.grapheme_break(0x1F200).code())

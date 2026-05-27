@@ -64,6 +64,19 @@ actor Main
     _write_file(auth, decomp_path, consume decomp_body)?
     env.out.print("  wrote " + decomp_path)
 
+    // Emit grapheme break property table
+    let gbp_lines = _read_lines(auth,
+      ucd_dir + "/auxiliary/GraphemeBreakProperty.txt")?
+    let emoji_lines = _read_lines(auth,
+      ucd_dir + "/emoji/emoji-data.txt")?
+    env.out.print("  read " + gbp_lines.size().string()
+      + " lines from GraphemeBreakProperty.txt + " + emoji_lines.size().string()
+      + " from emoji-data.txt")
+    let gb_body = GraphemeBreakTableEmitter.emit(gbp_lines, emoji_lines)?
+    let gb_path: String val = out_dir + "/_ucd_grapheme_break.pony"
+    _write_file(auth, gb_path, consume gb_body)?
+    env.out.print("  wrote " + gb_path)
+
     env.out.print("")
     env.out.print("Done.")
 
