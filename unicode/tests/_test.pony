@@ -126,6 +126,17 @@ actor \nodoc\ Main is TestList
     test(_TestNameLatin)
     test(_TestNameControl)
     test(_TestFromName)
+    // M6: Case
+    test(_TestCaseUpperAscii)
+    test(_TestCaseUpperEszett)
+    test(_TestCaseLowerAscii)
+    test(_TestCaseLowerGreek)
+    test(_TestCaseTitleAscii)
+    test(_TestCaseTitleMixed)
+    test(_TestCaseFoldAscii)
+    test(_TestCaseFoldEszett)
+    test(_TestCaseFoldMatchesMass)
+    test(_TestCaseUpperInvalid)
     // M5: Normalize
     test(_TestNfdAscii)
     test(_TestNfdLatinAcute)
@@ -1190,6 +1201,111 @@ class \nodoc\ iso _TestCodepointByteIndex is UnitTest
       h.assert_eq[USize](7, b3.value())
     else
       h.fail("setup raised")
+    end
+
+// ---- M6: Case ----
+
+class \nodoc\ iso _TestCaseUpperAscii is UnitTest
+  fun name(): String => "upper: ASCII"
+
+  fun apply(h: TestHelper) =>
+    match Case.upper("hello world")
+    | let s: String iso => h.assert_eq[String]("HELLO WORLD", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestCaseUpperEszett is UnitTest
+  fun name(): String => "upper: ß expands to SS"
+
+  fun apply(h: TestHelper) =>
+    let bytes_in: Array[U8] val = recover val [as U8: 0xC3; 0x9F] end
+    match Case.upper(String.from_array(bytes_in))
+    | let s: String iso => h.assert_eq[String]("SS", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestCaseLowerAscii is UnitTest
+  fun name(): String => "lower: ASCII"
+
+  fun apply(h: TestHelper) =>
+    match Case.lower("Hello WORLD")
+    | let s: String iso => h.assert_eq[String]("hello world", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestCaseLowerGreek is UnitTest
+  fun name(): String => "lower: Greek capital → small"
+
+  fun apply(h: TestHelper) =>
+    // 'Α' U+0391 → 'α' U+03B1
+    let bytes_in: Array[U8] val = recover val [as U8: 0xCE; 0x91] end
+    match Case.lower(String.from_array(bytes_in))
+    | let s: String iso =>
+      let r = consume s
+      h.assert_eq[USize](2, r.size())
+      try h.assert_eq[U8](0xCE, r(0)?) end
+      try h.assert_eq[U8](0xB1, r(1)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestCaseTitleAscii is UnitTest
+  fun name(): String => "title: word-start ASCII"
+
+  fun apply(h: TestHelper) =>
+    match Case.title("hello world")
+    | let s: String iso => h.assert_eq[String]("Hello World", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestCaseTitleMixed is UnitTest
+  fun name(): String => "title: mixed input recases properly"
+
+  fun apply(h: TestHelper) =>
+    match Case.title("HELLO   World  FOO")
+    | let s: String iso =>
+      h.assert_eq[String]("Hello   World  Foo", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestCaseFoldAscii is UnitTest
+  fun name(): String => "fold: ASCII = lower for letters"
+
+  fun apply(h: TestHelper) =>
+    match Case.fold("Hello WORLD")
+    | let s: String iso => h.assert_eq[String]("hello world", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestCaseFoldEszett is UnitTest
+  fun name(): String => "fold: ß → ss"
+
+  fun apply(h: TestHelper) =>
+    let bytes_in: Array[U8] val = recover val [as U8: 0xC3; 0x9F] end
+    match Case.fold(String.from_array(bytes_in))
+    | let s: String iso => h.assert_eq[String]("ss", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestCaseFoldMatchesMass is UnitTest
+  fun name(): String => "fold: 'Maße' folds equal to 'masse'"
+
+  fun apply(h: TestHelper) =>
+    // 'Maße' = M a ß e = 4D 61 (C3 9F) 65 → folds to 'masse'
+    let bytes_in: Array[U8] val =
+      recover val [as U8: 0x4D; 0x61; 0xC3; 0x9F; 0x65] end
+    match Case.fold(String.from_array(bytes_in))
+    | let s: String iso => h.assert_eq[String]("masse", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestCaseUpperInvalid is UnitTest
+  fun name(): String => "upper rejects ill-formed UTF-8"
+
+  fun apply(h: TestHelper) =>
+    let bad = String.from_array(recover val [as U8: 0x41; 0x80; 0x41] end)
+    match Case.upper(bad)
+    | let _: String iso => h.fail("expected InvalidUtf8")
+    | let e: InvalidUtf8 => h.assert_eq[USize](1, e.offset)
     end
 
 // ---- M5: Normalize ----
