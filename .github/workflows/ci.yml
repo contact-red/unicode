@@ -17,9 +17,8 @@ jobs:
 
       - name: Install ponyup
         run: |
-          curl --proto '=https' --tlsv1.2 -sSf \
-            https://raw.githubusercontent.com/ponylang/ponyup/main/ponyup-init.sh \
-            | sh -s -- --prefix "$HOME/.local"
+          sh -c "$(curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/ponylang/ponyup/main/ponyup-init.sh)"
           echo "$HOME/.local/share/ponyup/bin" >> "$GITHUB_PATH"
 
       - name: Install ponyc and corral
