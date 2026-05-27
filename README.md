@@ -1,5 +1,7 @@
 # unicode
 
+[![CI](https://github.com/contact-red/unicode/actions/workflows/ci.yml/badge.svg)](https://github.com/contact-red/unicode/actions/workflows/ci.yml)
+
 Unicode-correct text processing for Pony — graphemes, normalization, case folding, search, segmentation, and more.
 
 ## Status
