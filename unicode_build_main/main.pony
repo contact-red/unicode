@@ -147,6 +147,20 @@ actor Main
     _write_file(auth, title_path, consume title_body)?
     env.out.print("  wrote " + title_path)
 
+    // Emit BinaryProperty type + per-property tables (PropList +
+    // DerivedCoreProperties + emoji-data).
+    let prop_lines = _read_lines(auth, ucd_dir + "/PropList.txt")?
+    let dcp_lines = _read_lines(auth, ucd_dir + "/DerivedCoreProperties.txt")?
+    env.out.print("  read " + prop_lines.size().string()
+      + " lines from PropList.txt + "
+      + dcp_lines.size().string() + " from DerivedCoreProperties.txt")
+    (let bp_rt, let bp_tbl) = BinaryPropsTableEmitter.emit_both(
+      prop_lines, dcp_lines, emoji_lines)?
+    _write_file(auth, out_dir + "/binary_property.pony", consume bp_rt)?
+    env.out.print("  wrote " + out_dir + "/binary_property.pony")
+    _write_file(auth, out_dir + "/_ucd_binary_props.pony", consume bp_tbl)?
+    env.out.print("  wrote " + out_dir + "/_ucd_binary_props.pony")
+
     // Emit Script type + cp-range table (Scripts.txt).
     let scripts_lines = _read_lines(auth, ucd_dir + "/Scripts.txt")?
     env.out.print("  read " + scripts_lines.size().string()

@@ -114,6 +114,13 @@ actor \nodoc\ Main is TestList
     test(_TestScriptUnassigned)
     test(_TestScriptCode)
     test(_TestScriptsFromIso)
+    // M1.F: Binary properties
+    test(_TestBinaryPropIDStart)
+    test(_TestBinaryPropIDContinue)
+    test(_TestBinaryPropWhiteSpace)
+    test(_TestBinaryPropEmoji)
+    test(_TestBinaryPropAsciiHexDigit)
+    test(_TestBinaryPropsFromIso)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -1166,6 +1173,64 @@ class \nodoc\ iso _TestCodepointByteIndex is UnitTest
       h.assert_eq[USize](7, b3.value())
     else
       h.fail("setup raised")
+    end
+
+// ---- M1.F: Binary properties ----
+
+class \nodoc\ iso _TestBinaryPropIDStart is UnitTest
+  fun name(): String => "binary_property: ID_Start"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.has_binary_property(U32('A'), PropIDStart))
+    h.assert_true(Codepoints.has_binary_property(U32('a'), PropIDStart))
+    h.assert_false(Codepoints.has_binary_property(U32('5'), PropIDStart))
+    h.assert_false(Codepoints.has_binary_property(U32(' '), PropIDStart))
+
+class \nodoc\ iso _TestBinaryPropIDContinue is UnitTest
+  fun name(): String => "binary_property: ID_Continue"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.has_binary_property(U32('A'), PropIDContinue))
+    h.assert_true(Codepoints.has_binary_property(U32('5'), PropIDContinue))
+    h.assert_false(Codepoints.has_binary_property(U32(' '), PropIDContinue))
+
+class \nodoc\ iso _TestBinaryPropWhiteSpace is UnitTest
+  fun name(): String => "binary_property: White_Space"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.has_binary_property(U32(' '), PropWhiteSpace))
+    h.assert_true(Codepoints.has_binary_property(U32('\t'), PropWhiteSpace))
+    h.assert_true(Codepoints.has_binary_property(U32('\n'), PropWhiteSpace))
+    h.assert_false(Codepoints.has_binary_property(U32('a'), PropWhiteSpace))
+
+class \nodoc\ iso _TestBinaryPropEmoji is UnitTest
+  fun name(): String => "binary_property: Emoji"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.has_binary_property(0x1F600, PropEmoji))
+    h.assert_false(Codepoints.has_binary_property(U32('a'), PropEmoji))
+
+class \nodoc\ iso _TestBinaryPropAsciiHexDigit is UnitTest
+  fun name(): String => "binary_property: ASCII_Hex_Digit"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.has_binary_property(U32('0'), PropASCIIHexDigit))
+    h.assert_true(Codepoints.has_binary_property(U32('A'), PropASCIIHexDigit))
+    h.assert_true(Codepoints.has_binary_property(U32('f'), PropASCIIHexDigit))
+    h.assert_false(Codepoints.has_binary_property(U32('g'), PropASCIIHexDigit))
+
+class \nodoc\ iso _TestBinaryPropsFromIso is UnitTest
+  fun name(): String => "BinaryProperties.from_iso round-trip"
+
+  fun apply(h: TestHelper) =>
+    match BinaryProperties.from_iso("ID_Start")
+    | let _: PropIDStart => None
+    | let _: BinaryProperty => h.fail("expected PropIDStart")
+    | None => h.fail("from_iso(ID_Start) returned None")
+    end
+    match BinaryProperties.from_iso("NotARealProp")
+    | None => None
+    | let _: BinaryProperty => h.fail("expected None for fake property")
     end
 
 // ---- M1.E: Scripts ----

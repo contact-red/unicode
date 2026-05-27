@@ -148,6 +148,15 @@ primitive Codepoints
     """
     _UcdScript.of(u)
 
+  fun has_binary_property(u: U32, p: BinaryProperty): Bool =>
+    """
+    True iff `u` has the binary property `p` per PropList.txt,
+    DerivedCoreProperties.txt, or emoji-data.txt. Use
+    `BinaryProperties.from_iso(name)` to look up a `BinaryProperty`
+    by its UCD name.
+    """
+    _UcdBinaryProps.has(u, p)
+
   fun is_full_composition_excluded(u: U32): Bool =>
     """
     True iff `u` has the `Full_Composition_Exclusion` property per
