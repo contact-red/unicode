@@ -70,6 +70,29 @@ primitive Codepoints
     """
     _UcdCompatDecomp.of(u)
 
+  fun simple_upper(u: U32): U32 =>
+    """
+    Simple_Uppercase_Mapping. Returns `u` itself when no mapping is
+    defined. Single-codepoint result only — see `Case` (M6) for the
+    full mapping that can expand to multiple codepoints (e.g.,
+    German ß → SS).
+    """
+    _UcdSimpleUpper.of(u)
+
+  fun simple_lower(u: U32): U32 =>
+    """
+    Simple_Lowercase_Mapping. Returns `u` itself when no mapping
+    is defined.
+    """
+    _UcdSimpleLower.of(u)
+
+  fun simple_title(u: U32): U32 =>
+    """
+    Simple_Titlecase_Mapping. Returns `u` itself when no mapping
+    is defined.
+    """
+    _UcdSimpleTitle.of(u)
+
   fun grapheme_break(u: U32): GraphemeBreak =>
     """
     UAX #29 Grapheme_Cluster_Break property of `u`, including

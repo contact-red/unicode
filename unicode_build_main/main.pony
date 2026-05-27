@@ -83,6 +83,20 @@ actor Main
     _write_file(auth, gb_path, consume gb_body)?
     env.out.print("  wrote " + gb_path)
 
+    // Emit simple case mappings (UnicodeData.txt fields 12/13/14)
+    let upper_body = CaseTableEmitter.emit_simple_upper(entries)
+    let upper_path: String val = out_dir + "/_ucd_simple_upper.pony"
+    _write_file(auth, upper_path, consume upper_body)?
+    env.out.print("  wrote " + upper_path)
+    let lower_body = CaseTableEmitter.emit_simple_lower(entries)
+    let lower_path: String val = out_dir + "/_ucd_simple_lower.pony"
+    _write_file(auth, lower_path, consume lower_body)?
+    env.out.print("  wrote " + lower_path)
+    let title_body = CaseTableEmitter.emit_simple_title(entries)
+    let title_path: String val = out_dir + "/_ucd_simple_title.pony"
+    _write_file(auth, title_path, consume title_body)?
+    env.out.print("  wrote " + title_path)
+
     // Emit composition tables (Full_Composition_Exclusion + canonical compose).
     let dnp_lines = _read_lines(auth,
       ucd_dir + "/DerivedNormalizationProps.txt")?

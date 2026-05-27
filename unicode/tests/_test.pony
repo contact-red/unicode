@@ -95,6 +95,10 @@ actor \nodoc\ Main is TestList
     test(_TestCompatDecompCircledOne)
     test(_TestCompatDecompFraction)
     test(_TestCompatDecompAscii)
+    // M1.C: Simple case mappings
+    test(_TestSimpleUpper)
+    test(_TestSimpleLower)
+    test(_TestSimpleTitle)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -1148,6 +1152,44 @@ class \nodoc\ iso _TestCodepointByteIndex is UnitTest
     else
       h.fail("setup raised")
     end
+
+// ---- M1.C: Simple case mappings ----
+
+class \nodoc\ iso _TestSimpleUpper is UnitTest
+  fun name(): String => "simple_upper basic mappings"
+
+  fun apply(h: TestHelper) =>
+    h.assert_eq[U32](U32('A'), Codepoints.simple_upper(U32('a')))
+    h.assert_eq[U32](U32('Z'), Codepoints.simple_upper(U32('z')))
+    // identity: already uppercase
+    h.assert_eq[U32](U32('A'), Codepoints.simple_upper(U32('A')))
+    // identity: digit
+    h.assert_eq[U32](U32('5'), Codepoints.simple_upper(U32('5')))
+    // German eszett ß (U+00DF) — simple maps to ß itself in UCD
+    // (the SS expansion is in SpecialCasing — M1.D).
+    h.assert_eq[U32](0x00DF, Codepoints.simple_upper(0x00DF))
+    // Greek small alpha 'α' (U+03B1) → 'Α' (U+0391)
+    h.assert_eq[U32](0x0391, Codepoints.simple_upper(0x03B1))
+
+class \nodoc\ iso _TestSimpleLower is UnitTest
+  fun name(): String => "simple_lower basic mappings"
+
+  fun apply(h: TestHelper) =>
+    h.assert_eq[U32](U32('a'), Codepoints.simple_lower(U32('A')))
+    h.assert_eq[U32](U32('z'), Codepoints.simple_lower(U32('Z')))
+    h.assert_eq[U32](U32('a'), Codepoints.simple_lower(U32('a')))
+    h.assert_eq[U32](0x03B1, Codepoints.simple_lower(0x0391))
+
+class \nodoc\ iso _TestSimpleTitle is UnitTest
+  fun name(): String => "simple_title basic mappings"
+
+  fun apply(h: TestHelper) =>
+    // ASCII: titlecase == uppercase for letters.
+    h.assert_eq[U32](U32('A'), Codepoints.simple_title(U32('a')))
+    // Lj (U+01C9) "lj" → Lj (U+01C8) titlecase; lowercase 'lj' has
+    // a real titlecase entry. The full digraph 'ǉ' (U+01C9) titlecases
+    // to 'ǈ' (U+01C8).
+    h.assert_eq[U32](0x01C8, Codepoints.simple_title(0x01C9))
 
 // ---- M1.B: Compat decomposition ----
 
