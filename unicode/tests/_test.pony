@@ -126,6 +126,16 @@ actor \nodoc\ Main is TestList
     test(_TestNameLatin)
     test(_TestNameControl)
     test(_TestFromName)
+    // M7: Compare
+    test(_TestCompareBytes)
+    test(_TestEqualBytes)
+    test(_TestEqualCanonical)
+    test(_TestEqualCanonicalDistinct)
+    test(_TestEqualCompat)
+    test(_TestEqualCaseless)
+    test(_TestEqualCaselessAsciiDistinct)
+    test(_TestEqualCaselessCanonical)
+    test(_TestCompareInvalid)
     // M6: Case
     test(_TestCaseUpperAscii)
     test(_TestCaseUpperEszett)
@@ -1201,6 +1211,106 @@ class \nodoc\ iso _TestCodepointByteIndex is UnitTest
       h.assert_eq[USize](7, b3.value())
     else
       h.fail("setup raised")
+    end
+
+// ---- M7: Compare ----
+
+class \nodoc\ iso _TestCompareBytes is UnitTest
+  fun name(): String => "Compares.bytes: ordering and equality"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Compares.bytes("abc", "abc") is Equal)
+    h.assert_true(Compares.bytes("abc", "abd") is Less)
+    h.assert_true(Compares.bytes("abd", "abc") is Greater)
+    h.assert_true(Compares.bytes("abc", "abcd") is Less)
+    h.assert_true(Compares.bytes("", "a") is Less)
+    h.assert_true(Compares.bytes("", "") is Equal)
+
+class \nodoc\ iso _TestEqualBytes is UnitTest
+  fun name(): String => "equal_bytes: precomposed != decomposed"
+
+  fun apply(h: TestHelper) =>
+    let pre: Array[U8] val = recover val [as U8: 0xC3; 0xA9] end
+    let dec: Array[U8] val = recover val [as U8: 0x65; 0xCC; 0x81] end
+    h.assert_false(Compares.equal_bytes(
+      String.from_array(pre), String.from_array(dec)))
+    h.assert_true(Compares.equal_bytes("abc", "abc"))
+
+class \nodoc\ iso _TestEqualCanonical is UnitTest
+  fun name(): String => "equal_canonical: precomposed == decomposed"
+
+  fun apply(h: TestHelper) =>
+    let pre: Array[U8] val = recover val [as U8: 0xC3; 0xA9] end
+    let dec: Array[U8] val = recover val [as U8: 0x65; 0xCC; 0x81] end
+    match Compares.equal_canonical(
+      String.from_array(pre), String.from_array(dec))
+    | let eq: Bool => h.assert_true(eq)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestEqualCanonicalDistinct is UnitTest
+  fun name(): String => "equal_canonical: 'a' != 'b'"
+
+  fun apply(h: TestHelper) =>
+    match Compares.equal_canonical("a", "b")
+    | let eq: Bool => h.assert_false(eq)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestEqualCompat is UnitTest
+  fun name(): String => "equal_compat: ﬁ == 'fi'"
+
+  fun apply(h: TestHelper) =>
+    let fi_lig: Array[U8] val = recover val [as U8: 0xEF; 0xAC; 0x81] end
+    match Compares.equal_compat(String.from_array(fi_lig), "fi")
+    | let eq: Bool => h.assert_true(eq)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestEqualCaseless is UnitTest
+  fun name(): String => "equal_caseless: 'MAße' == 'masse' under fold"
+
+  fun apply(h: TestHelper) =>
+    let mas: Array[U8] val =
+      recover val [as U8: 0x4D; 0x41; 0xC3; 0x9F; 0x65] end  // 'MAße'
+    match Compares.equal_caseless(String.from_array(mas), "masse")
+    | let eq: Bool => h.assert_true(eq)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestEqualCaselessAsciiDistinct is UnitTest
+  fun name(): String => "equal_caseless: 'foo' != 'bar'"
+
+  fun apply(h: TestHelper) =>
+    match Compares.equal_caseless("foo", "bar")
+    | let eq: Bool => h.assert_false(eq)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestEqualCaselessCanonical is UnitTest
+  fun name(): String => "equal_caseless_canonical: 'Café' (pre) == 'CAFE\\u0301' (dec, upper)"
+
+  fun apply(h: TestHelper) =>
+    // 'Café' precomposed: 0x43 0x61 0x66 0xC3 0xA9
+    let a: Array[U8] val =
+      recover val [as U8: 0x43; 0x61; 0x66; 0xC3; 0xA9] end
+    // 'CAFE' + COMBINING ACUTE (0xCC 0x81)
+    let b: Array[U8] val =
+      recover val [as U8: 0x43; 0x41; 0x46; 0x45; 0xCC; 0x81] end
+    match Compares.equal_caseless_canonical(
+      String.from_array(a), String.from_array(b))
+    | let eq: Bool => h.assert_true(eq)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestCompareInvalid is UnitTest
+  fun name(): String => "Compares rejects ill-formed UTF-8"
+
+  fun apply(h: TestHelper) =>
+    let bad = String.from_array(recover val [as U8: 0x41; 0x80] end)
+    match Compares.equal_canonical(bad, "ok")
+    | let _: Bool => h.fail("expected InvalidUtf8")
+    | let e: InvalidUtf8 => h.assert_eq[USize](1, e.offset)
     end
 
 // ---- M6: Case ----
