@@ -20,6 +20,20 @@ actor \nodoc\ Main is TestList
     test(_TestCombiningClass)
     // M1: canonical decomposition table
     test(_TestCanonicalDecomp)
+    // M2: Bytes UTF-8 validation
+    test(_TestBytesAsciiValid)
+    test(_TestBytesUtf8Valid)
+    test(_TestBytesIllFormedAscii)
+    test(_TestBytesOverlong)
+    test(_TestBytesSurrogate)
+    test(_TestBytesTruncated)
+    test(_TestBytesAboveMax)
+    // M2: Text construction
+    test(_TestTextFromStringValid)
+    test(_TestTextFromStringInvalid)
+    test(_TestTextEmpty)
+    test(_TestTextRoundTrip)
+    test(_TestTextFromIsoString)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -152,4 +166,185 @@ class \nodoc\ iso _TestCanonicalDecomp is UnitTest
       h.assert_eq[U32](0x00C5, d(0)?)
     else
       h.fail("expected decomposition for U+212B")
+    end
+
+// ---- M2: Bytes UTF-8 validation ----
+
+class \nodoc\ iso _TestBytesAsciiValid is UnitTest
+  fun name(): String => "Bytes: ASCII is valid UTF-8"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Bytes.is_valid_utf8(""))
+    h.assert_true(Bytes.is_valid_utf8("hello"))
+    h.assert_true(Bytes.is_valid_utf8("0123456789"))
+    h.assert_true(Bytes.is_valid_utf8("!@#$%^&*()"))
+    // Also accepts Array[U8].
+    let ascii: Array[U8] val = recover val [as U8: 0x41; 0x42; 0x43] end
+    h.assert_true(Bytes.is_valid_utf8(ascii))
+
+class \nodoc\ iso _TestBytesUtf8Valid is UnitTest
+  fun name(): String => "Bytes: multi-byte UTF-8 is valid"
+
+  fun apply(h: TestHelper) =>
+    // "café" — e is precomposed (U+00E9 = 0xC3 0xA9)
+    h.assert_true(Bytes.is_valid_utf8("caf\xC3\xA9"))
+    // U+1F600 GRINNING FACE = F0 9F 98 80
+    let emoji: Array[U8] val = recover val [as U8: 0xF0; 0x9F; 0x98; 0x80] end
+    h.assert_true(Bytes.is_valid_utf8(emoji))
+    // U+2603 SNOWMAN = E2 98 83
+    let snowman: Array[U8] val = recover val [as U8: 0xE2; 0x98; 0x83] end
+    h.assert_true(Bytes.is_valid_utf8(snowman))
+
+class \nodoc\ iso _TestBytesIllFormedAscii is UnitTest
+  fun name(): String => "Bytes: stray continuation bytes rejected"
+
+  fun apply(h: TestHelper) =>
+    // 0x80 alone is invalid (continuation without lead).
+    let stray: Array[U8] val = recover val [as U8: 0x80] end
+    h.assert_false(Bytes.is_valid_utf8(stray))
+    match Bytes.first_bad_utf8_offset(stray)
+    | let off: USize => h.assert_eq[USize](0, off)
+    | AllValid => h.fail("expected bad offset, got AllValid")
+    end
+    // ASCII followed by stray continuation.
+    let mid: Array[U8] val = recover val [as U8: 0x41; 0x80] end
+    h.assert_false(Bytes.is_valid_utf8(mid))
+    match Bytes.first_bad_utf8_offset(mid)
+    | let off: USize => h.assert_eq[USize](1, off)
+    | AllValid => h.fail("expected bad offset, got AllValid")
+    end
+
+class \nodoc\ iso _TestBytesOverlong is UnitTest
+  fun name(): String => "Bytes: overlong encodings rejected"
+
+  fun apply(h: TestHelper) =>
+    // 0xC0 0x80 would be overlong NUL — rejected (0xC0 is invalid lead).
+    let overlong2: Array[U8] val = recover val [as U8: 0xC0; 0x80] end
+    h.assert_false(Bytes.is_valid_utf8(overlong2))
+    // 0xE0 0x80 0x80 — overlong 3-byte (b1 must be >= 0xA0 after 0xE0).
+    let overlong3: Array[U8] val = recover val [as U8: 0xE0; 0x80; 0x80] end
+    h.assert_false(Bytes.is_valid_utf8(overlong3))
+    // 0xF0 0x80 0x80 0x80 — overlong 4-byte (b1 must be >= 0x90 after 0xF0).
+    let overlong4: Array[U8] val = recover val [as U8: 0xF0; 0x80; 0x80; 0x80] end
+    h.assert_false(Bytes.is_valid_utf8(overlong4))
+
+class \nodoc\ iso _TestBytesSurrogate is UnitTest
+  fun name(): String => "Bytes: surrogates (U+D800..U+DFFF) rejected"
+
+  fun apply(h: TestHelper) =>
+    // U+D800 would encode as 0xED 0xA0 0x80 — but 0xED requires b1 in
+    // 0x80..0x9F to avoid the surrogate range.
+    let high_surr: Array[U8] val = recover val [as U8: 0xED; 0xA0; 0x80] end
+    h.assert_false(Bytes.is_valid_utf8(high_surr))
+    // U+DFFF: 0xED 0xBF 0xBF — same rejection.
+    let low_surr: Array[U8] val = recover val [as U8: 0xED; 0xBF; 0xBF] end
+    h.assert_false(Bytes.is_valid_utf8(low_surr))
+    // U+D7FF (just below surrogate range) — VALID: 0xED 0x9F 0xBF.
+    let pre_surr: Array[U8] val = recover val [as U8: 0xED; 0x9F; 0xBF] end
+    h.assert_true(Bytes.is_valid_utf8(pre_surr))
+
+class \nodoc\ iso _TestBytesTruncated is UnitTest
+  fun name(): String => "Bytes: truncated sequences rejected"
+
+  fun apply(h: TestHelper) =>
+    // 0xC2 alone — needs one continuation byte.
+    let trunc2: Array[U8] val = recover val [as U8: 0xC2] end
+    h.assert_false(Bytes.is_valid_utf8(trunc2))
+    // 0xE2 0x98 — needs one more continuation.
+    let trunc3: Array[U8] val = recover val [as U8: 0xE2; 0x98] end
+    h.assert_false(Bytes.is_valid_utf8(trunc3))
+    // 0xF0 0x9F 0x98 — needs one more continuation.
+    let trunc4: Array[U8] val = recover val [as U8: 0xF0; 0x9F; 0x98] end
+    h.assert_false(Bytes.is_valid_utf8(trunc4))
+
+class \nodoc\ iso _TestBytesAboveMax is UnitTest
+  fun name(): String => "Bytes: codepoints above U+10FFFF rejected"
+
+  fun apply(h: TestHelper) =>
+    // 0xF4 0x90 0x80 0x80 = U+110000 (one past the max).
+    let above: Array[U8] val = recover val [as U8: 0xF4; 0x90; 0x80; 0x80] end
+    h.assert_false(Bytes.is_valid_utf8(above))
+    // Invalid lead bytes (would encode codepoints way above U+10FFFF).
+    let invalid_lead: Array[U8] val = recover val [as U8: 0xF5; 0x80; 0x80; 0x80] end
+    h.assert_false(Bytes.is_valid_utf8(invalid_lead))
+    let invalid_lead2: Array[U8] val = recover val [as U8: 0xFF] end
+    h.assert_false(Bytes.is_valid_utf8(invalid_lead2))
+
+// ---- M2: Text construction ----
+
+class \nodoc\ iso _TestTextFromStringValid is UnitTest
+  fun name(): String => "Text.from_string accepts valid UTF-8"
+
+  fun apply(h: TestHelper) =>
+    try
+      let t = Text.from_string("hello")?
+      h.assert_eq[USize](5, t.size_bytes())
+    else
+      h.fail("Text.from_string raised on valid ASCII")
+    end
+    // For multi-byte UTF-8 use Text.from_array so we can specify raw bytes.
+    // Pony's `\xNN` in String literals is a Unicode codepoint escape — high
+    // bytes get UTF-8-encoded — so a String literal can't carry arbitrary
+    // bytes.
+    // "café" precomposed UTF-8: 63 61 66 C3 A9 = 5 bytes.
+    let bytes: Array[U8] val =
+      recover val [as U8: 0x63; 0x61; 0x66; 0xC3; 0xA9] end
+    try
+      let t = Text.from_array(bytes)?
+      h.assert_eq[USize](5, t.size_bytes())
+    else
+      h.fail("Text.from_array raised on valid multi-byte UTF-8")
+    end
+
+class \nodoc\ iso _TestTextFromStringInvalid is UnitTest
+  fun name(): String => "Text constructors raise on invalid UTF-8"
+
+  fun apply(h: TestHelper) =>
+    // Use Array[U8] val for raw bytes; String literals can't carry
+    // ill-formed UTF-8 directly (see _TestTextFromStringValid above).
+    // 0x80 is a stray continuation byte.
+    let bad: Array[U8] val =
+      recover val [as U8: 0x67; 0x6F; 0x6F; 0x64; 0x80; 0x62; 0x61; 0x64] end
+    let raised =
+      try
+        Text.from_array(bad)?
+        false
+      else
+        true
+      end
+    h.assert_true(raised)
+
+class \nodoc\ iso _TestTextEmpty is UnitTest
+  fun name(): String => "Text.create produces an empty Text"
+
+  fun apply(h: TestHelper) =>
+    let t: Text val = Text.create()
+    h.assert_eq[USize](0, t.size_bytes())
+    // Capacity hint compiles and runs.
+    let t2: Text val = Text.create(128)
+    h.assert_eq[USize](0, t2.size_bytes())
+
+class \nodoc\ iso _TestTextRoundTrip is UnitTest
+  fun name(): String => "Text.utf8_bytes round-trips through from_string"
+
+  fun apply(h: TestHelper) =>
+    let original: String val = "hello world"
+    try
+      let t = Text.from_string(original)?
+      let bytes = t.utf8_bytes()
+      h.assert_eq[String](original, consume bytes)
+    else
+      h.fail("Text.from_string raised on valid input")
+    end
+
+class \nodoc\ iso _TestTextFromIsoString is UnitTest
+  fun name(): String => "Text.from_iso_string adopts an iso String"
+
+  fun apply(h: TestHelper) =>
+    let raw: String iso = recover iso String.create() .> append("hello iso") end
+    try
+      let t = Text.from_iso_string(consume raw)?
+      h.assert_eq[USize](9, t.size_bytes())
+    else
+      h.fail("Text.from_iso_string raised on valid input")
     end
