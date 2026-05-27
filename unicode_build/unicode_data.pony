@@ -1,5 +1,3 @@
-use "../unicode"
-
 // UnicodeData.txt parser.
 //
 // Each non-comment line has 15 semicolon-separated fields (UAX #44 §5.7.1):
@@ -22,6 +20,10 @@ use "../unicode"
 // matching `<...Last>` line giving the range end. All codepoints in the
 // range share the start entry's category/CCC/etc., but have synthesized
 // names (e.g., `CJK UNIFIED IDEOGRAPH-XXXX`).
+//
+// This package keeps category as a byte (per `CategoryCodes.to_byte`)
+// rather than as a runtime `Category` primitive, so unicode-build has
+// no dependency on the runtime `unicode` package.
 
 class val UnicodeDataEntry
   """
@@ -33,17 +35,20 @@ class val UnicodeDataEntry
   `"<CJK Ideograph, First>"`; for non-range entries it is the canonical
   name. Callers that want the synthesized name for a specific codepoint
   in a range derive it themselves.
+
+  `category` is the byte encoding per `CategoryCodes.to_byte` — kept as
+  a byte rather than a runtime `Category` primitive so this package has
+  no dependency on the runtime `unicode` package.
   """
   let codepoint:        U32
   let range_end:        U32
   let name:             String val
-  let category:         Category
+  let category:         U8
   let combining_class:  U8
   let simple_upper:     (U32 | None)
   let simple_lower:     (U32 | None)
   let simple_title:     (U32 | None)
-  // Decomposition: empty if none. First element is a compatibility tag
-  // codepoint sentinel (0 for canonical, else U32 encoding of "<font>" etc.).
+  // Decomposition: empty if none. Variable-length codepoint sequence.
   let decomposition:    Array[U32] val
   let is_compat_decomp: Bool
 
@@ -51,7 +56,7 @@ class val UnicodeDataEntry
     codepoint': U32,
     range_end': U32,
     name': String val,
-    category': Category,
+    category': U8,
     combining_class': U8,
     simple_upper': (U32 | None),
     simple_lower': (U32 | None),
@@ -86,7 +91,11 @@ primitive UnicodeDataParser
 
     let cp = UcdLine.parse_codepoint(f(0)?)?
     let name = f(1)?
-    let cat = _parse_category(f(2)?)?
+    let cat =
+      match CategoryCodes.to_byte(f(2)?)
+      | let b: U8 => b
+      else error
+      end
     let ccc =
       try U8.from[USize](_parse_decimal(f(3)?)?) else 0 end
     let upper = _parse_optional_cp(f(12)?)
@@ -96,13 +105,6 @@ primitive UnicodeDataParser
 
     UnicodeDataEntry(cp, cp, name, cat, ccc, upper, lower, title, decomp,
       is_compat)
-
-  fun _parse_category(s: String box): Category ? =>
-    match Categories.from_iso(s)
-    | let c: Category => c
-    else
-      error
-    end
 
   fun _parse_decimal(s: String box): USize ? =>
     var acc: USize = 0

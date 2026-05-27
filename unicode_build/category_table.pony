@@ -1,15 +1,30 @@
-use "../unicode"
-
 // General Category table generator.
 //
-// Emits a sorted array of (range_start, range_end, category) entries plus
-// a binary-search lookup function. This is the simplest layout that still
-// performs well: the table for Unicode 16 is ~3000 ranges, so binary
-// search costs ~12 comparisons per lookup with predictable branches.
+// Layout:
+//   The table is a single `String val` literal of ASCII hex pairs —
+//   each byte of underlying data is two ASCII hex characters. Each
+//   9-byte record (18 ASCII chars) is:
+//     chars 0..7   : range_lo (little-endian U32, 8 hex chars = 4 bytes)
+//     chars 8..15  : range_hi (little-endian U32, 8 hex chars = 4 bytes)
+//     chars 16..17 : category index (2 hex chars = 1 byte)
 //
-// A more compact two-stage radix layout is in scope for a later
-// optimization pass; the API is `_UcdCategory.of(cp)` regardless of
-// storage shape, so callers don't see the difference.
+// Why ASCII hex pairs (not `\xNN` escapes, not `Array[U8]` literal):
+//
+//   * `\xNN` in Pony String literals is a Unicode codepoint escape — values
+//     above 0x7F get UTF-8 encoded (e.g., `\x80` becomes the two bytes
+//     `0xC2 0x80`). This corrupts a raw-byte table.
+//
+//   * `Array[U8]` literals create one AST node per element. For a
+//     ~3000-entry × 9-byte = 27000-byte table that means ~27000 AST
+//     nodes, which sends ponyc into a multi-hour typechecking spin.
+//
+//   ASCII hex pairs sidestep both problems: the string contains only
+//   printable ASCII (no UTF-8 encoding), and it's a single literal
+//   (one AST node). Compile is fast; runtime decodes pairs on the fly.
+//
+// Lookup:
+//   Binary search over the implicit record array, with each iteration
+//   reading the relevant hex pairs and parsing them. O(log n).
 
 primitive CategoryTableEmitter
   fun emit(entries: ReadSeq[UnicodeDataEntry val] box): String iso^ =>
@@ -24,25 +39,39 @@ primitive CategoryTableEmitter
       out.append("//   make ucd-generate\n")
       out.append("//\n")
       out.append("// Source: UnicodeData.txt General_Category field.\n")
-      out.append("// Format: sorted Array[(U32, U32, Category) val] val —\n")
-      out.append("// (range_lo, range_hi inclusive, category). Lookup is binary\n")
-      out.append("// search. Codepoints outside any range default to Cn.\n\n")
+      out.append("// Format: packed String val of 9-byte records — bytes 0..3\n")
+      out.append("// are range_lo (LE U32), bytes 4..7 are range_hi (LE U32),\n")
+      out.append("// byte 8 is the category index (per Categories._from_byte).\n")
+      out.append("// Lookup is binary search; codepoints outside any range default\n")
+      out.append("// to Cn. See unicode_build/category_table.pony for the layout\n")
+      out.append("// rationale.\n\n")
 
       out.append("primitive _UcdCategory\n")
       out.append("  fun of(cp: U32): Category =>\n")
       out.append("    let t = _table()\n")
       out.append("    var lo: USize = 0\n")
-      out.append("    var hi: USize = t.size()\n")
+      out.append("    var hi: USize = t.size() / 18\n")
       out.append("    while lo < hi do\n")
       out.append("      let mid = lo + ((hi - lo) / 2)\n")
+      out.append("      let base = mid * 18\n")
       out.append("      try\n")
-      out.append("        (let range_lo, let range_hi, let cat) = t(mid)?\n")
+      out.append("        // Each U32 is 4 LE bytes = 8 hex chars.\n")
+      out.append("        let range_lo: U32 =\n")
+      out.append("          _hex_byte(t, base)?\n")
+      out.append("            or (_hex_byte(t, base + 2)? << 8)\n")
+      out.append("            or (_hex_byte(t, base + 4)? << 16)\n")
+      out.append("            or (_hex_byte(t, base + 6)? << 24)\n")
+      out.append("        let range_hi: U32 =\n")
+      out.append("          _hex_byte(t, base + 8)?\n")
+      out.append("            or (_hex_byte(t, base + 10)? << 8)\n")
+      out.append("            or (_hex_byte(t, base + 12)? << 16)\n")
+      out.append("            or (_hex_byte(t, base + 14)? << 24)\n")
       out.append("        if cp < range_lo then\n")
       out.append("          hi = mid\n")
       out.append("        elseif cp > range_hi then\n")
       out.append("          lo = mid + 1\n")
       out.append("        else\n")
-      out.append("          return cat\n")
+      out.append("          return Categories._from_byte(U8.from[U32](_hex_byte(t, base + 16)?))\n")
       out.append("        end\n")
       out.append("      else\n")
       out.append("        return Cn\n")
@@ -50,39 +79,64 @@ primitive CategoryTableEmitter
       out.append("    end\n")
       out.append("    Cn\n\n")
 
-      out.append("  fun _table(): Array[(U32, U32, Category)] val =>\n")
-      out.append("    [as (U32, U32, Category):\n")
+      out.append("  fun _hex_byte(s: String val, offset: USize): U32 ? =>\n")
+      out.append("    \"\"\"\n")
+      out.append("    Decode two ASCII hex digits at `offset` into a U32 (0..255).\n")
+      out.append("    Raises on out-of-range or non-hex input.\n")
+      out.append("    \"\"\"\n")
+      out.append("    (_hex_digit(s(offset)?)? << 4) or _hex_digit(s(offset + 1)?)?\n\n")
+
+      out.append("  fun _hex_digit(c: U8): U32 ? =>\n")
+      out.append("    if (c >= '0') and (c <= '9') then U32.from[U8](c - '0')\n")
+      out.append("    elseif (c >= 'A') and (c <= 'F') then U32.from[U8]((c - 'A') + 10)\n")
+      out.append("    elseif (c >= 'a') and (c <= 'f') then U32.from[U8]((c - 'a') + 10)\n")
+      out.append("    else error\n")
+      out.append("    end\n\n")
+
+      out.append("  fun _table(): String val =>\n")
+      out.append("    \"")
       for entry in ranges.values() do
-        out.append("      (0x")
-        out.append(_hex(entry._1))
-        out.append(", 0x")
-        out.append(_hex(entry._2))
-        out.append(", ")
-        out.append(_category_code(entry._3))
-        out.append(")\n")
+        _emit_le_u32(out, entry._1)
+        _emit_le_u32(out, entry._2)
+        _emit_byte(out, entry._3)
       end
-      out.append("    ]\n")
+      out.append("\"\n")
 
       out
     end
 
+  fun _emit_le_u32(out: String ref, value: U32) =>
+    _emit_byte(out, U8.from[U32](value and 0xFF))
+    _emit_byte(out, U8.from[U32]((value >> 8) and 0xFF))
+    _emit_byte(out, U8.from[U32]((value >> 16) and 0xFF))
+    _emit_byte(out, U8.from[U32]((value >> 24) and 0xFF))
+
+  fun _emit_byte(out: String ref, b: U8) =>
+    """
+    Append two ASCII hex digits for `b`. The string literal stays in
+    printable ASCII so it sidesteps Pony's UTF-8-encoding `\xNN` rule.
+    """
+    let digits = "0123456789ABCDEF"
+    try out.push(digits(USize.from[U8](b >> 4))?) end
+    try out.push(digits(USize.from[U8](b and 0xF))?) end
+
   fun _coalesce_ranges(
     entries: ReadSeq[UnicodeDataEntry val] box)
-    : Array[(U32, U32, Category)] val
+    : Array[(U32, U32, U8)] val
   =>
     """
     Collapse consecutive single-codepoint entries with the same category
     into ranges. Multi-codepoint range entries (CJK Ideograph blocks, etc.)
-    pass through unchanged.
+    pass through unchanged. Returns (range_lo, range_hi, category_byte).
     """
-    let out = recover trn Array[(U32, U32, Category)] end
+    let out = recover trn Array[(U32, U32, U8)] end
     var cur_lo: U32 = 0
     var cur_hi: U32 = 0
-    var cur_cat: Category = Cn
+    var cur_cat: U8 = 29  // Cn
     var have_cur: Bool = false
 
     for e in entries.values() do
-      if have_cur and (e.codepoint == (cur_hi + 1)) and (e.category is cur_cat)
+      if have_cur and (e.codepoint == (cur_hi + 1)) and (e.category == cur_cat)
         and (e.codepoint == e.range_end)
       then
         cur_hi = e.codepoint
@@ -100,35 +154,3 @@ primitive CategoryTableEmitter
       out.push((cur_lo, cur_hi, cur_cat))
     end
     consume out
-
-  fun _hex(value: U32): String iso^ =>
-    """
-    Format `value` as uppercase hex (no `0x` prefix, no padding).
-    """
-    if value == 0 then return "0".clone() end
-    let digits = "0123456789ABCDEF"
-    var v = value
-    let tmp = recover ref Array[U8](8) end
-    while v > 0 do
-      try tmp.push(digits(USize.from[U32](v and 0xF))?) end
-      v = v >> 4
-    end
-    let out = recover iso String(tmp.size()) end
-    var i = tmp.size()
-    while i > 0 do
-      try out.push(tmp(i - 1)?) end
-      i = i - 1
-    end
-    consume out
-
-  fun _category_code(c: Category): String val =>
-    match c
-    | Lu => "Lu" | Ll => "Ll" | Lt => "Lt" | Lm => "Lm" | Lo => "Lo"
-    | Mn => "Mn" | Mc => "Mc" | Me => "Me"
-    | Nd => "Nd" | Nl => "Nl" | No => "No"
-    | Pc => "Pc" | Pd => "Pd" | Ps => "Ps" | Pe => "Pe"
-    | Pi => "Pi" | Pf => "Pf" | Po => "Po"
-    | Sm => "Sm" | Sc => "Sc" | Sk => "Sk" | So => "So"
-    | Zs => "Zs" | Zl => "Zl" | Zp => "Zp"
-    | Cc => "Cc" | Cf => "Cf" | Cs => "Cs" | Co => "Co" | Cn => "Cn"
-    end
