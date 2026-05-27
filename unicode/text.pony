@@ -123,7 +123,7 @@ class Text
     For zero-allocation iteration on large texts, use
     `grapheme_ranges()`.
     """
-    _GraphemeSliceIterator(_utf8)
+    Graphemes._iter(_utf8)
 
   fun box grapheme_ranges(): Iterator[(USize, USize)] =>
     """
@@ -131,7 +131,7 @@ class Text
     pairs. No per-yield allocation. Pair with `utf8_bytes()` to
     materialize specific clusters lazily.
     """
-    _GraphemeRangeIterator(_utf8)
+    Graphemes._ranges(_utf8)
 
   fun box size_graphemes(): USize =>
     """
@@ -140,14 +140,7 @@ class Text
     """
     match _index
     | let idx: _TextIndex val => idx.grapheme_count()
-    | None =>
-      var n: USize = 0
-      let it = _GraphemeRangeIterator(_utf8)
-      while it.has_next() do
-        try it.next()? end
-        n = n + 1
-      end
-      n
+    | None => Graphemes._count(_utf8)
     end
 
   fun box size_codepoints(): USize =>

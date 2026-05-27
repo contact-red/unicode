@@ -80,6 +80,11 @@ actor \nodoc\ Main is TestList
     test(_TestSliceOutOfRange)
     test(_TestCodepointByteIndex)
     test(_TestGraphemeByteIndex)
+    // M4f: Graphemes topical primitive
+    test(_TestGraphemesCount)
+    test(_TestGraphemesCountInvalid)
+    test(_TestGraphemesRanges)
+    test(_TestGraphemesIter)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -1132,6 +1137,70 @@ class \nodoc\ iso _TestCodepointByteIndex is UnitTest
       h.assert_eq[USize](7, b3.value())
     else
       h.fail("setup raised")
+    end
+
+// ---- M4f: Graphemes topical primitive ----
+
+class \nodoc\ iso _TestGraphemesCount is UnitTest
+  fun name(): String => "Graphemes.count validates and counts"
+
+  fun apply(h: TestHelper) =>
+    // "Hé🇨🇦" = 11 bytes, 3 graphemes
+    let bytes: Array[U8] val = recover val [as U8:
+      0x48; 0xC3; 0xA9; 0xF0; 0x9F; 0x87; 0xA8
+      0xF0; 0x9F; 0x87; 0xA6] end
+    let s = String.from_array(bytes)
+    match Graphemes.count(s)
+    | let n: USize => h.assert_eq[USize](3, n)
+    | let _: InvalidUtf8 => h.fail("expected USize, got InvalidUtf8")
+    end
+
+class \nodoc\ iso _TestGraphemesCountInvalid is UnitTest
+  fun name(): String => "Graphemes.count rejects ill-formed UTF-8"
+
+  fun apply(h: TestHelper) =>
+    // lone continuation 0x80
+    let s = String.from_array(recover val [as U8: 0x41; 0x80; 0x41] end)
+    match Graphemes.count(s)
+    | let _: USize => h.fail("expected InvalidUtf8")
+    | let e: InvalidUtf8 => h.assert_eq[USize](1, e.offset)
+    end
+
+class \nodoc\ iso _TestGraphemesRanges is UnitTest
+  fun name(): String => "Graphemes.ranges yields cluster byte ranges"
+
+  fun apply(h: TestHelper) =>
+    // "🇨🇦" — single cluster, 8 bytes
+    let bytes: Array[U8] val = recover val [as U8:
+      0xF0; 0x9F; 0x87; 0xA8; 0xF0; 0x9F; 0x87; 0xA6] end
+    let s = String.from_array(bytes)
+    match Graphemes.ranges(s)
+    | let it: Iterator[(USize, USize)] =>
+      let collected = recover trn Array[(USize, USize)] end
+      for r in it do collected.push(r) end
+      h.assert_eq[USize](1, collected.size())
+      try
+        (let st, let fi) = collected(0)?
+        h.assert_eq[USize](0, st)
+        h.assert_eq[USize](8, fi)
+      else
+        h.fail("collected access raised")
+      end
+    | let _: InvalidUtf8 => h.fail("expected iterator")
+    end
+
+class \nodoc\ iso _TestGraphemesIter is UnitTest
+  fun name(): String => "Graphemes.iter yields val slices"
+
+  fun apply(h: TestHelper) =>
+    let s: String val = "abc"
+    match Graphemes.iter(s)
+    | let it: Iterator[String val] =>
+      let collected = recover trn Array[String val] end
+      for g in it do collected.push(g) end
+      h.assert_eq[USize](3, collected.size())
+      try h.assert_eq[String]("b", collected(1)?) end
+    | let _: InvalidUtf8 => h.fail("expected iterator")
     end
 
 class \nodoc\ iso _TestGraphemeByteIndex is UnitTest
