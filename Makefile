@@ -44,7 +44,9 @@ PONYC := $(PONYC) $(LINKER)
 
 SOURCE_FILES := $(shell find $(SRC_DIR) -name '*.pony')
 
-ci: unit-tests
+all: ci
+
+ci: unit-tests conform
 
 test: unit-tests
 
@@ -75,6 +77,8 @@ dependencies: corral.json
 	$(GET_DEPENDENCIES_WITH)
 
 .PHONY: all ci test unit-tests clean realclean dependencies docs ucd-build ucd-generate ucd-download conform conform-build
+
+.DEFAULT_GOAL := all
 
 # ---------- UCD codegen ----------
 # unicode-build is a separate Pony tool that reads UCD source files and
