@@ -23,6 +23,28 @@ class val InvalidUtf8 is Stringable
     s.append(offset.string())
     s
 
+class val OutOfRange is Stringable
+  """
+  Returned by Text indexing operations when the requested index is past
+  the end of the Text in its unit (bytes / codepoints / graphemes).
+  Carries the requested index and the actual size for diagnostics.
+  """
+  let index: USize
+  let size:  USize
+
+  new val create(index': USize, size': USize) =>
+    index = index'
+    size = size'
+
+  fun string(): String iso^ =>
+    let s = recover iso String(48) end
+    s.append("OutOfRange: index ")
+    s.append(index.string())
+    s.append(" out of [0, ")
+    s.append(size.string())
+    s.append(")")
+    s
+
 class val InvalidScalar is Stringable
   """
   Returned by `Codepoints.from_u32(u)` for U32 values that don't name

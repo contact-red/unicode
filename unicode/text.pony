@@ -122,3 +122,99 @@ class Text
       n = n + 1
     end
     n
+
+  fun box size_codepoints(): USize =>
+    """
+    Number of Unicode codepoints in this Text. O(n) — walks the UTF-8
+    bytes counting codepoint starts. M4d will provide O(1) on indexed
+    Text via the cached count.
+    """
+    Codepoints._count(_utf8)
+
+  // ============================================================
+  // Index construction (range-checked)
+  // ============================================================
+
+  fun box byte_index(n: USize): (ByteIndex | OutOfRange) =>
+    """
+    Construct a `ByteIndex` pointing at byte position `n` (or the
+    one-past-end position `size_bytes()`). Returns `OutOfRange` for
+    values larger than `size_bytes()`.
+    """
+    if n <= _utf8.size() then Index[_ByteIdx]._raw(n)
+    else OutOfRange(n, _utf8.size())
+    end
+
+  fun box codepoint_index(n: USize): (CodepointIndex | OutOfRange) =>
+    """
+    Construct a `CodepointIndex` pointing at the n-th codepoint (or
+    the one-past-end position). Range-checked against
+    `size_codepoints()` — O(n) until M4d's indexed Text caches the
+    count.
+    """
+    let count = size_codepoints()
+    if n <= count then Index[_CodepointIdx]._raw(n)
+    else OutOfRange(n, count)
+    end
+
+  fun box grapheme_index(n: USize): (GraphemeIndex | OutOfRange) =>
+    """
+    Construct a `GraphemeIndex` pointing at the n-th grapheme cluster
+    (or the one-past-end position). Range-checked against
+    `size_graphemes()`.
+    """
+    let count = size_graphemes()
+    if n <= count then Index[_GraphemeIdx]._raw(n)
+    else OutOfRange(n, count)
+    end
+
+  // ============================================================
+  // Indexing — argument kind enforces correctness at compile time
+  // ============================================================
+
+  fun box byte_at(i: ByteIndex): (U8 | OutOfRange) =>
+    """
+    The raw UTF-8 byte at position `i`. Returns `OutOfRange` if `i`
+    is at or past the end.
+    """
+    let n = i.value()
+    if n >= _utf8.size() then OutOfRange(n, _utf8.size())
+    else
+      try _utf8(n)? else OutOfRange(n, _utf8.size()) end
+    end
+
+  fun box codepoint_at(i: CodepointIndex): (Codepoint val | OutOfRange) =>
+    """
+    The `Codepoint val` at position `i`. Walks the UTF-8 bytes from
+    the start; O(n) until M4d adds an indexed fast path.
+    """
+    let target = i.value()
+    var n: USize = 0
+    for u in _utf8.runes() do
+      if n == target then
+        return Codepoint._create(u)
+      end
+      n = n + 1
+    end
+    OutOfRange(target, n)
+
+  fun val grapheme_at(i: GraphemeIndex): (String val | OutOfRange) =>
+    """
+    The grapheme cluster at position `i`, returned as a `String val`
+    slice of the underlying UTF-8 buffer (zero byte-copy). Walks the
+    bytes; O(n) until M4d. Receiver is `val` because the returned
+    slice shares the val view of `_utf8`.
+    """
+    let target = i.value()
+    var n: USize = 0
+    let it = _GraphemeRangeIterator(_utf8)
+    while it.has_next() do
+      try
+        (let start, let finish) = it.next()?
+        if n == target then
+          return _utf8.trim(start, finish)
+        end
+        n = n + 1
+      end
+    end
+    OutOfRange(target, n)
