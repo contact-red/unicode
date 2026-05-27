@@ -126,6 +126,27 @@ actor \nodoc\ Main is TestList
     test(_TestNameLatin)
     test(_TestNameControl)
     test(_TestFromName)
+    // M8: Search
+    test(_TestSearchContains)
+    test(_TestSearchStartsEnds)
+    test(_TestSearchIndexOf)
+    test(_TestSearchCount)
+    test(_TestSearchInvalid)
+    // M8: Split
+    test(_TestSplitBasic)
+    test(_TestSplitAdjacent)
+    test(_TestSplitMultibyteSep)
+    test(_TestSplitLines)
+    // M8: Trim
+    test(_TestTrimBasic)
+    test(_TestTrimStartEnd)
+    test(_TestTrimUnicodeWhitespace)
+    test(_TestTrimAllWhitespace)
+    // M8: Replace
+    test(_TestReplaceAll)
+    test(_TestReplaceFirst)
+    test(_TestReplaceLengthChange)
+    test(_TestReplaceNotFound)
     // M7: Compare
     test(_TestCompareBytes)
     test(_TestEqualBytes)
@@ -1211,6 +1232,235 @@ class \nodoc\ iso _TestCodepointByteIndex is UnitTest
       h.assert_eq[USize](7, b3.value())
     else
       h.fail("setup raised")
+    end
+
+// ---- M8: Search ----
+
+class \nodoc\ iso _TestSearchContains is UnitTest
+  fun name(): String => "Search.contains: present and absent"
+
+  fun apply(h: TestHelper) =>
+    match Search.contains("hello world", "world")
+    | let b: Bool => h.assert_true(b)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+    match Search.contains("hello world", "xyz")
+    | let b: Bool => h.assert_false(b)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+    match Search.contains("hello", "")
+    | let b: Bool => h.assert_true(b)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestSearchStartsEnds is UnitTest
+  fun name(): String => "Search.starts_with / ends_with"
+
+  fun apply(h: TestHelper) =>
+    match Search.starts_with("hello world", "hello")
+    | let b: Bool => h.assert_true(b)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+    match Search.starts_with("hello world", "world")
+    | let b: Bool => h.assert_false(b)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+    match Search.ends_with("hello world", "world")
+    | let b: Bool => h.assert_true(b)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+    match Search.ends_with("hello world", "hello")
+    | let b: Bool => h.assert_false(b)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestSearchIndexOf is UnitTest
+  fun name(): String => "Search.index_of / last_index_of"
+
+  fun apply(h: TestHelper) =>
+    match Search.index_of("hello world hello", "hello")
+    | let i: USize => h.assert_eq[USize](0, i)
+    | None => h.fail("expected 0")
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+    match Search.last_index_of("hello world hello", "hello")
+    | let i: USize => h.assert_eq[USize](12, i)
+    | None => h.fail("expected 12")
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+    match Search.index_of("hello", "xyz")
+    | None => None
+    | let _: USize => h.fail("expected None")
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestSearchCount is UnitTest
+  fun name(): String => "Search.count: non-overlapping"
+
+  fun apply(h: TestHelper) =>
+    match Search.count("aaaa", "aa")
+    | let n: USize => h.assert_eq[USize](2, n)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+    match Search.count("hello hello hello", "hello")
+    | let n: USize => h.assert_eq[USize](3, n)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestSearchInvalid is UnitTest
+  fun name(): String => "Search rejects ill-formed UTF-8"
+
+  fun apply(h: TestHelper) =>
+    let bad = String.from_array(recover val [as U8: 0x41; 0x80] end)
+    match Search.contains(bad, "ok")
+    | let _: Bool => h.fail("expected InvalidUtf8")
+    | let e: InvalidUtf8 => h.assert_eq[USize](1, e.offset)
+    end
+
+// ---- M8: Split ----
+
+class \nodoc\ iso _TestSplitBasic is UnitTest
+  fun name(): String => "Split.on: basic comma split"
+
+  fun apply(h: TestHelper) =>
+    match Split.on("a,b,c", ",")
+    | let parts: Array[String val] val =>
+      h.assert_eq[USize](3, parts.size())
+      try h.assert_eq[String]("a", parts(0)?) end
+      try h.assert_eq[String]("b", parts(1)?) end
+      try h.assert_eq[String]("c", parts(2)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestSplitAdjacent is UnitTest
+  fun name(): String => "Split.on: adjacent separators yield empty parts"
+
+  fun apply(h: TestHelper) =>
+    match Split.on("a,,b", ",")
+    | let parts: Array[String val] val =>
+      h.assert_eq[USize](3, parts.size())
+      try h.assert_eq[String]("a", parts(0)?) end
+      try h.assert_eq[String]("", parts(1)?) end
+      try h.assert_eq[String]("b", parts(2)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestSplitMultibyteSep is UnitTest
+  fun name(): String => "Split.on: multi-byte separator"
+
+  fun apply(h: TestHelper) =>
+    // separator is "→" U+2192 (E2 86 92 in UTF-8)
+    let arrow: Array[U8] val = recover val [as U8: 0xE2; 0x86; 0x92] end
+    let sep_s = String.from_array(arrow)
+    let arr2: Array[U8] val = recover val [as U8:
+      0x61; 0xE2; 0x86; 0x92; 0x62; 0xE2; 0x86; 0x92; 0x63] end
+    match Split.on(String.from_array(arr2), sep_s)
+    | let parts: Array[String val] val =>
+      h.assert_eq[USize](3, parts.size())
+      try h.assert_eq[String]("a", parts(0)?) end
+      try h.assert_eq[String]("c", parts(2)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestSplitLines is UnitTest
+  fun name(): String => "Split.lines: handles \\n / \\r / \\r\\n"
+
+  fun apply(h: TestHelper) =>
+    match Split.lines("a\nb\r\nc\rd")
+    | let parts: Array[String val] val =>
+      h.assert_eq[USize](4, parts.size())
+      try h.assert_eq[String]("a", parts(0)?) end
+      try h.assert_eq[String]("b", parts(1)?) end
+      try h.assert_eq[String]("c", parts(2)?) end
+      try h.assert_eq[String]("d", parts(3)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+// ---- M8: Trim ----
+
+class \nodoc\ iso _TestTrimBasic is UnitTest
+  fun name(): String => "Trim.trim: ASCII whitespace"
+
+  fun apply(h: TestHelper) =>
+    match Trim.trim("  hello world  ")
+    | let s: String iso => h.assert_eq[String]("hello world", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestTrimStartEnd is UnitTest
+  fun name(): String => "Trim.trim_start / trim_end"
+
+  fun apply(h: TestHelper) =>
+    match Trim.trim_start("  hello  ")
+    | let s: String iso => h.assert_eq[String]("hello  ", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+    match Trim.trim_end("  hello  ")
+    | let s: String iso => h.assert_eq[String]("  hello", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestTrimUnicodeWhitespace is UnitTest
+  fun name(): String => "Trim: NBSP (U+00A0) is whitespace"
+
+  fun apply(h: TestHelper) =>
+    // NBSP = 0xC2 0xA0
+    let inp: Array[U8] val =
+      recover val [as U8: 0xC2; 0xA0; 0x68; 0x69; 0xC2; 0xA0] end
+    match Trim.trim(String.from_array(inp))
+    | let s: String iso => h.assert_eq[String]("hi", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestTrimAllWhitespace is UnitTest
+  fun name(): String => "Trim: all whitespace yields empty"
+
+  fun apply(h: TestHelper) =>
+    match Trim.trim("   \t\n\r  ")
+    | let s: String iso => h.assert_eq[String]("", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+// ---- M8: Replace ----
+
+class \nodoc\ iso _TestReplaceAll is UnitTest
+  fun name(): String => "Replace.all: substitute every match"
+
+  fun apply(h: TestHelper) =>
+    match Replace.all("foo bar foo baz", "foo", "qux")
+    | let s: String iso => h.assert_eq[String]("qux bar qux baz", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestReplaceFirst is UnitTest
+  fun name(): String => "Replace.first: substitute only the first match"
+
+  fun apply(h: TestHelper) =>
+    match Replace.first("foo bar foo baz", "foo", "qux")
+    | let s: String iso => h.assert_eq[String]("qux bar foo baz", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestReplaceLengthChange is UnitTest
+  fun name(): String => "Replace: replacement shorter/longer than needle"
+
+  fun apply(h: TestHelper) =>
+    match Replace.all("aaaa", "a", "bbb")
+    | let s: String iso => h.assert_eq[String]("bbbbbbbbbbbb", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+    match Replace.all("xxxxxx", "xx", "")
+    | let s: String iso => h.assert_eq[String]("", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestReplaceNotFound is UnitTest
+  fun name(): String => "Replace: needle absent returns clone"
+
+  fun apply(h: TestHelper) =>
+    match Replace.all("hello", "xyz", "abc")
+    | let s: String iso => h.assert_eq[String]("hello", consume s)
+    | let _: InvalidUtf8 => h.fail("rejected")
     end
 
 // ---- M7: Compare ----
