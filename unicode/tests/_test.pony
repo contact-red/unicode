@@ -34,6 +34,19 @@ actor \nodoc\ Main is TestList
     test(_TestTextEmpty)
     test(_TestTextRoundTrip)
     test(_TestTextFromIsoString)
+    // M3: Codepoint class + Codepoints factory/predicates/string-ops
+    test(_TestCodepointsIsScalar)
+    test(_TestCodepointsFromU32)
+    test(_TestCodepointsIsLetter)
+    test(_TestCodepointsIsDigit)
+    test(_TestCodepointsIsWhitespace)
+    test(_TestCodepointsIsAssigned)
+    test(_TestCodepointClassMethods)
+    test(_TestCodepointEquality)
+    test(_TestCodepointString)
+    test(_TestCodepointsStringCount)
+    test(_TestCodepointsStringIsAll)
+    test(_TestCodepointsStringInvalid)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -347,4 +360,221 @@ class \nodoc\ iso _TestTextFromIsoString is UnitTest
       h.assert_eq[USize](9, t.size_bytes())
     else
       h.fail("Text.from_iso_string raised on valid input")
+    end
+
+// ---- M3: Codepoint class + Codepoints primitive ----
+
+class \nodoc\ iso _TestCodepointsIsScalar is UnitTest
+  fun name(): String => "Codepoints.is_scalar"
+
+  fun apply(h: TestHelper) =>
+    // Valid scalar values
+    h.assert_true(Codepoints.is_scalar(0))
+    h.assert_true(Codepoints.is_scalar(0x41))
+    h.assert_true(Codepoints.is_scalar(0xD7FF))     // just before surrogates
+    h.assert_true(Codepoints.is_scalar(0xE000))     // just after surrogates
+    h.assert_true(Codepoints.is_scalar(0x10FFFF))   // max scalar
+    // Invalid: surrogates
+    h.assert_false(Codepoints.is_scalar(0xD800))
+    h.assert_false(Codepoints.is_scalar(0xDFFF))
+    h.assert_false(Codepoints.is_scalar(0xDC00))
+    // Invalid: above max
+    h.assert_false(Codepoints.is_scalar(0x110000))
+    h.assert_false(Codepoints.is_scalar(0xFFFFFFFF))
+
+class \nodoc\ iso _TestCodepointsFromU32 is UnitTest
+  fun name(): String => "Codepoints.from_u32 factory"
+
+  fun apply(h: TestHelper) =>
+    // Valid scalars produce Codepoint.
+    match Codepoints.from_u32(0x41)
+    | let cp: Codepoint val => h.assert_eq[U32](0x41, cp.scalar())
+    | let _: InvalidScalar => h.fail("expected Codepoint for 0x41")
+    end
+    // Surrogates produce InvalidScalar with the original value.
+    match Codepoints.from_u32(0xD800)
+    | let _: Codepoint val => h.fail("expected InvalidScalar for surrogate")
+    | let e: InvalidScalar => h.assert_eq[U32](0xD800, e.value)
+    end
+    // Above max produces InvalidScalar.
+    match Codepoints.from_u32(0x110000)
+    | let _: Codepoint val => h.fail("expected InvalidScalar above max")
+    | let e: InvalidScalar => h.assert_eq[U32](0x110000, e.value)
+    end
+
+class \nodoc\ iso _TestCodepointsIsLetter is UnitTest
+  fun name(): String => "Codepoints.is_letter"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.is_letter('A'))
+    h.assert_true(Codepoints.is_letter('z'))
+    h.assert_true(Codepoints.is_letter(0xE9))   // é (Ll)
+    h.assert_true(Codepoints.is_letter(0xC5))   // Å (Lu)
+    h.assert_false(Codepoints.is_letter('0'))
+    h.assert_false(Codepoints.is_letter(' '))
+    h.assert_false(Codepoints.is_letter('!'))
+    h.assert_false(Codepoints.is_letter(0))     // NULL (Cc)
+    // Non-scalars: false.
+    h.assert_false(Codepoints.is_letter(0xD800))
+    h.assert_false(Codepoints.is_letter(0x110000))
+
+class \nodoc\ iso _TestCodepointsIsDigit is UnitTest
+  fun name(): String => "Codepoints.is_digit"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.is_digit('0'))
+    h.assert_true(Codepoints.is_digit('9'))
+    // Arabic-Indic digit 0 (U+0660) — Nd
+    h.assert_true(Codepoints.is_digit(0x0660))
+    h.assert_false(Codepoints.is_digit('A'))
+    // Roman numeral I (U+2160) — Nl (letter-number), NOT Nd, so false
+    h.assert_false(Codepoints.is_digit(0x2160))
+    // Superscript 2 (U+00B2) — No (other-number), NOT Nd
+    h.assert_false(Codepoints.is_digit(0x00B2))
+
+class \nodoc\ iso _TestCodepointsIsWhitespace is UnitTest
+  fun name(): String => "Codepoints.is_whitespace (category-based)"
+
+  fun apply(h: TestHelper) =>
+    // Category Zs: SPACE
+    h.assert_true(Codepoints.is_whitespace(' '))
+    // Category Zs: NO-BREAK SPACE
+    h.assert_true(Codepoints.is_whitespace(0xA0))
+    // Specific control codes treated as whitespace.
+    h.assert_true(Codepoints.is_whitespace(0x09))  // TAB
+    h.assert_true(Codepoints.is_whitespace(0x0A))  // LF
+    h.assert_true(Codepoints.is_whitespace(0x0D))  // CR
+    h.assert_true(Codepoints.is_whitespace(0x85))  // NEL
+    h.assert_false(Codepoints.is_whitespace('A'))
+    h.assert_false(Codepoints.is_whitespace('!'))
+    h.assert_false(Codepoints.is_whitespace(0))    // NULL — Cc but not whitespace
+    h.assert_false(Codepoints.is_whitespace(0x07)) // BEL — Cc but not whitespace
+
+class \nodoc\ iso _TestCodepointsIsAssigned is UnitTest
+  fun name(): String => "Codepoints.is_assigned"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.is_assigned('A'))
+    h.assert_true(Codepoints.is_assigned(0xE9))
+    h.assert_true(Codepoints.is_assigned(0x1F600))  // emoji
+    h.assert_true(Codepoints.is_assigned(0))        // NULL is assigned (Cc)
+    // U+0378 — unassigned in Unicode 16
+    h.assert_false(Codepoints.is_assigned(0x0378))
+    // Non-scalars: false.
+    h.assert_false(Codepoints.is_assigned(0xD800))
+
+class \nodoc\ iso _TestCodepointClassMethods is UnitTest
+  fun name(): String => "Codepoint val instance methods"
+
+  fun apply(h: TestHelper) =>
+    try
+      let cp = Codepoints.from_u32(0xE9) as Codepoint val
+      h.assert_eq[U32](0xE9, cp.scalar())
+      h.assert_eq[String]("Ll", cp.category().code())
+      h.assert_true(cp.is_letter())
+      h.assert_false(cp.is_digit())
+      h.assert_false(cp.is_whitespace())
+      h.assert_true(cp.is_assigned())
+      h.assert_eq[U8](0, cp.combining_class())  // precomposed é
+      match cp.canonical_decomposition()
+      | let d: Array[U32] val =>
+        h.assert_eq[USize](2, d.size())
+        h.assert_eq[U32](0x65, d(0)?)
+        h.assert_eq[U32](0x301, d(1)?)
+      | None => h.fail("expected decomposition")
+      end
+    else
+      h.fail("Codepoints.from_u32(0xE9) didn't yield Codepoint")
+    end
+
+class \nodoc\ iso _TestCodepointEquality is UnitTest
+  fun name(): String => "Codepoint equality / comparison / hash"
+
+  fun apply(h: TestHelper) =>
+    try
+      let a = Codepoints.from_u32(0x41) as Codepoint val
+      let b = Codepoints.from_u32(0x41) as Codepoint val
+      let c = Codepoints.from_u32(0x42) as Codepoint val
+      h.assert_true(a.eq(b))
+      h.assert_false(a.eq(c))
+      h.assert_true(a.lt(c))
+      h.assert_false(c.lt(a))
+      h.assert_eq[USize](a.hash(), b.hash())
+    else
+      h.fail("from_u32 failed for ASCII")
+    end
+
+class \nodoc\ iso _TestCodepointString is UnitTest
+  fun name(): String => "Codepoint.string formats as U+XXXX"
+
+  fun apply(h: TestHelper) =>
+    try
+      let cp_a = Codepoints.from_u32(0x41) as Codepoint val
+      h.assert_eq[String]("U+0041", cp_a.string())
+      let cp_emoji = Codepoints.from_u32(0x1F600) as Codepoint val
+      h.assert_eq[String]("U+1F600", cp_emoji.string())
+      let cp_null = Codepoints.from_u32(0) as Codepoint val
+      h.assert_eq[String]("U+0000", cp_null.string())
+    else
+      h.fail("from_u32 failed")
+    end
+
+class \nodoc\ iso _TestCodepointsStringCount is UnitTest
+  fun name(): String => "Codepoints.count over String"
+
+  fun apply(h: TestHelper) =>
+    match Codepoints.count("")
+    | let n: USize => h.assert_eq[USize](0, n)
+    | let _: InvalidUtf8 => h.fail("empty string should count as 0")
+    end
+    match Codepoints.count("hello")
+    | let n: USize => h.assert_eq[USize](5, n)
+    | let _: InvalidUtf8 => h.fail("ASCII count failed")
+    end
+    // "café" (precomposed é) = 4 codepoints, 5 bytes.
+    let cafe: Array[U8] val =
+      recover val [as U8: 0x63; 0x61; 0x66; 0xC3; 0xA9] end
+    try
+      let t = Text.from_array(cafe)?
+      h.assert_eq[USize](5, t.size_bytes())
+      // Run codepoint count via the topical primitive using bytes view.
+      let s_bytes = t.utf8_bytes()
+      match Codepoints.count(consume s_bytes)
+      | let n: USize => h.assert_eq[USize](4, n)
+      | let _: InvalidUtf8 => h.fail("café count failed")
+      end
+    else
+      h.fail("from_array failed for café")
+    end
+
+class \nodoc\ iso _TestCodepointsStringIsAll is UnitTest
+  fun name(): String => "Codepoints.is_all with predicate"
+
+  fun apply(h: TestHelper) =>
+    let only_letters = {(u: U32): Bool => Codepoints.is_letter(u) } val
+    match Codepoints.is_all("abcXYZ", only_letters)
+    | let b: Bool => h.assert_true(b)
+    | let _: InvalidUtf8 => h.fail("validation failed for ASCII letters")
+    end
+    match Codepoints.is_all("abc 123", only_letters)
+    | let b: Bool => h.assert_false(b)
+    | let _: InvalidUtf8 => h.fail("validation failed for mixed")
+    end
+    // Empty string: vacuously true.
+    match Codepoints.is_all("", only_letters)
+    | let b: Bool => h.assert_true(b)
+    | let _: InvalidUtf8 => h.fail("validation failed for empty")
+    end
+
+class \nodoc\ iso _TestCodepointsStringInvalid is UnitTest
+  fun name(): String => "Codepoints.count returns InvalidUtf8 with offset"
+
+  fun apply(h: TestHelper) =>
+    // Build an invalid UTF-8 string via Array[U8] then String.from_array.
+    let bad: Array[U8] val =
+      recover val [as U8: 0x61; 0x62; 0x80; 0x63] end
+    let s = String.from_array(bad)
+    match Codepoints.count(s)
+    | let _: USize => h.fail("expected InvalidUtf8")
+    | let e: InvalidUtf8 => h.assert_eq[USize](2, e.offset)
     end
