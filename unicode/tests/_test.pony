@@ -53,6 +53,16 @@ actor \nodoc\ Main is TestList
     test(_TestGraphemeBreakHangul)
     test(_TestGraphemeBreakEmoji)
     test(_TestGraphemeBreakRegionalIndicator)
+    // M4b: grapheme iteration via UAX #29 state machine
+    test(_TestGraphemesAscii)
+    test(_TestGraphemesCombining)
+    test(_TestGraphemesCRLF)
+    test(_TestGraphemesHangul)
+    test(_TestGraphemesEmojiZWJ)
+    test(_TestGraphemesFlag)
+    test(_TestGraphemesEmpty)
+    test(_TestGraphemeRangesNoAlloc)
+    test(_TestSizeGraphemes)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -652,3 +662,167 @@ class \nodoc\ iso _TestGraphemeBreakRegionalIndicator is UnitTest
     // Just above the range: U+1F200 is Other.
     h.assert_eq[String]("Other",
       Codepoints.grapheme_break(0x1F200).code())
+
+// ---- M4b: grapheme iteration ----
+// Helper builds a Text val from a sequence of bytes (skipping the
+// String-literal UTF-8 escape trap from M2 tests).
+//
+// Each test counts and inspects clusters via `Text.graphemes()` and
+// `Text.grapheme_ranges()`, plus `Text.size_graphemes()`.
+
+class \nodoc\ iso _TestGraphemesAscii is UnitTest
+  fun name(): String => "graphemes: ASCII = one cluster per byte"
+
+  fun apply(h: TestHelper) =>
+    try
+      let t = Text.from_string("hello")?
+      h.assert_eq[USize](5, t.size_graphemes())
+      let collected = recover trn Array[String val] end
+      for g in t.graphemes() do collected.push(g) end
+      h.assert_eq[USize](5, collected.size())
+      h.assert_eq[String]("h", collected(0)?)
+      h.assert_eq[String]("o", collected(4)?)
+    else
+      h.fail("setup raised")
+    end
+
+class \nodoc\ iso _TestGraphemesCombining is UnitTest
+  fun name(): String => "graphemes: base + combining mark = one cluster"
+
+  fun apply(h: TestHelper) =>
+    // "café" decomposed: c (0x63) + a (0x61) + f (0x66) + e (0x65)
+    // + U+0301 COMBINING ACUTE (0xCC 0x81)
+    let bytes: Array[U8] val =
+      recover val [as U8: 0x63; 0x61; 0x66; 0x65; 0xCC; 0x81] end
+    try
+      let t = Text.from_array(bytes)?
+      // 6 bytes, 5 codepoints, 4 graphemes (e + combining = 1 cluster)
+      h.assert_eq[USize](6, t.size_bytes())
+      h.assert_eq[USize](4, t.size_graphemes())
+    else
+      h.fail("setup raised")
+    end
+
+class \nodoc\ iso _TestGraphemesCRLF is UnitTest
+  fun name(): String => "graphemes: CR LF = one cluster (GB3)"
+
+  fun apply(h: TestHelper) =>
+    let bytes: Array[U8] val =
+      recover val [as U8: 0x41; 0x0D; 0x0A; 0x42] end  // "A\r\nB"
+    try
+      let t = Text.from_array(bytes)?
+      h.assert_eq[USize](3, t.size_graphemes())  // A, CR+LF, B
+    else
+      h.fail("setup raised")
+    end
+
+class \nodoc\ iso _TestGraphemesHangul is UnitTest
+  fun name(): String => "graphemes: Hangul L+V+T = one cluster"
+
+  fun apply(h: TestHelper) =>
+    // U+1100 (L) + U+1161 (V) + U+11A8 (T) = one cluster
+    // UTF-8: E1 84 80 + E1 85 A1 + E1 86 A8 = 9 bytes
+    let bytes: Array[U8] val = recover val [as U8:
+      0xE1; 0x84; 0x80; 0xE1; 0x85; 0xA1; 0xE1; 0x86; 0xA8
+    ] end
+    try
+      let t = Text.from_array(bytes)?
+      h.assert_eq[USize](9, t.size_bytes())
+      h.assert_eq[USize](1, t.size_graphemes())
+    else
+      h.fail("setup raised")
+    end
+
+class \nodoc\ iso _TestGraphemesEmojiZWJ is UnitTest
+  fun name(): String => "graphemes: family-emoji ZWJ sequence = one cluster"
+
+  fun apply(h: TestHelper) =>
+    // 👨‍👩‍👧 — three Extended_Pictographic codepoints joined by ZWJ.
+    // U+1F468 MAN, U+200D ZWJ, U+1F469 WOMAN, U+200D ZWJ, U+1F467 GIRL.
+    // UTF-8: F0 9F 91 A8 E2 80 8D F0 9F 91 A9 E2 80 8D F0 9F 91 A7
+    let bytes: Array[U8] val = recover val [as U8:
+      0xF0; 0x9F; 0x91; 0xA8
+      0xE2; 0x80; 0x8D
+      0xF0; 0x9F; 0x91; 0xA9
+      0xE2; 0x80; 0x8D
+      0xF0; 0x9F; 0x91; 0xA7
+    ] end
+    try
+      let t = Text.from_array(bytes)?
+      h.assert_eq[USize](18, t.size_bytes())
+      h.assert_eq[USize](1, t.size_graphemes())
+    else
+      h.fail("setup raised")
+    end
+
+class \nodoc\ iso _TestGraphemesFlag is UnitTest
+  fun name(): String => "graphemes: regional-indicator pair = one cluster"
+
+  fun apply(h: TestHelper) =>
+    // 🇺🇸 — RI U + RI S
+    // U+1F1FA UTF-8: F0 9F 87 BA
+    // U+1F1F8 UTF-8: F0 9F 87 B8
+    let bytes: Array[U8] val = recover val [as U8:
+      0xF0; 0x9F; 0x87; 0xBA
+      0xF0; 0x9F; 0x87; 0xB8
+    ] end
+    try
+      let t = Text.from_array(bytes)?
+      h.assert_eq[USize](8, t.size_bytes())
+      h.assert_eq[USize](1, t.size_graphemes())
+    else
+      h.fail("setup raised")
+    end
+    // Two flags = two clusters.
+    let two_flags: Array[U8] val = recover val [as U8:
+      0xF0; 0x9F; 0x87; 0xBA; 0xF0; 0x9F; 0x87; 0xB8  // 🇺🇸
+      0xF0; 0x9F; 0x87; 0xAB; 0xF0; 0x9F; 0x87; 0xB7  // 🇫🇷
+    ] end
+    try
+      let t2 = Text.from_array(two_flags)?
+      h.assert_eq[USize](16, t2.size_bytes())
+      h.assert_eq[USize](2, t2.size_graphemes())
+    else
+      h.fail("two-flag setup raised")
+    end
+
+class \nodoc\ iso _TestGraphemesEmpty is UnitTest
+  fun name(): String => "graphemes: empty Text yields nothing"
+
+  fun apply(h: TestHelper) =>
+    let t: Text val = Text.create()
+    h.assert_eq[USize](0, t.size_graphemes())
+    h.assert_false(t.graphemes().has_next())
+    h.assert_false(t.grapheme_ranges().has_next())
+
+class \nodoc\ iso _TestGraphemeRangesNoAlloc is UnitTest
+  fun name(): String => "grapheme_ranges yields byte ranges"
+
+  fun apply(h: TestHelper) =>
+    // Same "café" with combining acute: 6 bytes, 4 clusters.
+    // Cluster ranges should be (0,1) (1,2) (2,3) (3,6).
+    let bytes: Array[U8] val =
+      recover val [as U8: 0x63; 0x61; 0x66; 0x65; 0xCC; 0x81] end
+    try
+      let t = Text.from_array(bytes)?
+      let collected = recover trn Array[(USize, USize)] end
+      for r in t.grapheme_ranges() do collected.push(r) end
+      h.assert_eq[USize](4, collected.size())
+      (let s0, let e0) = collected(0)?
+      h.assert_eq[USize](0, s0); h.assert_eq[USize](1, e0)
+      (let s3, let e3) = collected(3)?
+      h.assert_eq[USize](3, s3); h.assert_eq[USize](6, e3)
+    else
+      h.fail("setup raised")
+    end
+
+class \nodoc\ iso _TestSizeGraphemes is UnitTest
+  fun name(): String => "size_graphemes matches manual count"
+
+  fun apply(h: TestHelper) =>
+    try
+      let t = Text.from_string("Hello, world!")?
+      h.assert_eq[USize](13, t.size_graphemes())
+    else
+      h.fail("setup raised")
+    end

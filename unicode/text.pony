@@ -88,3 +88,37 @@ class Text
     code; external callers always pay the copy.
     """
     _utf8.clone()
+
+  fun val graphemes(): Iterator[String val] =>
+    """
+    Iterate over the UAX #29 extended grapheme clusters in this Text.
+    Each yielded `String val` is a zero-byte-copy slice of the
+    underlying UTF-8 buffer (one small `String` wrapper allocation
+    per yield).
+
+    For zero-allocation iteration on large texts, use
+    `grapheme_ranges()`.
+    """
+    _GraphemeSliceIterator(_utf8)
+
+  fun box grapheme_ranges(): Iterator[(USize, USize)] =>
+    """
+    Iterate over grapheme clusters as `(start_byte, end_byte_exclusive)`
+    pairs. No per-yield allocation. Pair with `utf8_bytes()` to
+    materialize specific clusters lazily.
+    """
+    _GraphemeRangeIterator(_utf8)
+
+  fun box size_graphemes(): USize =>
+    """
+    Number of extended grapheme clusters in this Text. O(n) — walks
+    the bytes to count. Indexed `Text` will get O(1) via the cached
+    bitmap count once M4d lands.
+    """
+    var n: USize = 0
+    let it = _GraphemeRangeIterator(_utf8)
+    while it.has_next() do
+      try it.next()? end
+      n = n + 1
+    end
+    n
