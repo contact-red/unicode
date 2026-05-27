@@ -274,3 +274,133 @@ class Text
       end
     end
     OutOfRange(target, n)
+
+  // ============================================================
+  // Slicing — by codepoint or grapheme, both returning a new Text
+  // ============================================================
+
+  fun val slice_codepoints(
+    start: CodepointIndex,
+    end_idx: CodepointIndex)
+    : (Text val | OutOfRange)
+  =>
+    """
+    A new Text containing codepoints in the half-open range
+    `[start, end_idx)`. The result is unindexed; chain `with_index()`
+    if you need O(1) sizes on the slice.
+
+    Returns `OutOfRange` if `start > end_idx` or `end_idx` exceeds
+    `size_codepoints()`. An empty range yields an empty Text.
+    """
+    let s = start.value()
+    let e = end_idx.value()
+    let total = size_codepoints()
+    if (s > e) or (e > total) then return OutOfRange(e, total) end
+    if s == e then
+      return try Text.from_string("")? else OutOfRange(0, 0) end
+    end
+    var cp: USize = 0
+    var i: USize = 0
+    var sbyte: USize = 0
+    var ebyte: USize = _utf8.size()
+    let n = _utf8.size()
+    var done: Bool = false
+    while (i < n) and (not done) do
+      try
+        let b = _utf8(i)?
+        if (b and 0xC0) != 0x80 then
+          if cp == s then sbyte = i end
+          if cp == e then ebyte = i; done = true end
+          cp = cp + 1
+        end
+      end
+      if not done then i = i + 1 end
+    end
+    try Text.from_string(_utf8.trim(sbyte, ebyte))?
+    else OutOfRange(s, total) end
+
+  fun val slice_graphemes(
+    start: GraphemeIndex,
+    end_idx: GraphemeIndex)
+    : (Text val | OutOfRange)
+  =>
+    """
+    A new Text containing grapheme clusters in the half-open range
+    `[start, end_idx)`. The result is unindexed.
+
+    Returns `OutOfRange` if `start > end_idx` or `end_idx` exceeds
+    `size_graphemes()`. An empty range yields an empty Text.
+    """
+    let s = start.value()
+    let e = end_idx.value()
+    let total = size_graphemes()
+    if (s > e) or (e > total) then return OutOfRange(e, total) end
+    if s == e then
+      return try Text.from_string("")? else OutOfRange(0, 0) end
+    end
+    var n: USize = 0
+    var sbyte: USize = 0
+    var ebyte: USize = _utf8.size()
+    var done: Bool = false
+    let it = _GraphemeRangeIterator(_utf8)
+    while it.has_next() and (not done) do
+      try
+        (let gs, let ge) = it.next()?
+        if n == s then sbyte = gs end
+        if (n + 1) == e then ebyte = ge; done = true end
+        n = n + 1
+      end
+    end
+    try Text.from_string(_utf8.trim(sbyte, ebyte))?
+    else OutOfRange(s, total) end
+
+  // ============================================================
+  // Conversions: cross-unit ByteIndex resolution
+  // ============================================================
+
+  fun box codepoint_byte_index(c: CodepointIndex): (ByteIndex | OutOfRange) =>
+    """
+    The `ByteIndex` of the first UTF-8 byte of codepoint `c`. If `c`
+    equals `size_codepoints()`, returns the one-past-end `ByteIndex`.
+    """
+    let target = c.value()
+    let total = size_codepoints()
+    if target > total then return OutOfRange(target, total) end
+    if target == total then return Index[_ByteIdx]._raw(_utf8.size()) end
+    var cp: USize = 0
+    var i: USize = 0
+    let n = _utf8.size()
+    while i < n do
+      try
+        let b = _utf8(i)?
+        if (b and 0xC0) != 0x80 then
+          if cp == target then return Index[_ByteIdx]._raw(i) end
+          cp = cp + 1
+        end
+      end
+      i = i + 1
+    end
+    OutOfRange(target, total)
+
+  fun box grapheme_byte_index(g: GraphemeIndex): (ByteIndex | OutOfRange) =>
+    """
+    The `ByteIndex` of the first UTF-8 byte of grapheme cluster `g`.
+    If `g` equals `size_graphemes()`, returns the one-past-end
+    `ByteIndex`.
+    """
+    let target = g.value()
+    let total = size_graphemes()
+    if target > total then return OutOfRange(target, total) end
+    if target == total then return Index[_ByteIdx]._raw(_utf8.size()) end
+    let cursor = _GraphemeCursor(_utf8)
+    var n: USize = 0
+    var done: Bool = false
+    while not done do
+      match cursor.next_range()
+      | (let gs: USize, _) =>
+        if n == target then return Index[_ByteIdx]._raw(gs) end
+        n = n + 1
+      | None => done = true
+      end
+    end
+    OutOfRange(target, total)

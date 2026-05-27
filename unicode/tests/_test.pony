@@ -74,6 +74,12 @@ actor \nodoc\ Main is TestList
     test(_TestIndexedCountsAgree)
     test(_TestIndexedFlipMethods)
     test(_TestIndexedEmpty)
+    // M4e: slicing + index conversions
+    test(_TestSliceCodepoints)
+    test(_TestSliceGraphemes)
+    test(_TestSliceOutOfRange)
+    test(_TestCodepointByteIndex)
+    test(_TestGraphemeByteIndex)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -1014,6 +1020,138 @@ class \nodoc\ iso _TestIndexedEmpty is UnitTest
       h.assert_eq[USize](0, t.size_bytes())
       h.assert_eq[USize](0, t.size_codepoints())
       h.assert_eq[USize](0, t.size_graphemes())
+    else
+      h.fail("setup raised")
+    end
+
+// ---- M4e: slicing + index conversions ----
+
+class \nodoc\ iso _TestSliceCodepoints is UnitTest
+  fun name(): String => "slice_codepoints returns the right substring"
+
+  fun apply(h: TestHelper) =>
+    try
+      // "Hé🌍" — 3 codepoints: 'H' (1 byte), 'é' (2 bytes),
+      // '🌍' (4 bytes), total 7 bytes.
+      let bytes: Array[U8] val = recover val [as U8:
+        0x48; 0xC3; 0xA9; 0xF0; 0x9F; 0x8C; 0x8D] end
+      let t = Text.from_array(bytes)?
+      h.assert_eq[USize](3, t.size_codepoints())
+      // [0, 2): "Hé" — 3 bytes
+      let s0 = t.codepoint_index(0) as CodepointIndex
+      let s2 = t.codepoint_index(2) as CodepointIndex
+      let s3 = t.codepoint_index(3) as CodepointIndex
+      let cut = t.slice_codepoints(s0, s2) as Text val
+      h.assert_eq[USize](3, cut.size_bytes())
+      h.assert_eq[USize](2, cut.size_codepoints())
+      // [1, 3): "é🌍" — 6 bytes
+      let s1 = t.codepoint_index(1) as CodepointIndex
+      let tail = t.slice_codepoints(s1, s3) as Text val
+      h.assert_eq[USize](6, tail.size_bytes())
+      h.assert_eq[USize](2, tail.size_codepoints())
+      // empty range
+      let empty = t.slice_codepoints(s1, s1) as Text val
+      h.assert_eq[USize](0, empty.size_bytes())
+    else
+      h.fail("setup raised")
+    end
+
+class \nodoc\ iso _TestSliceGraphemes is UnitTest
+  fun name(): String => "slice_graphemes returns the right cluster span"
+
+  fun apply(h: TestHelper) =>
+    try
+      // "Hé🇨🇦" — 3 graphemes: 'H', 'é', 🇨🇦 (RI pair = 1 cluster).
+      // Bytes: 0x48 | 0xC3 0xA9 | 0xF0 0x9F 0x87 0xA8 0xF0 0x9F 0x87 0xA6
+      // = 11 bytes total.
+      let bytes: Array[U8] val = recover val [as U8:
+        0x48; 0xC3; 0xA9; 0xF0; 0x9F; 0x87; 0xA8
+        0xF0; 0x9F; 0x87; 0xA6] end
+      let t = Text.from_array(bytes)?
+      h.assert_eq[USize](3, t.size_graphemes())
+      // [0, 2): "Hé" — 3 bytes, 2 clusters
+      let g0 = t.grapheme_index(0) as GraphemeIndex
+      let g2 = t.grapheme_index(2) as GraphemeIndex
+      let g3 = t.grapheme_index(3) as GraphemeIndex
+      let cut = t.slice_graphemes(g0, g2) as Text val
+      h.assert_eq[USize](3, cut.size_bytes())
+      h.assert_eq[USize](2, cut.size_graphemes())
+      // [2, 3): flag only — 8 bytes, 1 cluster
+      let flag = t.slice_graphemes(g2, g3) as Text val
+      h.assert_eq[USize](8, flag.size_bytes())
+      h.assert_eq[USize](1, flag.size_graphemes())
+    else
+      h.fail("setup raised")
+    end
+
+class \nodoc\ iso _TestSliceOutOfRange is UnitTest
+  fun name(): String => "slice_* return OutOfRange for bad bounds"
+
+  fun apply(h: TestHelper) =>
+    try
+      let t = Text.from_string("abc")?
+      let z = t.grapheme_index(0) as GraphemeIndex
+      let three = t.grapheme_index(3) as GraphemeIndex
+      // end past size
+      // (constructing a too-large index would fail at grapheme_index;
+      //  test reversed bounds instead — `start > end`)
+      match t.slice_graphemes(three, z)
+      | let _: Text val => h.fail("expected OutOfRange for reversed bounds")
+      | let _: OutOfRange => None
+      end
+      let cz = t.codepoint_index(0) as CodepointIndex
+      let cthree = t.codepoint_index(3) as CodepointIndex
+      match t.slice_codepoints(cthree, cz)
+      | let _: Text val => h.fail("expected OutOfRange for reversed bounds")
+      | let _: OutOfRange => None
+      end
+    else
+      h.fail("setup raised")
+    end
+
+class \nodoc\ iso _TestCodepointByteIndex is UnitTest
+  fun name(): String => "codepoint_byte_index resolves to byte offsets"
+
+  fun apply(h: TestHelper) =>
+    try
+      // "Hé🌍" — codepoint byte offsets: 0, 1, 3, (one-past-end) 7
+      let bytes: Array[U8] val = recover val [as U8:
+        0x48; 0xC3; 0xA9; 0xF0; 0x9F; 0x8C; 0x8D] end
+      let t = Text.from_array(bytes)?
+      let c0 = t.codepoint_index(0) as CodepointIndex
+      let c1 = t.codepoint_index(1) as CodepointIndex
+      let c2 = t.codepoint_index(2) as CodepointIndex
+      let c3 = t.codepoint_index(3) as CodepointIndex
+      let b0 = t.codepoint_byte_index(c0) as ByteIndex
+      let b1 = t.codepoint_byte_index(c1) as ByteIndex
+      let b2 = t.codepoint_byte_index(c2) as ByteIndex
+      let b3 = t.codepoint_byte_index(c3) as ByteIndex
+      h.assert_eq[USize](0, b0.value())
+      h.assert_eq[USize](1, b1.value())
+      h.assert_eq[USize](3, b2.value())
+      h.assert_eq[USize](7, b3.value())
+    else
+      h.fail("setup raised")
+    end
+
+class \nodoc\ iso _TestGraphemeByteIndex is UnitTest
+  fun name(): String => "grapheme_byte_index resolves to byte offsets"
+
+  fun apply(h: TestHelper) =>
+    try
+      // "Hé🇨🇦" — grapheme byte offsets: 0, 1, 3, (one-past-end) 11
+      let bytes: Array[U8] val = recover val [as U8:
+        0x48; 0xC3; 0xA9; 0xF0; 0x9F; 0x87; 0xA8
+        0xF0; 0x9F; 0x87; 0xA6] end
+      let t = Text.from_array(bytes)?
+      let g0 = t.grapheme_index(0) as GraphemeIndex
+      let g1 = t.grapheme_index(1) as GraphemeIndex
+      let g2 = t.grapheme_index(2) as GraphemeIndex
+      let g3 = t.grapheme_index(3) as GraphemeIndex
+      h.assert_eq[USize](0, (t.grapheme_byte_index(g0) as ByteIndex).value())
+      h.assert_eq[USize](1, (t.grapheme_byte_index(g1) as ByteIndex).value())
+      h.assert_eq[USize](3, (t.grapheme_byte_index(g2) as ByteIndex).value())
+      h.assert_eq[USize](11, (t.grapheme_byte_index(g3) as ByteIndex).value())
     else
       h.fail("setup raised")
     end
