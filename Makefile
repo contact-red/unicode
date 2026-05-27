@@ -74,7 +74,7 @@ $(BUILD_DIR):
 dependencies: corral.json
 	$(GET_DEPENDENCIES_WITH)
 
-.PHONY: all ci test unit-tests clean realclean dependencies docs ucd-build ucd-generate ucd-download
+.PHONY: all ci test unit-tests clean realclean dependencies docs ucd-build ucd-generate ucd-download conform conform-build
 
 # ---------- UCD codegen ----------
 # unicode-build is a separate Pony tool that reads UCD source files and
@@ -126,3 +126,13 @@ $(ucd_build_binary): $(SOURCE_FILES) $(shell find unicode_build unicode_build_ma
 
 ucd-generate: $(ucd_build_binary)
 	$(ucd_build_binary) $(UCD_DIR) ./unicode
+
+conform_binary := $(BUILD_DIR)/unicode_conform_main
+
+conform-build: $(conform_binary)
+
+$(conform_binary): $(SOURCE_FILES) $(shell find unicode_conform_main -name '*.pony' 2>/dev/null) | $(BUILD_DIR) dependencies
+	$(PONYC) -o $(BUILD_DIR) unicode_conform_main -b unicode_conform_main
+
+conform: $(conform_binary)
+	$(conform_binary) $(UCD_DIR)/NormalizationTest.txt

@@ -4,7 +4,18 @@ Unicode-correct text processing for Pony — graphemes, normalization, case fold
 
 ## Status
 
-Pre-release. First public release is `0.1.0` (see [design notes](#design)).
+Pre-release (VERSION 0.0.0). Foundation milestones M0–M9 complete:
+
+- Validated UTF-8 `Text` with optional grapheme bitmap index
+- Phantom-typed `ByteIndex` / `CodepointIndex` / `GraphemeIndex`
+- UAX #29 extended grapheme cluster iteration
+- UAX #15 normalization (NFC / NFD / NFKC / NFKD) — **100% NormalizationTest.txt conformance** (18,992/18,992 test cases pass)
+- Case operations (upper / lower / title / fold) with full multi-cp expansions
+- Comparison primitives (byte / canonical / compat / caseless / caseless-canonical per UAX #21 D146)
+- Search / Split / Trim / Replace on UTF-8
+- Full UCD-backed predicates: 30 General Categories, 163 Scripts, ~58 binary properties, ~30k Unicode names, case mappings, decomposition tables
+
+146 PonyCheck unit tests + the NormalizationTest conformance suite.
 
 ## Installation
 
@@ -22,10 +33,38 @@ use "unicode"
 actor Main
   new create(env: Env) =>
     try
+      // Validated UTF-8, codepoint/grapheme counts
       let t = Text.from_string("café 🇫🇷👨‍👩‍👧")?
-      env.out.print("graphemes:  " + t.size_graphemes().string())  // 6
-      env.out.print("codepoints: " + t.size_codepoints().string()) // 11
-      env.out.print("bytes:      " + t.size_bytes().string())      // 25
+      env.out.print("graphemes:  " + t.size_graphemes().string())
+      env.out.print("codepoints: " + t.size_codepoints().string())
+      env.out.print("bytes:      " + t.size_bytes().string())
+
+      // Normalization — precomposed and decomposed forms compare equal
+      let pre = "café"  // pre-composed é (U+00E9)
+      let dec = "café"  // e + combining acute
+      match Compares.equal_canonical(pre, dec)
+      | true => env.out.print("canonically equal: yes")
+      end
+
+      // Case folding for caseless matching
+      match Compares.equal_caseless("MASSE", "Maße")
+      | true => env.out.print("Maße == MASSE under fold")
+      end
+
+      // Search / Split / Trim / Replace
+      match Search.contains("hello world", "world")
+      | true => env.out.print("found")
+      end
+      match Replace.all("foo bar foo", "foo", "qux")
+      | let s: String iso => env.out.print(consume s)  // "qux bar qux"
+      end
+
+      // Per-codepoint properties
+      env.out.print("'A' script: " +
+        match Codepoints.script(U32('A'))
+        | let _: ScriptLatin => "Latin"
+        else "other"
+        end)
     else
       env.out.print("invalid UTF-8")
     end
