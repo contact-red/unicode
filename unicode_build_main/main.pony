@@ -147,6 +147,16 @@ actor Main
     _write_file(auth, title_path, consume title_body)?
     env.out.print("  wrote " + title_path)
 
+    // Emit Script type + cp-range table (Scripts.txt).
+    let scripts_lines = _read_lines(auth, ucd_dir + "/Scripts.txt")?
+    env.out.print("  read " + scripts_lines.size().string()
+      + " lines from Scripts.txt")
+    (let script_rt, let script_tbl) = ScriptTableEmitter.emit_both(scripts_lines)?
+    _write_file(auth, out_dir + "/script.pony", consume script_rt)?
+    env.out.print("  wrote " + out_dir + "/script.pony")
+    _write_file(auth, out_dir + "/_ucd_script.pony", consume script_tbl)?
+    env.out.print("  wrote " + out_dir + "/_ucd_script.pony")
+
     // Emit composition tables (Full_Composition_Exclusion + canonical compose).
     let dnp_lines = _read_lines(auth,
       ucd_dir + "/DerivedNormalizationProps.txt")?
@@ -189,6 +199,7 @@ actor Main
     let file = CreateFile(path)
     match file
     | let f: File =>
+      f.set_length(0)
       f.write(consume body)
       f.dispose()
     else

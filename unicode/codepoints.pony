@@ -141,6 +141,13 @@ primitive Codepoints
     """
     _UcdGraphemeBreak.of(u)
 
+  fun script(u: U32): Script =>
+    """
+    The Script property of `u` per Scripts.txt. Returns
+    `ScriptUnknown` for codepoints with no assigned script.
+    """
+    _UcdScript.of(u)
+
   fun is_full_composition_excluded(u: U32): Bool =>
     """
     True iff `u` has the `Full_Composition_Exclusion` property per

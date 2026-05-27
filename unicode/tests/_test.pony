@@ -107,6 +107,13 @@ actor \nodoc\ Main is TestList
     test(_TestSimpleCaseFold)
     test(_TestFullCaseFoldEszett)
     test(_TestFullCaseFoldAscii)
+    // M1.E: Scripts
+    test(_TestScriptLatin)
+    test(_TestScriptCyrillic)
+    test(_TestScriptCommon)
+    test(_TestScriptUnassigned)
+    test(_TestScriptCode)
+    test(_TestScriptsFromIso)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -1159,6 +1166,57 @@ class \nodoc\ iso _TestCodepointByteIndex is UnitTest
       h.assert_eq[USize](7, b3.value())
     else
       h.fail("setup raised")
+    end
+
+// ---- M1.E: Scripts ----
+
+class \nodoc\ iso _TestScriptLatin is UnitTest
+  fun name(): String => "script: ASCII letters are ScriptLatin"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.script(U32('A')) is ScriptLatin)
+    h.assert_true(Codepoints.script(U32('z')) is ScriptLatin)
+
+class \nodoc\ iso _TestScriptCyrillic is UnitTest
+  fun name(): String => "script: U+0410 is ScriptCyrillic"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.script(0x0410) is ScriptCyrillic)
+
+class \nodoc\ iso _TestScriptCommon is UnitTest
+  fun name(): String => "script: digits and space are ScriptCommon"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.script(U32('5')) is ScriptCommon)
+    h.assert_true(Codepoints.script(U32(' ')) is ScriptCommon)
+
+class \nodoc\ iso _TestScriptUnassigned is UnitTest
+  fun name(): String => "script: unassigned codepoint is ScriptUnknown"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.script(0xE0000) is ScriptUnknown)
+
+class \nodoc\ iso _TestScriptCode is UnitTest
+  fun name(): String => "script.code() returns UCD name"
+
+  fun apply(h: TestHelper) =>
+    let s = Codepoints.script(U32('A'))
+    h.assert_eq[String]("Latin",
+      match s | let l: ScriptLatin => l.code() else "?" end)
+
+class \nodoc\ iso _TestScriptsFromIso is UnitTest
+  fun name(): String => "Scripts.from_iso round-trips name"
+
+  fun apply(h: TestHelper) =>
+    match Scripts.from_iso("Latin")
+    | let _: ScriptLatin => None
+    | let _: Script => h.fail("expected ScriptLatin")
+    | None => h.fail("from_iso(\"Latin\") returned None")
+    end
+    // Unknown name
+    match Scripts.from_iso("NotARealScript")
+    | None => None
+    | let _: Script => h.fail("expected None for fake script name")
     end
 
 // ---- M1.D: Full + case folding mappings ----
