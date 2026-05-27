@@ -30,47 +30,71 @@ class Text
     _utf8 = String(len)
     _index = None
 
-  new val from_string(s: String val) ? =>
+  new val from_string(s: String val, indexed: Bool = false) ? =>
     """
     Wrap a `String val` after validating it as UTF-8. Raises if the
-    input is ill-formed. Callers that want the offset/kind of the bad
-    sequence should call `Bytes.first_bad_utf8_offset(s)` first.
+    input is ill-formed.
+
+    If `indexed` is true, also builds the grapheme-start bitmap index
+    so subsequent `size_graphemes()` / `size_codepoints()` are O(1)
+    and random grapheme lookups are ~64× faster (see §3.5 of the
+    design notes). Pay-for-what-you-use — pass-through workloads that
+    never index pay nothing.
     """
     if not Bytes.is_valid_utf8(s) then error end
+    _index = if indexed then recover val _TextIndex(s) end else None end
     _utf8 = s.clone()
-    _index = None
 
-  new val from_array(a: Array[U8] val) ? =>
+  new val from_array(a: Array[U8] val, indexed: Bool = false) ? =>
     """
     Wrap a byte array after validating it as UTF-8. Raises on
     ill-formed input. The bytes are copied into the Text's internal
-    `String ref` buffer.
+    `String ref` buffer. See `from_string` for the `indexed` flag.
     """
     if not Bytes.is_valid_utf8(a) then error end
-    let buf = String(a.size())
-    buf.append(a)
-    _utf8 = buf
-    _index = None
+    let buf_val: String val = recover val
+      let b = String(a.size())
+      b.append(a)
+      b
+    end
+    _index = if indexed then recover val _TextIndex(buf_val) end else None end
+    _utf8 = buf_val.clone()
 
-  new iso from_iso_string(s: String iso) ? =>
+  new iso from_iso_string(s: String iso, indexed: Bool = false) ? =>
     """
-    Zero-byte-copy adoption of an `iso` String. Validates UTF-8 in
-    place (walks the bytes directly via index access — see
-    `_IsoUtf8.validate_string`) and consumes the iso into the Text on
-    success. Raises on ill-formed input.
-    """
-    _utf8 = _IsoUtf8.validate_string(consume s)?
-    _index = None
+    Zero-byte-copy adoption of an `iso` String when `indexed` is false.
+    When `indexed` is true, builds the optional bitmap index — this
+    requires viewing the bytes via a val alias, which costs one extra
+    byte-copy (the opt-in price of indexing).
 
-  new iso from_iso_array(a: Array[U8] iso) ? =>
+    Validates UTF-8 in place. Raises on ill-formed input. See
+    `from_string` for the `indexed` flag.
     """
-    Zero-byte-copy adoption of an `iso` byte array. Validates UTF-8 in
-    place and consumes the array into a String on success. Raises on
-    ill-formed input.
+    let buf = _IsoUtf8.validate_string(consume s)?
+    if indexed then
+      let buf_val: String val = consume buf
+      _index = recover val _TextIndex(buf_val) end
+      _utf8 = buf_val.clone()
+    else
+      _index = None
+      _utf8 = consume buf
+    end
+
+  new iso from_iso_array(a: Array[U8] iso, indexed: Bool = false) ? =>
+    """
+    Zero-byte-copy adoption of an `iso` byte array when `indexed` is
+    false. See `from_iso_string` for the `indexed` tradeoff.
     """
     let validated = _IsoUtf8.validate_array(consume a)?
-    _utf8 = String.from_iso_array(consume validated)
-    _index = None
+    let buf = String.from_iso_array(consume validated)
+    if indexed then
+      let buf_val: String val = consume buf
+      _index = recover val _TextIndex(buf_val) end
+      _utf8 = buf_val.clone()
+    else
+      _index = None
+      _utf8 = consume buf
+    end
 
   fun box size_bytes(): USize =>
     """
@@ -111,25 +135,57 @@ class Text
 
   fun box size_graphemes(): USize =>
     """
-    Number of extended grapheme clusters in this Text. O(n) — walks
-    the bytes to count. Indexed `Text` will get O(1) via the cached
-    bitmap count once M4d lands.
+    Number of extended grapheme clusters in this Text. O(1) on an
+    indexed Text (cached count); O(n) otherwise (walks the bytes).
     """
-    var n: USize = 0
-    let it = _GraphemeRangeIterator(_utf8)
-    while it.has_next() do
-      try it.next()? end
-      n = n + 1
+    match _index
+    | let idx: _TextIndex val => idx.grapheme_count()
+    | None =>
+      var n: USize = 0
+      let it = _GraphemeRangeIterator(_utf8)
+      while it.has_next() do
+        try it.next()? end
+        n = n + 1
+      end
+      n
     end
-    n
 
   fun box size_codepoints(): USize =>
     """
-    Number of Unicode codepoints in this Text. O(n) — walks the UTF-8
-    bytes counting codepoint starts. M4d will provide O(1) on indexed
-    Text via the cached count.
+    Number of Unicode codepoints in this Text. O(1) on an indexed
+    Text; O(n) otherwise (walks the UTF-8 bytes counting lead bytes).
     """
-    Codepoints._count(_utf8)
+    match _index
+    | let idx: _TextIndex val => idx.codepoint_count()
+    | None => Codepoints._count(_utf8)
+    end
+
+  fun box is_indexed(): Bool =>
+    """
+    True iff this Text carries the optional bitmap index. Use
+    `with_index()` / `without_index()` to obtain a copy with the
+    index flipped.
+    """
+    match _index
+    | let _: _TextIndex val => true
+    | None => false
+    end
+
+  fun val with_index(): Text val ? =>
+    """
+    Return a copy of this Text carrying the optional bitmap index.
+    The byte buffer is cloned and the index is rebuilt. Partial only
+    because `from_string` is partial — the bytes here are guaranteed
+    valid so the error path is unreachable.
+    """
+    Text.from_string(_utf8.clone(), true)?
+
+  fun val without_index(): Text val ? =>
+    """
+    Return an index-free copy of this Text. The byte buffer is
+    cloned; partial for the same reason as `with_index()`.
+    """
+    Text.from_string(_utf8.clone(), false)?
 
   // ============================================================
   // Index construction (range-checked)

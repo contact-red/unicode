@@ -68,6 +68,12 @@ actor \nodoc\ Main is TestList
     test(_TestIndexAt)
     test(_TestIndexOutOfRange)
     test(_TestIndexCannotMix)
+    // M4d: bitmap index
+    test(_TestIndexedDefault)
+    test(_TestIndexedFlag)
+    test(_TestIndexedCountsAgree)
+    test(_TestIndexedFlipMethods)
+    test(_TestIndexedEmpty)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -931,3 +937,83 @@ class \nodoc\ iso _TestIndexCannotMix is UnitTest
     // (Index[_ByteIdx] vs Index[_GraphemeIdx] vs Index[_CodepointIdx]).
     // A trivial passing test — the compile-time check is what matters.
     h.assert_true(true)
+
+// ---- M4d: bitmap index ----
+
+class \nodoc\ iso _TestIndexedDefault is UnitTest
+  fun name(): String => "Text.from_string defaults to unindexed"
+
+  fun apply(h: TestHelper) =>
+    try
+      let t = Text.from_string("Hello, world!")?
+      h.assert_false(t.is_indexed())
+    else
+      h.fail("setup raised")
+    end
+
+class \nodoc\ iso _TestIndexedFlag is UnitTest
+  fun name(): String => "Text.from_string(indexed=true) is_indexed"
+
+  fun apply(h: TestHelper) =>
+    try
+      let t = Text.from_string("Hello, world!", true)?
+      h.assert_true(t.is_indexed())
+    else
+      h.fail("setup raised")
+    end
+
+class \nodoc\ iso _TestIndexedCountsAgree is UnitTest
+  fun name(): String => "indexed/unindexed sizes agree"
+
+  fun apply(h: TestHelper) =>
+    // "Hé🇨🇦" — mix of ASCII, precomposed Latin, regional-indicator pair.
+    // 1 ASCII (1 byte) + 'é' precomposed (2 bytes) + RI pair (8 bytes)
+    // = 11 bytes, 4 codepoints (H, é, RI-C, RI-A), 3 graphemes.
+    // 'H' + 'é' precomposed (UTF-8 0xC3 0xA9) + U+1F1E8 + U+1F1E6
+    let bytes: Array[U8] val = recover val [as U8:
+      0x48; 0xC3; 0xA9; 0xF0; 0x9F; 0x87; 0xA8; 0xF0; 0x9F; 0x87; 0xA6] end
+    try
+      let a = Text.from_array(bytes, false)?
+      let b = Text.from_array(bytes, true)?
+      h.assert_false(a.is_indexed())
+      h.assert_true(b.is_indexed())
+      h.assert_eq[USize](a.size_bytes(), b.size_bytes())
+      h.assert_eq[USize](a.size_codepoints(), b.size_codepoints())
+      h.assert_eq[USize](a.size_graphemes(), b.size_graphemes())
+      h.assert_eq[USize](11, b.size_bytes())
+      h.assert_eq[USize](4, b.size_codepoints())
+      h.assert_eq[USize](3, b.size_graphemes())
+    else
+      h.fail("setup raised")
+    end
+
+class \nodoc\ iso _TestIndexedFlipMethods is UnitTest
+  fun name(): String => "Text.with_index() / without_index() flip the index"
+
+  fun apply(h: TestHelper) =>
+    try
+      let plain = Text.from_string("abc")?
+      h.assert_false(plain.is_indexed())
+      let with_idx = plain.with_index()?
+      h.assert_true(with_idx.is_indexed())
+      let without_idx = with_idx.without_index()?
+      h.assert_false(without_idx.is_indexed())
+      h.assert_eq[USize](3, with_idx.size_graphemes())
+      h.assert_eq[USize](3, without_idx.size_graphemes())
+    else
+      h.fail("setup raised")
+    end
+
+class \nodoc\ iso _TestIndexedEmpty is UnitTest
+  fun name(): String => "indexed empty Text has zero counts"
+
+  fun apply(h: TestHelper) =>
+    try
+      let t = Text.from_string("", true)?
+      h.assert_true(t.is_indexed())
+      h.assert_eq[USize](0, t.size_bytes())
+      h.assert_eq[USize](0, t.size_codepoints())
+      h.assert_eq[USize](0, t.size_graphemes())
+    else
+      h.fail("setup raised")
+    end
