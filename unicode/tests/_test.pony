@@ -121,6 +121,11 @@ actor \nodoc\ Main is TestList
     test(_TestBinaryPropEmoji)
     test(_TestBinaryPropAsciiHexDigit)
     test(_TestBinaryPropsFromIso)
+    // M1.G: Names
+    test(_TestNameAscii)
+    test(_TestNameLatin)
+    test(_TestNameControl)
+    test(_TestFromName)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -1173,6 +1178,51 @@ class \nodoc\ iso _TestCodepointByteIndex is UnitTest
       h.assert_eq[USize](7, b3.value())
     else
       h.fail("setup raised")
+    end
+
+// ---- M1.G: Names ----
+
+class \nodoc\ iso _TestNameAscii is UnitTest
+  fun name(): String => "name: 'A' → LATIN CAPITAL LETTER A"
+
+  fun apply(h: TestHelper) =>
+    match Codepoints.name(U32('A'))
+    | let n: String val => h.assert_eq[String]("LATIN CAPITAL LETTER A", n)
+    | None => h.fail("expected name for 'A'")
+    end
+
+class \nodoc\ iso _TestNameLatin is UnitTest
+  fun name(): String => "name: 'é' → LATIN SMALL LETTER E WITH ACUTE"
+
+  fun apply(h: TestHelper) =>
+    match Codepoints.name(0x00E9)
+    | let n: String val =>
+      h.assert_eq[String]("LATIN SMALL LETTER E WITH ACUTE", n)
+    | None => h.fail("expected name for é")
+    end
+
+class \nodoc\ iso _TestNameControl is UnitTest
+  fun name(): String => "name: NUL has no name"
+
+  fun apply(h: TestHelper) =>
+    // Control characters have placeholder `<control>` names, which
+    // we exclude from the table; lookup returns None.
+    match Codepoints.name(0x0000)
+    | let _: String val => h.fail("expected None for NUL")
+    | None => None
+    end
+
+class \nodoc\ iso _TestFromName is UnitTest
+  fun name(): String => "from_name reverse lookup"
+
+  fun apply(h: TestHelper) =>
+    match Codepoints.from_name("LATIN CAPITAL LETTER A")
+    | let cp: U32 => h.assert_eq[U32](0x0041, cp)
+    | None => h.fail("expected 0x41 for LATIN CAPITAL LETTER A")
+    end
+    match Codepoints.from_name("NOT A REAL NAME XYZ")
+    | None => None
+    | let _: U32 => h.fail("expected None for fake name")
     end
 
 // ---- M1.F: Binary properties ----

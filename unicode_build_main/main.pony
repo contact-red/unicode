@@ -147,6 +147,11 @@ actor Main
     _write_file(auth, title_path, consume title_body)?
     env.out.print("  wrote " + title_path)
 
+    // Emit Codepoint name table.
+    let name_body = NameTableEmitter.emit(entries)
+    _write_file(auth, out_dir + "/_ucd_name.pony", consume name_body)?
+    env.out.print("  wrote " + out_dir + "/_ucd_name.pony")
+
     // Emit BinaryProperty type + per-property tables (PropList +
     // DerivedCoreProperties + emoji-data).
     let prop_lines = _read_lines(auth, ucd_dir + "/PropList.txt")?

@@ -157,6 +157,23 @@ primitive Codepoints
     """
     _UcdBinaryProps.has(u, p)
 
+  fun name(u: U32): (String val | None) =>
+    """
+    The canonical Unicode name of `u` per UnicodeData.txt column 1,
+    e.g. `"LATIN CAPITAL LETTER A"`. Returns `None` for codepoints
+    without a real name (controls, surrogates, private use, ranges
+    like CJK Ideographs with algorithmic names).
+    """
+    _UcdName.of(u)
+
+  fun from_name(name': String box): (U32 | None) =>
+    """
+    The codepoint with the given Unicode name (case- and
+    space-sensitive). Linear scan over ~30k entries — appropriate
+    for interactive use, not for hot paths.
+    """
+    _UcdName.from_name(name')
+
   fun is_full_composition_excluded(u: U32): Bool =>
     """
     True iff `u` has the `Full_Composition_Exclusion` property per
