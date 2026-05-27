@@ -93,6 +93,45 @@ primitive Codepoints
     """
     _UcdSimpleTitle.of(u)
 
+  fun full_upper(u: U32): (Array[U32] val | None) =>
+    """
+    Full Uppercase_Mapping for `u` from SpecialCasing.txt — may
+    expand to multiple codepoints (e.g., ß → SS = [0x53, 0x53]).
+    Returns `None` if no expansion exists; callers should fall back
+    to `simple_upper(u)` in that case.
+    """
+    _UcdFullUpper.of(u)
+
+  fun full_lower(u: U32): (Array[U32] val | None) =>
+    """
+    Full Lowercase_Mapping from SpecialCasing.txt. `None` if no
+    multi-cp expansion exists.
+    """
+    _UcdFullLower.of(u)
+
+  fun full_title(u: U32): (Array[U32] val | None) =>
+    """
+    Full Titlecase_Mapping from SpecialCasing.txt. `None` if no
+    multi-cp expansion exists.
+    """
+    _UcdFullTitle.of(u)
+
+  fun simple_casefold(u: U32): U32 =>
+    """
+    Simple case folding per UAX #44 — maps `u` to its
+    case-fold-equivalent single codepoint. Returns `u` itself when
+    no mapping is defined. Use `full_casefold` to handle ß → ss,
+    which simple folding leaves alone (length-preserving).
+    """
+    _UcdSimpleCaseFold.of(u)
+
+  fun full_casefold(u: U32): (Array[U32] val | None) =>
+    """
+    Default full case folding per UAX #44 — may expand to multiple
+    codepoints. `None` for codepoints that fold to themselves.
+    """
+    _UcdFullCaseFold.of(u)
+
   fun grapheme_break(u: U32): GraphemeBreak =>
     """
     UAX #29 Grapheme_Cluster_Break property of `u`, including

@@ -83,6 +83,56 @@ actor Main
     _write_file(auth, gb_path, consume gb_body)?
     env.out.print("  wrote " + gb_path)
 
+    // Emit full case mappings from SpecialCasing.txt (unconditional only)
+    let sc_lines = _read_lines(auth, ucd_dir + "/SpecialCasing.txt")?
+    env.out.print("  read " + sc_lines.size().string()
+      + " lines from SpecialCasing.txt")
+    let sc_entries = SpecialCasingParser.parse_all(sc_lines)?
+    env.out.print("  parsed " + sc_entries.size().string()
+      + " SpecialCasing entries")
+    let full_upper = _full_case_pairs(sc_entries, "upper")
+    let full_upper_body = VarLenTableEmitter.emit(
+      "_UcdFullUpper",
+      "SpecialCasing.txt Uppercase_Mapping (unconditional)",
+      full_upper)
+    _write_file(auth, out_dir + "/_ucd_full_upper.pony",
+      consume full_upper_body)?
+    env.out.print("  wrote " + out_dir + "/_ucd_full_upper.pony")
+    let full_lower = _full_case_pairs(sc_entries, "lower")
+    let full_lower_body = VarLenTableEmitter.emit(
+      "_UcdFullLower",
+      "SpecialCasing.txt Lowercase_Mapping (unconditional)",
+      full_lower)
+    _write_file(auth, out_dir + "/_ucd_full_lower.pony",
+      consume full_lower_body)?
+    env.out.print("  wrote " + out_dir + "/_ucd_full_lower.pony")
+    let full_title = _full_case_pairs(sc_entries, "title")
+    let full_title_body = VarLenTableEmitter.emit(
+      "_UcdFullTitle",
+      "SpecialCasing.txt Titlecase_Mapping (unconditional)",
+      full_title)
+    _write_file(auth, out_dir + "/_ucd_full_title.pony",
+      consume full_title_body)?
+    env.out.print("  wrote " + out_dir + "/_ucd_full_title.pony")
+
+    // Emit case folding tables from CaseFolding.txt
+    let cf_lines = _read_lines(auth, ucd_dir + "/CaseFolding.txt")?
+    env.out.print("  read " + cf_lines.size().string()
+      + " lines from CaseFolding.txt")
+    let cf_entries = CaseFoldingParser.parse_all(cf_lines)?
+    (let simple_fold, let full_fold) = _fold_pairs(cf_entries)
+    let simple_fold_body = SimpleCaseFoldEmitter.emit(simple_fold)
+    _write_file(auth, out_dir + "/_ucd_simple_casefold.pony",
+      consume simple_fold_body)?
+    env.out.print("  wrote " + out_dir + "/_ucd_simple_casefold.pony")
+    let full_fold_body = VarLenTableEmitter.emit(
+      "_UcdFullCaseFold",
+      "CaseFolding.txt status C + F entries (default full folding)",
+      full_fold)
+    _write_file(auth, out_dir + "/_ucd_full_casefold.pony",
+      consume full_fold_body)?
+    env.out.print("  wrote " + out_dir + "/_ucd_full_casefold.pony")
+
     // Emit simple case mappings (UnicodeData.txt fields 12/13/14)
     let upper_body = CaseTableEmitter.emit_simple_upper(entries)
     let upper_path: String val = out_dir + "/_ucd_simple_upper.pony"
@@ -144,3 +194,96 @@ actor Main
     else
       error
     end
+
+  fun _full_case_pairs(
+    entries: ReadSeq[SpecialCasingEntry val] box,
+    kind: String val)
+    : Array[(U32, Array[U32] val)] val
+  =>
+    """
+    Collect cp → mapping pairs for the requested case direction
+    (`"upper"`, `"lower"`, or `"title"`), skipping conditional
+    entries (those with a non-empty `conditions` field) and
+    identity-only mappings. Sorts by codepoint so the runtime
+    binary search is valid.
+    """
+    let out = recover trn Array[(U32, Array[U32] val)] end
+    for e in entries.values() do
+      if e.conditions.size() != 0 then continue end
+      let mapping: Array[U32] val =
+        if kind == "upper" then e.upper
+        elseif kind == "lower" then e.lower
+        else e.title
+        end
+      let is_identity: Bool =
+        try (mapping.size() == 1) and (mapping(0)? == e.codepoint)
+        else false
+        end
+      if not is_identity then
+        out.push((e.codepoint, mapping))
+      end
+    end
+    _sort_pairs(consume out)
+
+  fun _fold_pairs(
+    entries: ReadSeq[CaseFoldingEntry val] box)
+    : (Array[(U32, U32)] val, Array[(U32, Array[U32] val)] val)
+  =>
+    """
+    From CaseFolding.txt, build sorted simple-fold (C+S) and
+    full-fold (C+F) tables.
+    """
+    let simple = recover trn Array[(U32, U32)] end
+    let full = recover trn Array[(U32, Array[U32] val)] end
+    for e in entries.values() do
+      match e.status
+      | 'C' =>
+        try simple.push((e.codepoint, e.mapping(0)?)) end
+        full.push((e.codepoint, e.mapping))
+      | 'S' =>
+        try simple.push((e.codepoint, e.mapping(0)?)) end
+      | 'F' =>
+        full.push((e.codepoint, e.mapping))
+      end
+    end
+    (_sort_simple(consume simple), _sort_pairs(consume full))
+
+  fun _sort_simple(raw: Array[(U32, U32)] trn): Array[(U32, U32)] val =>
+    let n = raw.size()
+    var i: USize = 1
+    while i < n do
+      try
+        var j = i
+        let cur = raw(j)?
+        while (j > 0) and (raw(j - 1)?._1 > cur._1) do
+          raw(j)? = raw(j - 1)?
+          j = j - 1
+        end
+        raw(j)? = cur
+      end
+      i = i + 1
+    end
+    let out = recover trn Array[(U32, U32)](n) end
+    for x in raw.values() do out.push(x) end
+    consume out
+
+  fun _sort_pairs(raw: Array[(U32, Array[U32] val)] trn)
+    : Array[(U32, Array[U32] val)] val
+  =>
+    let n = raw.size()
+    var i: USize = 1
+    while i < n do
+      try
+        var j = i
+        let cur = raw(j)?
+        while (j > 0) and (raw(j - 1)?._1 > cur._1) do
+          raw(j)? = raw(j - 1)?
+          j = j - 1
+        end
+        raw(j)? = cur
+      end
+      i = i + 1
+    end
+    let out = recover trn Array[(U32, Array[U32] val)](n) end
+    for x in raw.values() do out.push(x) end
+    consume out

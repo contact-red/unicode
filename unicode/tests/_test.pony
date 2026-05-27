@@ -99,6 +99,14 @@ actor \nodoc\ Main is TestList
     test(_TestSimpleUpper)
     test(_TestSimpleLower)
     test(_TestSimpleTitle)
+    // M1.D: Full case mappings + folding
+    test(_TestFullUpperEszett)
+    test(_TestFullUpperFi)
+    test(_TestFullUpperAscii)
+    test(_TestFullLowerIDot)
+    test(_TestSimpleCaseFold)
+    test(_TestFullCaseFoldEszett)
+    test(_TestFullCaseFoldAscii)
 
 class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
@@ -1151,6 +1159,87 @@ class \nodoc\ iso _TestCodepointByteIndex is UnitTest
       h.assert_eq[USize](7, b3.value())
     else
       h.fail("setup raised")
+    end
+
+// ---- M1.D: Full + case folding mappings ----
+
+class \nodoc\ iso _TestFullUpperEszett is UnitTest
+  fun name(): String => "full_upper: ß → SS"
+
+  fun apply(h: TestHelper) =>
+    match Codepoints.full_upper(0x00DF)
+    | let a: Array[U32] val =>
+      h.assert_eq[USize](2, a.size())
+      try h.assert_eq[U32](0x0053, a(0)?) end
+      try h.assert_eq[U32](0x0053, a(1)?) end
+    | None => h.fail("expected ß → SS expansion")
+    end
+
+class \nodoc\ iso _TestFullUpperFi is UnitTest
+  fun name(): String => "full_upper: ﬁ → FI"
+
+  fun apply(h: TestHelper) =>
+    match Codepoints.full_upper(0xFB01)
+    | let a: Array[U32] val =>
+      h.assert_eq[USize](2, a.size())
+      try h.assert_eq[U32](0x0046, a(0)?) end
+      try h.assert_eq[U32](0x0049, a(1)?) end
+    | None => h.fail("expected ﬁ → FI expansion")
+    end
+
+class \nodoc\ iso _TestFullUpperAscii is UnitTest
+  fun name(): String => "full_upper: ASCII has no full expansion"
+
+  fun apply(h: TestHelper) =>
+    match Codepoints.full_upper(U32('a'))
+    | let _: Array[U32] val => h.fail("ASCII has no full expansion")
+    | None => None
+    end
+
+class \nodoc\ iso _TestFullLowerIDot is UnitTest
+  fun name(): String => "full_lower: İ → 'i̇' (i + COMBINING DOT ABOVE)"
+
+  fun apply(h: TestHelper) =>
+    match Codepoints.full_lower(0x0130)
+    | let a: Array[U32] val =>
+      h.assert_eq[USize](2, a.size())
+      try h.assert_eq[U32](0x0069, a(0)?) end
+      try h.assert_eq[U32](0x0307, a(1)?) end
+    | None => h.fail("expected İ → 'i̇' expansion")
+    end
+
+class \nodoc\ iso _TestSimpleCaseFold is UnitTest
+  fun name(): String => "simple_casefold: 'A' → 'a'"
+
+  fun apply(h: TestHelper) =>
+    h.assert_eq[U32](U32('a'), Codepoints.simple_casefold(U32('A')))
+    h.assert_eq[U32](U32('a'), Codepoints.simple_casefold(U32('a')))
+    h.assert_eq[U32](U32('5'), Codepoints.simple_casefold(U32('5')))
+    // Greek capital Sigma → small sigma (NOT final sigma in simple
+    // folding — that's a contextual rule outside simple folding's scope).
+    h.assert_eq[U32](0x03C3, Codepoints.simple_casefold(0x03A3))
+
+class \nodoc\ iso _TestFullCaseFoldEszett is UnitTest
+  fun name(): String => "full_casefold: ß → ss"
+
+  fun apply(h: TestHelper) =>
+    match Codepoints.full_casefold(0x00DF)
+    | let a: Array[U32] val =>
+      h.assert_eq[USize](2, a.size())
+      try h.assert_eq[U32](0x0073, a(0)?) end
+      try h.assert_eq[U32](0x0073, a(1)?) end
+    | None => h.fail("expected ß → ss")
+    end
+
+class \nodoc\ iso _TestFullCaseFoldAscii is UnitTest
+  fun name(): String => "full_casefold: 'A' → 'a' (single cp, via C entry)"
+
+  fun apply(h: TestHelper) =>
+    match Codepoints.full_casefold(U32('A'))
+    | let a: Array[U32] val =>
+      h.assert_eq[USize](1, a.size())
+      try h.assert_eq[U32](U32('a'), a(0)?) end
+    | None => h.fail("expected 'A' to fold")
     end
 
 // ---- M1.C: Simple case mappings ----
