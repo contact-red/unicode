@@ -152,13 +152,24 @@ actor Main
     _write_file(auth, out_dir + "/_ucd_name.pony", consume name_body)?
     env.out.print("  wrote " + out_dir + "/_ucd_name.pony")
 
-    // Emit BinaryProperty type + per-property tables (PropList +
-    // DerivedCoreProperties + emoji-data).
+    // Read PropList + DerivedCoreProperties once; used by InCB and
+    // BinaryProperty emitters below.
     let prop_lines = _read_lines(auth, ucd_dir + "/PropList.txt")?
     let dcp_lines = _read_lines(auth, ucd_dir + "/DerivedCoreProperties.txt")?
     env.out.print("  read " + prop_lines.size().string()
       + " lines from PropList.txt + "
       + dcp_lines.size().string() + " from DerivedCoreProperties.txt")
+
+    // Emit Indic_Conjunct_Break table (DerivedCoreProperties.txt InCB).
+    // Hand-written runtime types live in unicode/indic_conjunct_break.pony;
+    // here we just generate the lookup table.
+    let incb_body = IncbTableEmitter.emit(dcp_lines)
+    _write_file(auth, out_dir + "/_ucd_indic_conjunct_break.pony",
+      consume incb_body)?
+    env.out.print("  wrote " + out_dir + "/_ucd_indic_conjunct_break.pony")
+
+    // Emit BinaryProperty type + per-property tables (PropList +
+    // DerivedCoreProperties + emoji-data).
     (let bp_rt, let bp_tbl) = BinaryPropsTableEmitter.emit_both(
       prop_lines, dcp_lines, emoji_lines)?
     _write_file(auth, out_dir + "/binary_property.pony", consume bp_rt)?

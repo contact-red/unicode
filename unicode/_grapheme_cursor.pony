@@ -15,16 +15,15 @@
 //   GB9b      — Prepend ×
 //   GB11      — emoji ZWJ sequence: Extended_Pictographic Extend* ZWJ ×
 //               Extended_Pictographic
+//   GB9c      — Indic_Conjunct_Break (Unicode 15.1):
+//                 InCB=Consonant [InCB=Extend InCB=Linker]* InCB=Linker
+//                   [InCB=Extend InCB=Linker]* × InCB=Consonant
+//               Suppresses the break before a Consonant when the
+//               history since the last cluster start contains a
+//               Consonant followed by at least one Linker, with only
+//               Extend/Linker codepoints between.
 //   GB12, GB13 — Regional_Indicator pairs
 //   GB999     — otherwise: break
-//
-// Not yet implemented:
-//
-//   GB9c      — Indic conjunct breaks (Unicode 15.1+). Requires the
-//               InCB property table, which lands in a later M1
-//               generator. Until then, text using ZWJ-linked Indic
-//               conjuncts (Devanagari, Bengali, etc.) may produce
-//               extra break points within an intended visual unit.
 
 class ref _GraphemeCursor
   let _bytes: String box
@@ -36,6 +35,8 @@ class ref _GraphemeCursor
                                // (Extend|ZWJ)* on the current cluster?
   var _saw_zwj: Bool           // last codepoint in the cluster was ZWJ
                                // (set after E_Pict Extend*)
+  var _incb_consonant_seen: Bool  // GB9c: seen InCB=Consonant in cluster
+  var _incb_linker_seen: Bool     // GB9c: seen InCB=Linker after consonant
   var _emitted_first: Bool     // has the first cluster been emitted yet?
 
   new ref create(bytes: String box) =>
@@ -46,6 +47,8 @@ class ref _GraphemeCursor
     _ri_run = 0
     _in_emoji_seq = false
     _saw_zwj = false
+    _incb_consonant_seen = false
+    _incb_linker_seen = false
     _emitted_first = false
 
   fun ref next_range(): ((USize, USize) | None) =>
@@ -67,14 +70,24 @@ class ref _GraphemeCursor
     _start = _pos
     _pos = _pos + cp0_len
     let g0 = _UcdGraphemeBreak.of(cp0)
+    let incb0 = _UcdIndicConjunctBreak.of(cp0)
     _reset_state(g0)
+    _reset_incb(incb0)
 
     // Extend the cluster as long as GB rules say "no break."
     while _pos < size do
       (let cp1, let cp1_len) =
         try _decode(_pos)? else (U32(0xFFFD), USize(1)) end
       let g1 = _UcdGraphemeBreak.of(cp1)
-      if _break_between(_prev_break, g1) then
+      let incb1 = _UcdIndicConjunctBreak.of(cp1)
+      var should_break = _break_between(_prev_break, g1)
+      // GB9c override: suppress an otherwise-required break when the
+      // current cluster contains a Consonant + Linker history and the
+      // next codepoint is also a Consonant.
+      if should_break and _gb9c_applies(incb1) then
+        should_break = false
+      end
+      if should_break then
         // Boundary before cp1 — leave it for the next call.
         let range = (_start, _pos)
         _prev_break = g1
@@ -84,6 +97,7 @@ class ref _GraphemeCursor
       end
       // No break: extend the cluster.
       _advance_state(g1)
+      _advance_incb(incb1)
       _pos = _pos + cp1_len
     end
     // Reached end of input — emit the final cluster.
@@ -105,6 +119,55 @@ class ref _GraphemeCursor
       | GBRegionalIndicator => 1
       else 0
       end
+
+  fun ref _reset_incb(incb: IndicConjunctBreak) =>
+    """
+    Initialize InCB tracking when a new cluster's first codepoint is
+    `incb`. Only a Consonant primes the GB9c state machine; any other
+    starting value leaves both flags off.
+    """
+    match incb
+    | InCBConsonant =>
+      _incb_consonant_seen = true
+      _incb_linker_seen = false
+    else
+      _incb_consonant_seen = false
+      _incb_linker_seen = false
+    end
+
+  fun ref _advance_incb(incb: IndicConjunctBreak) =>
+    """
+    Update InCB tracking when a codepoint joins the current cluster.
+    Transitions (state = (consonant_seen, linker_seen)):
+      Consonant: → (true, false)   — a new Consonant restarts the search
+      Linker   : if consonant_seen, → (true, true)
+      Extend   : keep state
+      None     : break the chain → (false, false)
+    """
+    match incb
+    | InCBConsonant =>
+      _incb_consonant_seen = true
+      _incb_linker_seen = false
+    | InCBLinker =>
+      if _incb_consonant_seen then _incb_linker_seen = true end
+    | InCBExtend =>
+      None
+    | InCBNone =>
+      _incb_consonant_seen = false
+      _incb_linker_seen = false
+    end
+
+  fun _gb9c_applies(next: IndicConjunctBreak): Bool =>
+    """
+    True iff GB9c says to suppress the break before `next`. Active
+    only when next is Consonant and the current cluster's history
+    includes Consonant + ... + Linker (Extends and additional
+    Linkers allowed between).
+    """
+    match next
+    | InCBConsonant => _incb_consonant_seen and _incb_linker_seen
+    else false
+    end
 
   fun ref _advance_state(g: GraphemeBreak) =>
     """
