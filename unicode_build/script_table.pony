@@ -149,7 +149,7 @@ primitive ScriptTableEmitter
         let tn = _type_name(n)
         out.append("primitive " + tn + "\n")
         out.append("  fun code(): String val => \"" + n + "\"\n")
-        out.append("  fun string(): String iso^ => \"" + n + "\".clone()\n\n")
+        out.append("  fun string(): String val => \"" + n + "\"\n\n")
       end
 
       out.append("type Script is\n  ( ")
