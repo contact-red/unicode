@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Added
 
+- `SentenceBreak` closed union (15 values) + auto-generated `_UcdSentenceBreak` lookup from `SentenceBreakProperty.txt`
+- `_SentenceBreakCursor` UAX #29 sentence boundary state machine — implements SB1..SB11, including SB7 two-step lookback, SB8 forward Lower scan, and the SB9/SB10 phase distinction (Close-phase vs Sp-phase)
+- `Sentences` topical primitive: `count`, `ranges`, `iter` over `String box`
+- `make conform-sentence`: UAX #29 SentenceBreakTest.txt conformance (512 cases — 100% pass on Unicode 16.0.0)
 - `WordBreak` closed union (20 values) + auto-generated `_UcdWordBreak` lookup from `WordBreakProperty.txt` and emoji-data
 - `_WordBreakCursor` UAX #29 word boundary state machine — implements WB1..WB16 including the lookahead-dependent rules (WB6, WB7b, WB12)
 - `Words` topical primitive: `count`, `ranges`, `iter` over `String box`

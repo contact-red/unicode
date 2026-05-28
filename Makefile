@@ -46,7 +46,7 @@ SOURCE_FILES := $(shell find $(SRC_DIR) -name '*.pony')
 
 all: ci
 
-ci: unit-tests conform conform-grapheme conform-word
+ci: unit-tests conform conform-grapheme conform-word conform-sentence
 
 test: unit-tests
 
@@ -76,7 +76,7 @@ $(BUILD_DIR):
 dependencies: corral.json
 	$(GET_DEPENDENCIES_WITH)
 
-.PHONY: all ci test unit-tests clean realclean dependencies docs ucd-build ucd-generate ucd-download conform conform-build conform-grapheme conform-grapheme-build conform-word conform-word-build
+.PHONY: all ci test unit-tests clean realclean dependencies docs ucd-build ucd-generate ucd-download conform conform-build conform-grapheme conform-grapheme-build conform-word conform-word-build conform-sentence conform-sentence-build
 
 .DEFAULT_GOAL := all
 
@@ -165,3 +165,13 @@ $(conform_word_binary): $(SOURCE_FILES) $(shell find unicode_word_conform_main -
 
 conform-word: $(conform_word_binary)
 	$(conform_word_binary) $(UCD_DIR)/auxiliary/WordBreakTest.txt
+
+conform_sentence_binary := $(BUILD_DIR)/unicode_sentence_conform_main
+
+conform-sentence-build: $(conform_sentence_binary)
+
+$(conform_sentence_binary): $(SOURCE_FILES) $(shell find unicode_sentence_conform_main -name '*.pony' 2>/dev/null) | $(BUILD_DIR) dependencies
+	$(PONYC) -o $(BUILD_DIR) unicode_sentence_conform_main -b unicode_sentence_conform_main
+
+conform-sentence: $(conform_sentence_binary)
+	$(conform_sentence_binary) $(UCD_DIR)/auxiliary/SentenceBreakTest.txt
