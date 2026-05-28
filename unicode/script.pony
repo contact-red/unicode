@@ -167,6 +167,10 @@ primitive ScriptEthiopic
   fun code(): String val => "Ethiopic"
   fun string(): String val => "Ethiopic"
 
+primitive ScriptGaray
+  fun code(): String val => "Garay"
+  fun string(): String val => "Garay"
+
 primitive ScriptGeorgian
   fun code(): String val => "Georgian"
   fun string(): String val => "Georgian"
@@ -198,6 +202,10 @@ primitive ScriptGunjalaGondi
 primitive ScriptGurmukhi
   fun code(): String val => "Gurmukhi"
   fun string(): String val => "Gurmukhi"
+
+primitive ScriptGurungKhema
+  fun code(): String val => "Gurung_Khema"
+  fun string(): String val => "Gurung_Khema"
 
 primitive ScriptHan
   fun code(): String val => "Han"
@@ -259,6 +267,10 @@ primitive ScriptKatakana
   fun code(): String val => "Katakana"
   fun string(): String val => "Katakana"
 
+primitive ScriptKawi
+  fun code(): String val => "Kawi"
+  fun string(): String val => "Kawi"
+
 primitive ScriptKayahLi
   fun code(): String val => "Kayah_Li"
   fun string(): String val => "Kayah_Li"
@@ -282,6 +294,10 @@ primitive ScriptKhojki
 primitive ScriptKhudawadi
   fun code(): String val => "Khudawadi"
   fun string(): String val => "Khudawadi"
+
+primitive ScriptKiratRai
+  fun code(): String val => "Kirat_Rai"
+  fun string(): String val => "Kirat_Rai"
 
 primitive ScriptLao
   fun code(): String val => "Lao"
@@ -395,6 +411,10 @@ primitive ScriptNabataean
   fun code(): String val => "Nabataean"
   fun string(): String val => "Nabataean"
 
+primitive ScriptNagMundari
+  fun code(): String val => "Nag_Mundari"
+  fun string(): String val => "Nag_Mundari"
+
 primitive ScriptNandinagari
   fun code(): String val => "Nandinagari"
   fun string(): String val => "Nandinagari"
@@ -426,6 +446,10 @@ primitive ScriptOgham
 primitive ScriptOlChiki
   fun code(): String val => "Ol_Chiki"
   fun string(): String val => "Ol_Chiki"
+
+primitive ScriptOlOnal
+  fun code(): String val => "Ol_Onal"
+  fun string(): String val => "Ol_Onal"
 
 primitive ScriptOldHungarian
   fun code(): String val => "Old_Hungarian"
@@ -551,6 +575,10 @@ primitive ScriptSundanese
   fun code(): String val => "Sundanese"
   fun string(): String val => "Sundanese"
 
+primitive ScriptSunuwar
+  fun code(): String val => "Sunuwar"
+  fun string(): String val => "Sunuwar"
+
 primitive ScriptSylotiNagri
   fun code(): String val => "Syloti_Nagri"
   fun string(): String val => "Syloti_Nagri"
@@ -619,9 +647,17 @@ primitive ScriptTirhuta
   fun code(): String val => "Tirhuta"
   fun string(): String val => "Tirhuta"
 
+primitive ScriptTodhri
+  fun code(): String val => "Todhri"
+  fun string(): String val => "Todhri"
+
 primitive ScriptToto
   fun code(): String val => "Toto"
   fun string(): String val => "Toto"
+
+primitive ScriptTuluTigalari
+  fun code(): String val => "Tulu_Tigalari"
+  fun string(): String val => "Tulu_Tigalari"
 
 primitive ScriptUgaritic
   fun code(): String val => "Ugaritic"
@@ -696,6 +732,7 @@ type Script is
   | ScriptElbasan
   | ScriptElymaic
   | ScriptEthiopic
+  | ScriptGaray
   | ScriptGeorgian
   | ScriptGlagolitic
   | ScriptGothic
@@ -704,6 +741,7 @@ type Script is
   | ScriptGujarati
   | ScriptGunjalaGondi
   | ScriptGurmukhi
+  | ScriptGurungKhema
   | ScriptHan
   | ScriptHangul
   | ScriptHanifiRohingya
@@ -719,12 +757,14 @@ type Script is
   | ScriptKaithi
   | ScriptKannada
   | ScriptKatakana
+  | ScriptKawi
   | ScriptKayahLi
   | ScriptKharoshthi
   | ScriptKhitanSmallScript
   | ScriptKhmer
   | ScriptKhojki
   | ScriptKhudawadi
+  | ScriptKiratRai
   | ScriptLao
   | ScriptLatin
   | ScriptLepcha
@@ -753,6 +793,7 @@ type Script is
   | ScriptMultani
   | ScriptMyanmar
   | ScriptNabataean
+  | ScriptNagMundari
   | ScriptNandinagari
   | ScriptNewTaiLue
   | ScriptNewa
@@ -761,6 +802,7 @@ type Script is
   | ScriptNyiakengPuachueHmong
   | ScriptOgham
   | ScriptOlChiki
+  | ScriptOlOnal
   | ScriptOldHungarian
   | ScriptOldItalic
   | ScriptOldNorthArabian
@@ -792,6 +834,7 @@ type Script is
   | ScriptSoraSompeng
   | ScriptSoyombo
   | ScriptSundanese
+  | ScriptSunuwar
   | ScriptSylotiNagri
   | ScriptSyriac
   | ScriptTagalog
@@ -809,7 +852,9 @@ type Script is
   | ScriptTibetan
   | ScriptTifinagh
   | ScriptTirhuta
+  | ScriptTodhri
   | ScriptToto
+  | ScriptTuluTigalari
   | ScriptUgaritic
   | ScriptVai
   | ScriptVithkuqi
@@ -863,6 +908,7 @@ primitive Scripts
     | "Elbasan" => ScriptElbasan
     | "Elymaic" => ScriptElymaic
     | "Ethiopic" => ScriptEthiopic
+    | "Garay" => ScriptGaray
     | "Georgian" => ScriptGeorgian
     | "Glagolitic" => ScriptGlagolitic
     | "Gothic" => ScriptGothic
@@ -871,6 +917,7 @@ primitive Scripts
     | "Gujarati" => ScriptGujarati
     | "Gunjala_Gondi" => ScriptGunjalaGondi
     | "Gurmukhi" => ScriptGurmukhi
+    | "Gurung_Khema" => ScriptGurungKhema
     | "Han" => ScriptHan
     | "Hangul" => ScriptHangul
     | "Hanifi_Rohingya" => ScriptHanifiRohingya
@@ -886,12 +933,14 @@ primitive Scripts
     | "Kaithi" => ScriptKaithi
     | "Kannada" => ScriptKannada
     | "Katakana" => ScriptKatakana
+    | "Kawi" => ScriptKawi
     | "Kayah_Li" => ScriptKayahLi
     | "Kharoshthi" => ScriptKharoshthi
     | "Khitan_Small_Script" => ScriptKhitanSmallScript
     | "Khmer" => ScriptKhmer
     | "Khojki" => ScriptKhojki
     | "Khudawadi" => ScriptKhudawadi
+    | "Kirat_Rai" => ScriptKiratRai
     | "Lao" => ScriptLao
     | "Latin" => ScriptLatin
     | "Lepcha" => ScriptLepcha
@@ -920,6 +969,7 @@ primitive Scripts
     | "Multani" => ScriptMultani
     | "Myanmar" => ScriptMyanmar
     | "Nabataean" => ScriptNabataean
+    | "Nag_Mundari" => ScriptNagMundari
     | "Nandinagari" => ScriptNandinagari
     | "New_Tai_Lue" => ScriptNewTaiLue
     | "Newa" => ScriptNewa
@@ -928,6 +978,7 @@ primitive Scripts
     | "Nyiakeng_Puachue_Hmong" => ScriptNyiakengPuachueHmong
     | "Ogham" => ScriptOgham
     | "Ol_Chiki" => ScriptOlChiki
+    | "Ol_Onal" => ScriptOlOnal
     | "Old_Hungarian" => ScriptOldHungarian
     | "Old_Italic" => ScriptOldItalic
     | "Old_North_Arabian" => ScriptOldNorthArabian
@@ -959,6 +1010,7 @@ primitive Scripts
     | "Sora_Sompeng" => ScriptSoraSompeng
     | "Soyombo" => ScriptSoyombo
     | "Sundanese" => ScriptSundanese
+    | "Sunuwar" => ScriptSunuwar
     | "Syloti_Nagri" => ScriptSylotiNagri
     | "Syriac" => ScriptSyriac
     | "Tagalog" => ScriptTagalog
@@ -976,7 +1028,9 @@ primitive Scripts
     | "Tibetan" => ScriptTibetan
     | "Tifinagh" => ScriptTifinagh
     | "Tirhuta" => ScriptTirhuta
+    | "Todhri" => ScriptTodhri
     | "Toto" => ScriptToto
+    | "Tulu_Tigalari" => ScriptTuluTigalari
     | "Ugaritic" => ScriptUgaritic
     | "Vai" => ScriptVai
     | "Vithkuqi" => ScriptVithkuqi
@@ -1030,128 +1084,137 @@ primitive Scripts
     | ScriptElbasan => 37
     | ScriptElymaic => 38
     | ScriptEthiopic => 39
-    | ScriptGeorgian => 40
-    | ScriptGlagolitic => 41
-    | ScriptGothic => 42
-    | ScriptGrantha => 43
-    | ScriptGreek => 44
-    | ScriptGujarati => 45
-    | ScriptGunjalaGondi => 46
-    | ScriptGurmukhi => 47
-    | ScriptHan => 48
-    | ScriptHangul => 49
-    | ScriptHanifiRohingya => 50
-    | ScriptHanunoo => 51
-    | ScriptHatran => 52
-    | ScriptHebrew => 53
-    | ScriptHiragana => 54
-    | ScriptImperialAramaic => 55
-    | ScriptInherited => 56
-    | ScriptInscriptionalPahlavi => 57
-    | ScriptInscriptionalParthian => 58
-    | ScriptJavanese => 59
-    | ScriptKaithi => 60
-    | ScriptKannada => 61
-    | ScriptKatakana => 62
-    | ScriptKayahLi => 63
-    | ScriptKharoshthi => 64
-    | ScriptKhitanSmallScript => 65
-    | ScriptKhmer => 66
-    | ScriptKhojki => 67
-    | ScriptKhudawadi => 68
-    | ScriptLao => 69
-    | ScriptLatin => 70
-    | ScriptLepcha => 71
-    | ScriptLimbu => 72
-    | ScriptLinearA => 73
-    | ScriptLinearB => 74
-    | ScriptLisu => 75
-    | ScriptLycian => 76
-    | ScriptLydian => 77
-    | ScriptMahajani => 78
-    | ScriptMakasar => 79
-    | ScriptMalayalam => 80
-    | ScriptMandaic => 81
-    | ScriptManichaean => 82
-    | ScriptMarchen => 83
-    | ScriptMasaramGondi => 84
-    | ScriptMedefaidrin => 85
-    | ScriptMeeteiMayek => 86
-    | ScriptMendeKikakui => 87
-    | ScriptMeroiticCursive => 88
-    | ScriptMeroiticHieroglyphs => 89
-    | ScriptMiao => 90
-    | ScriptModi => 91
-    | ScriptMongolian => 92
-    | ScriptMro => 93
-    | ScriptMultani => 94
-    | ScriptMyanmar => 95
-    | ScriptNabataean => 96
-    | ScriptNandinagari => 97
-    | ScriptNewTaiLue => 98
-    | ScriptNewa => 99
-    | ScriptNko => 100
-    | ScriptNushu => 101
-    | ScriptNyiakengPuachueHmong => 102
-    | ScriptOgham => 103
-    | ScriptOlChiki => 104
-    | ScriptOldHungarian => 105
-    | ScriptOldItalic => 106
-    | ScriptOldNorthArabian => 107
-    | ScriptOldPermic => 108
-    | ScriptOldPersian => 109
-    | ScriptOldSogdian => 110
-    | ScriptOldSouthArabian => 111
-    | ScriptOldTurkic => 112
-    | ScriptOldUyghur => 113
-    | ScriptOriya => 114
-    | ScriptOsage => 115
-    | ScriptOsmanya => 116
-    | ScriptPahawhHmong => 117
-    | ScriptPalmyrene => 118
-    | ScriptPauCinHau => 119
-    | ScriptPhagsPa => 120
-    | ScriptPhoenician => 121
-    | ScriptPsalterPahlavi => 122
-    | ScriptRejang => 123
-    | ScriptRunic => 124
-    | ScriptSamaritan => 125
-    | ScriptSaurashtra => 126
-    | ScriptSharada => 127
-    | ScriptShavian => 128
-    | ScriptSiddham => 129
-    | ScriptSignWriting => 130
-    | ScriptSinhala => 131
-    | ScriptSogdian => 132
-    | ScriptSoraSompeng => 133
-    | ScriptSoyombo => 134
-    | ScriptSundanese => 135
-    | ScriptSylotiNagri => 136
-    | ScriptSyriac => 137
-    | ScriptTagalog => 138
-    | ScriptTagbanwa => 139
-    | ScriptTaiLe => 140
-    | ScriptTaiTham => 141
-    | ScriptTaiViet => 142
-    | ScriptTakri => 143
-    | ScriptTamil => 144
-    | ScriptTangsa => 145
-    | ScriptTangut => 146
-    | ScriptTelugu => 147
-    | ScriptThaana => 148
-    | ScriptThai => 149
-    | ScriptTibetan => 150
-    | ScriptTifinagh => 151
-    | ScriptTirhuta => 152
-    | ScriptToto => 153
-    | ScriptUgaritic => 154
-    | ScriptVai => 155
-    | ScriptVithkuqi => 156
-    | ScriptWancho => 157
-    | ScriptWarangCiti => 158
-    | ScriptYezidi => 159
-    | ScriptYi => 160
-    | ScriptZanabazarSquare => 161
+    | ScriptGaray => 40
+    | ScriptGeorgian => 41
+    | ScriptGlagolitic => 42
+    | ScriptGothic => 43
+    | ScriptGrantha => 44
+    | ScriptGreek => 45
+    | ScriptGujarati => 46
+    | ScriptGunjalaGondi => 47
+    | ScriptGurmukhi => 48
+    | ScriptGurungKhema => 49
+    | ScriptHan => 50
+    | ScriptHangul => 51
+    | ScriptHanifiRohingya => 52
+    | ScriptHanunoo => 53
+    | ScriptHatran => 54
+    | ScriptHebrew => 55
+    | ScriptHiragana => 56
+    | ScriptImperialAramaic => 57
+    | ScriptInherited => 58
+    | ScriptInscriptionalPahlavi => 59
+    | ScriptInscriptionalParthian => 60
+    | ScriptJavanese => 61
+    | ScriptKaithi => 62
+    | ScriptKannada => 63
+    | ScriptKatakana => 64
+    | ScriptKawi => 65
+    | ScriptKayahLi => 66
+    | ScriptKharoshthi => 67
+    | ScriptKhitanSmallScript => 68
+    | ScriptKhmer => 69
+    | ScriptKhojki => 70
+    | ScriptKhudawadi => 71
+    | ScriptKiratRai => 72
+    | ScriptLao => 73
+    | ScriptLatin => 74
+    | ScriptLepcha => 75
+    | ScriptLimbu => 76
+    | ScriptLinearA => 77
+    | ScriptLinearB => 78
+    | ScriptLisu => 79
+    | ScriptLycian => 80
+    | ScriptLydian => 81
+    | ScriptMahajani => 82
+    | ScriptMakasar => 83
+    | ScriptMalayalam => 84
+    | ScriptMandaic => 85
+    | ScriptManichaean => 86
+    | ScriptMarchen => 87
+    | ScriptMasaramGondi => 88
+    | ScriptMedefaidrin => 89
+    | ScriptMeeteiMayek => 90
+    | ScriptMendeKikakui => 91
+    | ScriptMeroiticCursive => 92
+    | ScriptMeroiticHieroglyphs => 93
+    | ScriptMiao => 94
+    | ScriptModi => 95
+    | ScriptMongolian => 96
+    | ScriptMro => 97
+    | ScriptMultani => 98
+    | ScriptMyanmar => 99
+    | ScriptNabataean => 100
+    | ScriptNagMundari => 101
+    | ScriptNandinagari => 102
+    | ScriptNewTaiLue => 103
+    | ScriptNewa => 104
+    | ScriptNko => 105
+    | ScriptNushu => 106
+    | ScriptNyiakengPuachueHmong => 107
+    | ScriptOgham => 108
+    | ScriptOlChiki => 109
+    | ScriptOlOnal => 110
+    | ScriptOldHungarian => 111
+    | ScriptOldItalic => 112
+    | ScriptOldNorthArabian => 113
+    | ScriptOldPermic => 114
+    | ScriptOldPersian => 115
+    | ScriptOldSogdian => 116
+    | ScriptOldSouthArabian => 117
+    | ScriptOldTurkic => 118
+    | ScriptOldUyghur => 119
+    | ScriptOriya => 120
+    | ScriptOsage => 121
+    | ScriptOsmanya => 122
+    | ScriptPahawhHmong => 123
+    | ScriptPalmyrene => 124
+    | ScriptPauCinHau => 125
+    | ScriptPhagsPa => 126
+    | ScriptPhoenician => 127
+    | ScriptPsalterPahlavi => 128
+    | ScriptRejang => 129
+    | ScriptRunic => 130
+    | ScriptSamaritan => 131
+    | ScriptSaurashtra => 132
+    | ScriptSharada => 133
+    | ScriptShavian => 134
+    | ScriptSiddham => 135
+    | ScriptSignWriting => 136
+    | ScriptSinhala => 137
+    | ScriptSogdian => 138
+    | ScriptSoraSompeng => 139
+    | ScriptSoyombo => 140
+    | ScriptSundanese => 141
+    | ScriptSunuwar => 142
+    | ScriptSylotiNagri => 143
+    | ScriptSyriac => 144
+    | ScriptTagalog => 145
+    | ScriptTagbanwa => 146
+    | ScriptTaiLe => 147
+    | ScriptTaiTham => 148
+    | ScriptTaiViet => 149
+    | ScriptTakri => 150
+    | ScriptTamil => 151
+    | ScriptTangsa => 152
+    | ScriptTangut => 153
+    | ScriptTelugu => 154
+    | ScriptThaana => 155
+    | ScriptThai => 156
+    | ScriptTibetan => 157
+    | ScriptTifinagh => 158
+    | ScriptTirhuta => 159
+    | ScriptTodhri => 160
+    | ScriptToto => 161
+    | ScriptTuluTigalari => 162
+    | ScriptUgaritic => 163
+    | ScriptVai => 164
+    | ScriptVithkuqi => 165
+    | ScriptWancho => 166
+    | ScriptWarangCiti => 167
+    | ScriptYezidi => 168
+    | ScriptYi => 169
+    | ScriptZanabazarSquare => 170
     end
 
   fun _from_byte(b: U8): Script =>
@@ -1196,127 +1259,136 @@ primitive Scripts
     | 37 => ScriptElbasan
     | 38 => ScriptElymaic
     | 39 => ScriptEthiopic
-    | 40 => ScriptGeorgian
-    | 41 => ScriptGlagolitic
-    | 42 => ScriptGothic
-    | 43 => ScriptGrantha
-    | 44 => ScriptGreek
-    | 45 => ScriptGujarati
-    | 46 => ScriptGunjalaGondi
-    | 47 => ScriptGurmukhi
-    | 48 => ScriptHan
-    | 49 => ScriptHangul
-    | 50 => ScriptHanifiRohingya
-    | 51 => ScriptHanunoo
-    | 52 => ScriptHatran
-    | 53 => ScriptHebrew
-    | 54 => ScriptHiragana
-    | 55 => ScriptImperialAramaic
-    | 56 => ScriptInherited
-    | 57 => ScriptInscriptionalPahlavi
-    | 58 => ScriptInscriptionalParthian
-    | 59 => ScriptJavanese
-    | 60 => ScriptKaithi
-    | 61 => ScriptKannada
-    | 62 => ScriptKatakana
-    | 63 => ScriptKayahLi
-    | 64 => ScriptKharoshthi
-    | 65 => ScriptKhitanSmallScript
-    | 66 => ScriptKhmer
-    | 67 => ScriptKhojki
-    | 68 => ScriptKhudawadi
-    | 69 => ScriptLao
-    | 70 => ScriptLatin
-    | 71 => ScriptLepcha
-    | 72 => ScriptLimbu
-    | 73 => ScriptLinearA
-    | 74 => ScriptLinearB
-    | 75 => ScriptLisu
-    | 76 => ScriptLycian
-    | 77 => ScriptLydian
-    | 78 => ScriptMahajani
-    | 79 => ScriptMakasar
-    | 80 => ScriptMalayalam
-    | 81 => ScriptMandaic
-    | 82 => ScriptManichaean
-    | 83 => ScriptMarchen
-    | 84 => ScriptMasaramGondi
-    | 85 => ScriptMedefaidrin
-    | 86 => ScriptMeeteiMayek
-    | 87 => ScriptMendeKikakui
-    | 88 => ScriptMeroiticCursive
-    | 89 => ScriptMeroiticHieroglyphs
-    | 90 => ScriptMiao
-    | 91 => ScriptModi
-    | 92 => ScriptMongolian
-    | 93 => ScriptMro
-    | 94 => ScriptMultani
-    | 95 => ScriptMyanmar
-    | 96 => ScriptNabataean
-    | 97 => ScriptNandinagari
-    | 98 => ScriptNewTaiLue
-    | 99 => ScriptNewa
-    | 100 => ScriptNko
-    | 101 => ScriptNushu
-    | 102 => ScriptNyiakengPuachueHmong
-    | 103 => ScriptOgham
-    | 104 => ScriptOlChiki
-    | 105 => ScriptOldHungarian
-    | 106 => ScriptOldItalic
-    | 107 => ScriptOldNorthArabian
-    | 108 => ScriptOldPermic
-    | 109 => ScriptOldPersian
-    | 110 => ScriptOldSogdian
-    | 111 => ScriptOldSouthArabian
-    | 112 => ScriptOldTurkic
-    | 113 => ScriptOldUyghur
-    | 114 => ScriptOriya
-    | 115 => ScriptOsage
-    | 116 => ScriptOsmanya
-    | 117 => ScriptPahawhHmong
-    | 118 => ScriptPalmyrene
-    | 119 => ScriptPauCinHau
-    | 120 => ScriptPhagsPa
-    | 121 => ScriptPhoenician
-    | 122 => ScriptPsalterPahlavi
-    | 123 => ScriptRejang
-    | 124 => ScriptRunic
-    | 125 => ScriptSamaritan
-    | 126 => ScriptSaurashtra
-    | 127 => ScriptSharada
-    | 128 => ScriptShavian
-    | 129 => ScriptSiddham
-    | 130 => ScriptSignWriting
-    | 131 => ScriptSinhala
-    | 132 => ScriptSogdian
-    | 133 => ScriptSoraSompeng
-    | 134 => ScriptSoyombo
-    | 135 => ScriptSundanese
-    | 136 => ScriptSylotiNagri
-    | 137 => ScriptSyriac
-    | 138 => ScriptTagalog
-    | 139 => ScriptTagbanwa
-    | 140 => ScriptTaiLe
-    | 141 => ScriptTaiTham
-    | 142 => ScriptTaiViet
-    | 143 => ScriptTakri
-    | 144 => ScriptTamil
-    | 145 => ScriptTangsa
-    | 146 => ScriptTangut
-    | 147 => ScriptTelugu
-    | 148 => ScriptThaana
-    | 149 => ScriptThai
-    | 150 => ScriptTibetan
-    | 151 => ScriptTifinagh
-    | 152 => ScriptTirhuta
-    | 153 => ScriptToto
-    | 154 => ScriptUgaritic
-    | 155 => ScriptVai
-    | 156 => ScriptVithkuqi
-    | 157 => ScriptWancho
-    | 158 => ScriptWarangCiti
-    | 159 => ScriptYezidi
-    | 160 => ScriptYi
-    | 161 => ScriptZanabazarSquare
+    | 40 => ScriptGaray
+    | 41 => ScriptGeorgian
+    | 42 => ScriptGlagolitic
+    | 43 => ScriptGothic
+    | 44 => ScriptGrantha
+    | 45 => ScriptGreek
+    | 46 => ScriptGujarati
+    | 47 => ScriptGunjalaGondi
+    | 48 => ScriptGurmukhi
+    | 49 => ScriptGurungKhema
+    | 50 => ScriptHan
+    | 51 => ScriptHangul
+    | 52 => ScriptHanifiRohingya
+    | 53 => ScriptHanunoo
+    | 54 => ScriptHatran
+    | 55 => ScriptHebrew
+    | 56 => ScriptHiragana
+    | 57 => ScriptImperialAramaic
+    | 58 => ScriptInherited
+    | 59 => ScriptInscriptionalPahlavi
+    | 60 => ScriptInscriptionalParthian
+    | 61 => ScriptJavanese
+    | 62 => ScriptKaithi
+    | 63 => ScriptKannada
+    | 64 => ScriptKatakana
+    | 65 => ScriptKawi
+    | 66 => ScriptKayahLi
+    | 67 => ScriptKharoshthi
+    | 68 => ScriptKhitanSmallScript
+    | 69 => ScriptKhmer
+    | 70 => ScriptKhojki
+    | 71 => ScriptKhudawadi
+    | 72 => ScriptKiratRai
+    | 73 => ScriptLao
+    | 74 => ScriptLatin
+    | 75 => ScriptLepcha
+    | 76 => ScriptLimbu
+    | 77 => ScriptLinearA
+    | 78 => ScriptLinearB
+    | 79 => ScriptLisu
+    | 80 => ScriptLycian
+    | 81 => ScriptLydian
+    | 82 => ScriptMahajani
+    | 83 => ScriptMakasar
+    | 84 => ScriptMalayalam
+    | 85 => ScriptMandaic
+    | 86 => ScriptManichaean
+    | 87 => ScriptMarchen
+    | 88 => ScriptMasaramGondi
+    | 89 => ScriptMedefaidrin
+    | 90 => ScriptMeeteiMayek
+    | 91 => ScriptMendeKikakui
+    | 92 => ScriptMeroiticCursive
+    | 93 => ScriptMeroiticHieroglyphs
+    | 94 => ScriptMiao
+    | 95 => ScriptModi
+    | 96 => ScriptMongolian
+    | 97 => ScriptMro
+    | 98 => ScriptMultani
+    | 99 => ScriptMyanmar
+    | 100 => ScriptNabataean
+    | 101 => ScriptNagMundari
+    | 102 => ScriptNandinagari
+    | 103 => ScriptNewTaiLue
+    | 104 => ScriptNewa
+    | 105 => ScriptNko
+    | 106 => ScriptNushu
+    | 107 => ScriptNyiakengPuachueHmong
+    | 108 => ScriptOgham
+    | 109 => ScriptOlChiki
+    | 110 => ScriptOlOnal
+    | 111 => ScriptOldHungarian
+    | 112 => ScriptOldItalic
+    | 113 => ScriptOldNorthArabian
+    | 114 => ScriptOldPermic
+    | 115 => ScriptOldPersian
+    | 116 => ScriptOldSogdian
+    | 117 => ScriptOldSouthArabian
+    | 118 => ScriptOldTurkic
+    | 119 => ScriptOldUyghur
+    | 120 => ScriptOriya
+    | 121 => ScriptOsage
+    | 122 => ScriptOsmanya
+    | 123 => ScriptPahawhHmong
+    | 124 => ScriptPalmyrene
+    | 125 => ScriptPauCinHau
+    | 126 => ScriptPhagsPa
+    | 127 => ScriptPhoenician
+    | 128 => ScriptPsalterPahlavi
+    | 129 => ScriptRejang
+    | 130 => ScriptRunic
+    | 131 => ScriptSamaritan
+    | 132 => ScriptSaurashtra
+    | 133 => ScriptSharada
+    | 134 => ScriptShavian
+    | 135 => ScriptSiddham
+    | 136 => ScriptSignWriting
+    | 137 => ScriptSinhala
+    | 138 => ScriptSogdian
+    | 139 => ScriptSoraSompeng
+    | 140 => ScriptSoyombo
+    | 141 => ScriptSundanese
+    | 142 => ScriptSunuwar
+    | 143 => ScriptSylotiNagri
+    | 144 => ScriptSyriac
+    | 145 => ScriptTagalog
+    | 146 => ScriptTagbanwa
+    | 147 => ScriptTaiLe
+    | 148 => ScriptTaiTham
+    | 149 => ScriptTaiViet
+    | 150 => ScriptTakri
+    | 151 => ScriptTamil
+    | 152 => ScriptTangsa
+    | 153 => ScriptTangut
+    | 154 => ScriptTelugu
+    | 155 => ScriptThaana
+    | 156 => ScriptThai
+    | 157 => ScriptTibetan
+    | 158 => ScriptTifinagh
+    | 159 => ScriptTirhuta
+    | 160 => ScriptTodhri
+    | 161 => ScriptToto
+    | 162 => ScriptTuluTigalari
+    | 163 => ScriptUgaritic
+    | 164 => ScriptVai
+    | 165 => ScriptVithkuqi
+    | 166 => ScriptWancho
+    | 167 => ScriptWarangCiti
+    | 168 => ScriptYezidi
+    | 169 => ScriptYi
+    | 170 => ScriptZanabazarSquare
     else ScriptUnknown
     end

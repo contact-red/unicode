@@ -118,6 +118,18 @@ primitive PropIDSTrinaryOperator
   fun code(): String val => "IDS_Trinary_Operator"
   fun string(): String val => "IDS_Trinary_Operator"
 
+primitive PropIDSUnaryOperator
+  fun code(): String val => "IDS_Unary_Operator"
+  fun string(): String val => "IDS_Unary_Operator"
+
+primitive PropIDCompatMathContinue
+  fun code(): String val => "ID_Compat_Math_Continue"
+  fun string(): String val => "ID_Compat_Math_Continue"
+
+primitive PropIDCompatMathStart
+  fun code(): String val => "ID_Compat_Math_Start"
+  fun string(): String val => "ID_Compat_Math_Start"
+
 primitive PropIDContinue
   fun code(): String val => "ID_Continue"
   fun string(): String val => "ID_Continue"
@@ -129,6 +141,10 @@ primitive PropIDStart
 primitive PropIdeographic
   fun code(): String val => "Ideographic"
   fun string(): String val => "Ideographic"
+
+primitive PropInCB
+  fun code(): String val => "InCB"
+  fun string(): String val => "InCB"
 
 primitive PropJoinControl
   fun code(): String val => "Join_Control"
@@ -145,6 +161,10 @@ primitive PropLowercase
 primitive PropMath
   fun code(): String val => "Math"
   fun string(): String val => "Math"
+
+primitive PropModifierCombiningMark
+  fun code(): String val => "Modifier_Combining_Mark"
+  fun string(): String val => "Modifier_Combining_Mark"
 
 primitive PropNoncharacterCodePoint
   fun code(): String val => "Noncharacter_Code_Point"
@@ -271,13 +291,18 @@ type BinaryProperty is
   | PropHyphen
   | PropIDSBinaryOperator
   | PropIDSTrinaryOperator
+  | PropIDSUnaryOperator
+  | PropIDCompatMathContinue
+  | PropIDCompatMathStart
   | PropIDContinue
   | PropIDStart
   | PropIdeographic
+  | PropInCB
   | PropJoinControl
   | PropLogicalOrderException
   | PropLowercase
   | PropMath
+  | PropModifierCombiningMark
   | PropNoncharacterCodePoint
   | PropOtherAlphabetic
   | PropOtherDefaultIgnorableCodePoint
@@ -335,13 +360,18 @@ primitive BinaryProperties
     | "Hyphen" => PropHyphen
     | "IDS_Binary_Operator" => PropIDSBinaryOperator
     | "IDS_Trinary_Operator" => PropIDSTrinaryOperator
+    | "IDS_Unary_Operator" => PropIDSUnaryOperator
+    | "ID_Compat_Math_Continue" => PropIDCompatMathContinue
+    | "ID_Compat_Math_Start" => PropIDCompatMathStart
     | "ID_Continue" => PropIDContinue
     | "ID_Start" => PropIDStart
     | "Ideographic" => PropIdeographic
+    | "InCB" => PropInCB
     | "Join_Control" => PropJoinControl
     | "Logical_Order_Exception" => PropLogicalOrderException
     | "Lowercase" => PropLowercase
     | "Math" => PropMath
+    | "Modifier_Combining_Mark" => PropModifierCombiningMark
     | "Noncharacter_Code_Point" => PropNoncharacterCodePoint
     | "Other_Alphabetic" => PropOtherAlphabetic
     | "Other_Default_Ignorable_Code_Point" => PropOtherDefaultIgnorableCodePoint
