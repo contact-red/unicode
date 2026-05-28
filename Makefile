@@ -46,7 +46,7 @@ SOURCE_FILES := $(shell find $(SRC_DIR) -name '*.pony')
 
 all: ci
 
-ci: unit-tests conform conform-grapheme
+ci: unit-tests conform conform-grapheme conform-word
 
 test: unit-tests
 
@@ -76,7 +76,7 @@ $(BUILD_DIR):
 dependencies: corral.json
 	$(GET_DEPENDENCIES_WITH)
 
-.PHONY: all ci test unit-tests clean realclean dependencies docs ucd-build ucd-generate ucd-download conform conform-build conform-grapheme conform-grapheme-build
+.PHONY: all ci test unit-tests clean realclean dependencies docs ucd-build ucd-generate ucd-download conform conform-build conform-grapheme conform-grapheme-build conform-word conform-word-build
 
 .DEFAULT_GOAL := all
 
@@ -155,3 +155,13 @@ $(conform_grapheme_binary): $(SOURCE_FILES) $(shell find unicode_grapheme_confor
 
 conform-grapheme: $(conform_grapheme_binary)
 	$(conform_grapheme_binary) $(UCD_DIR)/auxiliary/GraphemeBreakTest.txt
+
+conform_word_binary := $(BUILD_DIR)/unicode_word_conform_main
+
+conform-word-build: $(conform_word_binary)
+
+$(conform_word_binary): $(SOURCE_FILES) $(shell find unicode_word_conform_main -name '*.pony' 2>/dev/null) | $(BUILD_DIR) dependencies
+	$(PONYC) -o $(BUILD_DIR) unicode_word_conform_main -b unicode_word_conform_main
+
+conform-word: $(conform_word_binary)
+	$(conform_word_binary) $(UCD_DIR)/auxiliary/WordBreakTest.txt

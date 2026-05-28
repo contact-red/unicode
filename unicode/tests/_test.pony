@@ -126,6 +126,13 @@ actor \nodoc\ Main is TestList
     test(_TestNameLatin)
     test(_TestNameControl)
     test(_TestFromName)
+    // 0.2.0: Words (UAX #29)
+    test(_TestWordsAsciiBasic)
+    test(_TestWordsNumeric)
+    test(_TestWordsApostrophe)
+    test(_TestWordsCrLf)
+    test(_TestWordsEmpty)
+    test(_TestWordsInvalid)
     // M8: Search
     test(_TestSearchContains)
     test(_TestSearchStartsEnds)
@@ -1232,6 +1239,89 @@ class \nodoc\ iso _TestCodepointByteIndex is UnitTest
       h.assert_eq[USize](7, b3.value())
     else
       h.fail("setup raised")
+    end
+
+// ---- 0.2.0: Words (UAX #29) ----
+
+class \nodoc\ iso _TestWordsAsciiBasic is UnitTest
+  fun name(): String => "Words.iter: ASCII words and spaces"
+
+  fun apply(h: TestHelper) =>
+    let s: String val = "Hello, world!"
+    match Words.iter(s)
+    | let it: Iterator[String val] =>
+      let parts = recover trn Array[String val] end
+      for w in it do parts.push(w) end
+      // Expected: "Hello", ",", " ", "world", "!"
+      h.assert_eq[USize](5, parts.size())
+      try h.assert_eq[String]("Hello", parts(0)?) end
+      try h.assert_eq[String](",", parts(1)?) end
+      try h.assert_eq[String](" ", parts(2)?) end
+      try h.assert_eq[String]("world", parts(3)?) end
+      try h.assert_eq[String]("!", parts(4)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestWordsNumeric is UnitTest
+  fun name(): String => "Words: numeric stays together (WB8, WB12)"
+
+  fun apply(h: TestHelper) =>
+    // "3.14" → "3.14" (WB12: Numeric × MidNum Numeric)
+    match Words.iter("3.14")
+    | let it: Iterator[String val] =>
+      let parts = recover trn Array[String val] end
+      for w in it do parts.push(w) end
+      h.assert_eq[USize](1, parts.size())
+      try h.assert_eq[String]("3.14", parts(0)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestWordsApostrophe is UnitTest
+  fun name(): String => "Words: don't → one word (WB6/WB7 via Single_Quote)"
+
+  fun apply(h: TestHelper) =>
+    match Words.iter("don't")
+    | let it: Iterator[String val] =>
+      let parts = recover trn Array[String val] end
+      for w in it do parts.push(w) end
+      h.assert_eq[USize](1, parts.size())
+      try h.assert_eq[String]("don't", parts(0)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestWordsCrLf is UnitTest
+  fun name(): String => "Words: CR LF stays together (WB3)"
+
+  fun apply(h: TestHelper) =>
+    match Words.iter("a\r\nb")
+    | let it: Iterator[String val] =>
+      let parts = recover trn Array[String val] end
+      for w in it do parts.push(w) end
+      // "a", "\r\n", "b"
+      h.assert_eq[USize](3, parts.size())
+      try h.assert_eq[String]("a", parts(0)?) end
+      try h.assert_eq[String]("\r\n", parts(1)?) end
+      try h.assert_eq[String]("b", parts(2)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestWordsEmpty is UnitTest
+  fun name(): String => "Words.count: empty string"
+
+  fun apply(h: TestHelper) =>
+    match Words.count("")
+    | let n: USize => h.assert_eq[USize](0, n)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestWordsInvalid is UnitTest
+  fun name(): String => "Words rejects ill-formed UTF-8"
+
+  fun apply(h: TestHelper) =>
+    let bad = String.from_array(recover val [as U8: 0x41; 0x80] end)
+    match Words.count(bad)
+    | let _: USize => h.fail("expected InvalidUtf8")
+    | let e: InvalidUtf8 => h.assert_eq[USize](1, e.offset)
     end
 
 // ---- M8: Search ----

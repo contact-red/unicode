@@ -83,6 +83,15 @@ actor Main
     _write_file(auth, gb_path, consume gb_body)?
     env.out.print("  wrote " + gb_path)
 
+    // Emit word break property table (UAX #29).
+    let wbp_lines = _read_lines(auth,
+      ucd_dir + "/auxiliary/WordBreakProperty.txt")?
+    env.out.print("  read " + wbp_lines.size().string()
+      + " lines from WordBreakProperty.txt")
+    let wb_body = WordBreakTableEmitter.emit(wbp_lines, emoji_lines)?
+    _write_file(auth, out_dir + "/_ucd_word_break.pony", consume wb_body)?
+    env.out.print("  wrote " + out_dir + "/_ucd_word_break.pony")
+
     // Emit full case mappings from SpecialCasing.txt (unconditional only)
     let sc_lines = _read_lines(auth, ucd_dir + "/SpecialCasing.txt")?
     env.out.print("  read " + sc_lines.size().string()

@@ -6,6 +6,14 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Fixed
 
+
+### Added
+
+- `WordBreak` closed union (20 values) + auto-generated `_UcdWordBreak` lookup from `WordBreakProperty.txt` and emoji-data
+- `_WordBreakCursor` UAX #29 word boundary state machine — implements WB1..WB16 including the lookahead-dependent rules (WB6, WB7b, WB12)
+- `Words` topical primitive: `count`, `ranges`, `iter` over `String box`
+- `make conform-word`: UAX #29 WordBreakTest.txt conformance (1,826 cases — 100% pass on Unicode 16.0.0)
+
 - Grapheme cursor now implements UAX #29 GB9c (Indic_Conjunct_Break, Unicode 15.1). Sequences like Devanagari KA + VIRAMA + TA are now correctly treated as a single cluster. Caught by the new GraphemeBreakTest.txt conformance runner.
 
 
