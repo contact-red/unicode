@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Fixed
 
+- Grapheme cursor now implements UAX #29 GB9c (Indic_Conjunct_Break, Unicode 15.1). Sequences like Devanagari KA + VIRAMA + TA are now correctly treated as a single cluster. Caught by the new GraphemeBreakTest.txt conformance runner.
+
 
 ### Added
 
@@ -34,8 +36,11 @@ All notable changes to this project will be documented in this file. This projec
 - `Trim` primitive — `trim`, `trim_start`, `trim_end` over the White_Space property
 - `Replace` primitive — `all`, `first`
 - Error types: `InvalidUtf8(offset)`, `OutOfRange(index, size)`, `InvalidScalar(value)`
+- `IndicConjunctBreak` closed union (`InCBNone` / `InCBConsonant` / `InCBLinker` / `InCBExtend`) and `_UcdIndicConjunctBreak` lookup table; surfaced via `Codepoints.indic_conjunct_break`
+- `make conform`: NormalizationTest.txt Part 2 — for every assigned cp not in @Part1 of the test file, verify X == NFC(X) == NFD(X) == NFKC(X) == NFKD(X)
+- `make conform-grapheme`: UAX #29 GraphemeBreakTest.txt conformance (1,093 cases including GB9c)
 - 146 PonyCheck unit tests
-- GitHub Actions CI: pr workflow with lint, changelog verify, and full UAX #15 conformance
+- GitHub Actions CI: pr workflow with lint, changelog verify, and full normalization + grapheme conformance
 
 ### Changed
 
