@@ -15,63 +15,63 @@
 
 primitive GBCR
   fun code(): String val => "CR"
-  fun string(): String iso^ => "CR".clone()
+  fun string(): String val => "CR"
 
 primitive GBLF
   fun code(): String val => "LF"
-  fun string(): String iso^ => "LF".clone()
+  fun string(): String val => "LF"
 
 primitive GBControl
   fun code(): String val => "Control"
-  fun string(): String iso^ => "Control".clone()
+  fun string(): String val => "Control"
 
 primitive GBExtend
   fun code(): String val => "Extend"
-  fun string(): String iso^ => "Extend".clone()
+  fun string(): String val => "Extend"
 
 primitive GBZWJ
   fun code(): String val => "ZWJ"
-  fun string(): String iso^ => "ZWJ".clone()
+  fun string(): String val => "ZWJ"
 
 primitive GBRegionalIndicator
   fun code(): String val => "Regional_Indicator"
-  fun string(): String iso^ => "Regional_Indicator".clone()
+  fun string(): String val => "Regional_Indicator"
 
 primitive GBPrepend
   fun code(): String val => "Prepend"
-  fun string(): String iso^ => "Prepend".clone()
+  fun string(): String val => "Prepend"
 
 primitive GBSpacingMark
   fun code(): String val => "SpacingMark"
-  fun string(): String iso^ => "SpacingMark".clone()
+  fun string(): String val => "SpacingMark"
 
 primitive GBL
   fun code(): String val => "L"
-  fun string(): String iso^ => "L".clone()
+  fun string(): String val => "L"
 
 primitive GBV
   fun code(): String val => "V"
-  fun string(): String iso^ => "V".clone()
+  fun string(): String val => "V"
 
 primitive GBT
   fun code(): String val => "T"
-  fun string(): String iso^ => "T".clone()
+  fun string(): String val => "T"
 
 primitive GBLV
   fun code(): String val => "LV"
-  fun string(): String iso^ => "LV".clone()
+  fun string(): String val => "LV"
 
 primitive GBLVT
   fun code(): String val => "LVT"
-  fun string(): String iso^ => "LVT".clone()
+  fun string(): String val => "LVT"
 
 primitive GBExtendedPictographic
   fun code(): String val => "Extended_Pictographic"
-  fun string(): String iso^ => "Extended_Pictographic".clone()
+  fun string(): String val => "Extended_Pictographic"
 
 primitive GBOther
   fun code(): String val => "Other"
-  fun string(): String iso^ => "Other".clone()
+  fun string(): String val => "Other"
 
 type GraphemeBreak is
   ( GBCR | GBLF | GBControl | GBExtend | GBZWJ

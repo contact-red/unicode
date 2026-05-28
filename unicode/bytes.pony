@@ -14,7 +14,7 @@
 // `AllValid` sentinel returned by `Bytes.first_bad_utf8_offset` when the
 // input is fully well-formed UTF-8.
 primitive AllValid
-  fun string(): String iso^ => "AllValid".clone()
+  fun string(): String val => "AllValid"
 
 primitive Bytes
   fun is_valid_utf8(b: (String box | Array[U8] box)): Bool =>

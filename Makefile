@@ -85,7 +85,12 @@ dependencies: corral.json
 # emits the per-property tables into unicode/_ucd_*.pony.
 
 UCD_DIR ?= ./ucd
-UCD_URL := https://www.unicode.org/Public/UCD/latest/ucd
+# Pinned to a specific Unicode version so CI and local stay in sync.
+# Bumping this is a deliberate, reviewed step: change the version,
+# `make ucd-download && make ucd-generate`, commit the regenerated
+# tables, and verify `make conform` still passes.
+UCD_VERSION := 16.0.0
+UCD_URL := https://www.unicode.org/Public/$(UCD_VERSION)/ucd
 
 # Files we pull from the authoritative source. Split into top-level UCD,
 # auxiliary, and emoji subdirectories per unicode.org layout.

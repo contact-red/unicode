@@ -12,129 +12,129 @@
 // Letter
 primitive Lu  // Uppercase Letter
   fun code(): String val => "Lu"
-  fun string(): String iso^ => "Lu".clone()
+  fun string(): String val => "Lu"
 
 primitive Ll  // Lowercase Letter
   fun code(): String val => "Ll"
-  fun string(): String iso^ => "Ll".clone()
+  fun string(): String val => "Ll"
 
 primitive Lt  // Titlecase Letter
   fun code(): String val => "Lt"
-  fun string(): String iso^ => "Lt".clone()
+  fun string(): String val => "Lt"
 
 primitive Lm  // Modifier Letter
   fun code(): String val => "Lm"
-  fun string(): String iso^ => "Lm".clone()
+  fun string(): String val => "Lm"
 
 primitive Lo  // Other Letter
   fun code(): String val => "Lo"
-  fun string(): String iso^ => "Lo".clone()
+  fun string(): String val => "Lo"
 
 // Mark
 primitive Mn  // Nonspacing Mark
   fun code(): String val => "Mn"
-  fun string(): String iso^ => "Mn".clone()
+  fun string(): String val => "Mn"
 
 primitive Mc  // Spacing Mark
   fun code(): String val => "Mc"
-  fun string(): String iso^ => "Mc".clone()
+  fun string(): String val => "Mc"
 
 primitive Me  // Enclosing Mark
   fun code(): String val => "Me"
-  fun string(): String iso^ => "Me".clone()
+  fun string(): String val => "Me"
 
 // Number
 primitive Nd  // Decimal Number
   fun code(): String val => "Nd"
-  fun string(): String iso^ => "Nd".clone()
+  fun string(): String val => "Nd"
 
 primitive Nl  // Letter Number
   fun code(): String val => "Nl"
-  fun string(): String iso^ => "Nl".clone()
+  fun string(): String val => "Nl"
 
 primitive No  // Other Number
   fun code(): String val => "No"
-  fun string(): String iso^ => "No".clone()
+  fun string(): String val => "No"
 
 // Punctuation
 primitive Pc  // Connector Punctuation
   fun code(): String val => "Pc"
-  fun string(): String iso^ => "Pc".clone()
+  fun string(): String val => "Pc"
 
 primitive Pd  // Dash Punctuation
   fun code(): String val => "Pd"
-  fun string(): String iso^ => "Pd".clone()
+  fun string(): String val => "Pd"
 
 primitive Ps  // Open Punctuation
   fun code(): String val => "Ps"
-  fun string(): String iso^ => "Ps".clone()
+  fun string(): String val => "Ps"
 
 primitive Pe  // Close Punctuation
   fun code(): String val => "Pe"
-  fun string(): String iso^ => "Pe".clone()
+  fun string(): String val => "Pe"
 
 primitive Pi  // Initial Punctuation
   fun code(): String val => "Pi"
-  fun string(): String iso^ => "Pi".clone()
+  fun string(): String val => "Pi"
 
 primitive Pf  // Final Punctuation
   fun code(): String val => "Pf"
-  fun string(): String iso^ => "Pf".clone()
+  fun string(): String val => "Pf"
 
 primitive Po  // Other Punctuation
   fun code(): String val => "Po"
-  fun string(): String iso^ => "Po".clone()
+  fun string(): String val => "Po"
 
 // Symbol
 primitive Sm  // Math Symbol
   fun code(): String val => "Sm"
-  fun string(): String iso^ => "Sm".clone()
+  fun string(): String val => "Sm"
 
 primitive Sc  // Currency Symbol
   fun code(): String val => "Sc"
-  fun string(): String iso^ => "Sc".clone()
+  fun string(): String val => "Sc"
 
 primitive Sk  // Modifier Symbol
   fun code(): String val => "Sk"
-  fun string(): String iso^ => "Sk".clone()
+  fun string(): String val => "Sk"
 
 primitive So  // Other Symbol
   fun code(): String val => "So"
-  fun string(): String iso^ => "So".clone()
+  fun string(): String val => "So"
 
 // Separator
 primitive Zs  // Space Separator
   fun code(): String val => "Zs"
-  fun string(): String iso^ => "Zs".clone()
+  fun string(): String val => "Zs"
 
 primitive Zl  // Line Separator
   fun code(): String val => "Zl"
-  fun string(): String iso^ => "Zl".clone()
+  fun string(): String val => "Zl"
 
 primitive Zp  // Paragraph Separator
   fun code(): String val => "Zp"
-  fun string(): String iso^ => "Zp".clone()
+  fun string(): String val => "Zp"
 
 // Other
 primitive Cc  // Control
   fun code(): String val => "Cc"
-  fun string(): String iso^ => "Cc".clone()
+  fun string(): String val => "Cc"
 
 primitive Cf  // Format
   fun code(): String val => "Cf"
-  fun string(): String iso^ => "Cf".clone()
+  fun string(): String val => "Cf"
 
 primitive Cs  // Surrogate
   fun code(): String val => "Cs"
-  fun string(): String iso^ => "Cs".clone()
+  fun string(): String val => "Cs"
 
 primitive Co  // Private Use
   fun code(): String val => "Co"
-  fun string(): String iso^ => "Co".clone()
+  fun string(): String val => "Co"
 
 primitive Cn  // Unassigned (also used for "I don't know")
   fun code(): String val => "Cn"
-  fun string(): String iso^ => "Cn".clone()
+  fun string(): String val => "Cn"
 
 type Category is
   ( Lu | Ll | Lt | Lm | Lo

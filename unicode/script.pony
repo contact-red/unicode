@@ -9,651 +9,687 @@
 
 primitive ScriptUnknown
   fun code(): String val => "Unknown"
-  fun string(): String iso^ => "Unknown".clone()
+  fun string(): String val => "Unknown"
 
 primitive ScriptAdlam
   fun code(): String val => "Adlam"
-  fun string(): String iso^ => "Adlam".clone()
+  fun string(): String val => "Adlam"
 
 primitive ScriptAhom
   fun code(): String val => "Ahom"
-  fun string(): String iso^ => "Ahom".clone()
+  fun string(): String val => "Ahom"
 
 primitive ScriptAnatolianHieroglyphs
   fun code(): String val => "Anatolian_Hieroglyphs"
-  fun string(): String iso^ => "Anatolian_Hieroglyphs".clone()
+  fun string(): String val => "Anatolian_Hieroglyphs"
 
 primitive ScriptArabic
   fun code(): String val => "Arabic"
-  fun string(): String iso^ => "Arabic".clone()
+  fun string(): String val => "Arabic"
 
 primitive ScriptArmenian
   fun code(): String val => "Armenian"
-  fun string(): String iso^ => "Armenian".clone()
+  fun string(): String val => "Armenian"
 
 primitive ScriptAvestan
   fun code(): String val => "Avestan"
-  fun string(): String iso^ => "Avestan".clone()
+  fun string(): String val => "Avestan"
 
 primitive ScriptBalinese
   fun code(): String val => "Balinese"
-  fun string(): String iso^ => "Balinese".clone()
+  fun string(): String val => "Balinese"
 
 primitive ScriptBamum
   fun code(): String val => "Bamum"
-  fun string(): String iso^ => "Bamum".clone()
+  fun string(): String val => "Bamum"
 
 primitive ScriptBassaVah
   fun code(): String val => "Bassa_Vah"
-  fun string(): String iso^ => "Bassa_Vah".clone()
+  fun string(): String val => "Bassa_Vah"
 
 primitive ScriptBatak
   fun code(): String val => "Batak"
-  fun string(): String iso^ => "Batak".clone()
+  fun string(): String val => "Batak"
 
 primitive ScriptBengali
   fun code(): String val => "Bengali"
-  fun string(): String iso^ => "Bengali".clone()
+  fun string(): String val => "Bengali"
 
 primitive ScriptBhaiksuki
   fun code(): String val => "Bhaiksuki"
-  fun string(): String iso^ => "Bhaiksuki".clone()
+  fun string(): String val => "Bhaiksuki"
 
 primitive ScriptBopomofo
   fun code(): String val => "Bopomofo"
-  fun string(): String iso^ => "Bopomofo".clone()
+  fun string(): String val => "Bopomofo"
 
 primitive ScriptBrahmi
   fun code(): String val => "Brahmi"
-  fun string(): String iso^ => "Brahmi".clone()
+  fun string(): String val => "Brahmi"
 
 primitive ScriptBraille
   fun code(): String val => "Braille"
-  fun string(): String iso^ => "Braille".clone()
+  fun string(): String val => "Braille"
 
 primitive ScriptBuginese
   fun code(): String val => "Buginese"
-  fun string(): String iso^ => "Buginese".clone()
+  fun string(): String val => "Buginese"
 
 primitive ScriptBuhid
   fun code(): String val => "Buhid"
-  fun string(): String iso^ => "Buhid".clone()
+  fun string(): String val => "Buhid"
 
 primitive ScriptCanadianAboriginal
   fun code(): String val => "Canadian_Aboriginal"
-  fun string(): String iso^ => "Canadian_Aboriginal".clone()
+  fun string(): String val => "Canadian_Aboriginal"
 
 primitive ScriptCarian
   fun code(): String val => "Carian"
-  fun string(): String iso^ => "Carian".clone()
+  fun string(): String val => "Carian"
 
 primitive ScriptCaucasianAlbanian
   fun code(): String val => "Caucasian_Albanian"
-  fun string(): String iso^ => "Caucasian_Albanian".clone()
+  fun string(): String val => "Caucasian_Albanian"
 
 primitive ScriptChakma
   fun code(): String val => "Chakma"
-  fun string(): String iso^ => "Chakma".clone()
+  fun string(): String val => "Chakma"
 
 primitive ScriptCham
   fun code(): String val => "Cham"
-  fun string(): String iso^ => "Cham".clone()
+  fun string(): String val => "Cham"
 
 primitive ScriptCherokee
   fun code(): String val => "Cherokee"
-  fun string(): String iso^ => "Cherokee".clone()
+  fun string(): String val => "Cherokee"
 
 primitive ScriptChorasmian
   fun code(): String val => "Chorasmian"
-  fun string(): String iso^ => "Chorasmian".clone()
+  fun string(): String val => "Chorasmian"
 
 primitive ScriptCommon
   fun code(): String val => "Common"
-  fun string(): String iso^ => "Common".clone()
+  fun string(): String val => "Common"
 
 primitive ScriptCoptic
   fun code(): String val => "Coptic"
-  fun string(): String iso^ => "Coptic".clone()
+  fun string(): String val => "Coptic"
 
 primitive ScriptCuneiform
   fun code(): String val => "Cuneiform"
-  fun string(): String iso^ => "Cuneiform".clone()
+  fun string(): String val => "Cuneiform"
 
 primitive ScriptCypriot
   fun code(): String val => "Cypriot"
-  fun string(): String iso^ => "Cypriot".clone()
+  fun string(): String val => "Cypriot"
 
 primitive ScriptCyproMinoan
   fun code(): String val => "Cypro_Minoan"
-  fun string(): String iso^ => "Cypro_Minoan".clone()
+  fun string(): String val => "Cypro_Minoan"
 
 primitive ScriptCyrillic
   fun code(): String val => "Cyrillic"
-  fun string(): String iso^ => "Cyrillic".clone()
+  fun string(): String val => "Cyrillic"
 
 primitive ScriptDeseret
   fun code(): String val => "Deseret"
-  fun string(): String iso^ => "Deseret".clone()
+  fun string(): String val => "Deseret"
 
 primitive ScriptDevanagari
   fun code(): String val => "Devanagari"
-  fun string(): String iso^ => "Devanagari".clone()
+  fun string(): String val => "Devanagari"
 
 primitive ScriptDivesAkuru
   fun code(): String val => "Dives_Akuru"
-  fun string(): String iso^ => "Dives_Akuru".clone()
+  fun string(): String val => "Dives_Akuru"
 
 primitive ScriptDogra
   fun code(): String val => "Dogra"
-  fun string(): String iso^ => "Dogra".clone()
+  fun string(): String val => "Dogra"
 
 primitive ScriptDuployan
   fun code(): String val => "Duployan"
-  fun string(): String iso^ => "Duployan".clone()
+  fun string(): String val => "Duployan"
 
 primitive ScriptEgyptianHieroglyphs
   fun code(): String val => "Egyptian_Hieroglyphs"
-  fun string(): String iso^ => "Egyptian_Hieroglyphs".clone()
+  fun string(): String val => "Egyptian_Hieroglyphs"
 
 primitive ScriptElbasan
   fun code(): String val => "Elbasan"
-  fun string(): String iso^ => "Elbasan".clone()
+  fun string(): String val => "Elbasan"
 
 primitive ScriptElymaic
   fun code(): String val => "Elymaic"
-  fun string(): String iso^ => "Elymaic".clone()
+  fun string(): String val => "Elymaic"
 
 primitive ScriptEthiopic
   fun code(): String val => "Ethiopic"
-  fun string(): String iso^ => "Ethiopic".clone()
+  fun string(): String val => "Ethiopic"
+
+primitive ScriptGaray
+  fun code(): String val => "Garay"
+  fun string(): String val => "Garay"
 
 primitive ScriptGeorgian
   fun code(): String val => "Georgian"
-  fun string(): String iso^ => "Georgian".clone()
+  fun string(): String val => "Georgian"
 
 primitive ScriptGlagolitic
   fun code(): String val => "Glagolitic"
-  fun string(): String iso^ => "Glagolitic".clone()
+  fun string(): String val => "Glagolitic"
 
 primitive ScriptGothic
   fun code(): String val => "Gothic"
-  fun string(): String iso^ => "Gothic".clone()
+  fun string(): String val => "Gothic"
 
 primitive ScriptGrantha
   fun code(): String val => "Grantha"
-  fun string(): String iso^ => "Grantha".clone()
+  fun string(): String val => "Grantha"
 
 primitive ScriptGreek
   fun code(): String val => "Greek"
-  fun string(): String iso^ => "Greek".clone()
+  fun string(): String val => "Greek"
 
 primitive ScriptGujarati
   fun code(): String val => "Gujarati"
-  fun string(): String iso^ => "Gujarati".clone()
+  fun string(): String val => "Gujarati"
 
 primitive ScriptGunjalaGondi
   fun code(): String val => "Gunjala_Gondi"
-  fun string(): String iso^ => "Gunjala_Gondi".clone()
+  fun string(): String val => "Gunjala_Gondi"
 
 primitive ScriptGurmukhi
   fun code(): String val => "Gurmukhi"
-  fun string(): String iso^ => "Gurmukhi".clone()
+  fun string(): String val => "Gurmukhi"
+
+primitive ScriptGurungKhema
+  fun code(): String val => "Gurung_Khema"
+  fun string(): String val => "Gurung_Khema"
 
 primitive ScriptHan
   fun code(): String val => "Han"
-  fun string(): String iso^ => "Han".clone()
+  fun string(): String val => "Han"
 
 primitive ScriptHangul
   fun code(): String val => "Hangul"
-  fun string(): String iso^ => "Hangul".clone()
+  fun string(): String val => "Hangul"
 
 primitive ScriptHanifiRohingya
   fun code(): String val => "Hanifi_Rohingya"
-  fun string(): String iso^ => "Hanifi_Rohingya".clone()
+  fun string(): String val => "Hanifi_Rohingya"
 
 primitive ScriptHanunoo
   fun code(): String val => "Hanunoo"
-  fun string(): String iso^ => "Hanunoo".clone()
+  fun string(): String val => "Hanunoo"
 
 primitive ScriptHatran
   fun code(): String val => "Hatran"
-  fun string(): String iso^ => "Hatran".clone()
+  fun string(): String val => "Hatran"
 
 primitive ScriptHebrew
   fun code(): String val => "Hebrew"
-  fun string(): String iso^ => "Hebrew".clone()
+  fun string(): String val => "Hebrew"
 
 primitive ScriptHiragana
   fun code(): String val => "Hiragana"
-  fun string(): String iso^ => "Hiragana".clone()
+  fun string(): String val => "Hiragana"
 
 primitive ScriptImperialAramaic
   fun code(): String val => "Imperial_Aramaic"
-  fun string(): String iso^ => "Imperial_Aramaic".clone()
+  fun string(): String val => "Imperial_Aramaic"
 
 primitive ScriptInherited
   fun code(): String val => "Inherited"
-  fun string(): String iso^ => "Inherited".clone()
+  fun string(): String val => "Inherited"
 
 primitive ScriptInscriptionalPahlavi
   fun code(): String val => "Inscriptional_Pahlavi"
-  fun string(): String iso^ => "Inscriptional_Pahlavi".clone()
+  fun string(): String val => "Inscriptional_Pahlavi"
 
 primitive ScriptInscriptionalParthian
   fun code(): String val => "Inscriptional_Parthian"
-  fun string(): String iso^ => "Inscriptional_Parthian".clone()
+  fun string(): String val => "Inscriptional_Parthian"
 
 primitive ScriptJavanese
   fun code(): String val => "Javanese"
-  fun string(): String iso^ => "Javanese".clone()
+  fun string(): String val => "Javanese"
 
 primitive ScriptKaithi
   fun code(): String val => "Kaithi"
-  fun string(): String iso^ => "Kaithi".clone()
+  fun string(): String val => "Kaithi"
 
 primitive ScriptKannada
   fun code(): String val => "Kannada"
-  fun string(): String iso^ => "Kannada".clone()
+  fun string(): String val => "Kannada"
 
 primitive ScriptKatakana
   fun code(): String val => "Katakana"
-  fun string(): String iso^ => "Katakana".clone()
+  fun string(): String val => "Katakana"
+
+primitive ScriptKawi
+  fun code(): String val => "Kawi"
+  fun string(): String val => "Kawi"
 
 primitive ScriptKayahLi
   fun code(): String val => "Kayah_Li"
-  fun string(): String iso^ => "Kayah_Li".clone()
+  fun string(): String val => "Kayah_Li"
 
 primitive ScriptKharoshthi
   fun code(): String val => "Kharoshthi"
-  fun string(): String iso^ => "Kharoshthi".clone()
+  fun string(): String val => "Kharoshthi"
 
 primitive ScriptKhitanSmallScript
   fun code(): String val => "Khitan_Small_Script"
-  fun string(): String iso^ => "Khitan_Small_Script".clone()
+  fun string(): String val => "Khitan_Small_Script"
 
 primitive ScriptKhmer
   fun code(): String val => "Khmer"
-  fun string(): String iso^ => "Khmer".clone()
+  fun string(): String val => "Khmer"
 
 primitive ScriptKhojki
   fun code(): String val => "Khojki"
-  fun string(): String iso^ => "Khojki".clone()
+  fun string(): String val => "Khojki"
 
 primitive ScriptKhudawadi
   fun code(): String val => "Khudawadi"
-  fun string(): String iso^ => "Khudawadi".clone()
+  fun string(): String val => "Khudawadi"
+
+primitive ScriptKiratRai
+  fun code(): String val => "Kirat_Rai"
+  fun string(): String val => "Kirat_Rai"
 
 primitive ScriptLao
   fun code(): String val => "Lao"
-  fun string(): String iso^ => "Lao".clone()
+  fun string(): String val => "Lao"
 
 primitive ScriptLatin
   fun code(): String val => "Latin"
-  fun string(): String iso^ => "Latin".clone()
+  fun string(): String val => "Latin"
 
 primitive ScriptLepcha
   fun code(): String val => "Lepcha"
-  fun string(): String iso^ => "Lepcha".clone()
+  fun string(): String val => "Lepcha"
 
 primitive ScriptLimbu
   fun code(): String val => "Limbu"
-  fun string(): String iso^ => "Limbu".clone()
+  fun string(): String val => "Limbu"
 
 primitive ScriptLinearA
   fun code(): String val => "Linear_A"
-  fun string(): String iso^ => "Linear_A".clone()
+  fun string(): String val => "Linear_A"
 
 primitive ScriptLinearB
   fun code(): String val => "Linear_B"
-  fun string(): String iso^ => "Linear_B".clone()
+  fun string(): String val => "Linear_B"
 
 primitive ScriptLisu
   fun code(): String val => "Lisu"
-  fun string(): String iso^ => "Lisu".clone()
+  fun string(): String val => "Lisu"
 
 primitive ScriptLycian
   fun code(): String val => "Lycian"
-  fun string(): String iso^ => "Lycian".clone()
+  fun string(): String val => "Lycian"
 
 primitive ScriptLydian
   fun code(): String val => "Lydian"
-  fun string(): String iso^ => "Lydian".clone()
+  fun string(): String val => "Lydian"
 
 primitive ScriptMahajani
   fun code(): String val => "Mahajani"
-  fun string(): String iso^ => "Mahajani".clone()
+  fun string(): String val => "Mahajani"
 
 primitive ScriptMakasar
   fun code(): String val => "Makasar"
-  fun string(): String iso^ => "Makasar".clone()
+  fun string(): String val => "Makasar"
 
 primitive ScriptMalayalam
   fun code(): String val => "Malayalam"
-  fun string(): String iso^ => "Malayalam".clone()
+  fun string(): String val => "Malayalam"
 
 primitive ScriptMandaic
   fun code(): String val => "Mandaic"
-  fun string(): String iso^ => "Mandaic".clone()
+  fun string(): String val => "Mandaic"
 
 primitive ScriptManichaean
   fun code(): String val => "Manichaean"
-  fun string(): String iso^ => "Manichaean".clone()
+  fun string(): String val => "Manichaean"
 
 primitive ScriptMarchen
   fun code(): String val => "Marchen"
-  fun string(): String iso^ => "Marchen".clone()
+  fun string(): String val => "Marchen"
 
 primitive ScriptMasaramGondi
   fun code(): String val => "Masaram_Gondi"
-  fun string(): String iso^ => "Masaram_Gondi".clone()
+  fun string(): String val => "Masaram_Gondi"
 
 primitive ScriptMedefaidrin
   fun code(): String val => "Medefaidrin"
-  fun string(): String iso^ => "Medefaidrin".clone()
+  fun string(): String val => "Medefaidrin"
 
 primitive ScriptMeeteiMayek
   fun code(): String val => "Meetei_Mayek"
-  fun string(): String iso^ => "Meetei_Mayek".clone()
+  fun string(): String val => "Meetei_Mayek"
 
 primitive ScriptMendeKikakui
   fun code(): String val => "Mende_Kikakui"
-  fun string(): String iso^ => "Mende_Kikakui".clone()
+  fun string(): String val => "Mende_Kikakui"
 
 primitive ScriptMeroiticCursive
   fun code(): String val => "Meroitic_Cursive"
-  fun string(): String iso^ => "Meroitic_Cursive".clone()
+  fun string(): String val => "Meroitic_Cursive"
 
 primitive ScriptMeroiticHieroglyphs
   fun code(): String val => "Meroitic_Hieroglyphs"
-  fun string(): String iso^ => "Meroitic_Hieroglyphs".clone()
+  fun string(): String val => "Meroitic_Hieroglyphs"
 
 primitive ScriptMiao
   fun code(): String val => "Miao"
-  fun string(): String iso^ => "Miao".clone()
+  fun string(): String val => "Miao"
 
 primitive ScriptModi
   fun code(): String val => "Modi"
-  fun string(): String iso^ => "Modi".clone()
+  fun string(): String val => "Modi"
 
 primitive ScriptMongolian
   fun code(): String val => "Mongolian"
-  fun string(): String iso^ => "Mongolian".clone()
+  fun string(): String val => "Mongolian"
 
 primitive ScriptMro
   fun code(): String val => "Mro"
-  fun string(): String iso^ => "Mro".clone()
+  fun string(): String val => "Mro"
 
 primitive ScriptMultani
   fun code(): String val => "Multani"
-  fun string(): String iso^ => "Multani".clone()
+  fun string(): String val => "Multani"
 
 primitive ScriptMyanmar
   fun code(): String val => "Myanmar"
-  fun string(): String iso^ => "Myanmar".clone()
+  fun string(): String val => "Myanmar"
 
 primitive ScriptNabataean
   fun code(): String val => "Nabataean"
-  fun string(): String iso^ => "Nabataean".clone()
+  fun string(): String val => "Nabataean"
+
+primitive ScriptNagMundari
+  fun code(): String val => "Nag_Mundari"
+  fun string(): String val => "Nag_Mundari"
 
 primitive ScriptNandinagari
   fun code(): String val => "Nandinagari"
-  fun string(): String iso^ => "Nandinagari".clone()
+  fun string(): String val => "Nandinagari"
 
 primitive ScriptNewTaiLue
   fun code(): String val => "New_Tai_Lue"
-  fun string(): String iso^ => "New_Tai_Lue".clone()
+  fun string(): String val => "New_Tai_Lue"
 
 primitive ScriptNewa
   fun code(): String val => "Newa"
-  fun string(): String iso^ => "Newa".clone()
+  fun string(): String val => "Newa"
 
 primitive ScriptNko
   fun code(): String val => "Nko"
-  fun string(): String iso^ => "Nko".clone()
+  fun string(): String val => "Nko"
 
 primitive ScriptNushu
   fun code(): String val => "Nushu"
-  fun string(): String iso^ => "Nushu".clone()
+  fun string(): String val => "Nushu"
 
 primitive ScriptNyiakengPuachueHmong
   fun code(): String val => "Nyiakeng_Puachue_Hmong"
-  fun string(): String iso^ => "Nyiakeng_Puachue_Hmong".clone()
+  fun string(): String val => "Nyiakeng_Puachue_Hmong"
 
 primitive ScriptOgham
   fun code(): String val => "Ogham"
-  fun string(): String iso^ => "Ogham".clone()
+  fun string(): String val => "Ogham"
 
 primitive ScriptOlChiki
   fun code(): String val => "Ol_Chiki"
-  fun string(): String iso^ => "Ol_Chiki".clone()
+  fun string(): String val => "Ol_Chiki"
+
+primitive ScriptOlOnal
+  fun code(): String val => "Ol_Onal"
+  fun string(): String val => "Ol_Onal"
 
 primitive ScriptOldHungarian
   fun code(): String val => "Old_Hungarian"
-  fun string(): String iso^ => "Old_Hungarian".clone()
+  fun string(): String val => "Old_Hungarian"
 
 primitive ScriptOldItalic
   fun code(): String val => "Old_Italic"
-  fun string(): String iso^ => "Old_Italic".clone()
+  fun string(): String val => "Old_Italic"
 
 primitive ScriptOldNorthArabian
   fun code(): String val => "Old_North_Arabian"
-  fun string(): String iso^ => "Old_North_Arabian".clone()
+  fun string(): String val => "Old_North_Arabian"
 
 primitive ScriptOldPermic
   fun code(): String val => "Old_Permic"
-  fun string(): String iso^ => "Old_Permic".clone()
+  fun string(): String val => "Old_Permic"
 
 primitive ScriptOldPersian
   fun code(): String val => "Old_Persian"
-  fun string(): String iso^ => "Old_Persian".clone()
+  fun string(): String val => "Old_Persian"
 
 primitive ScriptOldSogdian
   fun code(): String val => "Old_Sogdian"
-  fun string(): String iso^ => "Old_Sogdian".clone()
+  fun string(): String val => "Old_Sogdian"
 
 primitive ScriptOldSouthArabian
   fun code(): String val => "Old_South_Arabian"
-  fun string(): String iso^ => "Old_South_Arabian".clone()
+  fun string(): String val => "Old_South_Arabian"
 
 primitive ScriptOldTurkic
   fun code(): String val => "Old_Turkic"
-  fun string(): String iso^ => "Old_Turkic".clone()
+  fun string(): String val => "Old_Turkic"
 
 primitive ScriptOldUyghur
   fun code(): String val => "Old_Uyghur"
-  fun string(): String iso^ => "Old_Uyghur".clone()
+  fun string(): String val => "Old_Uyghur"
 
 primitive ScriptOriya
   fun code(): String val => "Oriya"
-  fun string(): String iso^ => "Oriya".clone()
+  fun string(): String val => "Oriya"
 
 primitive ScriptOsage
   fun code(): String val => "Osage"
-  fun string(): String iso^ => "Osage".clone()
+  fun string(): String val => "Osage"
 
 primitive ScriptOsmanya
   fun code(): String val => "Osmanya"
-  fun string(): String iso^ => "Osmanya".clone()
+  fun string(): String val => "Osmanya"
 
 primitive ScriptPahawhHmong
   fun code(): String val => "Pahawh_Hmong"
-  fun string(): String iso^ => "Pahawh_Hmong".clone()
+  fun string(): String val => "Pahawh_Hmong"
 
 primitive ScriptPalmyrene
   fun code(): String val => "Palmyrene"
-  fun string(): String iso^ => "Palmyrene".clone()
+  fun string(): String val => "Palmyrene"
 
 primitive ScriptPauCinHau
   fun code(): String val => "Pau_Cin_Hau"
-  fun string(): String iso^ => "Pau_Cin_Hau".clone()
+  fun string(): String val => "Pau_Cin_Hau"
 
 primitive ScriptPhagsPa
   fun code(): String val => "Phags_Pa"
-  fun string(): String iso^ => "Phags_Pa".clone()
+  fun string(): String val => "Phags_Pa"
 
 primitive ScriptPhoenician
   fun code(): String val => "Phoenician"
-  fun string(): String iso^ => "Phoenician".clone()
+  fun string(): String val => "Phoenician"
 
 primitive ScriptPsalterPahlavi
   fun code(): String val => "Psalter_Pahlavi"
-  fun string(): String iso^ => "Psalter_Pahlavi".clone()
+  fun string(): String val => "Psalter_Pahlavi"
 
 primitive ScriptRejang
   fun code(): String val => "Rejang"
-  fun string(): String iso^ => "Rejang".clone()
+  fun string(): String val => "Rejang"
 
 primitive ScriptRunic
   fun code(): String val => "Runic"
-  fun string(): String iso^ => "Runic".clone()
+  fun string(): String val => "Runic"
 
 primitive ScriptSamaritan
   fun code(): String val => "Samaritan"
-  fun string(): String iso^ => "Samaritan".clone()
+  fun string(): String val => "Samaritan"
 
 primitive ScriptSaurashtra
   fun code(): String val => "Saurashtra"
-  fun string(): String iso^ => "Saurashtra".clone()
+  fun string(): String val => "Saurashtra"
 
 primitive ScriptSharada
   fun code(): String val => "Sharada"
-  fun string(): String iso^ => "Sharada".clone()
+  fun string(): String val => "Sharada"
 
 primitive ScriptShavian
   fun code(): String val => "Shavian"
-  fun string(): String iso^ => "Shavian".clone()
+  fun string(): String val => "Shavian"
 
 primitive ScriptSiddham
   fun code(): String val => "Siddham"
-  fun string(): String iso^ => "Siddham".clone()
+  fun string(): String val => "Siddham"
 
 primitive ScriptSignWriting
   fun code(): String val => "SignWriting"
-  fun string(): String iso^ => "SignWriting".clone()
+  fun string(): String val => "SignWriting"
 
 primitive ScriptSinhala
   fun code(): String val => "Sinhala"
-  fun string(): String iso^ => "Sinhala".clone()
+  fun string(): String val => "Sinhala"
 
 primitive ScriptSogdian
   fun code(): String val => "Sogdian"
-  fun string(): String iso^ => "Sogdian".clone()
+  fun string(): String val => "Sogdian"
 
 primitive ScriptSoraSompeng
   fun code(): String val => "Sora_Sompeng"
-  fun string(): String iso^ => "Sora_Sompeng".clone()
+  fun string(): String val => "Sora_Sompeng"
 
 primitive ScriptSoyombo
   fun code(): String val => "Soyombo"
-  fun string(): String iso^ => "Soyombo".clone()
+  fun string(): String val => "Soyombo"
 
 primitive ScriptSundanese
   fun code(): String val => "Sundanese"
-  fun string(): String iso^ => "Sundanese".clone()
+  fun string(): String val => "Sundanese"
+
+primitive ScriptSunuwar
+  fun code(): String val => "Sunuwar"
+  fun string(): String val => "Sunuwar"
 
 primitive ScriptSylotiNagri
   fun code(): String val => "Syloti_Nagri"
-  fun string(): String iso^ => "Syloti_Nagri".clone()
+  fun string(): String val => "Syloti_Nagri"
 
 primitive ScriptSyriac
   fun code(): String val => "Syriac"
-  fun string(): String iso^ => "Syriac".clone()
+  fun string(): String val => "Syriac"
 
 primitive ScriptTagalog
   fun code(): String val => "Tagalog"
-  fun string(): String iso^ => "Tagalog".clone()
+  fun string(): String val => "Tagalog"
 
 primitive ScriptTagbanwa
   fun code(): String val => "Tagbanwa"
-  fun string(): String iso^ => "Tagbanwa".clone()
+  fun string(): String val => "Tagbanwa"
 
 primitive ScriptTaiLe
   fun code(): String val => "Tai_Le"
-  fun string(): String iso^ => "Tai_Le".clone()
+  fun string(): String val => "Tai_Le"
 
 primitive ScriptTaiTham
   fun code(): String val => "Tai_Tham"
-  fun string(): String iso^ => "Tai_Tham".clone()
+  fun string(): String val => "Tai_Tham"
 
 primitive ScriptTaiViet
   fun code(): String val => "Tai_Viet"
-  fun string(): String iso^ => "Tai_Viet".clone()
+  fun string(): String val => "Tai_Viet"
 
 primitive ScriptTakri
   fun code(): String val => "Takri"
-  fun string(): String iso^ => "Takri".clone()
+  fun string(): String val => "Takri"
 
 primitive ScriptTamil
   fun code(): String val => "Tamil"
-  fun string(): String iso^ => "Tamil".clone()
+  fun string(): String val => "Tamil"
 
 primitive ScriptTangsa
   fun code(): String val => "Tangsa"
-  fun string(): String iso^ => "Tangsa".clone()
+  fun string(): String val => "Tangsa"
 
 primitive ScriptTangut
   fun code(): String val => "Tangut"
-  fun string(): String iso^ => "Tangut".clone()
+  fun string(): String val => "Tangut"
 
 primitive ScriptTelugu
   fun code(): String val => "Telugu"
-  fun string(): String iso^ => "Telugu".clone()
+  fun string(): String val => "Telugu"
 
 primitive ScriptThaana
   fun code(): String val => "Thaana"
-  fun string(): String iso^ => "Thaana".clone()
+  fun string(): String val => "Thaana"
 
 primitive ScriptThai
   fun code(): String val => "Thai"
-  fun string(): String iso^ => "Thai".clone()
+  fun string(): String val => "Thai"
 
 primitive ScriptTibetan
   fun code(): String val => "Tibetan"
-  fun string(): String iso^ => "Tibetan".clone()
+  fun string(): String val => "Tibetan"
 
 primitive ScriptTifinagh
   fun code(): String val => "Tifinagh"
-  fun string(): String iso^ => "Tifinagh".clone()
+  fun string(): String val => "Tifinagh"
 
 primitive ScriptTirhuta
   fun code(): String val => "Tirhuta"
-  fun string(): String iso^ => "Tirhuta".clone()
+  fun string(): String val => "Tirhuta"
+
+primitive ScriptTodhri
+  fun code(): String val => "Todhri"
+  fun string(): String val => "Todhri"
 
 primitive ScriptToto
   fun code(): String val => "Toto"
-  fun string(): String iso^ => "Toto".clone()
+  fun string(): String val => "Toto"
+
+primitive ScriptTuluTigalari
+  fun code(): String val => "Tulu_Tigalari"
+  fun string(): String val => "Tulu_Tigalari"
 
 primitive ScriptUgaritic
   fun code(): String val => "Ugaritic"
-  fun string(): String iso^ => "Ugaritic".clone()
+  fun string(): String val => "Ugaritic"
 
 primitive ScriptVai
   fun code(): String val => "Vai"
-  fun string(): String iso^ => "Vai".clone()
+  fun string(): String val => "Vai"
 
 primitive ScriptVithkuqi
   fun code(): String val => "Vithkuqi"
-  fun string(): String iso^ => "Vithkuqi".clone()
+  fun string(): String val => "Vithkuqi"
 
 primitive ScriptWancho
   fun code(): String val => "Wancho"
-  fun string(): String iso^ => "Wancho".clone()
+  fun string(): String val => "Wancho"
 
 primitive ScriptWarangCiti
   fun code(): String val => "Warang_Citi"
-  fun string(): String iso^ => "Warang_Citi".clone()
+  fun string(): String val => "Warang_Citi"
 
 primitive ScriptYezidi
   fun code(): String val => "Yezidi"
-  fun string(): String iso^ => "Yezidi".clone()
+  fun string(): String val => "Yezidi"
 
 primitive ScriptYi
   fun code(): String val => "Yi"
-  fun string(): String iso^ => "Yi".clone()
+  fun string(): String val => "Yi"
 
 primitive ScriptZanabazarSquare
   fun code(): String val => "Zanabazar_Square"
-  fun string(): String iso^ => "Zanabazar_Square".clone()
+  fun string(): String val => "Zanabazar_Square"
 
 type Script is
   ( ScriptUnknown
@@ -696,6 +732,7 @@ type Script is
   | ScriptElbasan
   | ScriptElymaic
   | ScriptEthiopic
+  | ScriptGaray
   | ScriptGeorgian
   | ScriptGlagolitic
   | ScriptGothic
@@ -704,6 +741,7 @@ type Script is
   | ScriptGujarati
   | ScriptGunjalaGondi
   | ScriptGurmukhi
+  | ScriptGurungKhema
   | ScriptHan
   | ScriptHangul
   | ScriptHanifiRohingya
@@ -719,12 +757,14 @@ type Script is
   | ScriptKaithi
   | ScriptKannada
   | ScriptKatakana
+  | ScriptKawi
   | ScriptKayahLi
   | ScriptKharoshthi
   | ScriptKhitanSmallScript
   | ScriptKhmer
   | ScriptKhojki
   | ScriptKhudawadi
+  | ScriptKiratRai
   | ScriptLao
   | ScriptLatin
   | ScriptLepcha
@@ -753,6 +793,7 @@ type Script is
   | ScriptMultani
   | ScriptMyanmar
   | ScriptNabataean
+  | ScriptNagMundari
   | ScriptNandinagari
   | ScriptNewTaiLue
   | ScriptNewa
@@ -761,6 +802,7 @@ type Script is
   | ScriptNyiakengPuachueHmong
   | ScriptOgham
   | ScriptOlChiki
+  | ScriptOlOnal
   | ScriptOldHungarian
   | ScriptOldItalic
   | ScriptOldNorthArabian
@@ -792,6 +834,7 @@ type Script is
   | ScriptSoraSompeng
   | ScriptSoyombo
   | ScriptSundanese
+  | ScriptSunuwar
   | ScriptSylotiNagri
   | ScriptSyriac
   | ScriptTagalog
@@ -809,7 +852,9 @@ type Script is
   | ScriptTibetan
   | ScriptTifinagh
   | ScriptTirhuta
+  | ScriptTodhri
   | ScriptToto
+  | ScriptTuluTigalari
   | ScriptUgaritic
   | ScriptVai
   | ScriptVithkuqi
@@ -863,6 +908,7 @@ primitive Scripts
     | "Elbasan" => ScriptElbasan
     | "Elymaic" => ScriptElymaic
     | "Ethiopic" => ScriptEthiopic
+    | "Garay" => ScriptGaray
     | "Georgian" => ScriptGeorgian
     | "Glagolitic" => ScriptGlagolitic
     | "Gothic" => ScriptGothic
@@ -871,6 +917,7 @@ primitive Scripts
     | "Gujarati" => ScriptGujarati
     | "Gunjala_Gondi" => ScriptGunjalaGondi
     | "Gurmukhi" => ScriptGurmukhi
+    | "Gurung_Khema" => ScriptGurungKhema
     | "Han" => ScriptHan
     | "Hangul" => ScriptHangul
     | "Hanifi_Rohingya" => ScriptHanifiRohingya
@@ -886,12 +933,14 @@ primitive Scripts
     | "Kaithi" => ScriptKaithi
     | "Kannada" => ScriptKannada
     | "Katakana" => ScriptKatakana
+    | "Kawi" => ScriptKawi
     | "Kayah_Li" => ScriptKayahLi
     | "Kharoshthi" => ScriptKharoshthi
     | "Khitan_Small_Script" => ScriptKhitanSmallScript
     | "Khmer" => ScriptKhmer
     | "Khojki" => ScriptKhojki
     | "Khudawadi" => ScriptKhudawadi
+    | "Kirat_Rai" => ScriptKiratRai
     | "Lao" => ScriptLao
     | "Latin" => ScriptLatin
     | "Lepcha" => ScriptLepcha
@@ -920,6 +969,7 @@ primitive Scripts
     | "Multani" => ScriptMultani
     | "Myanmar" => ScriptMyanmar
     | "Nabataean" => ScriptNabataean
+    | "Nag_Mundari" => ScriptNagMundari
     | "Nandinagari" => ScriptNandinagari
     | "New_Tai_Lue" => ScriptNewTaiLue
     | "Newa" => ScriptNewa
@@ -928,6 +978,7 @@ primitive Scripts
     | "Nyiakeng_Puachue_Hmong" => ScriptNyiakengPuachueHmong
     | "Ogham" => ScriptOgham
     | "Ol_Chiki" => ScriptOlChiki
+    | "Ol_Onal" => ScriptOlOnal
     | "Old_Hungarian" => ScriptOldHungarian
     | "Old_Italic" => ScriptOldItalic
     | "Old_North_Arabian" => ScriptOldNorthArabian
@@ -959,6 +1010,7 @@ primitive Scripts
     | "Sora_Sompeng" => ScriptSoraSompeng
     | "Soyombo" => ScriptSoyombo
     | "Sundanese" => ScriptSundanese
+    | "Sunuwar" => ScriptSunuwar
     | "Syloti_Nagri" => ScriptSylotiNagri
     | "Syriac" => ScriptSyriac
     | "Tagalog" => ScriptTagalog
@@ -976,7 +1028,9 @@ primitive Scripts
     | "Tibetan" => ScriptTibetan
     | "Tifinagh" => ScriptTifinagh
     | "Tirhuta" => ScriptTirhuta
+    | "Todhri" => ScriptTodhri
     | "Toto" => ScriptToto
+    | "Tulu_Tigalari" => ScriptTuluTigalari
     | "Ugaritic" => ScriptUgaritic
     | "Vai" => ScriptVai
     | "Vithkuqi" => ScriptVithkuqi
@@ -1030,128 +1084,137 @@ primitive Scripts
     | ScriptElbasan => 37
     | ScriptElymaic => 38
     | ScriptEthiopic => 39
-    | ScriptGeorgian => 40
-    | ScriptGlagolitic => 41
-    | ScriptGothic => 42
-    | ScriptGrantha => 43
-    | ScriptGreek => 44
-    | ScriptGujarati => 45
-    | ScriptGunjalaGondi => 46
-    | ScriptGurmukhi => 47
-    | ScriptHan => 48
-    | ScriptHangul => 49
-    | ScriptHanifiRohingya => 50
-    | ScriptHanunoo => 51
-    | ScriptHatran => 52
-    | ScriptHebrew => 53
-    | ScriptHiragana => 54
-    | ScriptImperialAramaic => 55
-    | ScriptInherited => 56
-    | ScriptInscriptionalPahlavi => 57
-    | ScriptInscriptionalParthian => 58
-    | ScriptJavanese => 59
-    | ScriptKaithi => 60
-    | ScriptKannada => 61
-    | ScriptKatakana => 62
-    | ScriptKayahLi => 63
-    | ScriptKharoshthi => 64
-    | ScriptKhitanSmallScript => 65
-    | ScriptKhmer => 66
-    | ScriptKhojki => 67
-    | ScriptKhudawadi => 68
-    | ScriptLao => 69
-    | ScriptLatin => 70
-    | ScriptLepcha => 71
-    | ScriptLimbu => 72
-    | ScriptLinearA => 73
-    | ScriptLinearB => 74
-    | ScriptLisu => 75
-    | ScriptLycian => 76
-    | ScriptLydian => 77
-    | ScriptMahajani => 78
-    | ScriptMakasar => 79
-    | ScriptMalayalam => 80
-    | ScriptMandaic => 81
-    | ScriptManichaean => 82
-    | ScriptMarchen => 83
-    | ScriptMasaramGondi => 84
-    | ScriptMedefaidrin => 85
-    | ScriptMeeteiMayek => 86
-    | ScriptMendeKikakui => 87
-    | ScriptMeroiticCursive => 88
-    | ScriptMeroiticHieroglyphs => 89
-    | ScriptMiao => 90
-    | ScriptModi => 91
-    | ScriptMongolian => 92
-    | ScriptMro => 93
-    | ScriptMultani => 94
-    | ScriptMyanmar => 95
-    | ScriptNabataean => 96
-    | ScriptNandinagari => 97
-    | ScriptNewTaiLue => 98
-    | ScriptNewa => 99
-    | ScriptNko => 100
-    | ScriptNushu => 101
-    | ScriptNyiakengPuachueHmong => 102
-    | ScriptOgham => 103
-    | ScriptOlChiki => 104
-    | ScriptOldHungarian => 105
-    | ScriptOldItalic => 106
-    | ScriptOldNorthArabian => 107
-    | ScriptOldPermic => 108
-    | ScriptOldPersian => 109
-    | ScriptOldSogdian => 110
-    | ScriptOldSouthArabian => 111
-    | ScriptOldTurkic => 112
-    | ScriptOldUyghur => 113
-    | ScriptOriya => 114
-    | ScriptOsage => 115
-    | ScriptOsmanya => 116
-    | ScriptPahawhHmong => 117
-    | ScriptPalmyrene => 118
-    | ScriptPauCinHau => 119
-    | ScriptPhagsPa => 120
-    | ScriptPhoenician => 121
-    | ScriptPsalterPahlavi => 122
-    | ScriptRejang => 123
-    | ScriptRunic => 124
-    | ScriptSamaritan => 125
-    | ScriptSaurashtra => 126
-    | ScriptSharada => 127
-    | ScriptShavian => 128
-    | ScriptSiddham => 129
-    | ScriptSignWriting => 130
-    | ScriptSinhala => 131
-    | ScriptSogdian => 132
-    | ScriptSoraSompeng => 133
-    | ScriptSoyombo => 134
-    | ScriptSundanese => 135
-    | ScriptSylotiNagri => 136
-    | ScriptSyriac => 137
-    | ScriptTagalog => 138
-    | ScriptTagbanwa => 139
-    | ScriptTaiLe => 140
-    | ScriptTaiTham => 141
-    | ScriptTaiViet => 142
-    | ScriptTakri => 143
-    | ScriptTamil => 144
-    | ScriptTangsa => 145
-    | ScriptTangut => 146
-    | ScriptTelugu => 147
-    | ScriptThaana => 148
-    | ScriptThai => 149
-    | ScriptTibetan => 150
-    | ScriptTifinagh => 151
-    | ScriptTirhuta => 152
-    | ScriptToto => 153
-    | ScriptUgaritic => 154
-    | ScriptVai => 155
-    | ScriptVithkuqi => 156
-    | ScriptWancho => 157
-    | ScriptWarangCiti => 158
-    | ScriptYezidi => 159
-    | ScriptYi => 160
-    | ScriptZanabazarSquare => 161
+    | ScriptGaray => 40
+    | ScriptGeorgian => 41
+    | ScriptGlagolitic => 42
+    | ScriptGothic => 43
+    | ScriptGrantha => 44
+    | ScriptGreek => 45
+    | ScriptGujarati => 46
+    | ScriptGunjalaGondi => 47
+    | ScriptGurmukhi => 48
+    | ScriptGurungKhema => 49
+    | ScriptHan => 50
+    | ScriptHangul => 51
+    | ScriptHanifiRohingya => 52
+    | ScriptHanunoo => 53
+    | ScriptHatran => 54
+    | ScriptHebrew => 55
+    | ScriptHiragana => 56
+    | ScriptImperialAramaic => 57
+    | ScriptInherited => 58
+    | ScriptInscriptionalPahlavi => 59
+    | ScriptInscriptionalParthian => 60
+    | ScriptJavanese => 61
+    | ScriptKaithi => 62
+    | ScriptKannada => 63
+    | ScriptKatakana => 64
+    | ScriptKawi => 65
+    | ScriptKayahLi => 66
+    | ScriptKharoshthi => 67
+    | ScriptKhitanSmallScript => 68
+    | ScriptKhmer => 69
+    | ScriptKhojki => 70
+    | ScriptKhudawadi => 71
+    | ScriptKiratRai => 72
+    | ScriptLao => 73
+    | ScriptLatin => 74
+    | ScriptLepcha => 75
+    | ScriptLimbu => 76
+    | ScriptLinearA => 77
+    | ScriptLinearB => 78
+    | ScriptLisu => 79
+    | ScriptLycian => 80
+    | ScriptLydian => 81
+    | ScriptMahajani => 82
+    | ScriptMakasar => 83
+    | ScriptMalayalam => 84
+    | ScriptMandaic => 85
+    | ScriptManichaean => 86
+    | ScriptMarchen => 87
+    | ScriptMasaramGondi => 88
+    | ScriptMedefaidrin => 89
+    | ScriptMeeteiMayek => 90
+    | ScriptMendeKikakui => 91
+    | ScriptMeroiticCursive => 92
+    | ScriptMeroiticHieroglyphs => 93
+    | ScriptMiao => 94
+    | ScriptModi => 95
+    | ScriptMongolian => 96
+    | ScriptMro => 97
+    | ScriptMultani => 98
+    | ScriptMyanmar => 99
+    | ScriptNabataean => 100
+    | ScriptNagMundari => 101
+    | ScriptNandinagari => 102
+    | ScriptNewTaiLue => 103
+    | ScriptNewa => 104
+    | ScriptNko => 105
+    | ScriptNushu => 106
+    | ScriptNyiakengPuachueHmong => 107
+    | ScriptOgham => 108
+    | ScriptOlChiki => 109
+    | ScriptOlOnal => 110
+    | ScriptOldHungarian => 111
+    | ScriptOldItalic => 112
+    | ScriptOldNorthArabian => 113
+    | ScriptOldPermic => 114
+    | ScriptOldPersian => 115
+    | ScriptOldSogdian => 116
+    | ScriptOldSouthArabian => 117
+    | ScriptOldTurkic => 118
+    | ScriptOldUyghur => 119
+    | ScriptOriya => 120
+    | ScriptOsage => 121
+    | ScriptOsmanya => 122
+    | ScriptPahawhHmong => 123
+    | ScriptPalmyrene => 124
+    | ScriptPauCinHau => 125
+    | ScriptPhagsPa => 126
+    | ScriptPhoenician => 127
+    | ScriptPsalterPahlavi => 128
+    | ScriptRejang => 129
+    | ScriptRunic => 130
+    | ScriptSamaritan => 131
+    | ScriptSaurashtra => 132
+    | ScriptSharada => 133
+    | ScriptShavian => 134
+    | ScriptSiddham => 135
+    | ScriptSignWriting => 136
+    | ScriptSinhala => 137
+    | ScriptSogdian => 138
+    | ScriptSoraSompeng => 139
+    | ScriptSoyombo => 140
+    | ScriptSundanese => 141
+    | ScriptSunuwar => 142
+    | ScriptSylotiNagri => 143
+    | ScriptSyriac => 144
+    | ScriptTagalog => 145
+    | ScriptTagbanwa => 146
+    | ScriptTaiLe => 147
+    | ScriptTaiTham => 148
+    | ScriptTaiViet => 149
+    | ScriptTakri => 150
+    | ScriptTamil => 151
+    | ScriptTangsa => 152
+    | ScriptTangut => 153
+    | ScriptTelugu => 154
+    | ScriptThaana => 155
+    | ScriptThai => 156
+    | ScriptTibetan => 157
+    | ScriptTifinagh => 158
+    | ScriptTirhuta => 159
+    | ScriptTodhri => 160
+    | ScriptToto => 161
+    | ScriptTuluTigalari => 162
+    | ScriptUgaritic => 163
+    | ScriptVai => 164
+    | ScriptVithkuqi => 165
+    | ScriptWancho => 166
+    | ScriptWarangCiti => 167
+    | ScriptYezidi => 168
+    | ScriptYi => 169
+    | ScriptZanabazarSquare => 170
     end
 
   fun _from_byte(b: U8): Script =>
@@ -1196,127 +1259,136 @@ primitive Scripts
     | 37 => ScriptElbasan
     | 38 => ScriptElymaic
     | 39 => ScriptEthiopic
-    | 40 => ScriptGeorgian
-    | 41 => ScriptGlagolitic
-    | 42 => ScriptGothic
-    | 43 => ScriptGrantha
-    | 44 => ScriptGreek
-    | 45 => ScriptGujarati
-    | 46 => ScriptGunjalaGondi
-    | 47 => ScriptGurmukhi
-    | 48 => ScriptHan
-    | 49 => ScriptHangul
-    | 50 => ScriptHanifiRohingya
-    | 51 => ScriptHanunoo
-    | 52 => ScriptHatran
-    | 53 => ScriptHebrew
-    | 54 => ScriptHiragana
-    | 55 => ScriptImperialAramaic
-    | 56 => ScriptInherited
-    | 57 => ScriptInscriptionalPahlavi
-    | 58 => ScriptInscriptionalParthian
-    | 59 => ScriptJavanese
-    | 60 => ScriptKaithi
-    | 61 => ScriptKannada
-    | 62 => ScriptKatakana
-    | 63 => ScriptKayahLi
-    | 64 => ScriptKharoshthi
-    | 65 => ScriptKhitanSmallScript
-    | 66 => ScriptKhmer
-    | 67 => ScriptKhojki
-    | 68 => ScriptKhudawadi
-    | 69 => ScriptLao
-    | 70 => ScriptLatin
-    | 71 => ScriptLepcha
-    | 72 => ScriptLimbu
-    | 73 => ScriptLinearA
-    | 74 => ScriptLinearB
-    | 75 => ScriptLisu
-    | 76 => ScriptLycian
-    | 77 => ScriptLydian
-    | 78 => ScriptMahajani
-    | 79 => ScriptMakasar
-    | 80 => ScriptMalayalam
-    | 81 => ScriptMandaic
-    | 82 => ScriptManichaean
-    | 83 => ScriptMarchen
-    | 84 => ScriptMasaramGondi
-    | 85 => ScriptMedefaidrin
-    | 86 => ScriptMeeteiMayek
-    | 87 => ScriptMendeKikakui
-    | 88 => ScriptMeroiticCursive
-    | 89 => ScriptMeroiticHieroglyphs
-    | 90 => ScriptMiao
-    | 91 => ScriptModi
-    | 92 => ScriptMongolian
-    | 93 => ScriptMro
-    | 94 => ScriptMultani
-    | 95 => ScriptMyanmar
-    | 96 => ScriptNabataean
-    | 97 => ScriptNandinagari
-    | 98 => ScriptNewTaiLue
-    | 99 => ScriptNewa
-    | 100 => ScriptNko
-    | 101 => ScriptNushu
-    | 102 => ScriptNyiakengPuachueHmong
-    | 103 => ScriptOgham
-    | 104 => ScriptOlChiki
-    | 105 => ScriptOldHungarian
-    | 106 => ScriptOldItalic
-    | 107 => ScriptOldNorthArabian
-    | 108 => ScriptOldPermic
-    | 109 => ScriptOldPersian
-    | 110 => ScriptOldSogdian
-    | 111 => ScriptOldSouthArabian
-    | 112 => ScriptOldTurkic
-    | 113 => ScriptOldUyghur
-    | 114 => ScriptOriya
-    | 115 => ScriptOsage
-    | 116 => ScriptOsmanya
-    | 117 => ScriptPahawhHmong
-    | 118 => ScriptPalmyrene
-    | 119 => ScriptPauCinHau
-    | 120 => ScriptPhagsPa
-    | 121 => ScriptPhoenician
-    | 122 => ScriptPsalterPahlavi
-    | 123 => ScriptRejang
-    | 124 => ScriptRunic
-    | 125 => ScriptSamaritan
-    | 126 => ScriptSaurashtra
-    | 127 => ScriptSharada
-    | 128 => ScriptShavian
-    | 129 => ScriptSiddham
-    | 130 => ScriptSignWriting
-    | 131 => ScriptSinhala
-    | 132 => ScriptSogdian
-    | 133 => ScriptSoraSompeng
-    | 134 => ScriptSoyombo
-    | 135 => ScriptSundanese
-    | 136 => ScriptSylotiNagri
-    | 137 => ScriptSyriac
-    | 138 => ScriptTagalog
-    | 139 => ScriptTagbanwa
-    | 140 => ScriptTaiLe
-    | 141 => ScriptTaiTham
-    | 142 => ScriptTaiViet
-    | 143 => ScriptTakri
-    | 144 => ScriptTamil
-    | 145 => ScriptTangsa
-    | 146 => ScriptTangut
-    | 147 => ScriptTelugu
-    | 148 => ScriptThaana
-    | 149 => ScriptThai
-    | 150 => ScriptTibetan
-    | 151 => ScriptTifinagh
-    | 152 => ScriptTirhuta
-    | 153 => ScriptToto
-    | 154 => ScriptUgaritic
-    | 155 => ScriptVai
-    | 156 => ScriptVithkuqi
-    | 157 => ScriptWancho
-    | 158 => ScriptWarangCiti
-    | 159 => ScriptYezidi
-    | 160 => ScriptYi
-    | 161 => ScriptZanabazarSquare
+    | 40 => ScriptGaray
+    | 41 => ScriptGeorgian
+    | 42 => ScriptGlagolitic
+    | 43 => ScriptGothic
+    | 44 => ScriptGrantha
+    | 45 => ScriptGreek
+    | 46 => ScriptGujarati
+    | 47 => ScriptGunjalaGondi
+    | 48 => ScriptGurmukhi
+    | 49 => ScriptGurungKhema
+    | 50 => ScriptHan
+    | 51 => ScriptHangul
+    | 52 => ScriptHanifiRohingya
+    | 53 => ScriptHanunoo
+    | 54 => ScriptHatran
+    | 55 => ScriptHebrew
+    | 56 => ScriptHiragana
+    | 57 => ScriptImperialAramaic
+    | 58 => ScriptInherited
+    | 59 => ScriptInscriptionalPahlavi
+    | 60 => ScriptInscriptionalParthian
+    | 61 => ScriptJavanese
+    | 62 => ScriptKaithi
+    | 63 => ScriptKannada
+    | 64 => ScriptKatakana
+    | 65 => ScriptKawi
+    | 66 => ScriptKayahLi
+    | 67 => ScriptKharoshthi
+    | 68 => ScriptKhitanSmallScript
+    | 69 => ScriptKhmer
+    | 70 => ScriptKhojki
+    | 71 => ScriptKhudawadi
+    | 72 => ScriptKiratRai
+    | 73 => ScriptLao
+    | 74 => ScriptLatin
+    | 75 => ScriptLepcha
+    | 76 => ScriptLimbu
+    | 77 => ScriptLinearA
+    | 78 => ScriptLinearB
+    | 79 => ScriptLisu
+    | 80 => ScriptLycian
+    | 81 => ScriptLydian
+    | 82 => ScriptMahajani
+    | 83 => ScriptMakasar
+    | 84 => ScriptMalayalam
+    | 85 => ScriptMandaic
+    | 86 => ScriptManichaean
+    | 87 => ScriptMarchen
+    | 88 => ScriptMasaramGondi
+    | 89 => ScriptMedefaidrin
+    | 90 => ScriptMeeteiMayek
+    | 91 => ScriptMendeKikakui
+    | 92 => ScriptMeroiticCursive
+    | 93 => ScriptMeroiticHieroglyphs
+    | 94 => ScriptMiao
+    | 95 => ScriptModi
+    | 96 => ScriptMongolian
+    | 97 => ScriptMro
+    | 98 => ScriptMultani
+    | 99 => ScriptMyanmar
+    | 100 => ScriptNabataean
+    | 101 => ScriptNagMundari
+    | 102 => ScriptNandinagari
+    | 103 => ScriptNewTaiLue
+    | 104 => ScriptNewa
+    | 105 => ScriptNko
+    | 106 => ScriptNushu
+    | 107 => ScriptNyiakengPuachueHmong
+    | 108 => ScriptOgham
+    | 109 => ScriptOlChiki
+    | 110 => ScriptOlOnal
+    | 111 => ScriptOldHungarian
+    | 112 => ScriptOldItalic
+    | 113 => ScriptOldNorthArabian
+    | 114 => ScriptOldPermic
+    | 115 => ScriptOldPersian
+    | 116 => ScriptOldSogdian
+    | 117 => ScriptOldSouthArabian
+    | 118 => ScriptOldTurkic
+    | 119 => ScriptOldUyghur
+    | 120 => ScriptOriya
+    | 121 => ScriptOsage
+    | 122 => ScriptOsmanya
+    | 123 => ScriptPahawhHmong
+    | 124 => ScriptPalmyrene
+    | 125 => ScriptPauCinHau
+    | 126 => ScriptPhagsPa
+    | 127 => ScriptPhoenician
+    | 128 => ScriptPsalterPahlavi
+    | 129 => ScriptRejang
+    | 130 => ScriptRunic
+    | 131 => ScriptSamaritan
+    | 132 => ScriptSaurashtra
+    | 133 => ScriptSharada
+    | 134 => ScriptShavian
+    | 135 => ScriptSiddham
+    | 136 => ScriptSignWriting
+    | 137 => ScriptSinhala
+    | 138 => ScriptSogdian
+    | 139 => ScriptSoraSompeng
+    | 140 => ScriptSoyombo
+    | 141 => ScriptSundanese
+    | 142 => ScriptSunuwar
+    | 143 => ScriptSylotiNagri
+    | 144 => ScriptSyriac
+    | 145 => ScriptTagalog
+    | 146 => ScriptTagbanwa
+    | 147 => ScriptTaiLe
+    | 148 => ScriptTaiTham
+    | 149 => ScriptTaiViet
+    | 150 => ScriptTakri
+    | 151 => ScriptTamil
+    | 152 => ScriptTangsa
+    | 153 => ScriptTangut
+    | 154 => ScriptTelugu
+    | 155 => ScriptThaana
+    | 156 => ScriptThai
+    | 157 => ScriptTibetan
+    | 158 => ScriptTifinagh
+    | 159 => ScriptTirhuta
+    | 160 => ScriptTodhri
+    | 161 => ScriptToto
+    | 162 => ScriptTuluTigalari
+    | 163 => ScriptUgaritic
+    | 164 => ScriptVai
+    | 165 => ScriptVithkuqi
+    | 166 => ScriptWancho
+    | 167 => ScriptWarangCiti
+    | 168 => ScriptYezidi
+    | 169 => ScriptYi
+    | 170 => ScriptZanabazarSquare
     else ScriptUnknown
     end

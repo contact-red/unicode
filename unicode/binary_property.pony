@@ -8,239 +8,259 @@
 
 primitive PropASCIIHexDigit
   fun code(): String val => "ASCII_Hex_Digit"
-  fun string(): String iso^ => "ASCII_Hex_Digit".clone()
+  fun string(): String val => "ASCII_Hex_Digit"
 
 primitive PropAlphabetic
   fun code(): String val => "Alphabetic"
-  fun string(): String iso^ => "Alphabetic".clone()
+  fun string(): String val => "Alphabetic"
 
 primitive PropBidiControl
   fun code(): String val => "Bidi_Control"
-  fun string(): String iso^ => "Bidi_Control".clone()
+  fun string(): String val => "Bidi_Control"
 
 primitive PropCaseIgnorable
   fun code(): String val => "Case_Ignorable"
-  fun string(): String iso^ => "Case_Ignorable".clone()
+  fun string(): String val => "Case_Ignorable"
 
 primitive PropCased
   fun code(): String val => "Cased"
-  fun string(): String iso^ => "Cased".clone()
+  fun string(): String val => "Cased"
 
 primitive PropChangesWhenCasefolded
   fun code(): String val => "Changes_When_Casefolded"
-  fun string(): String iso^ => "Changes_When_Casefolded".clone()
+  fun string(): String val => "Changes_When_Casefolded"
 
 primitive PropChangesWhenCasemapped
   fun code(): String val => "Changes_When_Casemapped"
-  fun string(): String iso^ => "Changes_When_Casemapped".clone()
+  fun string(): String val => "Changes_When_Casemapped"
 
 primitive PropChangesWhenLowercased
   fun code(): String val => "Changes_When_Lowercased"
-  fun string(): String iso^ => "Changes_When_Lowercased".clone()
+  fun string(): String val => "Changes_When_Lowercased"
 
 primitive PropChangesWhenTitlecased
   fun code(): String val => "Changes_When_Titlecased"
-  fun string(): String iso^ => "Changes_When_Titlecased".clone()
+  fun string(): String val => "Changes_When_Titlecased"
 
 primitive PropChangesWhenUppercased
   fun code(): String val => "Changes_When_Uppercased"
-  fun string(): String iso^ => "Changes_When_Uppercased".clone()
+  fun string(): String val => "Changes_When_Uppercased"
 
 primitive PropDash
   fun code(): String val => "Dash"
-  fun string(): String iso^ => "Dash".clone()
+  fun string(): String val => "Dash"
 
 primitive PropDefaultIgnorableCodePoint
   fun code(): String val => "Default_Ignorable_Code_Point"
-  fun string(): String iso^ => "Default_Ignorable_Code_Point".clone()
+  fun string(): String val => "Default_Ignorable_Code_Point"
 
 primitive PropDeprecated
   fun code(): String val => "Deprecated"
-  fun string(): String iso^ => "Deprecated".clone()
+  fun string(): String val => "Deprecated"
 
 primitive PropDiacritic
   fun code(): String val => "Diacritic"
-  fun string(): String iso^ => "Diacritic".clone()
+  fun string(): String val => "Diacritic"
 
 primitive PropEmoji
   fun code(): String val => "Emoji"
-  fun string(): String iso^ => "Emoji".clone()
+  fun string(): String val => "Emoji"
 
 primitive PropEmojiComponent
   fun code(): String val => "Emoji_Component"
-  fun string(): String iso^ => "Emoji_Component".clone()
+  fun string(): String val => "Emoji_Component"
 
 primitive PropEmojiModifier
   fun code(): String val => "Emoji_Modifier"
-  fun string(): String iso^ => "Emoji_Modifier".clone()
+  fun string(): String val => "Emoji_Modifier"
 
 primitive PropEmojiModifierBase
   fun code(): String val => "Emoji_Modifier_Base"
-  fun string(): String iso^ => "Emoji_Modifier_Base".clone()
+  fun string(): String val => "Emoji_Modifier_Base"
 
 primitive PropEmojiPresentation
   fun code(): String val => "Emoji_Presentation"
-  fun string(): String iso^ => "Emoji_Presentation".clone()
+  fun string(): String val => "Emoji_Presentation"
 
 primitive PropExtendedPictographic
   fun code(): String val => "Extended_Pictographic"
-  fun string(): String iso^ => "Extended_Pictographic".clone()
+  fun string(): String val => "Extended_Pictographic"
 
 primitive PropExtender
   fun code(): String val => "Extender"
-  fun string(): String iso^ => "Extender".clone()
+  fun string(): String val => "Extender"
 
 primitive PropGraphemeBase
   fun code(): String val => "Grapheme_Base"
-  fun string(): String iso^ => "Grapheme_Base".clone()
+  fun string(): String val => "Grapheme_Base"
 
 primitive PropGraphemeExtend
   fun code(): String val => "Grapheme_Extend"
-  fun string(): String iso^ => "Grapheme_Extend".clone()
+  fun string(): String val => "Grapheme_Extend"
 
 primitive PropGraphemeLink
   fun code(): String val => "Grapheme_Link"
-  fun string(): String iso^ => "Grapheme_Link".clone()
+  fun string(): String val => "Grapheme_Link"
 
 primitive PropHexDigit
   fun code(): String val => "Hex_Digit"
-  fun string(): String iso^ => "Hex_Digit".clone()
+  fun string(): String val => "Hex_Digit"
 
 primitive PropHyphen
   fun code(): String val => "Hyphen"
-  fun string(): String iso^ => "Hyphen".clone()
+  fun string(): String val => "Hyphen"
 
 primitive PropIDSBinaryOperator
   fun code(): String val => "IDS_Binary_Operator"
-  fun string(): String iso^ => "IDS_Binary_Operator".clone()
+  fun string(): String val => "IDS_Binary_Operator"
 
 primitive PropIDSTrinaryOperator
   fun code(): String val => "IDS_Trinary_Operator"
-  fun string(): String iso^ => "IDS_Trinary_Operator".clone()
+  fun string(): String val => "IDS_Trinary_Operator"
+
+primitive PropIDSUnaryOperator
+  fun code(): String val => "IDS_Unary_Operator"
+  fun string(): String val => "IDS_Unary_Operator"
+
+primitive PropIDCompatMathContinue
+  fun code(): String val => "ID_Compat_Math_Continue"
+  fun string(): String val => "ID_Compat_Math_Continue"
+
+primitive PropIDCompatMathStart
+  fun code(): String val => "ID_Compat_Math_Start"
+  fun string(): String val => "ID_Compat_Math_Start"
 
 primitive PropIDContinue
   fun code(): String val => "ID_Continue"
-  fun string(): String iso^ => "ID_Continue".clone()
+  fun string(): String val => "ID_Continue"
 
 primitive PropIDStart
   fun code(): String val => "ID_Start"
-  fun string(): String iso^ => "ID_Start".clone()
+  fun string(): String val => "ID_Start"
 
 primitive PropIdeographic
   fun code(): String val => "Ideographic"
-  fun string(): String iso^ => "Ideographic".clone()
+  fun string(): String val => "Ideographic"
+
+primitive PropInCB
+  fun code(): String val => "InCB"
+  fun string(): String val => "InCB"
 
 primitive PropJoinControl
   fun code(): String val => "Join_Control"
-  fun string(): String iso^ => "Join_Control".clone()
+  fun string(): String val => "Join_Control"
 
 primitive PropLogicalOrderException
   fun code(): String val => "Logical_Order_Exception"
-  fun string(): String iso^ => "Logical_Order_Exception".clone()
+  fun string(): String val => "Logical_Order_Exception"
 
 primitive PropLowercase
   fun code(): String val => "Lowercase"
-  fun string(): String iso^ => "Lowercase".clone()
+  fun string(): String val => "Lowercase"
 
 primitive PropMath
   fun code(): String val => "Math"
-  fun string(): String iso^ => "Math".clone()
+  fun string(): String val => "Math"
+
+primitive PropModifierCombiningMark
+  fun code(): String val => "Modifier_Combining_Mark"
+  fun string(): String val => "Modifier_Combining_Mark"
 
 primitive PropNoncharacterCodePoint
   fun code(): String val => "Noncharacter_Code_Point"
-  fun string(): String iso^ => "Noncharacter_Code_Point".clone()
+  fun string(): String val => "Noncharacter_Code_Point"
 
 primitive PropOtherAlphabetic
   fun code(): String val => "Other_Alphabetic"
-  fun string(): String iso^ => "Other_Alphabetic".clone()
+  fun string(): String val => "Other_Alphabetic"
 
 primitive PropOtherDefaultIgnorableCodePoint
   fun code(): String val => "Other_Default_Ignorable_Code_Point"
-  fun string(): String iso^ => "Other_Default_Ignorable_Code_Point".clone()
+  fun string(): String val => "Other_Default_Ignorable_Code_Point"
 
 primitive PropOtherGraphemeExtend
   fun code(): String val => "Other_Grapheme_Extend"
-  fun string(): String iso^ => "Other_Grapheme_Extend".clone()
+  fun string(): String val => "Other_Grapheme_Extend"
 
 primitive PropOtherIDContinue
   fun code(): String val => "Other_ID_Continue"
-  fun string(): String iso^ => "Other_ID_Continue".clone()
+  fun string(): String val => "Other_ID_Continue"
 
 primitive PropOtherIDStart
   fun code(): String val => "Other_ID_Start"
-  fun string(): String iso^ => "Other_ID_Start".clone()
+  fun string(): String val => "Other_ID_Start"
 
 primitive PropOtherLowercase
   fun code(): String val => "Other_Lowercase"
-  fun string(): String iso^ => "Other_Lowercase".clone()
+  fun string(): String val => "Other_Lowercase"
 
 primitive PropOtherMath
   fun code(): String val => "Other_Math"
-  fun string(): String iso^ => "Other_Math".clone()
+  fun string(): String val => "Other_Math"
 
 primitive PropOtherUppercase
   fun code(): String val => "Other_Uppercase"
-  fun string(): String iso^ => "Other_Uppercase".clone()
+  fun string(): String val => "Other_Uppercase"
 
 primitive PropPatternSyntax
   fun code(): String val => "Pattern_Syntax"
-  fun string(): String iso^ => "Pattern_Syntax".clone()
+  fun string(): String val => "Pattern_Syntax"
 
 primitive PropPatternWhiteSpace
   fun code(): String val => "Pattern_White_Space"
-  fun string(): String iso^ => "Pattern_White_Space".clone()
+  fun string(): String val => "Pattern_White_Space"
 
 primitive PropPrependedConcatenationMark
   fun code(): String val => "Prepended_Concatenation_Mark"
-  fun string(): String iso^ => "Prepended_Concatenation_Mark".clone()
+  fun string(): String val => "Prepended_Concatenation_Mark"
 
 primitive PropQuotationMark
   fun code(): String val => "Quotation_Mark"
-  fun string(): String iso^ => "Quotation_Mark".clone()
+  fun string(): String val => "Quotation_Mark"
 
 primitive PropRadical
   fun code(): String val => "Radical"
-  fun string(): String iso^ => "Radical".clone()
+  fun string(): String val => "Radical"
 
 primitive PropRegionalIndicator
   fun code(): String val => "Regional_Indicator"
-  fun string(): String iso^ => "Regional_Indicator".clone()
+  fun string(): String val => "Regional_Indicator"
 
 primitive PropSentenceTerminal
   fun code(): String val => "Sentence_Terminal"
-  fun string(): String iso^ => "Sentence_Terminal".clone()
+  fun string(): String val => "Sentence_Terminal"
 
 primitive PropSoftDotted
   fun code(): String val => "Soft_Dotted"
-  fun string(): String iso^ => "Soft_Dotted".clone()
+  fun string(): String val => "Soft_Dotted"
 
 primitive PropTerminalPunctuation
   fun code(): String val => "Terminal_Punctuation"
-  fun string(): String iso^ => "Terminal_Punctuation".clone()
+  fun string(): String val => "Terminal_Punctuation"
 
 primitive PropUnifiedIdeograph
   fun code(): String val => "Unified_Ideograph"
-  fun string(): String iso^ => "Unified_Ideograph".clone()
+  fun string(): String val => "Unified_Ideograph"
 
 primitive PropUppercase
   fun code(): String val => "Uppercase"
-  fun string(): String iso^ => "Uppercase".clone()
+  fun string(): String val => "Uppercase"
 
 primitive PropVariationSelector
   fun code(): String val => "Variation_Selector"
-  fun string(): String iso^ => "Variation_Selector".clone()
+  fun string(): String val => "Variation_Selector"
 
 primitive PropWhiteSpace
   fun code(): String val => "White_Space"
-  fun string(): String iso^ => "White_Space".clone()
+  fun string(): String val => "White_Space"
 
 primitive PropXIDContinue
   fun code(): String val => "XID_Continue"
-  fun string(): String iso^ => "XID_Continue".clone()
+  fun string(): String val => "XID_Continue"
 
 primitive PropXIDStart
   fun code(): String val => "XID_Start"
-  fun string(): String iso^ => "XID_Start".clone()
+  fun string(): String val => "XID_Start"
 
 type BinaryProperty is
   ( PropASCIIHexDigit
@@ -271,13 +291,18 @@ type BinaryProperty is
   | PropHyphen
   | PropIDSBinaryOperator
   | PropIDSTrinaryOperator
+  | PropIDSUnaryOperator
+  | PropIDCompatMathContinue
+  | PropIDCompatMathStart
   | PropIDContinue
   | PropIDStart
   | PropIdeographic
+  | PropInCB
   | PropJoinControl
   | PropLogicalOrderException
   | PropLowercase
   | PropMath
+  | PropModifierCombiningMark
   | PropNoncharacterCodePoint
   | PropOtherAlphabetic
   | PropOtherDefaultIgnorableCodePoint
@@ -335,13 +360,18 @@ primitive BinaryProperties
     | "Hyphen" => PropHyphen
     | "IDS_Binary_Operator" => PropIDSBinaryOperator
     | "IDS_Trinary_Operator" => PropIDSTrinaryOperator
+    | "IDS_Unary_Operator" => PropIDSUnaryOperator
+    | "ID_Compat_Math_Continue" => PropIDCompatMathContinue
+    | "ID_Compat_Math_Start" => PropIDCompatMathStart
     | "ID_Continue" => PropIDContinue
     | "ID_Start" => PropIDStart
     | "Ideographic" => PropIdeographic
+    | "InCB" => PropInCB
     | "Join_Control" => PropJoinControl
     | "Logical_Order_Exception" => PropLogicalOrderException
     | "Lowercase" => PropLowercase
     | "Math" => PropMath
+    | "Modifier_Combining_Mark" => PropModifierCombiningMark
     | "Noncharacter_Code_Point" => PropNoncharacterCodePoint
     | "Other_Alphabetic" => PropOtherAlphabetic
     | "Other_Default_Ignorable_Code_Point" => PropOtherDefaultIgnorableCodePoint
