@@ -126,6 +126,13 @@ actor \nodoc\ Main is TestList
     test(_TestNameLatin)
     test(_TestNameControl)
     test(_TestFromName)
+    // 0.2.0: Sentences (UAX #29)
+    test(_TestSentencesBasic)
+    test(_TestSentencesParaSep)
+    test(_TestSentencesSB8)
+    test(_TestSentencesNoTerm)
+    test(_TestSentencesEmpty)
+    test(_TestSentencesInvalid)
     // 0.2.0: Words (UAX #29)
     test(_TestWordsAsciiBasic)
     test(_TestWordsNumeric)
@@ -1239,6 +1246,83 @@ class \nodoc\ iso _TestCodepointByteIndex is UnitTest
       h.assert_eq[USize](7, b3.value())
     else
       h.fail("setup raised")
+    end
+
+// ---- 0.2.0: Sentences (UAX #29) ----
+
+class \nodoc\ iso _TestSentencesBasic is UnitTest
+  fun name(): String => "Sentences: two basic sentences with full stop"
+
+  fun apply(h: TestHelper) =>
+    match Sentences.iter("Hello. World!")
+    | let it: Iterator[String val] =>
+      let parts = recover trn Array[String val] end
+      for s in it do parts.push(s) end
+      h.assert_eq[USize](2, parts.size())
+      try h.assert_eq[String]("Hello. ", parts(0)?) end
+      try h.assert_eq[String]("World!", parts(1)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestSentencesParaSep is UnitTest
+  fun name(): String => "Sentences: paragraph separators break (SB4)"
+
+  fun apply(h: TestHelper) =>
+    match Sentences.iter("Line one\nLine two")
+    | let it: Iterator[String val] =>
+      let parts = recover trn Array[String val] end
+      for s in it do parts.push(s) end
+      h.assert_eq[USize](2, parts.size())
+      try h.assert_eq[String]("Line one\n", parts(0)?) end
+      try h.assert_eq[String]("Line two", parts(1)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestSentencesSB8 is UnitTest
+  fun name(): String => "Sentences: SB8 forward-Lower keeps 'Dr. smith ...' together"
+
+  fun apply(h: TestHelper) =>
+    // SB8: ATerm Close* Sp* × ... Lower
+    // After "Dr." + space, the next letter is lowercase 's' — SB8
+    // suppresses the break (treating it as an abbreviation).
+    match Sentences.iter("Dr. smith said hello.")
+    | let it: Iterator[String val] =>
+      let parts = recover trn Array[String val] end
+      for s in it do parts.push(s) end
+      h.assert_eq[USize](1, parts.size())
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestSentencesNoTerm is UnitTest
+  fun name(): String => "Sentences: no terminator = one sentence"
+
+  fun apply(h: TestHelper) =>
+    match Sentences.iter("just some text")
+    | let it: Iterator[String val] =>
+      let parts = recover trn Array[String val] end
+      for s in it do parts.push(s) end
+      h.assert_eq[USize](1, parts.size())
+      try h.assert_eq[String]("just some text", parts(0)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestSentencesEmpty is UnitTest
+  fun name(): String => "Sentences.count: empty"
+
+  fun apply(h: TestHelper) =>
+    match Sentences.count("")
+    | let n: USize => h.assert_eq[USize](0, n)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestSentencesInvalid is UnitTest
+  fun name(): String => "Sentences rejects ill-formed UTF-8"
+
+  fun apply(h: TestHelper) =>
+    let bad = String.from_array(recover val [as U8: 0x41; 0x80] end)
+    match Sentences.count(bad)
+    | let _: USize => h.fail("expected InvalidUtf8")
+    | let e: InvalidUtf8 => h.assert_eq[USize](1, e.offset)
     end
 
 // ---- 0.2.0: Words (UAX #29) ----
