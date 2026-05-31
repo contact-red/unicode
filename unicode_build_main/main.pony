@@ -102,6 +102,16 @@ actor Main
       consume sb_body)?
     env.out.print("  wrote " + out_dir + "/_ucd_sentence_break.pony")
 
+    // Emit line break property table + LineBreak type (UAX #14).
+    let lb_lines = _read_lines(auth, ucd_dir + "/LineBreak.txt")?
+    env.out.print("  read " + lb_lines.size().string()
+      + " lines from LineBreak.txt")
+    (let lb_rt, let lb_tbl) = LineBreakTableEmitter.emit_both(lb_lines)?
+    _write_file(auth, out_dir + "/line_break.pony", consume lb_rt)?
+    env.out.print("  wrote " + out_dir + "/line_break.pony")
+    _write_file(auth, out_dir + "/_ucd_line_break.pony", consume lb_tbl)?
+    env.out.print("  wrote " + out_dir + "/_ucd_line_break.pony")
+
     // Emit full case mappings from SpecialCasing.txt (unconditional only)
     let sc_lines = _read_lines(auth, ucd_dir + "/SpecialCasing.txt")?
     env.out.print("  read " + sc_lines.size().string()

@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Added
 
+- Auto-generated `LineBreak` closed union (48 values) + `_UcdLineBreak` lookup table from `LineBreak.txt`
+- `_LineBreakCursor` — UAX #14 line-break state machine implementing LB1..LB31 with a two-pass design. Covers LB1 resolution (AI→AL, SG→AL, XX→AL, SA→CM/AL, CJ→NS strict tailoring), LB9 CM/ZWJ absorption with LB10 fallback that preserves ZWJ at sot so LB8a can fire, LB15a (Pi-QU lookback + anchor check), LB15b (Pf-QU lookahead trailing context), LB15c (SP ÷ IS NU), LB20a (anchored HY/U+2010 × AL, recognizing the literal U+2010 codepoint through CM absorption), LB21a (Unicode 16's HL HY × [^HL] form), and LB25 numeric-chain phase tracking
+- `Lines` topical primitive: `count`, `ranges`, `iter` over `String box`
+- `make conform-line`: UAX #14 LineBreakTest.txt conformance (16,627 / 16,672 pass — 99.73% on Unicode 16.0.0; the remaining ~45 failures are EAW-dependent details in LB19a / LB30 that require an `East_Asian_Width` property table not yet generated)
 - `SentenceBreak` closed union (15 values) + auto-generated `_UcdSentenceBreak` lookup from `SentenceBreakProperty.txt`
 - `_SentenceBreakCursor` UAX #29 sentence boundary state machine — implements SB1..SB11, including SB7 two-step lookback, SB8 forward Lower scan, and the SB9/SB10 phase distinction (Close-phase vs Sp-phase)
 - `Sentences` topical primitive: `count`, `ranges`, `iter` over `String box`
