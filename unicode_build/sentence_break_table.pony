@@ -22,42 +22,27 @@ primitive SentenceBreakTableEmitter
 
       out.append("primitive _UcdSentenceBreak\n")
       out.append("  fun of(cp: U32): SentenceBreak =>\n")
-      out.append("    let t = _table()\n")
-      out.append("    var lo: USize = 0\n")
-      out.append("    var hi: USize = t.size() / 18\n")
-      out.append("    while lo < hi do\n")
-      out.append("      let mid = lo + ((hi - lo) / 2)\n")
-      out.append("      let base = mid * 18\n")
-      out.append("      try\n")
-      out.append("        let range_lo: U32 =\n")
-      out.append("          _UcdHex.byte(t, base)?\n")
-      out.append("            or (_UcdHex.byte(t, base + 2)? << 8)\n")
-      out.append("            or (_UcdHex.byte(t, base + 4)? << 16)\n")
-      out.append("            or (_UcdHex.byte(t, base + 6)? << 24)\n")
-      out.append("        let range_hi: U32 =\n")
-      out.append("          _UcdHex.byte(t, base + 8)?\n")
-      out.append("            or (_UcdHex.byte(t, base + 10)? << 8)\n")
-      out.append("            or (_UcdHex.byte(t, base + 12)? << 16)\n")
-      out.append("            or (_UcdHex.byte(t, base + 14)? << 24)\n")
-      out.append("        if cp < range_lo then hi = mid\n")
-      out.append("        elseif cp > range_hi then lo = mid + 1\n")
-      out.append("        else\n")
-      out.append("          return SentenceBreaks._from_byte(\n")
-      out.append("            U8.from[U32](_UcdHex.byte(t, base + 16)?))\n")
-      out.append("        end\n")
-      out.append("      else return SBOther\n")
-      out.append("      end\n")
-      out.append("    end\n")
-      out.append("    SBOther\n\n")
-
-      out.append("  fun _table(): String val =>\n")
-      out.append("    \"")
-      for r in merged.values() do
-        _emit_le_u32(out, r._1)
-        _emit_le_u32(out, r._2)
-        _emit_byte(out, r._3)
-      end
-      out.append("\"\n")
+      let to_variant: {(U8): String val} val =
+        {(b: U8): String val =>
+          match b
+          | U8(1) => "SBCR"
+          | U8(2) => "SBLF"
+          | U8(3) => "SBExtend"
+          | U8(4) => "SBSep"
+          | U8(5) => "SBFormat"
+          | U8(6) => "SBSp"
+          | U8(7) => "SBLower"
+          | U8(8) => "SBUpper"
+          | U8(9) => "SBOLetter"
+          | U8(10) => "SBNumeric"
+          | U8(11) => "SBATerm"
+          | U8(12) => "SBSTerm"
+          | U8(13) => "SBClose"
+          | U8(14) => "SBSContinue"
+          else "SBOther"
+          end
+        }
+      _RangeMatchEmitter.emit(out, merged, to_variant, "SBOther")
       out
     end
 

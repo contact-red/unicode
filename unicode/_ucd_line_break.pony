@@ -7,33 +7,4038 @@
 
 primitive _UcdLineBreak
   fun of(cp: U32): LineBreak =>
-    let t = _table()
-    var lo: USize = 0
-    var hi: USize = t.size() / 18
-    while lo < hi do
-      let mid = lo + ((hi - lo) / 2)
-      let base = mid * 18
-      try
-        let range_lo: U32 =
-          _UcdHex.byte(t, base)?
-            or (_UcdHex.byte(t, base + 2)? << 8)
-            or (_UcdHex.byte(t, base + 4)? << 16)
-            or (_UcdHex.byte(t, base + 6)? << 24)
-        let range_hi: U32 =
-          _UcdHex.byte(t, base + 8)?
-            or (_UcdHex.byte(t, base + 10)? << 8)
-            or (_UcdHex.byte(t, base + 12)? << 16)
-            or (_UcdHex.byte(t, base + 14)? << 24)
-        if cp < range_lo then hi = mid
-        elseif cp > range_hi then lo = mid + 1
-        else
-          return LineBreaks._from_byte(
-            U8.from[U32](_UcdHex.byte(t, base + 16)?))
-        end
-      else return LBXX
+    match cp >> 12
+    | 0x0000 =>
+      match cp
+      | let c: U32 if c <= 0x0008 => LBCM
+      | let c: U32 if c <= 0x0009 => LBBA
+      | let c: U32 if c <= 0x000A => LBLF
+      | let c: U32 if c <= 0x000C => LBBK
+      | let c: U32 if c <= 0x000D => LBCR
+      | let c: U32 if c <= 0x001F => LBCM
+      | let c: U32 if c <= 0x0020 => LBSP
+      | let c: U32 if c <= 0x0021 => LBEX
+      | let c: U32 if c <= 0x0022 => LBQU
+      | let c: U32 if c <= 0x0023 => LBAL
+      | let c: U32 if c <= 0x0024 => LBPR
+      | let c: U32 if c <= 0x0025 => LBPO
+      | let c: U32 if c <= 0x0026 => LBAL
+      | let c: U32 if c <= 0x0027 => LBQU
+      | let c: U32 if c <= 0x0028 => LBOP
+      | let c: U32 if c <= 0x0029 => LBCP
+      | let c: U32 if c <= 0x002A => LBAL
+      | let c: U32 if c <= 0x002B => LBPR
+      | let c: U32 if c <= 0x002C => LBIS
+      | let c: U32 if c <= 0x002D => LBHY
+      | let c: U32 if c <= 0x002E => LBIS
+      | let c: U32 if c <= 0x002F => LBSY
+      | let c: U32 if c <= 0x0039 => LBNU
+      | let c: U32 if c <= 0x003B => LBIS
+      | let c: U32 if c <= 0x003E => LBAL
+      | let c: U32 if c <= 0x003F => LBEX
+      | let c: U32 if c <= 0x005A => LBAL
+      | let c: U32 if c <= 0x005B => LBOP
+      | let c: U32 if c <= 0x005C => LBPR
+      | let c: U32 if c <= 0x005D => LBCP
+      | let c: U32 if c <= 0x007A => LBAL
+      | let c: U32 if c <= 0x007B => LBOP
+      | let c: U32 if c <= 0x007C => LBBA
+      | let c: U32 if c <= 0x007D => LBCL
+      | let c: U32 if c <= 0x007E => LBAL
+      | let c: U32 if c <= 0x0084 => LBCM
+      | let c: U32 if c <= 0x0085 => LBNL
+      | let c: U32 if c <= 0x009F => LBCM
+      | let c: U32 if c <= 0x00A0 => LBGL
+      | let c: U32 if c <= 0x00A1 => LBOP
+      | let c: U32 if c <= 0x00A2 => LBPO
+      | let c: U32 if c <= 0x00A5 => LBPR
+      | let c: U32 if c <= 0x00A6 => LBAL
+      | let c: U32 if c <= 0x00A8 => LBAI
+      | let c: U32 if c <= 0x00A9 => LBAL
+      | let c: U32 if c <= 0x00AA => LBAI
+      | let c: U32 if c <= 0x00AB => LBQU
+      | let c: U32 if c <= 0x00AC => LBAL
+      | let c: U32 if c <= 0x00AD => LBBA
+      | let c: U32 if c <= 0x00AF => LBAL
+      | let c: U32 if c <= 0x00B0 => LBPO
+      | let c: U32 if c <= 0x00B1 => LBPR
+      | let c: U32 if c <= 0x00B3 => LBAI
+      | let c: U32 if c <= 0x00B4 => LBBB
+      | let c: U32 if c <= 0x00B5 => LBAL
+      | let c: U32 if c <= 0x00BA => LBAI
+      | let c: U32 if c <= 0x00BB => LBQU
+      | let c: U32 if c <= 0x00BE => LBAI
+      | let c: U32 if c <= 0x00BF => LBOP
+      | let c: U32 if c <= 0x00D6 => LBAL
+      | let c: U32 if c <= 0x00D7 => LBAI
+      | let c: U32 if c <= 0x00F6 => LBAL
+      | let c: U32 if c <= 0x00F7 => LBAI
+      | let c: U32 if c <= 0x02C6 => LBAL
+      | let c: U32 if c <= 0x02C7 => LBAI
+      | let c: U32 if c <= 0x02C8 => LBBB
+      | let c: U32 if c <= 0x02CB => LBAI
+      | let c: U32 if c <= 0x02CC => LBBB
+      | let c: U32 if c <= 0x02CD => LBAI
+      | let c: U32 if c <= 0x02CF => LBAL
+      | let c: U32 if c <= 0x02D0 => LBAI
+      | let c: U32 if c <= 0x02D7 => LBAL
+      | let c: U32 if c <= 0x02DB => LBAI
+      | let c: U32 if c <= 0x02DC => LBAL
+      | let c: U32 if c <= 0x02DD => LBAI
+      | let c: U32 if c <= 0x02DE => LBAL
+      | let c: U32 if c <= 0x02DF => LBBB
+      | let c: U32 if c <= 0x02FF => LBAL
+      | let c: U32 if c <= 0x034E => LBCM
+      | let c: U32 if c <= 0x034F => LBGL
+      | let c: U32 if c <= 0x035B => LBCM
+      | let c: U32 if c <= 0x0362 => LBGL
+      | let c: U32 if c <= 0x036F => LBCM
+      | let c: U32 if c <= 0x0377 => LBAL
+      | let c: U32 if c <= 0x0379 => LBXX
+      | let c: U32 if c <= 0x037D => LBAL
+      | let c: U32 if c <= 0x037E => LBIS
+      | let c: U32 if c <= 0x037F => LBAL
+      | let c: U32 if c <= 0x0383 => LBXX
+      | let c: U32 if c <= 0x038A => LBAL
+      | let c: U32 if c <= 0x038B => LBXX
+      | let c: U32 if c <= 0x038C => LBAL
+      | let c: U32 if c <= 0x038D => LBXX
+      | let c: U32 if c <= 0x03A1 => LBAL
+      | let c: U32 if c <= 0x03A2 => LBXX
+      | let c: U32 if c <= 0x0482 => LBAL
+      | let c: U32 if c <= 0x0489 => LBCM
+      | let c: U32 if c <= 0x052F => LBAL
+      | let c: U32 if c <= 0x0530 => LBXX
+      | let c: U32 if c <= 0x0556 => LBAL
+      | let c: U32 if c <= 0x0558 => LBXX
+      | let c: U32 if c <= 0x0588 => LBAL
+      | let c: U32 if c <= 0x0589 => LBIS
+      | let c: U32 if c <= 0x058A => LBBA
+      | let c: U32 if c <= 0x058C => LBXX
+      | let c: U32 if c <= 0x058E => LBAL
+      | let c: U32 if c <= 0x058F => LBPR
+      | let c: U32 if c <= 0x0590 => LBXX
+      | let c: U32 if c <= 0x05BD => LBCM
+      | let c: U32 if c <= 0x05BE => LBBA
+      | let c: U32 if c <= 0x05BF => LBCM
+      | let c: U32 if c <= 0x05C0 => LBAL
+      | let c: U32 if c <= 0x05C2 => LBCM
+      | let c: U32 if c <= 0x05C3 => LBAL
+      | let c: U32 if c <= 0x05C5 => LBCM
+      | let c: U32 if c <= 0x05C6 => LBEX
+      | let c: U32 if c <= 0x05C7 => LBCM
+      | let c: U32 if c <= 0x05CF => LBXX
+      | let c: U32 if c <= 0x05EA => LBHL
+      | let c: U32 if c <= 0x05EE => LBXX
+      | let c: U32 if c <= 0x05F2 => LBHL
+      | let c: U32 if c <= 0x05F4 => LBAL
+      | let c: U32 if c <= 0x05FF => LBXX
+      | let c: U32 if c <= 0x0605 => LBNU
+      | let c: U32 if c <= 0x0608 => LBAL
+      | let c: U32 if c <= 0x060B => LBPO
+      | let c: U32 if c <= 0x060D => LBIS
+      | let c: U32 if c <= 0x060F => LBAL
+      | let c: U32 if c <= 0x061A => LBCM
+      | let c: U32 if c <= 0x061B => LBEX
+      | let c: U32 if c <= 0x061C => LBCM
+      | let c: U32 if c <= 0x061F => LBEX
+      | let c: U32 if c <= 0x064A => LBAL
+      | let c: U32 if c <= 0x065F => LBCM
+      | let c: U32 if c <= 0x0669 => LBNU
+      | let c: U32 if c <= 0x066A => LBPO
+      | let c: U32 if c <= 0x066C => LBNU
+      | let c: U32 if c <= 0x066F => LBAL
+      | let c: U32 if c <= 0x0670 => LBCM
+      | let c: U32 if c <= 0x06D3 => LBAL
+      | let c: U32 if c <= 0x06D4 => LBEX
+      | let c: U32 if c <= 0x06D5 => LBAL
+      | let c: U32 if c <= 0x06DC => LBCM
+      | let c: U32 if c <= 0x06DD => LBNU
+      | let c: U32 if c <= 0x06DE => LBAL
+      | let c: U32 if c <= 0x06E4 => LBCM
+      | let c: U32 if c <= 0x06E6 => LBAL
+      | let c: U32 if c <= 0x06E8 => LBCM
+      | let c: U32 if c <= 0x06E9 => LBAL
+      | let c: U32 if c <= 0x06ED => LBCM
+      | let c: U32 if c <= 0x06EF => LBAL
+      | let c: U32 if c <= 0x06F9 => LBNU
+      | let c: U32 if c <= 0x070D => LBAL
+      | let c: U32 if c <= 0x070E => LBXX
+      | let c: U32 if c <= 0x0710 => LBAL
+      | let c: U32 if c <= 0x0711 => LBCM
+      | let c: U32 if c <= 0x072F => LBAL
+      | let c: U32 if c <= 0x074A => LBCM
+      | let c: U32 if c <= 0x074C => LBXX
+      | let c: U32 if c <= 0x07A5 => LBAL
+      | let c: U32 if c <= 0x07B0 => LBCM
+      | let c: U32 if c <= 0x07B1 => LBAL
+      | let c: U32 if c <= 0x07BF => LBXX
+      | let c: U32 if c <= 0x07C9 => LBNU
+      | let c: U32 if c <= 0x07EA => LBAL
+      | let c: U32 if c <= 0x07F3 => LBCM
+      | let c: U32 if c <= 0x07F7 => LBAL
+      | let c: U32 if c <= 0x07F8 => LBIS
+      | let c: U32 if c <= 0x07F9 => LBEX
+      | let c: U32 if c <= 0x07FA => LBAL
+      | let c: U32 if c <= 0x07FC => LBXX
+      | let c: U32 if c <= 0x07FD => LBCM
+      | let c: U32 if c <= 0x07FF => LBPR
+      | let c: U32 if c <= 0x0815 => LBAL
+      | let c: U32 if c <= 0x0819 => LBCM
+      | let c: U32 if c <= 0x081A => LBAL
+      | let c: U32 if c <= 0x0823 => LBCM
+      | let c: U32 if c <= 0x0824 => LBAL
+      | let c: U32 if c <= 0x0827 => LBCM
+      | let c: U32 if c <= 0x0828 => LBAL
+      | let c: U32 if c <= 0x082D => LBCM
+      | let c: U32 if c <= 0x082F => LBXX
+      | let c: U32 if c <= 0x083E => LBAL
+      | let c: U32 if c <= 0x083F => LBXX
+      | let c: U32 if c <= 0x0858 => LBAL
+      | let c: U32 if c <= 0x085B => LBCM
+      | let c: U32 if c <= 0x085D => LBXX
+      | let c: U32 if c <= 0x085E => LBAL
+      | let c: U32 if c <= 0x085F => LBXX
+      | let c: U32 if c <= 0x086A => LBAL
+      | let c: U32 if c <= 0x086F => LBXX
+      | let c: U32 if c <= 0x088E => LBAL
+      | let c: U32 if c <= 0x088F => LBXX
+      | let c: U32 if c <= 0x0891 => LBNU
+      | let c: U32 if c <= 0x0896 => LBXX
+      | let c: U32 if c <= 0x089F => LBCM
+      | let c: U32 if c <= 0x08C9 => LBAL
+      | let c: U32 if c <= 0x08E1 => LBCM
+      | let c: U32 if c <= 0x08E2 => LBNU
+      | let c: U32 if c <= 0x0903 => LBCM
+      | let c: U32 if c <= 0x0939 => LBAL
+      | let c: U32 if c <= 0x093C => LBCM
+      | let c: U32 if c <= 0x093D => LBAL
+      | let c: U32 if c <= 0x094F => LBCM
+      | let c: U32 if c <= 0x0950 => LBAL
+      | let c: U32 if c <= 0x0957 => LBCM
+      | let c: U32 if c <= 0x0961 => LBAL
+      | let c: U32 if c <= 0x0963 => LBCM
+      | let c: U32 if c <= 0x0965 => LBBA
+      | let c: U32 if c <= 0x096F => LBNU
+      | let c: U32 if c <= 0x0980 => LBAL
+      | let c: U32 if c <= 0x0983 => LBCM
+      | let c: U32 if c <= 0x0984 => LBXX
+      | let c: U32 if c <= 0x098C => LBAL
+      | let c: U32 if c <= 0x098E => LBXX
+      | let c: U32 if c <= 0x0990 => LBAL
+      | let c: U32 if c <= 0x0992 => LBXX
+      | let c: U32 if c <= 0x09A8 => LBAL
+      | let c: U32 if c <= 0x09A9 => LBXX
+      | let c: U32 if c <= 0x09B0 => LBAL
+      | let c: U32 if c <= 0x09B1 => LBXX
+      | let c: U32 if c <= 0x09B2 => LBAL
+      | let c: U32 if c <= 0x09B5 => LBXX
+      | let c: U32 if c <= 0x09B9 => LBAL
+      | let c: U32 if c <= 0x09BB => LBXX
+      | let c: U32 if c <= 0x09BC => LBCM
+      | let c: U32 if c <= 0x09BD => LBAL
+      | let c: U32 if c <= 0x09C4 => LBCM
+      | let c: U32 if c <= 0x09C6 => LBXX
+      | let c: U32 if c <= 0x09C8 => LBCM
+      | let c: U32 if c <= 0x09CA => LBXX
+      | let c: U32 if c <= 0x09CD => LBCM
+      | let c: U32 if c <= 0x09CE => LBAL
+      | let c: U32 if c <= 0x09D6 => LBXX
+      | let c: U32 if c <= 0x09D7 => LBCM
+      | let c: U32 if c <= 0x09DB => LBXX
+      | let c: U32 if c <= 0x09DD => LBAL
+      | let c: U32 if c <= 0x09DE => LBXX
+      | let c: U32 if c <= 0x09E1 => LBAL
+      | let c: U32 if c <= 0x09E3 => LBCM
+      | let c: U32 if c <= 0x09E5 => LBXX
+      | let c: U32 if c <= 0x09EF => LBNU
+      | let c: U32 if c <= 0x09F1 => LBAL
+      | let c: U32 if c <= 0x09F3 => LBPO
+      | let c: U32 if c <= 0x09F8 => LBAL
+      | let c: U32 if c <= 0x09F9 => LBPO
+      | let c: U32 if c <= 0x09FA => LBAL
+      | let c: U32 if c <= 0x09FB => LBPR
+      | let c: U32 if c <= 0x09FD => LBAL
+      | let c: U32 if c <= 0x09FE => LBCM
+      | let c: U32 if c <= 0x0A00 => LBXX
+      | let c: U32 if c <= 0x0A03 => LBCM
+      | let c: U32 if c <= 0x0A04 => LBXX
+      | let c: U32 if c <= 0x0A0A => LBAL
+      | let c: U32 if c <= 0x0A0E => LBXX
+      | let c: U32 if c <= 0x0A10 => LBAL
+      | let c: U32 if c <= 0x0A12 => LBXX
+      | let c: U32 if c <= 0x0A28 => LBAL
+      | let c: U32 if c <= 0x0A29 => LBXX
+      | let c: U32 if c <= 0x0A30 => LBAL
+      | let c: U32 if c <= 0x0A31 => LBXX
+      | let c: U32 if c <= 0x0A33 => LBAL
+      | let c: U32 if c <= 0x0A34 => LBXX
+      | let c: U32 if c <= 0x0A36 => LBAL
+      | let c: U32 if c <= 0x0A37 => LBXX
+      | let c: U32 if c <= 0x0A39 => LBAL
+      | let c: U32 if c <= 0x0A3B => LBXX
+      | let c: U32 if c <= 0x0A3C => LBCM
+      | let c: U32 if c <= 0x0A3D => LBXX
+      | let c: U32 if c <= 0x0A42 => LBCM
+      | let c: U32 if c <= 0x0A46 => LBXX
+      | let c: U32 if c <= 0x0A48 => LBCM
+      | let c: U32 if c <= 0x0A4A => LBXX
+      | let c: U32 if c <= 0x0A4D => LBCM
+      | let c: U32 if c <= 0x0A50 => LBXX
+      | let c: U32 if c <= 0x0A51 => LBCM
+      | let c: U32 if c <= 0x0A58 => LBXX
+      | let c: U32 if c <= 0x0A5C => LBAL
+      | let c: U32 if c <= 0x0A5D => LBXX
+      | let c: U32 if c <= 0x0A5E => LBAL
+      | let c: U32 if c <= 0x0A65 => LBXX
+      | let c: U32 if c <= 0x0A6F => LBNU
+      | let c: U32 if c <= 0x0A71 => LBCM
+      | let c: U32 if c <= 0x0A74 => LBAL
+      | let c: U32 if c <= 0x0A75 => LBCM
+      | let c: U32 if c <= 0x0A76 => LBAL
+      | let c: U32 if c <= 0x0A80 => LBXX
+      | let c: U32 if c <= 0x0A83 => LBCM
+      | let c: U32 if c <= 0x0A84 => LBXX
+      | let c: U32 if c <= 0x0A8D => LBAL
+      | let c: U32 if c <= 0x0A8E => LBXX
+      | let c: U32 if c <= 0x0A91 => LBAL
+      | let c: U32 if c <= 0x0A92 => LBXX
+      | let c: U32 if c <= 0x0AA8 => LBAL
+      | let c: U32 if c <= 0x0AA9 => LBXX
+      | let c: U32 if c <= 0x0AB0 => LBAL
+      | let c: U32 if c <= 0x0AB1 => LBXX
+      | let c: U32 if c <= 0x0AB3 => LBAL
+      | let c: U32 if c <= 0x0AB4 => LBXX
+      | let c: U32 if c <= 0x0AB9 => LBAL
+      | let c: U32 if c <= 0x0ABB => LBXX
+      | let c: U32 if c <= 0x0ABC => LBCM
+      | let c: U32 if c <= 0x0ABD => LBAL
+      | let c: U32 if c <= 0x0AC5 => LBCM
+      | let c: U32 if c <= 0x0AC6 => LBXX
+      | let c: U32 if c <= 0x0AC9 => LBCM
+      | let c: U32 if c <= 0x0ACA => LBXX
+      | let c: U32 if c <= 0x0ACD => LBCM
+      | let c: U32 if c <= 0x0ACF => LBXX
+      | let c: U32 if c <= 0x0AD0 => LBAL
+      | let c: U32 if c <= 0x0ADF => LBXX
+      | let c: U32 if c <= 0x0AE1 => LBAL
+      | let c: U32 if c <= 0x0AE3 => LBCM
+      | let c: U32 if c <= 0x0AE5 => LBXX
+      | let c: U32 if c <= 0x0AEF => LBNU
+      | let c: U32 if c <= 0x0AF0 => LBAL
+      | let c: U32 if c <= 0x0AF1 => LBPR
+      | let c: U32 if c <= 0x0AF8 => LBXX
+      | let c: U32 if c <= 0x0AF9 => LBAL
+      | let c: U32 if c <= 0x0AFF => LBCM
+      | let c: U32 if c <= 0x0B00 => LBXX
+      | let c: U32 if c <= 0x0B03 => LBCM
+      | let c: U32 if c <= 0x0B04 => LBXX
+      | let c: U32 if c <= 0x0B0C => LBAL
+      | let c: U32 if c <= 0x0B0E => LBXX
+      | let c: U32 if c <= 0x0B10 => LBAL
+      | let c: U32 if c <= 0x0B12 => LBXX
+      | let c: U32 if c <= 0x0B28 => LBAL
+      | let c: U32 if c <= 0x0B29 => LBXX
+      | let c: U32 if c <= 0x0B30 => LBAL
+      | let c: U32 if c <= 0x0B31 => LBXX
+      | let c: U32 if c <= 0x0B33 => LBAL
+      | let c: U32 if c <= 0x0B34 => LBXX
+      | let c: U32 if c <= 0x0B39 => LBAL
+      | let c: U32 if c <= 0x0B3B => LBXX
+      | let c: U32 if c <= 0x0B3C => LBCM
+      | let c: U32 if c <= 0x0B3D => LBAL
+      | let c: U32 if c <= 0x0B44 => LBCM
+      | let c: U32 if c <= 0x0B46 => LBXX
+      | let c: U32 if c <= 0x0B48 => LBCM
+      | let c: U32 if c <= 0x0B4A => LBXX
+      | let c: U32 if c <= 0x0B4D => LBCM
+      | let c: U32 if c <= 0x0B54 => LBXX
+      | let c: U32 if c <= 0x0B57 => LBCM
+      | let c: U32 if c <= 0x0B5B => LBXX
+      | let c: U32 if c <= 0x0B5D => LBAL
+      | let c: U32 if c <= 0x0B5E => LBXX
+      | let c: U32 if c <= 0x0B61 => LBAL
+      | let c: U32 if c <= 0x0B63 => LBCM
+      | let c: U32 if c <= 0x0B65 => LBXX
+      | let c: U32 if c <= 0x0B6F => LBNU
+      | let c: U32 if c <= 0x0B77 => LBAL
+      | let c: U32 if c <= 0x0B81 => LBXX
+      | let c: U32 if c <= 0x0B82 => LBCM
+      | let c: U32 if c <= 0x0B83 => LBAL
+      | let c: U32 if c <= 0x0B84 => LBXX
+      | let c: U32 if c <= 0x0B8A => LBAL
+      | let c: U32 if c <= 0x0B8D => LBXX
+      | let c: U32 if c <= 0x0B90 => LBAL
+      | let c: U32 if c <= 0x0B91 => LBXX
+      | let c: U32 if c <= 0x0B95 => LBAL
+      | let c: U32 if c <= 0x0B98 => LBXX
+      | let c: U32 if c <= 0x0B9A => LBAL
+      | let c: U32 if c <= 0x0B9B => LBXX
+      | let c: U32 if c <= 0x0B9C => LBAL
+      | let c: U32 if c <= 0x0B9D => LBXX
+      | let c: U32 if c <= 0x0B9F => LBAL
+      | let c: U32 if c <= 0x0BA2 => LBXX
+      | let c: U32 if c <= 0x0BA4 => LBAL
+      | let c: U32 if c <= 0x0BA7 => LBXX
+      | let c: U32 if c <= 0x0BAA => LBAL
+      | let c: U32 if c <= 0x0BAD => LBXX
+      | let c: U32 if c <= 0x0BB9 => LBAL
+      | let c: U32 if c <= 0x0BBD => LBXX
+      | let c: U32 if c <= 0x0BC2 => LBCM
+      | let c: U32 if c <= 0x0BC5 => LBXX
+      | let c: U32 if c <= 0x0BC8 => LBCM
+      | let c: U32 if c <= 0x0BC9 => LBXX
+      | let c: U32 if c <= 0x0BCD => LBCM
+      | let c: U32 if c <= 0x0BCF => LBXX
+      | let c: U32 if c <= 0x0BD0 => LBAL
+      | let c: U32 if c <= 0x0BD6 => LBXX
+      | let c: U32 if c <= 0x0BD7 => LBCM
+      | let c: U32 if c <= 0x0BE5 => LBXX
+      | let c: U32 if c <= 0x0BEF => LBNU
+      | let c: U32 if c <= 0x0BF8 => LBAL
+      | let c: U32 if c <= 0x0BF9 => LBPR
+      | let c: U32 if c <= 0x0BFA => LBAL
+      | let c: U32 if c <= 0x0BFF => LBXX
+      | let c: U32 if c <= 0x0C04 => LBCM
+      | let c: U32 if c <= 0x0C0C => LBAL
+      | let c: U32 if c <= 0x0C0D => LBXX
+      | let c: U32 if c <= 0x0C10 => LBAL
+      | let c: U32 if c <= 0x0C11 => LBXX
+      | let c: U32 if c <= 0x0C28 => LBAL
+      | let c: U32 if c <= 0x0C29 => LBXX
+      | let c: U32 if c <= 0x0C39 => LBAL
+      | let c: U32 if c <= 0x0C3B => LBXX
+      | let c: U32 if c <= 0x0C3C => LBCM
+      | let c: U32 if c <= 0x0C3D => LBAL
+      | let c: U32 if c <= 0x0C44 => LBCM
+      | let c: U32 if c <= 0x0C45 => LBXX
+      | let c: U32 if c <= 0x0C48 => LBCM
+      | let c: U32 if c <= 0x0C49 => LBXX
+      | let c: U32 if c <= 0x0C4D => LBCM
+      | let c: U32 if c <= 0x0C54 => LBXX
+      | let c: U32 if c <= 0x0C56 => LBCM
+      | let c: U32 if c <= 0x0C57 => LBXX
+      | let c: U32 if c <= 0x0C5A => LBAL
+      | let c: U32 if c <= 0x0C5C => LBXX
+      | let c: U32 if c <= 0x0C5D => LBAL
+      | let c: U32 if c <= 0x0C5F => LBXX
+      | let c: U32 if c <= 0x0C61 => LBAL
+      | let c: U32 if c <= 0x0C63 => LBCM
+      | let c: U32 if c <= 0x0C65 => LBXX
+      | let c: U32 if c <= 0x0C6F => LBNU
+      | let c: U32 if c <= 0x0C76 => LBXX
+      | let c: U32 if c <= 0x0C77 => LBBB
+      | let c: U32 if c <= 0x0C80 => LBAL
+      | let c: U32 if c <= 0x0C83 => LBCM
+      | let c: U32 if c <= 0x0C84 => LBBB
+      | let c: U32 if c <= 0x0C8C => LBAL
+      | let c: U32 if c <= 0x0C8D => LBXX
+      | let c: U32 if c <= 0x0C90 => LBAL
+      | let c: U32 if c <= 0x0C91 => LBXX
+      | let c: U32 if c <= 0x0CA8 => LBAL
+      | let c: U32 if c <= 0x0CA9 => LBXX
+      | let c: U32 if c <= 0x0CB3 => LBAL
+      | let c: U32 if c <= 0x0CB4 => LBXX
+      | let c: U32 if c <= 0x0CB9 => LBAL
+      | let c: U32 if c <= 0x0CBB => LBXX
+      | let c: U32 if c <= 0x0CBC => LBCM
+      | let c: U32 if c <= 0x0CBD => LBAL
+      | let c: U32 if c <= 0x0CC4 => LBCM
+      | let c: U32 if c <= 0x0CC5 => LBXX
+      | let c: U32 if c <= 0x0CC8 => LBCM
+      | let c: U32 if c <= 0x0CC9 => LBXX
+      | let c: U32 if c <= 0x0CCD => LBCM
+      | let c: U32 if c <= 0x0CD4 => LBXX
+      | let c: U32 if c <= 0x0CD6 => LBCM
+      | let c: U32 if c <= 0x0CDC => LBXX
+      | let c: U32 if c <= 0x0CDE => LBAL
+      | let c: U32 if c <= 0x0CDF => LBXX
+      | let c: U32 if c <= 0x0CE1 => LBAL
+      | let c: U32 if c <= 0x0CE3 => LBCM
+      | let c: U32 if c <= 0x0CE5 => LBXX
+      | let c: U32 if c <= 0x0CEF => LBNU
+      | let c: U32 if c <= 0x0CF0 => LBXX
+      | let c: U32 if c <= 0x0CF2 => LBAL
+      | let c: U32 if c <= 0x0CF3 => LBCM
+      | let c: U32 if c <= 0x0CFF => LBXX
+      | let c: U32 if c <= 0x0D03 => LBCM
+      | let c: U32 if c <= 0x0D0C => LBAL
+      | let c: U32 if c <= 0x0D0D => LBXX
+      | let c: U32 if c <= 0x0D10 => LBAL
+      | let c: U32 if c <= 0x0D11 => LBXX
+      | let c: U32 if c <= 0x0D3A => LBAL
+      | let c: U32 if c <= 0x0D3C => LBCM
+      | let c: U32 if c <= 0x0D3D => LBAL
+      | let c: U32 if c <= 0x0D44 => LBCM
+      | let c: U32 if c <= 0x0D45 => LBXX
+      | let c: U32 if c <= 0x0D48 => LBCM
+      | let c: U32 if c <= 0x0D49 => LBXX
+      | let c: U32 if c <= 0x0D4D => LBCM
+      | let c: U32 if c <= 0x0D4F => LBAL
+      | let c: U32 if c <= 0x0D53 => LBXX
+      | let c: U32 if c <= 0x0D56 => LBAL
+      | let c: U32 if c <= 0x0D57 => LBCM
+      | let c: U32 if c <= 0x0D61 => LBAL
+      | let c: U32 if c <= 0x0D63 => LBCM
+      | let c: U32 if c <= 0x0D65 => LBXX
+      | let c: U32 if c <= 0x0D6F => LBNU
+      | let c: U32 if c <= 0x0D78 => LBAL
+      | let c: U32 if c <= 0x0D79 => LBPO
+      | let c: U32 if c <= 0x0D7F => LBAL
+      | let c: U32 if c <= 0x0D80 => LBXX
+      | let c: U32 if c <= 0x0D83 => LBCM
+      | let c: U32 if c <= 0x0D84 => LBXX
+      | let c: U32 if c <= 0x0D96 => LBAL
+      | let c: U32 if c <= 0x0D99 => LBXX
+      | let c: U32 if c <= 0x0DB1 => LBAL
+      | let c: U32 if c <= 0x0DB2 => LBXX
+      | let c: U32 if c <= 0x0DBB => LBAL
+      | let c: U32 if c <= 0x0DBC => LBXX
+      | let c: U32 if c <= 0x0DBD => LBAL
+      | let c: U32 if c <= 0x0DBF => LBXX
+      | let c: U32 if c <= 0x0DC6 => LBAL
+      | let c: U32 if c <= 0x0DC9 => LBXX
+      | let c: U32 if c <= 0x0DCA => LBCM
+      | let c: U32 if c <= 0x0DCE => LBXX
+      | let c: U32 if c <= 0x0DD4 => LBCM
+      | let c: U32 if c <= 0x0DD5 => LBXX
+      | let c: U32 if c <= 0x0DD6 => LBCM
+      | let c: U32 if c <= 0x0DD7 => LBXX
+      | let c: U32 if c <= 0x0DDF => LBCM
+      | let c: U32 if c <= 0x0DE5 => LBXX
+      | let c: U32 if c <= 0x0DEF => LBNU
+      | let c: U32 if c <= 0x0DF1 => LBXX
+      | let c: U32 if c <= 0x0DF3 => LBCM
+      | let c: U32 if c <= 0x0DF4 => LBAL
+      | let c: U32 if c <= 0x0E00 => LBXX
+      | let c: U32 if c <= 0x0E3A => LBSA
+      | let c: U32 if c <= 0x0E3E => LBXX
+      | let c: U32 if c <= 0x0E3F => LBPR
+      | let c: U32 if c <= 0x0E4E => LBSA
+      | let c: U32 if c <= 0x0E4F => LBAL
+      | let c: U32 if c <= 0x0E59 => LBNU
+      | let c: U32 if c <= 0x0E5B => LBBA
+      | let c: U32 if c <= 0x0E80 => LBXX
+      | let c: U32 if c <= 0x0E82 => LBSA
+      | let c: U32 if c <= 0x0E83 => LBXX
+      | let c: U32 if c <= 0x0E84 => LBSA
+      | let c: U32 if c <= 0x0E85 => LBXX
+      | let c: U32 if c <= 0x0E8A => LBSA
+      | let c: U32 if c <= 0x0E8B => LBXX
+      | let c: U32 if c <= 0x0EA3 => LBSA
+      | let c: U32 if c <= 0x0EA4 => LBXX
+      | let c: U32 if c <= 0x0EA5 => LBSA
+      | let c: U32 if c <= 0x0EA6 => LBXX
+      | let c: U32 if c <= 0x0EBD => LBSA
+      | let c: U32 if c <= 0x0EBF => LBXX
+      | let c: U32 if c <= 0x0EC4 => LBSA
+      | let c: U32 if c <= 0x0EC5 => LBXX
+      | let c: U32 if c <= 0x0EC6 => LBSA
+      | let c: U32 if c <= 0x0EC7 => LBXX
+      | let c: U32 if c <= 0x0ECE => LBSA
+      | let c: U32 if c <= 0x0ECF => LBXX
+      | let c: U32 if c <= 0x0ED9 => LBNU
+      | let c: U32 if c <= 0x0EDB => LBXX
+      | let c: U32 if c <= 0x0EDF => LBSA
+      | let c: U32 if c <= 0x0EFF => LBXX
+      | let c: U32 if c <= 0x0F00 => LBAL
+      | let c: U32 if c <= 0x0F04 => LBBB
+      | let c: U32 if c <= 0x0F05 => LBAL
+      | let c: U32 if c <= 0x0F07 => LBBB
+      | let c: U32 if c <= 0x0F08 => LBGL
+      | let c: U32 if c <= 0x0F0A => LBBB
+      | let c: U32 if c <= 0x0F0B => LBBA
+      | let c: U32 if c <= 0x0F0C => LBGL
+      | let c: U32 if c <= 0x0F11 => LBEX
+      | let c: U32 if c <= 0x0F12 => LBGL
+      | let c: U32 if c <= 0x0F13 => LBAL
+      | let c: U32 if c <= 0x0F14 => LBEX
+      | let c: U32 if c <= 0x0F17 => LBAL
+      | let c: U32 if c <= 0x0F19 => LBCM
+      | let c: U32 if c <= 0x0F1F => LBAL
+      | let c: U32 if c <= 0x0F29 => LBNU
+      | let c: U32 if c <= 0x0F33 => LBAL
+      | let c: U32 if c <= 0x0F34 => LBBA
+      | let c: U32 if c <= 0x0F35 => LBCM
+      | let c: U32 if c <= 0x0F36 => LBAL
+      | let c: U32 if c <= 0x0F37 => LBCM
+      | let c: U32 if c <= 0x0F38 => LBAL
+      | let c: U32 if c <= 0x0F39 => LBCM
+      | let c: U32 if c <= 0x0F3A => LBOP
+      | let c: U32 if c <= 0x0F3B => LBCL
+      | let c: U32 if c <= 0x0F3C => LBOP
+      | let c: U32 if c <= 0x0F3D => LBCL
+      | let c: U32 if c <= 0x0F3F => LBCM
+      | let c: U32 if c <= 0x0F47 => LBAL
+      | let c: U32 if c <= 0x0F48 => LBXX
+      | let c: U32 if c <= 0x0F6C => LBAL
+      | let c: U32 if c <= 0x0F70 => LBXX
+      | let c: U32 if c <= 0x0F7E => LBCM
+      | let c: U32 if c <= 0x0F7F => LBBA
+      | let c: U32 if c <= 0x0F84 => LBCM
+      | let c: U32 if c <= 0x0F85 => LBBA
+      | let c: U32 if c <= 0x0F87 => LBCM
+      | let c: U32 if c <= 0x0F8C => LBAL
+      | let c: U32 if c <= 0x0F97 => LBCM
+      | let c: U32 if c <= 0x0F98 => LBXX
+      | let c: U32 if c <= 0x0FBC => LBCM
+      | let c: U32 if c <= 0x0FBD => LBXX
+      | let c: U32 if c <= 0x0FBF => LBBA
+      | let c: U32 if c <= 0x0FC5 => LBAL
+      | let c: U32 if c <= 0x0FC6 => LBCM
+      | let c: U32 if c <= 0x0FCC => LBAL
+      | let c: U32 if c <= 0x0FCD => LBXX
+      | let c: U32 if c <= 0x0FCF => LBAL
+      | let c: U32 if c <= 0x0FD1 => LBBB
+      | let c: U32 if c <= 0x0FD2 => LBBA
+      | let c: U32 if c <= 0x0FD3 => LBBB
+      | let c: U32 if c <= 0x0FD8 => LBAL
+      | let c: U32 if c <= 0x0FDA => LBGL
+      else LBXX
       end
+    | 0x0001 =>
+      match cp
+      | let c: U32 if c <= 0x103F => LBSA
+      | let c: U32 if c <= 0x1049 => LBNU
+      | let c: U32 if c <= 0x104B => LBBA
+      | let c: U32 if c <= 0x104F => LBAL
+      | let c: U32 if c <= 0x108F => LBSA
+      | let c: U32 if c <= 0x1099 => LBNU
+      | let c: U32 if c <= 0x109F => LBSA
+      | let c: U32 if c <= 0x10C5 => LBAL
+      | let c: U32 if c <= 0x10C6 => LBXX
+      | let c: U32 if c <= 0x10C7 => LBAL
+      | let c: U32 if c <= 0x10CC => LBXX
+      | let c: U32 if c <= 0x10CD => LBAL
+      | let c: U32 if c <= 0x10CF => LBXX
+      | let c: U32 if c <= 0x10FF => LBAL
+      | let c: U32 if c <= 0x115F => LBJL
+      | let c: U32 if c <= 0x11A7 => LBJV
+      | let c: U32 if c <= 0x11FF => LBJT
+      | let c: U32 if c <= 0x1248 => LBAL
+      | let c: U32 if c <= 0x1249 => LBXX
+      | let c: U32 if c <= 0x124D => LBAL
+      | let c: U32 if c <= 0x124F => LBXX
+      | let c: U32 if c <= 0x1256 => LBAL
+      | let c: U32 if c <= 0x1257 => LBXX
+      | let c: U32 if c <= 0x1258 => LBAL
+      | let c: U32 if c <= 0x1259 => LBXX
+      | let c: U32 if c <= 0x125D => LBAL
+      | let c: U32 if c <= 0x125F => LBXX
+      | let c: U32 if c <= 0x1288 => LBAL
+      | let c: U32 if c <= 0x1289 => LBXX
+      | let c: U32 if c <= 0x128D => LBAL
+      | let c: U32 if c <= 0x128F => LBXX
+      | let c: U32 if c <= 0x12B0 => LBAL
+      | let c: U32 if c <= 0x12B1 => LBXX
+      | let c: U32 if c <= 0x12B5 => LBAL
+      | let c: U32 if c <= 0x12B7 => LBXX
+      | let c: U32 if c <= 0x12BE => LBAL
+      | let c: U32 if c <= 0x12BF => LBXX
+      | let c: U32 if c <= 0x12C0 => LBAL
+      | let c: U32 if c <= 0x12C1 => LBXX
+      | let c: U32 if c <= 0x12C5 => LBAL
+      | let c: U32 if c <= 0x12C7 => LBXX
+      | let c: U32 if c <= 0x12D6 => LBAL
+      | let c: U32 if c <= 0x12D7 => LBXX
+      | let c: U32 if c <= 0x1310 => LBAL
+      | let c: U32 if c <= 0x1311 => LBXX
+      | let c: U32 if c <= 0x1315 => LBAL
+      | let c: U32 if c <= 0x1317 => LBXX
+      | let c: U32 if c <= 0x135A => LBAL
+      | let c: U32 if c <= 0x135C => LBXX
+      | let c: U32 if c <= 0x135F => LBCM
+      | let c: U32 if c <= 0x1360 => LBAL
+      | let c: U32 if c <= 0x1361 => LBBA
+      | let c: U32 if c <= 0x137C => LBAL
+      | let c: U32 if c <= 0x137F => LBXX
+      | let c: U32 if c <= 0x1399 => LBAL
+      | let c: U32 if c <= 0x139F => LBXX
+      | let c: U32 if c <= 0x13F5 => LBAL
+      | let c: U32 if c <= 0x13F7 => LBXX
+      | let c: U32 if c <= 0x13FD => LBAL
+      | let c: U32 if c <= 0x13FF => LBXX
+      | let c: U32 if c <= 0x1400 => LBBA
+      | let c: U32 if c <= 0x167F => LBAL
+      | let c: U32 if c <= 0x1680 => LBBA
+      | let c: U32 if c <= 0x169A => LBAL
+      | let c: U32 if c <= 0x169B => LBOP
+      | let c: U32 if c <= 0x169C => LBCL
+      | let c: U32 if c <= 0x169F => LBXX
+      | let c: U32 if c <= 0x16EA => LBAL
+      | let c: U32 if c <= 0x16ED => LBBA
+      | let c: U32 if c <= 0x16F8 => LBAL
+      | let c: U32 if c <= 0x16FF => LBXX
+      | let c: U32 if c <= 0x1711 => LBAL
+      | let c: U32 if c <= 0x1715 => LBCM
+      | let c: U32 if c <= 0x171E => LBXX
+      | let c: U32 if c <= 0x1731 => LBAL
+      | let c: U32 if c <= 0x1734 => LBCM
+      | let c: U32 if c <= 0x1736 => LBBA
+      | let c: U32 if c <= 0x173F => LBXX
+      | let c: U32 if c <= 0x1751 => LBAL
+      | let c: U32 if c <= 0x1753 => LBCM
+      | let c: U32 if c <= 0x175F => LBXX
+      | let c: U32 if c <= 0x176C => LBAL
+      | let c: U32 if c <= 0x176D => LBXX
+      | let c: U32 if c <= 0x1770 => LBAL
+      | let c: U32 if c <= 0x1771 => LBXX
+      | let c: U32 if c <= 0x1773 => LBCM
+      | let c: U32 if c <= 0x177F => LBXX
+      | let c: U32 if c <= 0x17D3 => LBSA
+      | let c: U32 if c <= 0x17D5 => LBBA
+      | let c: U32 if c <= 0x17D6 => LBNS
+      | let c: U32 if c <= 0x17D7 => LBSA
+      | let c: U32 if c <= 0x17D8 => LBBA
+      | let c: U32 if c <= 0x17D9 => LBAL
+      | let c: U32 if c <= 0x17DA => LBBA
+      | let c: U32 if c <= 0x17DB => LBPR
+      | let c: U32 if c <= 0x17DD => LBSA
+      | let c: U32 if c <= 0x17DF => LBXX
+      | let c: U32 if c <= 0x17E9 => LBNU
+      | let c: U32 if c <= 0x17EF => LBXX
+      | let c: U32 if c <= 0x17F9 => LBAL
+      | let c: U32 if c <= 0x17FF => LBXX
+      | let c: U32 if c <= 0x1801 => LBAL
+      | let c: U32 if c <= 0x1803 => LBEX
+      | let c: U32 if c <= 0x1805 => LBBA
+      | let c: U32 if c <= 0x1806 => LBBB
+      | let c: U32 if c <= 0x1807 => LBAL
+      | let c: U32 if c <= 0x1809 => LBEX
+      | let c: U32 if c <= 0x180A => LBAL
+      | let c: U32 if c <= 0x180D => LBCM
+      | let c: U32 if c <= 0x180E => LBGL
+      | let c: U32 if c <= 0x180F => LBCM
+      | let c: U32 if c <= 0x1819 => LBNU
+      | let c: U32 if c <= 0x181F => LBXX
+      | let c: U32 if c <= 0x1878 => LBAL
+      | let c: U32 if c <= 0x187F => LBXX
+      | let c: U32 if c <= 0x1884 => LBAL
+      | let c: U32 if c <= 0x1886 => LBCM
+      | let c: U32 if c <= 0x18A8 => LBAL
+      | let c: U32 if c <= 0x18A9 => LBCM
+      | let c: U32 if c <= 0x18AA => LBAL
+      | let c: U32 if c <= 0x18AF => LBXX
+      | let c: U32 if c <= 0x18F5 => LBAL
+      | let c: U32 if c <= 0x18FF => LBXX
+      | let c: U32 if c <= 0x191E => LBAL
+      | let c: U32 if c <= 0x191F => LBXX
+      | let c: U32 if c <= 0x192B => LBCM
+      | let c: U32 if c <= 0x192F => LBXX
+      | let c: U32 if c <= 0x193B => LBCM
+      | let c: U32 if c <= 0x193F => LBXX
+      | let c: U32 if c <= 0x1940 => LBAL
+      | let c: U32 if c <= 0x1943 => LBXX
+      | let c: U32 if c <= 0x1945 => LBEX
+      | let c: U32 if c <= 0x194F => LBNU
+      | let c: U32 if c <= 0x196D => LBSA
+      | let c: U32 if c <= 0x196F => LBXX
+      | let c: U32 if c <= 0x1974 => LBSA
+      | let c: U32 if c <= 0x197F => LBXX
+      | let c: U32 if c <= 0x19AB => LBSA
+      | let c: U32 if c <= 0x19AF => LBXX
+      | let c: U32 if c <= 0x19C9 => LBSA
+      | let c: U32 if c <= 0x19CF => LBXX
+      | let c: U32 if c <= 0x19DA => LBNU
+      | let c: U32 if c <= 0x19DD => LBXX
+      | let c: U32 if c <= 0x19DF => LBSA
+      | let c: U32 if c <= 0x1A16 => LBAL
+      | let c: U32 if c <= 0x1A1B => LBCM
+      | let c: U32 if c <= 0x1A1D => LBXX
+      | let c: U32 if c <= 0x1A1F => LBAL
+      | let c: U32 if c <= 0x1A5E => LBSA
+      | let c: U32 if c <= 0x1A5F => LBXX
+      | let c: U32 if c <= 0x1A7C => LBSA
+      | let c: U32 if c <= 0x1A7E => LBXX
+      | let c: U32 if c <= 0x1A7F => LBCM
+      | let c: U32 if c <= 0x1A89 => LBNU
+      | let c: U32 if c <= 0x1A8F => LBXX
+      | let c: U32 if c <= 0x1A99 => LBNU
+      | let c: U32 if c <= 0x1A9F => LBXX
+      | let c: U32 if c <= 0x1AAD => LBSA
+      | let c: U32 if c <= 0x1AAF => LBXX
+      | let c: U32 if c <= 0x1ACE => LBCM
+      | let c: U32 if c <= 0x1AFF => LBXX
+      | let c: U32 if c <= 0x1B04 => LBCM
+      | let c: U32 if c <= 0x1B33 => LBAK
+      | let c: U32 if c <= 0x1B43 => LBCM
+      | let c: U32 if c <= 0x1B44 => LBVI
+      | let c: U32 if c <= 0x1B4C => LBAK
+      | let c: U32 if c <= 0x1B4D => LBXX
+      | let c: U32 if c <= 0x1B4F => LBBA
+      | let c: U32 if c <= 0x1B59 => LBAS
+      | let c: U32 if c <= 0x1B5B => LBBA
+      | let c: U32 if c <= 0x1B5C => LBID
+      | let c: U32 if c <= 0x1B60 => LBBA
+      | let c: U32 if c <= 0x1B6A => LBID
+      | let c: U32 if c <= 0x1B73 => LBCM
+      | let c: U32 if c <= 0x1B7C => LBID
+      | let c: U32 if c <= 0x1B7F => LBBA
+      | let c: U32 if c <= 0x1B82 => LBCM
+      | let c: U32 if c <= 0x1BA0 => LBAL
+      | let c: U32 if c <= 0x1BAD => LBCM
+      | let c: U32 if c <= 0x1BAF => LBAL
+      | let c: U32 if c <= 0x1BB9 => LBNU
+      | let c: U32 if c <= 0x1BBF => LBAL
+      | let c: U32 if c <= 0x1BE5 => LBAS
+      | let c: U32 if c <= 0x1BF1 => LBCM
+      | let c: U32 if c <= 0x1BF3 => LBVF
+      | let c: U32 if c <= 0x1BFB => LBXX
+      | let c: U32 if c <= 0x1C23 => LBAL
+      | let c: U32 if c <= 0x1C37 => LBCM
+      | let c: U32 if c <= 0x1C3A => LBXX
+      | let c: U32 if c <= 0x1C3F => LBBA
+      | let c: U32 if c <= 0x1C49 => LBNU
+      | let c: U32 if c <= 0x1C4C => LBXX
+      | let c: U32 if c <= 0x1C4F => LBAL
+      | let c: U32 if c <= 0x1C59 => LBNU
+      | let c: U32 if c <= 0x1C7D => LBAL
+      | let c: U32 if c <= 0x1C7F => LBBA
+      | let c: U32 if c <= 0x1C8A => LBAL
+      | let c: U32 if c <= 0x1C8F => LBXX
+      | let c: U32 if c <= 0x1CBA => LBAL
+      | let c: U32 if c <= 0x1CBC => LBXX
+      | let c: U32 if c <= 0x1CC7 => LBAL
+      | let c: U32 if c <= 0x1CCF => LBXX
+      | let c: U32 if c <= 0x1CD2 => LBCM
+      | let c: U32 if c <= 0x1CD3 => LBAL
+      | let c: U32 if c <= 0x1CE8 => LBCM
+      | let c: U32 if c <= 0x1CEC => LBAL
+      | let c: U32 if c <= 0x1CED => LBCM
+      | let c: U32 if c <= 0x1CF3 => LBAL
+      | let c: U32 if c <= 0x1CF4 => LBCM
+      | let c: U32 if c <= 0x1CF6 => LBAL
+      | let c: U32 if c <= 0x1CF9 => LBCM
+      | let c: U32 if c <= 0x1CFA => LBAL
+      | let c: U32 if c <= 0x1CFF => LBXX
+      | let c: U32 if c <= 0x1DBF => LBAL
+      | let c: U32 if c <= 0x1DCC => LBCM
+      | let c: U32 if c <= 0x1DCD => LBGL
+      | let c: U32 if c <= 0x1DFB => LBCM
+      | let c: U32 if c <= 0x1DFC => LBGL
+      | let c: U32 if c <= 0x1DFF => LBCM
+      | let c: U32 if c <= 0x1F15 => LBAL
+      | let c: U32 if c <= 0x1F17 => LBXX
+      | let c: U32 if c <= 0x1F1D => LBAL
+      | let c: U32 if c <= 0x1F1F => LBXX
+      | let c: U32 if c <= 0x1F45 => LBAL
+      | let c: U32 if c <= 0x1F47 => LBXX
+      | let c: U32 if c <= 0x1F4D => LBAL
+      | let c: U32 if c <= 0x1F4F => LBXX
+      | let c: U32 if c <= 0x1F57 => LBAL
+      | let c: U32 if c <= 0x1F58 => LBXX
+      | let c: U32 if c <= 0x1F59 => LBAL
+      | let c: U32 if c <= 0x1F5A => LBXX
+      | let c: U32 if c <= 0x1F5B => LBAL
+      | let c: U32 if c <= 0x1F5C => LBXX
+      | let c: U32 if c <= 0x1F5D => LBAL
+      | let c: U32 if c <= 0x1F5E => LBXX
+      | let c: U32 if c <= 0x1F7D => LBAL
+      | let c: U32 if c <= 0x1F7F => LBXX
+      | let c: U32 if c <= 0x1FB4 => LBAL
+      | let c: U32 if c <= 0x1FB5 => LBXX
+      | let c: U32 if c <= 0x1FC4 => LBAL
+      | let c: U32 if c <= 0x1FC5 => LBXX
+      | let c: U32 if c <= 0x1FD3 => LBAL
+      | let c: U32 if c <= 0x1FD5 => LBXX
+      | let c: U32 if c <= 0x1FDB => LBAL
+      | let c: U32 if c <= 0x1FDC => LBXX
+      | let c: U32 if c <= 0x1FEF => LBAL
+      | let c: U32 if c <= 0x1FF1 => LBXX
+      | let c: U32 if c <= 0x1FF4 => LBAL
+      | let c: U32 if c <= 0x1FF5 => LBXX
+      | let c: U32 if c <= 0x1FFC => LBAL
+      | let c: U32 if c <= 0x1FFD => LBBB
+      | let c: U32 if c <= 0x1FFE => LBAL
+      else LBXX
+      end
+    | 0x0002 =>
+      match cp
+      | let c: U32 if c <= 0x2006 => LBBA
+      | let c: U32 if c <= 0x2007 => LBGL
+      | let c: U32 if c <= 0x200A => LBBA
+      | let c: U32 if c <= 0x200B => LBZW
+      | let c: U32 if c <= 0x200C => LBCM
+      | let c: U32 if c <= 0x200D => LBZWJ
+      | let c: U32 if c <= 0x200F => LBCM
+      | let c: U32 if c <= 0x2010 => LBBA
+      | let c: U32 if c <= 0x2011 => LBGL
+      | let c: U32 if c <= 0x2013 => LBBA
+      | let c: U32 if c <= 0x2014 => LBB2
+      | let c: U32 if c <= 0x2016 => LBAI
+      | let c: U32 if c <= 0x2017 => LBAL
+      | let c: U32 if c <= 0x2019 => LBQU
+      | let c: U32 if c <= 0x201A => LBOP
+      | let c: U32 if c <= 0x201D => LBQU
+      | let c: U32 if c <= 0x201E => LBOP
+      | let c: U32 if c <= 0x201F => LBQU
+      | let c: U32 if c <= 0x2021 => LBAI
+      | let c: U32 if c <= 0x2023 => LBAL
+      | let c: U32 if c <= 0x2026 => LBIN
+      | let c: U32 if c <= 0x2027 => LBBA
+      | let c: U32 if c <= 0x2029 => LBBK
+      | let c: U32 if c <= 0x202E => LBCM
+      | let c: U32 if c <= 0x202F => LBGL
+      | let c: U32 if c <= 0x2037 => LBPO
+      | let c: U32 if c <= 0x2038 => LBAL
+      | let c: U32 if c <= 0x203A => LBQU
+      | let c: U32 if c <= 0x203B => LBAI
+      | let c: U32 if c <= 0x203D => LBNS
+      | let c: U32 if c <= 0x2043 => LBAL
+      | let c: U32 if c <= 0x2044 => LBIS
+      | let c: U32 if c <= 0x2045 => LBOP
+      | let c: U32 if c <= 0x2046 => LBCL
+      | let c: U32 if c <= 0x2049 => LBNS
+      | let c: U32 if c <= 0x2055 => LBAL
+      | let c: U32 if c <= 0x2056 => LBBA
+      | let c: U32 if c <= 0x2057 => LBPO
+      | let c: U32 if c <= 0x205B => LBBA
+      | let c: U32 if c <= 0x205C => LBAL
+      | let c: U32 if c <= 0x205F => LBBA
+      | let c: U32 if c <= 0x2060 => LBWJ
+      | let c: U32 if c <= 0x2064 => LBAL
+      | let c: U32 if c <= 0x2065 => LBXX
+      | let c: U32 if c <= 0x206F => LBCM
+      | let c: U32 if c <= 0x2071 => LBAL
+      | let c: U32 if c <= 0x2073 => LBXX
+      | let c: U32 if c <= 0x2074 => LBAI
+      | let c: U32 if c <= 0x207C => LBAL
+      | let c: U32 if c <= 0x207D => LBOP
+      | let c: U32 if c <= 0x207E => LBCL
+      | let c: U32 if c <= 0x207F => LBAI
+      | let c: U32 if c <= 0x2080 => LBAL
+      | let c: U32 if c <= 0x2084 => LBAI
+      | let c: U32 if c <= 0x208C => LBAL
+      | let c: U32 if c <= 0x208D => LBOP
+      | let c: U32 if c <= 0x208E => LBCL
+      | let c: U32 if c <= 0x208F => LBXX
+      | let c: U32 if c <= 0x209C => LBAL
+      | let c: U32 if c <= 0x209F => LBXX
+      | let c: U32 if c <= 0x20A6 => LBPR
+      | let c: U32 if c <= 0x20A7 => LBPO
+      | let c: U32 if c <= 0x20B5 => LBPR
+      | let c: U32 if c <= 0x20B6 => LBPO
+      | let c: U32 if c <= 0x20BA => LBPR
+      | let c: U32 if c <= 0x20BB => LBPO
+      | let c: U32 if c <= 0x20BD => LBPR
+      | let c: U32 if c <= 0x20BE => LBPO
+      | let c: U32 if c <= 0x20BF => LBPR
+      | let c: U32 if c <= 0x20C0 => LBPO
+      | let c: U32 if c <= 0x20CF => LBPR
+      | let c: U32 if c <= 0x20F0 => LBCM
+      | let c: U32 if c <= 0x20FF => LBXX
+      | let c: U32 if c <= 0x2102 => LBAL
+      | let c: U32 if c <= 0x2103 => LBPO
+      | let c: U32 if c <= 0x2104 => LBAL
+      | let c: U32 if c <= 0x2105 => LBAI
+      | let c: U32 if c <= 0x2108 => LBAL
+      | let c: U32 if c <= 0x2109 => LBPO
+      | let c: U32 if c <= 0x2112 => LBAL
+      | let c: U32 if c <= 0x2113 => LBAI
+      | let c: U32 if c <= 0x2115 => LBAL
+      | let c: U32 if c <= 0x2116 => LBPR
+      | let c: U32 if c <= 0x2120 => LBAL
+      | let c: U32 if c <= 0x2122 => LBAI
+      | let c: U32 if c <= 0x212A => LBAL
+      | let c: U32 if c <= 0x212B => LBAI
+      | let c: U32 if c <= 0x214F => LBAL
+      | let c: U32 if c <= 0x215E => LBAI
+      | let c: U32 if c <= 0x215F => LBAL
+      | let c: U32 if c <= 0x216B => LBAI
+      | let c: U32 if c <= 0x216F => LBAL
+      | let c: U32 if c <= 0x2179 => LBAI
+      | let c: U32 if c <= 0x2188 => LBAL
+      | let c: U32 if c <= 0x2189 => LBAI
+      | let c: U32 if c <= 0x218B => LBAL
+      | let c: U32 if c <= 0x218F => LBXX
+      | let c: U32 if c <= 0x2199 => LBAI
+      | let c: U32 if c <= 0x21D1 => LBAL
+      | let c: U32 if c <= 0x21D2 => LBAI
+      | let c: U32 if c <= 0x21D3 => LBAL
+      | let c: U32 if c <= 0x21D4 => LBAI
+      | let c: U32 if c <= 0x21FF => LBAL
+      | let c: U32 if c <= 0x2200 => LBAI
+      | let c: U32 if c <= 0x2201 => LBAL
+      | let c: U32 if c <= 0x2203 => LBAI
+      | let c: U32 if c <= 0x2206 => LBAL
+      | let c: U32 if c <= 0x2208 => LBAI
+      | let c: U32 if c <= 0x220A => LBAL
+      | let c: U32 if c <= 0x220B => LBAI
+      | let c: U32 if c <= 0x220E => LBAL
+      | let c: U32 if c <= 0x220F => LBAI
+      | let c: U32 if c <= 0x2210 => LBAL
+      | let c: U32 if c <= 0x2211 => LBAI
+      | let c: U32 if c <= 0x2213 => LBPR
+      | let c: U32 if c <= 0x2214 => LBAL
+      | let c: U32 if c <= 0x2215 => LBAI
+      | let c: U32 if c <= 0x2219 => LBAL
+      | let c: U32 if c <= 0x221A => LBAI
+      | let c: U32 if c <= 0x221C => LBAL
+      | let c: U32 if c <= 0x2220 => LBAI
+      | let c: U32 if c <= 0x2222 => LBAL
+      | let c: U32 if c <= 0x2223 => LBAI
+      | let c: U32 if c <= 0x2224 => LBAL
+      | let c: U32 if c <= 0x2225 => LBAI
+      | let c: U32 if c <= 0x2226 => LBAL
+      | let c: U32 if c <= 0x222C => LBAI
+      | let c: U32 if c <= 0x222D => LBAL
+      | let c: U32 if c <= 0x222E => LBAI
+      | let c: U32 if c <= 0x2233 => LBAL
+      | let c: U32 if c <= 0x2237 => LBAI
+      | let c: U32 if c <= 0x223B => LBAL
+      | let c: U32 if c <= 0x223D => LBAI
+      | let c: U32 if c <= 0x2247 => LBAL
+      | let c: U32 if c <= 0x2248 => LBAI
+      | let c: U32 if c <= 0x224B => LBAL
+      | let c: U32 if c <= 0x224C => LBAI
+      | let c: U32 if c <= 0x2251 => LBAL
+      | let c: U32 if c <= 0x2252 => LBAI
+      | let c: U32 if c <= 0x225F => LBAL
+      | let c: U32 if c <= 0x2261 => LBAI
+      | let c: U32 if c <= 0x2263 => LBAL
+      | let c: U32 if c <= 0x2267 => LBAI
+      | let c: U32 if c <= 0x2269 => LBAL
+      | let c: U32 if c <= 0x226B => LBAI
+      | let c: U32 if c <= 0x226D => LBAL
+      | let c: U32 if c <= 0x226F => LBAI
+      | let c: U32 if c <= 0x2281 => LBAL
+      | let c: U32 if c <= 0x2283 => LBAI
+      | let c: U32 if c <= 0x2285 => LBAL
+      | let c: U32 if c <= 0x2287 => LBAI
+      | let c: U32 if c <= 0x2294 => LBAL
+      | let c: U32 if c <= 0x2295 => LBAI
+      | let c: U32 if c <= 0x2298 => LBAL
+      | let c: U32 if c <= 0x2299 => LBAI
+      | let c: U32 if c <= 0x22A4 => LBAL
+      | let c: U32 if c <= 0x22A5 => LBAI
+      | let c: U32 if c <= 0x22BE => LBAL
+      | let c: U32 if c <= 0x22BF => LBAI
+      | let c: U32 if c <= 0x22EE => LBAL
+      | let c: U32 if c <= 0x22EF => LBIN
+      | let c: U32 if c <= 0x2307 => LBAL
+      | let c: U32 if c <= 0x2308 => LBOP
+      | let c: U32 if c <= 0x2309 => LBCL
+      | let c: U32 if c <= 0x230A => LBOP
+      | let c: U32 if c <= 0x230B => LBCL
+      | let c: U32 if c <= 0x2311 => LBAL
+      | let c: U32 if c <= 0x2312 => LBAI
+      | let c: U32 if c <= 0x2319 => LBAL
+      | let c: U32 if c <= 0x231B => LBID
+      | let c: U32 if c <= 0x2328 => LBAL
+      | let c: U32 if c <= 0x2329 => LBOP
+      | let c: U32 if c <= 0x232A => LBCL
+      | let c: U32 if c <= 0x23EF => LBAL
+      | let c: U32 if c <= 0x23F3 => LBID
+      | let c: U32 if c <= 0x2429 => LBAL
+      | let c: U32 if c <= 0x243F => LBXX
+      | let c: U32 if c <= 0x244A => LBAL
+      | let c: U32 if c <= 0x245F => LBXX
+      | let c: U32 if c <= 0x24FE => LBAI
+      | let c: U32 if c <= 0x24FF => LBAL
+      | let c: U32 if c <= 0x254B => LBAI
+      | let c: U32 if c <= 0x254F => LBAL
+      | let c: U32 if c <= 0x2574 => LBAI
+      | let c: U32 if c <= 0x257F => LBAL
+      | let c: U32 if c <= 0x258F => LBAI
+      | let c: U32 if c <= 0x2591 => LBAL
+      | let c: U32 if c <= 0x2595 => LBAI
+      | let c: U32 if c <= 0x259F => LBAL
+      | let c: U32 if c <= 0x25A1 => LBAI
+      | let c: U32 if c <= 0x25A2 => LBAL
+      | let c: U32 if c <= 0x25A9 => LBAI
+      | let c: U32 if c <= 0x25B1 => LBAL
+      | let c: U32 if c <= 0x25B3 => LBAI
+      | let c: U32 if c <= 0x25B5 => LBAL
+      | let c: U32 if c <= 0x25B7 => LBAI
+      | let c: U32 if c <= 0x25BB => LBAL
+      | let c: U32 if c <= 0x25BD => LBAI
+      | let c: U32 if c <= 0x25BF => LBAL
+      | let c: U32 if c <= 0x25C1 => LBAI
+      | let c: U32 if c <= 0x25C5 => LBAL
+      | let c: U32 if c <= 0x25C8 => LBAI
+      | let c: U32 if c <= 0x25CA => LBAL
+      | let c: U32 if c <= 0x25CB => LBAI
+      | let c: U32 if c <= 0x25CD => LBAL
+      | let c: U32 if c <= 0x25D1 => LBAI
+      | let c: U32 if c <= 0x25E1 => LBAL
+      | let c: U32 if c <= 0x25E5 => LBAI
+      | let c: U32 if c <= 0x25EE => LBAL
+      | let c: U32 if c <= 0x25EF => LBAI
+      | let c: U32 if c <= 0x25FF => LBAL
+      | let c: U32 if c <= 0x2603 => LBID
+      | let c: U32 if c <= 0x2604 => LBAL
+      | let c: U32 if c <= 0x2606 => LBAI
+      | let c: U32 if c <= 0x2608 => LBAL
+      | let c: U32 if c <= 0x2609 => LBAI
+      | let c: U32 if c <= 0x260D => LBAL
+      | let c: U32 if c <= 0x260F => LBAI
+      | let c: U32 if c <= 0x2613 => LBAL
+      | let c: U32 if c <= 0x2615 => LBID
+      | let c: U32 if c <= 0x2617 => LBAI
+      | let c: U32 if c <= 0x2618 => LBID
+      | let c: U32 if c <= 0x2619 => LBAL
+      | let c: U32 if c <= 0x261C => LBID
+      | let c: U32 if c <= 0x261D => LBEB
+      | let c: U32 if c <= 0x261F => LBID
+      | let c: U32 if c <= 0x2638 => LBAL
+      | let c: U32 if c <= 0x263B => LBID
+      | let c: U32 if c <= 0x263F => LBAL
+      | let c: U32 if c <= 0x2640 => LBAI
+      | let c: U32 if c <= 0x2641 => LBAL
+      | let c: U32 if c <= 0x2642 => LBAI
+      | let c: U32 if c <= 0x265F => LBAL
+      | let c: U32 if c <= 0x2661 => LBAI
+      | let c: U32 if c <= 0x2662 => LBAL
+      | let c: U32 if c <= 0x2665 => LBAI
+      | let c: U32 if c <= 0x2666 => LBAL
+      | let c: U32 if c <= 0x2667 => LBAI
+      | let c: U32 if c <= 0x2668 => LBID
+      | let c: U32 if c <= 0x266A => LBAI
+      | let c: U32 if c <= 0x266B => LBAL
+      | let c: U32 if c <= 0x266D => LBAI
+      | let c: U32 if c <= 0x266E => LBAL
+      | let c: U32 if c <= 0x266F => LBAI
+      | let c: U32 if c <= 0x267E => LBAL
+      | let c: U32 if c <= 0x267F => LBID
+      | let c: U32 if c <= 0x269D => LBAL
+      | let c: U32 if c <= 0x269F => LBAI
+      | let c: U32 if c <= 0x26BC => LBAL
+      | let c: U32 if c <= 0x26C8 => LBID
+      | let c: U32 if c <= 0x26CC => LBAI
+      | let c: U32 if c <= 0x26CD => LBID
+      | let c: U32 if c <= 0x26CE => LBAL
+      | let c: U32 if c <= 0x26D1 => LBID
+      | let c: U32 if c <= 0x26D2 => LBAI
+      | let c: U32 if c <= 0x26D4 => LBID
+      | let c: U32 if c <= 0x26D7 => LBAI
+      | let c: U32 if c <= 0x26D9 => LBID
+      | let c: U32 if c <= 0x26DB => LBAI
+      | let c: U32 if c <= 0x26DC => LBID
+      | let c: U32 if c <= 0x26DE => LBAI
+      | let c: U32 if c <= 0x26E1 => LBID
+      | let c: U32 if c <= 0x26E2 => LBAL
+      | let c: U32 if c <= 0x26E3 => LBAI
+      | let c: U32 if c <= 0x26E7 => LBAL
+      | let c: U32 if c <= 0x26E9 => LBAI
+      | let c: U32 if c <= 0x26EA => LBID
+      | let c: U32 if c <= 0x26F0 => LBAI
+      | let c: U32 if c <= 0x26F5 => LBID
+      | let c: U32 if c <= 0x26F6 => LBAI
+      | let c: U32 if c <= 0x26F8 => LBID
+      | let c: U32 if c <= 0x26F9 => LBEB
+      | let c: U32 if c <= 0x26FA => LBID
+      | let c: U32 if c <= 0x26FC => LBAI
+      | let c: U32 if c <= 0x2704 => LBID
+      | let c: U32 if c <= 0x2707 => LBAL
+      | let c: U32 if c <= 0x2709 => LBID
+      | let c: U32 if c <= 0x270D => LBEB
+      | let c: U32 if c <= 0x2756 => LBAL
+      | let c: U32 if c <= 0x2757 => LBAI
+      | let c: U32 if c <= 0x275A => LBAL
+      | let c: U32 if c <= 0x2760 => LBQU
+      | let c: U32 if c <= 0x2761 => LBAL
+      | let c: U32 if c <= 0x2763 => LBEX
+      | let c: U32 if c <= 0x2764 => LBID
+      | let c: U32 if c <= 0x2767 => LBAL
+      | let c: U32 if c <= 0x2768 => LBOP
+      | let c: U32 if c <= 0x2769 => LBCL
+      | let c: U32 if c <= 0x276A => LBOP
+      | let c: U32 if c <= 0x276B => LBCL
+      | let c: U32 if c <= 0x276C => LBOP
+      | let c: U32 if c <= 0x276D => LBCL
+      | let c: U32 if c <= 0x276E => LBOP
+      | let c: U32 if c <= 0x276F => LBCL
+      | let c: U32 if c <= 0x2770 => LBOP
+      | let c: U32 if c <= 0x2771 => LBCL
+      | let c: U32 if c <= 0x2772 => LBOP
+      | let c: U32 if c <= 0x2773 => LBCL
+      | let c: U32 if c <= 0x2774 => LBOP
+      | let c: U32 if c <= 0x2775 => LBCL
+      | let c: U32 if c <= 0x2793 => LBAI
+      | let c: U32 if c <= 0x27C4 => LBAL
+      | let c: U32 if c <= 0x27C5 => LBOP
+      | let c: U32 if c <= 0x27C6 => LBCL
+      | let c: U32 if c <= 0x27E5 => LBAL
+      | let c: U32 if c <= 0x27E6 => LBOP
+      | let c: U32 if c <= 0x27E7 => LBCL
+      | let c: U32 if c <= 0x27E8 => LBOP
+      | let c: U32 if c <= 0x27E9 => LBCL
+      | let c: U32 if c <= 0x27EA => LBOP
+      | let c: U32 if c <= 0x27EB => LBCL
+      | let c: U32 if c <= 0x27EC => LBOP
+      | let c: U32 if c <= 0x27ED => LBCL
+      | let c: U32 if c <= 0x27EE => LBOP
+      | let c: U32 if c <= 0x27EF => LBCL
+      | let c: U32 if c <= 0x2982 => LBAL
+      | let c: U32 if c <= 0x2983 => LBOP
+      | let c: U32 if c <= 0x2984 => LBCL
+      | let c: U32 if c <= 0x2985 => LBOP
+      | let c: U32 if c <= 0x2986 => LBCL
+      | let c: U32 if c <= 0x2987 => LBOP
+      | let c: U32 if c <= 0x2988 => LBCL
+      | let c: U32 if c <= 0x2989 => LBOP
+      | let c: U32 if c <= 0x298A => LBCL
+      | let c: U32 if c <= 0x298B => LBOP
+      | let c: U32 if c <= 0x298C => LBCL
+      | let c: U32 if c <= 0x298D => LBOP
+      | let c: U32 if c <= 0x298E => LBCL
+      | let c: U32 if c <= 0x298F => LBOP
+      | let c: U32 if c <= 0x2990 => LBCL
+      | let c: U32 if c <= 0x2991 => LBOP
+      | let c: U32 if c <= 0x2992 => LBCL
+      | let c: U32 if c <= 0x2993 => LBOP
+      | let c: U32 if c <= 0x2994 => LBCL
+      | let c: U32 if c <= 0x2995 => LBOP
+      | let c: U32 if c <= 0x2996 => LBCL
+      | let c: U32 if c <= 0x2997 => LBOP
+      | let c: U32 if c <= 0x2998 => LBCL
+      | let c: U32 if c <= 0x29D7 => LBAL
+      | let c: U32 if c <= 0x29D8 => LBOP
+      | let c: U32 if c <= 0x29D9 => LBCL
+      | let c: U32 if c <= 0x29DA => LBOP
+      | let c: U32 if c <= 0x29DB => LBCL
+      | let c: U32 if c <= 0x29FB => LBAL
+      | let c: U32 if c <= 0x29FC => LBOP
+      | let c: U32 if c <= 0x29FD => LBCL
+      | let c: U32 if c <= 0x2B54 => LBAL
+      | let c: U32 if c <= 0x2B59 => LBAI
+      | let c: U32 if c <= 0x2B73 => LBAL
+      | let c: U32 if c <= 0x2B75 => LBXX
+      | let c: U32 if c <= 0x2B95 => LBAL
+      | let c: U32 if c <= 0x2B96 => LBXX
+      | let c: U32 if c <= 0x2CEE => LBAL
+      | let c: U32 if c <= 0x2CF1 => LBCM
+      | let c: U32 if c <= 0x2CF3 => LBAL
+      | let c: U32 if c <= 0x2CF8 => LBXX
+      | let c: U32 if c <= 0x2CF9 => LBEX
+      | let c: U32 if c <= 0x2CFC => LBBA
+      | let c: U32 if c <= 0x2CFD => LBAL
+      | let c: U32 if c <= 0x2CFE => LBEX
+      | let c: U32 if c <= 0x2CFF => LBBA
+      | let c: U32 if c <= 0x2D25 => LBAL
+      | let c: U32 if c <= 0x2D26 => LBXX
+      | let c: U32 if c <= 0x2D27 => LBAL
+      | let c: U32 if c <= 0x2D2C => LBXX
+      | let c: U32 if c <= 0x2D2D => LBAL
+      | let c: U32 if c <= 0x2D2F => LBXX
+      | let c: U32 if c <= 0x2D67 => LBAL
+      | let c: U32 if c <= 0x2D6E => LBXX
+      | let c: U32 if c <= 0x2D6F => LBAL
+      | let c: U32 if c <= 0x2D70 => LBBA
+      | let c: U32 if c <= 0x2D7E => LBXX
+      | let c: U32 if c <= 0x2D7F => LBCM
+      | let c: U32 if c <= 0x2D96 => LBAL
+      | let c: U32 if c <= 0x2D9F => LBXX
+      | let c: U32 if c <= 0x2DA6 => LBAL
+      | let c: U32 if c <= 0x2DA7 => LBXX
+      | let c: U32 if c <= 0x2DAE => LBAL
+      | let c: U32 if c <= 0x2DAF => LBXX
+      | let c: U32 if c <= 0x2DB6 => LBAL
+      | let c: U32 if c <= 0x2DB7 => LBXX
+      | let c: U32 if c <= 0x2DBE => LBAL
+      | let c: U32 if c <= 0x2DBF => LBXX
+      | let c: U32 if c <= 0x2DC6 => LBAL
+      | let c: U32 if c <= 0x2DC7 => LBXX
+      | let c: U32 if c <= 0x2DCE => LBAL
+      | let c: U32 if c <= 0x2DCF => LBXX
+      | let c: U32 if c <= 0x2DD6 => LBAL
+      | let c: U32 if c <= 0x2DD7 => LBXX
+      | let c: U32 if c <= 0x2DDE => LBAL
+      | let c: U32 if c <= 0x2DDF => LBXX
+      | let c: U32 if c <= 0x2DFF => LBCM
+      | let c: U32 if c <= 0x2E0D => LBQU
+      | let c: U32 if c <= 0x2E15 => LBBA
+      | let c: U32 if c <= 0x2E16 => LBAL
+      | let c: U32 if c <= 0x2E17 => LBBA
+      | let c: U32 if c <= 0x2E18 => LBOP
+      | let c: U32 if c <= 0x2E19 => LBBA
+      | let c: U32 if c <= 0x2E1B => LBAL
+      | let c: U32 if c <= 0x2E1D => LBQU
+      | let c: U32 if c <= 0x2E1F => LBAL
+      | let c: U32 if c <= 0x2E21 => LBQU
+      | let c: U32 if c <= 0x2E22 => LBOP
+      | let c: U32 if c <= 0x2E23 => LBCL
+      | let c: U32 if c <= 0x2E24 => LBOP
+      | let c: U32 if c <= 0x2E25 => LBCL
+      | let c: U32 if c <= 0x2E26 => LBOP
+      | let c: U32 if c <= 0x2E27 => LBCL
+      | let c: U32 if c <= 0x2E28 => LBOP
+      | let c: U32 if c <= 0x2E29 => LBCL
+      | let c: U32 if c <= 0x2E2D => LBBA
+      | let c: U32 if c <= 0x2E2E => LBEX
+      | let c: U32 if c <= 0x2E2F => LBAL
+      | let c: U32 if c <= 0x2E31 => LBBA
+      | let c: U32 if c <= 0x2E32 => LBAL
+      | let c: U32 if c <= 0x2E34 => LBBA
+      | let c: U32 if c <= 0x2E39 => LBAL
+      | let c: U32 if c <= 0x2E3B => LBB2
+      | let c: U32 if c <= 0x2E3E => LBBA
+      | let c: U32 if c <= 0x2E3F => LBAL
+      | let c: U32 if c <= 0x2E41 => LBBA
+      | let c: U32 if c <= 0x2E42 => LBOP
+      | let c: U32 if c <= 0x2E4A => LBBA
+      | let c: U32 if c <= 0x2E4B => LBAL
+      | let c: U32 if c <= 0x2E4C => LBBA
+      | let c: U32 if c <= 0x2E4D => LBAL
+      | let c: U32 if c <= 0x2E4F => LBBA
+      | let c: U32 if c <= 0x2E52 => LBAL
+      | let c: U32 if c <= 0x2E54 => LBEX
+      | let c: U32 if c <= 0x2E55 => LBOP
+      | let c: U32 if c <= 0x2E56 => LBCP
+      | let c: U32 if c <= 0x2E57 => LBOP
+      | let c: U32 if c <= 0x2E58 => LBCP
+      | let c: U32 if c <= 0x2E59 => LBOP
+      | let c: U32 if c <= 0x2E5A => LBCP
+      | let c: U32 if c <= 0x2E5B => LBOP
+      | let c: U32 if c <= 0x2E5C => LBCP
+      | let c: U32 if c <= 0x2E5D => LBBA
+      | let c: U32 if c <= 0x2E7F => LBXX
+      | let c: U32 if c <= 0x2E99 => LBID
+      | let c: U32 if c <= 0x2E9A => LBXX
+      | let c: U32 if c <= 0x2EF3 => LBID
+      | let c: U32 if c <= 0x2EFF => LBXX
+      | let c: U32 if c <= 0x2FD5 => LBID
+      | let c: U32 if c <= 0x2FEF => LBXX
+      | let c: U32 if c <= 0x2FFF => LBID
+      else LBXX
+      end
+    | 0x0003 =>
+      match cp
+      | let c: U32 if c <= 0x3000 => LBBA
+      | let c: U32 if c <= 0x3002 => LBCL
+      | let c: U32 if c <= 0x3004 => LBID
+      | let c: U32 if c <= 0x3005 => LBNS
+      | let c: U32 if c <= 0x3007 => LBID
+      | let c: U32 if c <= 0x3008 => LBOP
+      | let c: U32 if c <= 0x3009 => LBCL
+      | let c: U32 if c <= 0x300A => LBOP
+      | let c: U32 if c <= 0x300B => LBCL
+      | let c: U32 if c <= 0x300C => LBOP
+      | let c: U32 if c <= 0x300D => LBCL
+      | let c: U32 if c <= 0x300E => LBOP
+      | let c: U32 if c <= 0x300F => LBCL
+      | let c: U32 if c <= 0x3010 => LBOP
+      | let c: U32 if c <= 0x3011 => LBCL
+      | let c: U32 if c <= 0x3013 => LBID
+      | let c: U32 if c <= 0x3014 => LBOP
+      | let c: U32 if c <= 0x3015 => LBCL
+      | let c: U32 if c <= 0x3016 => LBOP
+      | let c: U32 if c <= 0x3017 => LBCL
+      | let c: U32 if c <= 0x3018 => LBOP
+      | let c: U32 if c <= 0x3019 => LBCL
+      | let c: U32 if c <= 0x301A => LBOP
+      | let c: U32 if c <= 0x301B => LBCL
+      | let c: U32 if c <= 0x301C => LBNS
+      | let c: U32 if c <= 0x301D => LBOP
+      | let c: U32 if c <= 0x301F => LBCL
+      | let c: U32 if c <= 0x3029 => LBID
+      | let c: U32 if c <= 0x302F => LBCM
+      | let c: U32 if c <= 0x3034 => LBID
+      | let c: U32 if c <= 0x3035 => LBCM
+      | let c: U32 if c <= 0x303A => LBID
+      | let c: U32 if c <= 0x303C => LBNS
+      | let c: U32 if c <= 0x303F => LBID
+      | let c: U32 if c <= 0x3040 => LBXX
+      | let c: U32 if c <= 0x3041 => LBCJ
+      | let c: U32 if c <= 0x3042 => LBID
+      | let c: U32 if c <= 0x3043 => LBCJ
+      | let c: U32 if c <= 0x3044 => LBID
+      | let c: U32 if c <= 0x3045 => LBCJ
+      | let c: U32 if c <= 0x3046 => LBID
+      | let c: U32 if c <= 0x3047 => LBCJ
+      | let c: U32 if c <= 0x3048 => LBID
+      | let c: U32 if c <= 0x3049 => LBCJ
+      | let c: U32 if c <= 0x3062 => LBID
+      | let c: U32 if c <= 0x3063 => LBCJ
+      | let c: U32 if c <= 0x3082 => LBID
+      | let c: U32 if c <= 0x3083 => LBCJ
+      | let c: U32 if c <= 0x3084 => LBID
+      | let c: U32 if c <= 0x3085 => LBCJ
+      | let c: U32 if c <= 0x3086 => LBID
+      | let c: U32 if c <= 0x3087 => LBCJ
+      | let c: U32 if c <= 0x308D => LBID
+      | let c: U32 if c <= 0x308E => LBCJ
+      | let c: U32 if c <= 0x3094 => LBID
+      | let c: U32 if c <= 0x3096 => LBCJ
+      | let c: U32 if c <= 0x3098 => LBXX
+      | let c: U32 if c <= 0x309A => LBCM
+      | let c: U32 if c <= 0x309E => LBNS
+      | let c: U32 if c <= 0x309F => LBID
+      | let c: U32 if c <= 0x30A0 => LBNS
+      | let c: U32 if c <= 0x30A1 => LBCJ
+      | let c: U32 if c <= 0x30A2 => LBID
+      | let c: U32 if c <= 0x30A3 => LBCJ
+      | let c: U32 if c <= 0x30A4 => LBID
+      | let c: U32 if c <= 0x30A5 => LBCJ
+      | let c: U32 if c <= 0x30A6 => LBID
+      | let c: U32 if c <= 0x30A7 => LBCJ
+      | let c: U32 if c <= 0x30A8 => LBID
+      | let c: U32 if c <= 0x30A9 => LBCJ
+      | let c: U32 if c <= 0x30C2 => LBID
+      | let c: U32 if c <= 0x30C3 => LBCJ
+      | let c: U32 if c <= 0x30E2 => LBID
+      | let c: U32 if c <= 0x30E3 => LBCJ
+      | let c: U32 if c <= 0x30E4 => LBID
+      | let c: U32 if c <= 0x30E5 => LBCJ
+      | let c: U32 if c <= 0x30E6 => LBID
+      | let c: U32 if c <= 0x30E7 => LBCJ
+      | let c: U32 if c <= 0x30ED => LBID
+      | let c: U32 if c <= 0x30EE => LBCJ
+      | let c: U32 if c <= 0x30F4 => LBID
+      | let c: U32 if c <= 0x30F6 => LBCJ
+      | let c: U32 if c <= 0x30FA => LBID
+      | let c: U32 if c <= 0x30FB => LBNS
+      | let c: U32 if c <= 0x30FC => LBCJ
+      | let c: U32 if c <= 0x30FE => LBNS
+      | let c: U32 if c <= 0x30FF => LBID
+      | let c: U32 if c <= 0x3104 => LBXX
+      | let c: U32 if c <= 0x312F => LBID
+      | let c: U32 if c <= 0x3130 => LBXX
+      | let c: U32 if c <= 0x318E => LBID
+      | let c: U32 if c <= 0x318F => LBXX
+      | let c: U32 if c <= 0x31E5 => LBID
+      | let c: U32 if c <= 0x31EE => LBXX
+      | let c: U32 if c <= 0x31EF => LBID
+      | let c: U32 if c <= 0x31FF => LBCJ
+      | let c: U32 if c <= 0x321E => LBID
+      | let c: U32 if c <= 0x321F => LBXX
+      | let c: U32 if c <= 0x3247 => LBID
+      | let c: U32 if c <= 0x324F => LBAI
+      | let c: U32 if c <= 0x3FFF => LBID
+      else LBXX
+      end
+    | 0x0004 =>
+      match cp
+      | let c: U32 if c <= 0x4DBF => LBID
+      | let c: U32 if c <= 0x4DFF => LBAL
+      | let c: U32 if c <= 0x4FFF => LBID
+      else LBXX
+      end
+    | 0x0005 =>
+      match cp
+      | let c: U32 if c <= 0x5FFF => LBID
+      else LBXX
+      end
+    | 0x0006 =>
+      match cp
+      | let c: U32 if c <= 0x6FFF => LBID
+      else LBXX
+      end
+    | 0x0007 =>
+      match cp
+      | let c: U32 if c <= 0x7FFF => LBID
+      else LBXX
+      end
+    | 0x0008 =>
+      match cp
+      | let c: U32 if c <= 0x8FFF => LBID
+      else LBXX
+      end
+    | 0x0009 =>
+      match cp
+      | let c: U32 if c <= 0x9FFF => LBID
+      else LBXX
+      end
+    | 0x000A =>
+      match cp
+      | let c: U32 if c <= 0xA014 => LBID
+      | let c: U32 if c <= 0xA015 => LBNS
+      | let c: U32 if c <= 0xA48C => LBID
+      | let c: U32 if c <= 0xA48F => LBXX
+      | let c: U32 if c <= 0xA4C6 => LBID
+      | let c: U32 if c <= 0xA4CF => LBXX
+      | let c: U32 if c <= 0xA4FD => LBAL
+      | let c: U32 if c <= 0xA4FF => LBBA
+      | let c: U32 if c <= 0xA60C => LBAL
+      | let c: U32 if c <= 0xA60D => LBBA
+      | let c: U32 if c <= 0xA60E => LBEX
+      | let c: U32 if c <= 0xA60F => LBBA
+      | let c: U32 if c <= 0xA61F => LBAL
+      | let c: U32 if c <= 0xA629 => LBNU
+      | let c: U32 if c <= 0xA62B => LBAL
+      | let c: U32 if c <= 0xA63F => LBXX
+      | let c: U32 if c <= 0xA66E => LBAL
+      | let c: U32 if c <= 0xA672 => LBCM
+      | let c: U32 if c <= 0xA673 => LBAL
+      | let c: U32 if c <= 0xA67D => LBCM
+      | let c: U32 if c <= 0xA69D => LBAL
+      | let c: U32 if c <= 0xA69F => LBCM
+      | let c: U32 if c <= 0xA6EF => LBAL
+      | let c: U32 if c <= 0xA6F1 => LBCM
+      | let c: U32 if c <= 0xA6F2 => LBAL
+      | let c: U32 if c <= 0xA6F7 => LBBA
+      | let c: U32 if c <= 0xA6FF => LBXX
+      | let c: U32 if c <= 0xA7CD => LBAL
+      | let c: U32 if c <= 0xA7CF => LBXX
+      | let c: U32 if c <= 0xA7D1 => LBAL
+      | let c: U32 if c <= 0xA7D2 => LBXX
+      | let c: U32 if c <= 0xA7D3 => LBAL
+      | let c: U32 if c <= 0xA7D4 => LBXX
+      | let c: U32 if c <= 0xA7DC => LBAL
+      | let c: U32 if c <= 0xA7F1 => LBXX
+      | let c: U32 if c <= 0xA801 => LBAL
+      | let c: U32 if c <= 0xA802 => LBCM
+      | let c: U32 if c <= 0xA805 => LBAL
+      | let c: U32 if c <= 0xA806 => LBCM
+      | let c: U32 if c <= 0xA80A => LBAL
+      | let c: U32 if c <= 0xA80B => LBCM
+      | let c: U32 if c <= 0xA822 => LBAL
+      | let c: U32 if c <= 0xA827 => LBCM
+      | let c: U32 if c <= 0xA82B => LBAL
+      | let c: U32 if c <= 0xA82C => LBCM
+      | let c: U32 if c <= 0xA82F => LBXX
+      | let c: U32 if c <= 0xA837 => LBAL
+      | let c: U32 if c <= 0xA838 => LBPO
+      | let c: U32 if c <= 0xA839 => LBAL
+      | let c: U32 if c <= 0xA83F => LBXX
+      | let c: U32 if c <= 0xA873 => LBAL
+      | let c: U32 if c <= 0xA875 => LBBB
+      | let c: U32 if c <= 0xA877 => LBEX
+      | let c: U32 if c <= 0xA87F => LBXX
+      | let c: U32 if c <= 0xA881 => LBCM
+      | let c: U32 if c <= 0xA8B3 => LBAL
+      | let c: U32 if c <= 0xA8C5 => LBCM
+      | let c: U32 if c <= 0xA8CD => LBXX
+      | let c: U32 if c <= 0xA8CF => LBBA
+      | let c: U32 if c <= 0xA8D9 => LBNU
+      | let c: U32 if c <= 0xA8DF => LBXX
+      | let c: U32 if c <= 0xA8F1 => LBCM
+      | let c: U32 if c <= 0xA8FB => LBAL
+      | let c: U32 if c <= 0xA8FC => LBBB
+      | let c: U32 if c <= 0xA8FE => LBAL
+      | let c: U32 if c <= 0xA8FF => LBCM
+      | let c: U32 if c <= 0xA909 => LBNU
+      | let c: U32 if c <= 0xA925 => LBAL
+      | let c: U32 if c <= 0xA92D => LBCM
+      | let c: U32 if c <= 0xA92F => LBBA
+      | let c: U32 if c <= 0xA946 => LBAL
+      | let c: U32 if c <= 0xA953 => LBCM
+      | let c: U32 if c <= 0xA95E => LBXX
+      | let c: U32 if c <= 0xA95F => LBAL
+      | let c: U32 if c <= 0xA97C => LBJL
+      | let c: U32 if c <= 0xA97F => LBXX
+      | let c: U32 if c <= 0xA983 => LBCM
+      | let c: U32 if c <= 0xA9B2 => LBAK
+      | let c: U32 if c <= 0xA9BF => LBCM
+      | let c: U32 if c <= 0xA9C0 => LBVI
+      | let c: U32 if c <= 0xA9C6 => LBID
+      | let c: U32 if c <= 0xA9C9 => LBBA
+      | let c: U32 if c <= 0xA9CD => LBID
+      | let c: U32 if c <= 0xA9CE => LBXX
+      | let c: U32 if c <= 0xA9CF => LBBA
+      | let c: U32 if c <= 0xA9D9 => LBAS
+      | let c: U32 if c <= 0xA9DD => LBXX
+      | let c: U32 if c <= 0xA9DF => LBID
+      | let c: U32 if c <= 0xA9EF => LBSA
+      | let c: U32 if c <= 0xA9F9 => LBNU
+      | let c: U32 if c <= 0xA9FE => LBSA
+      | let c: U32 if c <= 0xA9FF => LBXX
+      | let c: U32 if c <= 0xAA28 => LBAS
+      | let c: U32 if c <= 0xAA36 => LBCM
+      | let c: U32 if c <= 0xAA3F => LBXX
+      | let c: U32 if c <= 0xAA42 => LBBA
+      | let c: U32 if c <= 0xAA43 => LBCM
+      | let c: U32 if c <= 0xAA4B => LBBA
+      | let c: U32 if c <= 0xAA4D => LBCM
+      | let c: U32 if c <= 0xAA4F => LBXX
+      | let c: U32 if c <= 0xAA59 => LBAS
+      | let c: U32 if c <= 0xAA5B => LBXX
+      | let c: U32 if c <= 0xAA5C => LBID
+      | let c: U32 if c <= 0xAA5F => LBBA
+      | let c: U32 if c <= 0xAAC2 => LBSA
+      | let c: U32 if c <= 0xAADA => LBXX
+      | let c: U32 if c <= 0xAADF => LBSA
+      | let c: U32 if c <= 0xAAEA => LBAL
+      | let c: U32 if c <= 0xAAEF => LBCM
+      | let c: U32 if c <= 0xAAF1 => LBBA
+      | let c: U32 if c <= 0xAAF4 => LBAL
+      | let c: U32 if c <= 0xAAF6 => LBCM
+      | let c: U32 if c <= 0xAB00 => LBXX
+      | let c: U32 if c <= 0xAB06 => LBAL
+      | let c: U32 if c <= 0xAB08 => LBXX
+      | let c: U32 if c <= 0xAB0E => LBAL
+      | let c: U32 if c <= 0xAB10 => LBXX
+      | let c: U32 if c <= 0xAB16 => LBAL
+      | let c: U32 if c <= 0xAB1F => LBXX
+      | let c: U32 if c <= 0xAB26 => LBAL
+      | let c: U32 if c <= 0xAB27 => LBXX
+      | let c: U32 if c <= 0xAB2E => LBAL
+      | let c: U32 if c <= 0xAB2F => LBXX
+      | let c: U32 if c <= 0xAB6B => LBAL
+      | let c: U32 if c <= 0xAB6F => LBXX
+      | let c: U32 if c <= 0xABE2 => LBAL
+      | let c: U32 if c <= 0xABEA => LBCM
+      | let c: U32 if c <= 0xABEB => LBBA
+      | let c: U32 if c <= 0xABED => LBCM
+      | let c: U32 if c <= 0xABEF => LBXX
+      | let c: U32 if c <= 0xABF9 => LBNU
+      | let c: U32 if c <= 0xABFF => LBXX
+      | let c: U32 if c <= 0xAC00 => LBH2
+      | let c: U32 if c <= 0xAC1B => LBH3
+      | let c: U32 if c <= 0xAC1C => LBH2
+      | let c: U32 if c <= 0xAC37 => LBH3
+      | let c: U32 if c <= 0xAC38 => LBH2
+      | let c: U32 if c <= 0xAC53 => LBH3
+      | let c: U32 if c <= 0xAC54 => LBH2
+      | let c: U32 if c <= 0xAC6F => LBH3
+      | let c: U32 if c <= 0xAC70 => LBH2
+      | let c: U32 if c <= 0xAC8B => LBH3
+      | let c: U32 if c <= 0xAC8C => LBH2
+      | let c: U32 if c <= 0xACA7 => LBH3
+      | let c: U32 if c <= 0xACA8 => LBH2
+      | let c: U32 if c <= 0xACC3 => LBH3
+      | let c: U32 if c <= 0xACC4 => LBH2
+      | let c: U32 if c <= 0xACDF => LBH3
+      | let c: U32 if c <= 0xACE0 => LBH2
+      | let c: U32 if c <= 0xACFB => LBH3
+      | let c: U32 if c <= 0xACFC => LBH2
+      | let c: U32 if c <= 0xAD17 => LBH3
+      | let c: U32 if c <= 0xAD18 => LBH2
+      | let c: U32 if c <= 0xAD33 => LBH3
+      | let c: U32 if c <= 0xAD34 => LBH2
+      | let c: U32 if c <= 0xAD4F => LBH3
+      | let c: U32 if c <= 0xAD50 => LBH2
+      | let c: U32 if c <= 0xAD6B => LBH3
+      | let c: U32 if c <= 0xAD6C => LBH2
+      | let c: U32 if c <= 0xAD87 => LBH3
+      | let c: U32 if c <= 0xAD88 => LBH2
+      | let c: U32 if c <= 0xADA3 => LBH3
+      | let c: U32 if c <= 0xADA4 => LBH2
+      | let c: U32 if c <= 0xADBF => LBH3
+      | let c: U32 if c <= 0xADC0 => LBH2
+      | let c: U32 if c <= 0xADDB => LBH3
+      | let c: U32 if c <= 0xADDC => LBH2
+      | let c: U32 if c <= 0xADF7 => LBH3
+      | let c: U32 if c <= 0xADF8 => LBH2
+      | let c: U32 if c <= 0xAE13 => LBH3
+      | let c: U32 if c <= 0xAE14 => LBH2
+      | let c: U32 if c <= 0xAE2F => LBH3
+      | let c: U32 if c <= 0xAE30 => LBH2
+      | let c: U32 if c <= 0xAE4B => LBH3
+      | let c: U32 if c <= 0xAE4C => LBH2
+      | let c: U32 if c <= 0xAE67 => LBH3
+      | let c: U32 if c <= 0xAE68 => LBH2
+      | let c: U32 if c <= 0xAE83 => LBH3
+      | let c: U32 if c <= 0xAE84 => LBH2
+      | let c: U32 if c <= 0xAE9F => LBH3
+      | let c: U32 if c <= 0xAEA0 => LBH2
+      | let c: U32 if c <= 0xAEBB => LBH3
+      | let c: U32 if c <= 0xAEBC => LBH2
+      | let c: U32 if c <= 0xAED7 => LBH3
+      | let c: U32 if c <= 0xAED8 => LBH2
+      | let c: U32 if c <= 0xAEF3 => LBH3
+      | let c: U32 if c <= 0xAEF4 => LBH2
+      | let c: U32 if c <= 0xAF0F => LBH3
+      | let c: U32 if c <= 0xAF10 => LBH2
+      | let c: U32 if c <= 0xAF2B => LBH3
+      | let c: U32 if c <= 0xAF2C => LBH2
+      | let c: U32 if c <= 0xAF47 => LBH3
+      | let c: U32 if c <= 0xAF48 => LBH2
+      | let c: U32 if c <= 0xAF63 => LBH3
+      | let c: U32 if c <= 0xAF64 => LBH2
+      | let c: U32 if c <= 0xAF7F => LBH3
+      | let c: U32 if c <= 0xAF80 => LBH2
+      | let c: U32 if c <= 0xAF9B => LBH3
+      | let c: U32 if c <= 0xAF9C => LBH2
+      | let c: U32 if c <= 0xAFB7 => LBH3
+      | let c: U32 if c <= 0xAFB8 => LBH2
+      | let c: U32 if c <= 0xAFD3 => LBH3
+      | let c: U32 if c <= 0xAFD4 => LBH2
+      | let c: U32 if c <= 0xAFEF => LBH3
+      | let c: U32 if c <= 0xAFF0 => LBH2
+      | let c: U32 if c <= 0xAFFF => LBH3
+      else LBXX
+      end
+    | 0x000B =>
+      match cp
+      | let c: U32 if c <= 0xB00B => LBH3
+      | let c: U32 if c <= 0xB00C => LBH2
+      | let c: U32 if c <= 0xB027 => LBH3
+      | let c: U32 if c <= 0xB028 => LBH2
+      | let c: U32 if c <= 0xB043 => LBH3
+      | let c: U32 if c <= 0xB044 => LBH2
+      | let c: U32 if c <= 0xB05F => LBH3
+      | let c: U32 if c <= 0xB060 => LBH2
+      | let c: U32 if c <= 0xB07B => LBH3
+      | let c: U32 if c <= 0xB07C => LBH2
+      | let c: U32 if c <= 0xB097 => LBH3
+      | let c: U32 if c <= 0xB098 => LBH2
+      | let c: U32 if c <= 0xB0B3 => LBH3
+      | let c: U32 if c <= 0xB0B4 => LBH2
+      | let c: U32 if c <= 0xB0CF => LBH3
+      | let c: U32 if c <= 0xB0D0 => LBH2
+      | let c: U32 if c <= 0xB0EB => LBH3
+      | let c: U32 if c <= 0xB0EC => LBH2
+      | let c: U32 if c <= 0xB107 => LBH3
+      | let c: U32 if c <= 0xB108 => LBH2
+      | let c: U32 if c <= 0xB123 => LBH3
+      | let c: U32 if c <= 0xB124 => LBH2
+      | let c: U32 if c <= 0xB13F => LBH3
+      | let c: U32 if c <= 0xB140 => LBH2
+      | let c: U32 if c <= 0xB15B => LBH3
+      | let c: U32 if c <= 0xB15C => LBH2
+      | let c: U32 if c <= 0xB177 => LBH3
+      | let c: U32 if c <= 0xB178 => LBH2
+      | let c: U32 if c <= 0xB193 => LBH3
+      | let c: U32 if c <= 0xB194 => LBH2
+      | let c: U32 if c <= 0xB1AF => LBH3
+      | let c: U32 if c <= 0xB1B0 => LBH2
+      | let c: U32 if c <= 0xB1CB => LBH3
+      | let c: U32 if c <= 0xB1CC => LBH2
+      | let c: U32 if c <= 0xB1E7 => LBH3
+      | let c: U32 if c <= 0xB1E8 => LBH2
+      | let c: U32 if c <= 0xB203 => LBH3
+      | let c: U32 if c <= 0xB204 => LBH2
+      | let c: U32 if c <= 0xB21F => LBH3
+      | let c: U32 if c <= 0xB220 => LBH2
+      | let c: U32 if c <= 0xB23B => LBH3
+      | let c: U32 if c <= 0xB23C => LBH2
+      | let c: U32 if c <= 0xB257 => LBH3
+      | let c: U32 if c <= 0xB258 => LBH2
+      | let c: U32 if c <= 0xB273 => LBH3
+      | let c: U32 if c <= 0xB274 => LBH2
+      | let c: U32 if c <= 0xB28F => LBH3
+      | let c: U32 if c <= 0xB290 => LBH2
+      | let c: U32 if c <= 0xB2AB => LBH3
+      | let c: U32 if c <= 0xB2AC => LBH2
+      | let c: U32 if c <= 0xB2C7 => LBH3
+      | let c: U32 if c <= 0xB2C8 => LBH2
+      | let c: U32 if c <= 0xB2E3 => LBH3
+      | let c: U32 if c <= 0xB2E4 => LBH2
+      | let c: U32 if c <= 0xB2FF => LBH3
+      | let c: U32 if c <= 0xB300 => LBH2
+      | let c: U32 if c <= 0xB31B => LBH3
+      | let c: U32 if c <= 0xB31C => LBH2
+      | let c: U32 if c <= 0xB337 => LBH3
+      | let c: U32 if c <= 0xB338 => LBH2
+      | let c: U32 if c <= 0xB353 => LBH3
+      | let c: U32 if c <= 0xB354 => LBH2
+      | let c: U32 if c <= 0xB36F => LBH3
+      | let c: U32 if c <= 0xB370 => LBH2
+      | let c: U32 if c <= 0xB38B => LBH3
+      | let c: U32 if c <= 0xB38C => LBH2
+      | let c: U32 if c <= 0xB3A7 => LBH3
+      | let c: U32 if c <= 0xB3A8 => LBH2
+      | let c: U32 if c <= 0xB3C3 => LBH3
+      | let c: U32 if c <= 0xB3C4 => LBH2
+      | let c: U32 if c <= 0xB3DF => LBH3
+      | let c: U32 if c <= 0xB3E0 => LBH2
+      | let c: U32 if c <= 0xB3FB => LBH3
+      | let c: U32 if c <= 0xB3FC => LBH2
+      | let c: U32 if c <= 0xB417 => LBH3
+      | let c: U32 if c <= 0xB418 => LBH2
+      | let c: U32 if c <= 0xB433 => LBH3
+      | let c: U32 if c <= 0xB434 => LBH2
+      | let c: U32 if c <= 0xB44F => LBH3
+      | let c: U32 if c <= 0xB450 => LBH2
+      | let c: U32 if c <= 0xB46B => LBH3
+      | let c: U32 if c <= 0xB46C => LBH2
+      | let c: U32 if c <= 0xB487 => LBH3
+      | let c: U32 if c <= 0xB488 => LBH2
+      | let c: U32 if c <= 0xB4A3 => LBH3
+      | let c: U32 if c <= 0xB4A4 => LBH2
+      | let c: U32 if c <= 0xB4BF => LBH3
+      | let c: U32 if c <= 0xB4C0 => LBH2
+      | let c: U32 if c <= 0xB4DB => LBH3
+      | let c: U32 if c <= 0xB4DC => LBH2
+      | let c: U32 if c <= 0xB4F7 => LBH3
+      | let c: U32 if c <= 0xB4F8 => LBH2
+      | let c: U32 if c <= 0xB513 => LBH3
+      | let c: U32 if c <= 0xB514 => LBH2
+      | let c: U32 if c <= 0xB52F => LBH3
+      | let c: U32 if c <= 0xB530 => LBH2
+      | let c: U32 if c <= 0xB54B => LBH3
+      | let c: U32 if c <= 0xB54C => LBH2
+      | let c: U32 if c <= 0xB567 => LBH3
+      | let c: U32 if c <= 0xB568 => LBH2
+      | let c: U32 if c <= 0xB583 => LBH3
+      | let c: U32 if c <= 0xB584 => LBH2
+      | let c: U32 if c <= 0xB59F => LBH3
+      | let c: U32 if c <= 0xB5A0 => LBH2
+      | let c: U32 if c <= 0xB5BB => LBH3
+      | let c: U32 if c <= 0xB5BC => LBH2
+      | let c: U32 if c <= 0xB5D7 => LBH3
+      | let c: U32 if c <= 0xB5D8 => LBH2
+      | let c: U32 if c <= 0xB5F3 => LBH3
+      | let c: U32 if c <= 0xB5F4 => LBH2
+      | let c: U32 if c <= 0xB60F => LBH3
+      | let c: U32 if c <= 0xB610 => LBH2
+      | let c: U32 if c <= 0xB62B => LBH3
+      | let c: U32 if c <= 0xB62C => LBH2
+      | let c: U32 if c <= 0xB647 => LBH3
+      | let c: U32 if c <= 0xB648 => LBH2
+      | let c: U32 if c <= 0xB663 => LBH3
+      | let c: U32 if c <= 0xB664 => LBH2
+      | let c: U32 if c <= 0xB67F => LBH3
+      | let c: U32 if c <= 0xB680 => LBH2
+      | let c: U32 if c <= 0xB69B => LBH3
+      | let c: U32 if c <= 0xB69C => LBH2
+      | let c: U32 if c <= 0xB6B7 => LBH3
+      | let c: U32 if c <= 0xB6B8 => LBH2
+      | let c: U32 if c <= 0xB6D3 => LBH3
+      | let c: U32 if c <= 0xB6D4 => LBH2
+      | let c: U32 if c <= 0xB6EF => LBH3
+      | let c: U32 if c <= 0xB6F0 => LBH2
+      | let c: U32 if c <= 0xB70B => LBH3
+      | let c: U32 if c <= 0xB70C => LBH2
+      | let c: U32 if c <= 0xB727 => LBH3
+      | let c: U32 if c <= 0xB728 => LBH2
+      | let c: U32 if c <= 0xB743 => LBH3
+      | let c: U32 if c <= 0xB744 => LBH2
+      | let c: U32 if c <= 0xB75F => LBH3
+      | let c: U32 if c <= 0xB760 => LBH2
+      | let c: U32 if c <= 0xB77B => LBH3
+      | let c: U32 if c <= 0xB77C => LBH2
+      | let c: U32 if c <= 0xB797 => LBH3
+      | let c: U32 if c <= 0xB798 => LBH2
+      | let c: U32 if c <= 0xB7B3 => LBH3
+      | let c: U32 if c <= 0xB7B4 => LBH2
+      | let c: U32 if c <= 0xB7CF => LBH3
+      | let c: U32 if c <= 0xB7D0 => LBH2
+      | let c: U32 if c <= 0xB7EB => LBH3
+      | let c: U32 if c <= 0xB7EC => LBH2
+      | let c: U32 if c <= 0xB807 => LBH3
+      | let c: U32 if c <= 0xB808 => LBH2
+      | let c: U32 if c <= 0xB823 => LBH3
+      | let c: U32 if c <= 0xB824 => LBH2
+      | let c: U32 if c <= 0xB83F => LBH3
+      | let c: U32 if c <= 0xB840 => LBH2
+      | let c: U32 if c <= 0xB85B => LBH3
+      | let c: U32 if c <= 0xB85C => LBH2
+      | let c: U32 if c <= 0xB877 => LBH3
+      | let c: U32 if c <= 0xB878 => LBH2
+      | let c: U32 if c <= 0xB893 => LBH3
+      | let c: U32 if c <= 0xB894 => LBH2
+      | let c: U32 if c <= 0xB8AF => LBH3
+      | let c: U32 if c <= 0xB8B0 => LBH2
+      | let c: U32 if c <= 0xB8CB => LBH3
+      | let c: U32 if c <= 0xB8CC => LBH2
+      | let c: U32 if c <= 0xB8E7 => LBH3
+      | let c: U32 if c <= 0xB8E8 => LBH2
+      | let c: U32 if c <= 0xB903 => LBH3
+      | let c: U32 if c <= 0xB904 => LBH2
+      | let c: U32 if c <= 0xB91F => LBH3
+      | let c: U32 if c <= 0xB920 => LBH2
+      | let c: U32 if c <= 0xB93B => LBH3
+      | let c: U32 if c <= 0xB93C => LBH2
+      | let c: U32 if c <= 0xB957 => LBH3
+      | let c: U32 if c <= 0xB958 => LBH2
+      | let c: U32 if c <= 0xB973 => LBH3
+      | let c: U32 if c <= 0xB974 => LBH2
+      | let c: U32 if c <= 0xB98F => LBH3
+      | let c: U32 if c <= 0xB990 => LBH2
+      | let c: U32 if c <= 0xB9AB => LBH3
+      | let c: U32 if c <= 0xB9AC => LBH2
+      | let c: U32 if c <= 0xB9C7 => LBH3
+      | let c: U32 if c <= 0xB9C8 => LBH2
+      | let c: U32 if c <= 0xB9E3 => LBH3
+      | let c: U32 if c <= 0xB9E4 => LBH2
+      | let c: U32 if c <= 0xB9FF => LBH3
+      | let c: U32 if c <= 0xBA00 => LBH2
+      | let c: U32 if c <= 0xBA1B => LBH3
+      | let c: U32 if c <= 0xBA1C => LBH2
+      | let c: U32 if c <= 0xBA37 => LBH3
+      | let c: U32 if c <= 0xBA38 => LBH2
+      | let c: U32 if c <= 0xBA53 => LBH3
+      | let c: U32 if c <= 0xBA54 => LBH2
+      | let c: U32 if c <= 0xBA6F => LBH3
+      | let c: U32 if c <= 0xBA70 => LBH2
+      | let c: U32 if c <= 0xBA8B => LBH3
+      | let c: U32 if c <= 0xBA8C => LBH2
+      | let c: U32 if c <= 0xBAA7 => LBH3
+      | let c: U32 if c <= 0xBAA8 => LBH2
+      | let c: U32 if c <= 0xBAC3 => LBH3
+      | let c: U32 if c <= 0xBAC4 => LBH2
+      | let c: U32 if c <= 0xBADF => LBH3
+      | let c: U32 if c <= 0xBAE0 => LBH2
+      | let c: U32 if c <= 0xBAFB => LBH3
+      | let c: U32 if c <= 0xBAFC => LBH2
+      | let c: U32 if c <= 0xBB17 => LBH3
+      | let c: U32 if c <= 0xBB18 => LBH2
+      | let c: U32 if c <= 0xBB33 => LBH3
+      | let c: U32 if c <= 0xBB34 => LBH2
+      | let c: U32 if c <= 0xBB4F => LBH3
+      | let c: U32 if c <= 0xBB50 => LBH2
+      | let c: U32 if c <= 0xBB6B => LBH3
+      | let c: U32 if c <= 0xBB6C => LBH2
+      | let c: U32 if c <= 0xBB87 => LBH3
+      | let c: U32 if c <= 0xBB88 => LBH2
+      | let c: U32 if c <= 0xBBA3 => LBH3
+      | let c: U32 if c <= 0xBBA4 => LBH2
+      | let c: U32 if c <= 0xBBBF => LBH3
+      | let c: U32 if c <= 0xBBC0 => LBH2
+      | let c: U32 if c <= 0xBBDB => LBH3
+      | let c: U32 if c <= 0xBBDC => LBH2
+      | let c: U32 if c <= 0xBBF7 => LBH3
+      | let c: U32 if c <= 0xBBF8 => LBH2
+      | let c: U32 if c <= 0xBC13 => LBH3
+      | let c: U32 if c <= 0xBC14 => LBH2
+      | let c: U32 if c <= 0xBC2F => LBH3
+      | let c: U32 if c <= 0xBC30 => LBH2
+      | let c: U32 if c <= 0xBC4B => LBH3
+      | let c: U32 if c <= 0xBC4C => LBH2
+      | let c: U32 if c <= 0xBC67 => LBH3
+      | let c: U32 if c <= 0xBC68 => LBH2
+      | let c: U32 if c <= 0xBC83 => LBH3
+      | let c: U32 if c <= 0xBC84 => LBH2
+      | let c: U32 if c <= 0xBC9F => LBH3
+      | let c: U32 if c <= 0xBCA0 => LBH2
+      | let c: U32 if c <= 0xBCBB => LBH3
+      | let c: U32 if c <= 0xBCBC => LBH2
+      | let c: U32 if c <= 0xBCD7 => LBH3
+      | let c: U32 if c <= 0xBCD8 => LBH2
+      | let c: U32 if c <= 0xBCF3 => LBH3
+      | let c: U32 if c <= 0xBCF4 => LBH2
+      | let c: U32 if c <= 0xBD0F => LBH3
+      | let c: U32 if c <= 0xBD10 => LBH2
+      | let c: U32 if c <= 0xBD2B => LBH3
+      | let c: U32 if c <= 0xBD2C => LBH2
+      | let c: U32 if c <= 0xBD47 => LBH3
+      | let c: U32 if c <= 0xBD48 => LBH2
+      | let c: U32 if c <= 0xBD63 => LBH3
+      | let c: U32 if c <= 0xBD64 => LBH2
+      | let c: U32 if c <= 0xBD7F => LBH3
+      | let c: U32 if c <= 0xBD80 => LBH2
+      | let c: U32 if c <= 0xBD9B => LBH3
+      | let c: U32 if c <= 0xBD9C => LBH2
+      | let c: U32 if c <= 0xBDB7 => LBH3
+      | let c: U32 if c <= 0xBDB8 => LBH2
+      | let c: U32 if c <= 0xBDD3 => LBH3
+      | let c: U32 if c <= 0xBDD4 => LBH2
+      | let c: U32 if c <= 0xBDEF => LBH3
+      | let c: U32 if c <= 0xBDF0 => LBH2
+      | let c: U32 if c <= 0xBE0B => LBH3
+      | let c: U32 if c <= 0xBE0C => LBH2
+      | let c: U32 if c <= 0xBE27 => LBH3
+      | let c: U32 if c <= 0xBE28 => LBH2
+      | let c: U32 if c <= 0xBE43 => LBH3
+      | let c: U32 if c <= 0xBE44 => LBH2
+      | let c: U32 if c <= 0xBE5F => LBH3
+      | let c: U32 if c <= 0xBE60 => LBH2
+      | let c: U32 if c <= 0xBE7B => LBH3
+      | let c: U32 if c <= 0xBE7C => LBH2
+      | let c: U32 if c <= 0xBE97 => LBH3
+      | let c: U32 if c <= 0xBE98 => LBH2
+      | let c: U32 if c <= 0xBEB3 => LBH3
+      | let c: U32 if c <= 0xBEB4 => LBH2
+      | let c: U32 if c <= 0xBECF => LBH3
+      | let c: U32 if c <= 0xBED0 => LBH2
+      | let c: U32 if c <= 0xBEEB => LBH3
+      | let c: U32 if c <= 0xBEEC => LBH2
+      | let c: U32 if c <= 0xBF07 => LBH3
+      | let c: U32 if c <= 0xBF08 => LBH2
+      | let c: U32 if c <= 0xBF23 => LBH3
+      | let c: U32 if c <= 0xBF24 => LBH2
+      | let c: U32 if c <= 0xBF3F => LBH3
+      | let c: U32 if c <= 0xBF40 => LBH2
+      | let c: U32 if c <= 0xBF5B => LBH3
+      | let c: U32 if c <= 0xBF5C => LBH2
+      | let c: U32 if c <= 0xBF77 => LBH3
+      | let c: U32 if c <= 0xBF78 => LBH2
+      | let c: U32 if c <= 0xBF93 => LBH3
+      | let c: U32 if c <= 0xBF94 => LBH2
+      | let c: U32 if c <= 0xBFAF => LBH3
+      | let c: U32 if c <= 0xBFB0 => LBH2
+      | let c: U32 if c <= 0xBFCB => LBH3
+      | let c: U32 if c <= 0xBFCC => LBH2
+      | let c: U32 if c <= 0xBFE7 => LBH3
+      | let c: U32 if c <= 0xBFE8 => LBH2
+      | let c: U32 if c <= 0xBFFF => LBH3
+      else LBXX
+      end
+    | 0x000C =>
+      match cp
+      | let c: U32 if c <= 0xC003 => LBH3
+      | let c: U32 if c <= 0xC004 => LBH2
+      | let c: U32 if c <= 0xC01F => LBH3
+      | let c: U32 if c <= 0xC020 => LBH2
+      | let c: U32 if c <= 0xC03B => LBH3
+      | let c: U32 if c <= 0xC03C => LBH2
+      | let c: U32 if c <= 0xC057 => LBH3
+      | let c: U32 if c <= 0xC058 => LBH2
+      | let c: U32 if c <= 0xC073 => LBH3
+      | let c: U32 if c <= 0xC074 => LBH2
+      | let c: U32 if c <= 0xC08F => LBH3
+      | let c: U32 if c <= 0xC090 => LBH2
+      | let c: U32 if c <= 0xC0AB => LBH3
+      | let c: U32 if c <= 0xC0AC => LBH2
+      | let c: U32 if c <= 0xC0C7 => LBH3
+      | let c: U32 if c <= 0xC0C8 => LBH2
+      | let c: U32 if c <= 0xC0E3 => LBH3
+      | let c: U32 if c <= 0xC0E4 => LBH2
+      | let c: U32 if c <= 0xC0FF => LBH3
+      | let c: U32 if c <= 0xC100 => LBH2
+      | let c: U32 if c <= 0xC11B => LBH3
+      | let c: U32 if c <= 0xC11C => LBH2
+      | let c: U32 if c <= 0xC137 => LBH3
+      | let c: U32 if c <= 0xC138 => LBH2
+      | let c: U32 if c <= 0xC153 => LBH3
+      | let c: U32 if c <= 0xC154 => LBH2
+      | let c: U32 if c <= 0xC16F => LBH3
+      | let c: U32 if c <= 0xC170 => LBH2
+      | let c: U32 if c <= 0xC18B => LBH3
+      | let c: U32 if c <= 0xC18C => LBH2
+      | let c: U32 if c <= 0xC1A7 => LBH3
+      | let c: U32 if c <= 0xC1A8 => LBH2
+      | let c: U32 if c <= 0xC1C3 => LBH3
+      | let c: U32 if c <= 0xC1C4 => LBH2
+      | let c: U32 if c <= 0xC1DF => LBH3
+      | let c: U32 if c <= 0xC1E0 => LBH2
+      | let c: U32 if c <= 0xC1FB => LBH3
+      | let c: U32 if c <= 0xC1FC => LBH2
+      | let c: U32 if c <= 0xC217 => LBH3
+      | let c: U32 if c <= 0xC218 => LBH2
+      | let c: U32 if c <= 0xC233 => LBH3
+      | let c: U32 if c <= 0xC234 => LBH2
+      | let c: U32 if c <= 0xC24F => LBH3
+      | let c: U32 if c <= 0xC250 => LBH2
+      | let c: U32 if c <= 0xC26B => LBH3
+      | let c: U32 if c <= 0xC26C => LBH2
+      | let c: U32 if c <= 0xC287 => LBH3
+      | let c: U32 if c <= 0xC288 => LBH2
+      | let c: U32 if c <= 0xC2A3 => LBH3
+      | let c: U32 if c <= 0xC2A4 => LBH2
+      | let c: U32 if c <= 0xC2BF => LBH3
+      | let c: U32 if c <= 0xC2C0 => LBH2
+      | let c: U32 if c <= 0xC2DB => LBH3
+      | let c: U32 if c <= 0xC2DC => LBH2
+      | let c: U32 if c <= 0xC2F7 => LBH3
+      | let c: U32 if c <= 0xC2F8 => LBH2
+      | let c: U32 if c <= 0xC313 => LBH3
+      | let c: U32 if c <= 0xC314 => LBH2
+      | let c: U32 if c <= 0xC32F => LBH3
+      | let c: U32 if c <= 0xC330 => LBH2
+      | let c: U32 if c <= 0xC34B => LBH3
+      | let c: U32 if c <= 0xC34C => LBH2
+      | let c: U32 if c <= 0xC367 => LBH3
+      | let c: U32 if c <= 0xC368 => LBH2
+      | let c: U32 if c <= 0xC383 => LBH3
+      | let c: U32 if c <= 0xC384 => LBH2
+      | let c: U32 if c <= 0xC39F => LBH3
+      | let c: U32 if c <= 0xC3A0 => LBH2
+      | let c: U32 if c <= 0xC3BB => LBH3
+      | let c: U32 if c <= 0xC3BC => LBH2
+      | let c: U32 if c <= 0xC3D7 => LBH3
+      | let c: U32 if c <= 0xC3D8 => LBH2
+      | let c: U32 if c <= 0xC3F3 => LBH3
+      | let c: U32 if c <= 0xC3F4 => LBH2
+      | let c: U32 if c <= 0xC40F => LBH3
+      | let c: U32 if c <= 0xC410 => LBH2
+      | let c: U32 if c <= 0xC42B => LBH3
+      | let c: U32 if c <= 0xC42C => LBH2
+      | let c: U32 if c <= 0xC447 => LBH3
+      | let c: U32 if c <= 0xC448 => LBH2
+      | let c: U32 if c <= 0xC463 => LBH3
+      | let c: U32 if c <= 0xC464 => LBH2
+      | let c: U32 if c <= 0xC47F => LBH3
+      | let c: U32 if c <= 0xC480 => LBH2
+      | let c: U32 if c <= 0xC49B => LBH3
+      | let c: U32 if c <= 0xC49C => LBH2
+      | let c: U32 if c <= 0xC4B7 => LBH3
+      | let c: U32 if c <= 0xC4B8 => LBH2
+      | let c: U32 if c <= 0xC4D3 => LBH3
+      | let c: U32 if c <= 0xC4D4 => LBH2
+      | let c: U32 if c <= 0xC4EF => LBH3
+      | let c: U32 if c <= 0xC4F0 => LBH2
+      | let c: U32 if c <= 0xC50B => LBH3
+      | let c: U32 if c <= 0xC50C => LBH2
+      | let c: U32 if c <= 0xC527 => LBH3
+      | let c: U32 if c <= 0xC528 => LBH2
+      | let c: U32 if c <= 0xC543 => LBH3
+      | let c: U32 if c <= 0xC544 => LBH2
+      | let c: U32 if c <= 0xC55F => LBH3
+      | let c: U32 if c <= 0xC560 => LBH2
+      | let c: U32 if c <= 0xC57B => LBH3
+      | let c: U32 if c <= 0xC57C => LBH2
+      | let c: U32 if c <= 0xC597 => LBH3
+      | let c: U32 if c <= 0xC598 => LBH2
+      | let c: U32 if c <= 0xC5B3 => LBH3
+      | let c: U32 if c <= 0xC5B4 => LBH2
+      | let c: U32 if c <= 0xC5CF => LBH3
+      | let c: U32 if c <= 0xC5D0 => LBH2
+      | let c: U32 if c <= 0xC5EB => LBH3
+      | let c: U32 if c <= 0xC5EC => LBH2
+      | let c: U32 if c <= 0xC607 => LBH3
+      | let c: U32 if c <= 0xC608 => LBH2
+      | let c: U32 if c <= 0xC623 => LBH3
+      | let c: U32 if c <= 0xC624 => LBH2
+      | let c: U32 if c <= 0xC63F => LBH3
+      | let c: U32 if c <= 0xC640 => LBH2
+      | let c: U32 if c <= 0xC65B => LBH3
+      | let c: U32 if c <= 0xC65C => LBH2
+      | let c: U32 if c <= 0xC677 => LBH3
+      | let c: U32 if c <= 0xC678 => LBH2
+      | let c: U32 if c <= 0xC693 => LBH3
+      | let c: U32 if c <= 0xC694 => LBH2
+      | let c: U32 if c <= 0xC6AF => LBH3
+      | let c: U32 if c <= 0xC6B0 => LBH2
+      | let c: U32 if c <= 0xC6CB => LBH3
+      | let c: U32 if c <= 0xC6CC => LBH2
+      | let c: U32 if c <= 0xC6E7 => LBH3
+      | let c: U32 if c <= 0xC6E8 => LBH2
+      | let c: U32 if c <= 0xC703 => LBH3
+      | let c: U32 if c <= 0xC704 => LBH2
+      | let c: U32 if c <= 0xC71F => LBH3
+      | let c: U32 if c <= 0xC720 => LBH2
+      | let c: U32 if c <= 0xC73B => LBH3
+      | let c: U32 if c <= 0xC73C => LBH2
+      | let c: U32 if c <= 0xC757 => LBH3
+      | let c: U32 if c <= 0xC758 => LBH2
+      | let c: U32 if c <= 0xC773 => LBH3
+      | let c: U32 if c <= 0xC774 => LBH2
+      | let c: U32 if c <= 0xC78F => LBH3
+      | let c: U32 if c <= 0xC790 => LBH2
+      | let c: U32 if c <= 0xC7AB => LBH3
+      | let c: U32 if c <= 0xC7AC => LBH2
+      | let c: U32 if c <= 0xC7C7 => LBH3
+      | let c: U32 if c <= 0xC7C8 => LBH2
+      | let c: U32 if c <= 0xC7E3 => LBH3
+      | let c: U32 if c <= 0xC7E4 => LBH2
+      | let c: U32 if c <= 0xC7FF => LBH3
+      | let c: U32 if c <= 0xC800 => LBH2
+      | let c: U32 if c <= 0xC81B => LBH3
+      | let c: U32 if c <= 0xC81C => LBH2
+      | let c: U32 if c <= 0xC837 => LBH3
+      | let c: U32 if c <= 0xC838 => LBH2
+      | let c: U32 if c <= 0xC853 => LBH3
+      | let c: U32 if c <= 0xC854 => LBH2
+      | let c: U32 if c <= 0xC86F => LBH3
+      | let c: U32 if c <= 0xC870 => LBH2
+      | let c: U32 if c <= 0xC88B => LBH3
+      | let c: U32 if c <= 0xC88C => LBH2
+      | let c: U32 if c <= 0xC8A7 => LBH3
+      | let c: U32 if c <= 0xC8A8 => LBH2
+      | let c: U32 if c <= 0xC8C3 => LBH3
+      | let c: U32 if c <= 0xC8C4 => LBH2
+      | let c: U32 if c <= 0xC8DF => LBH3
+      | let c: U32 if c <= 0xC8E0 => LBH2
+      | let c: U32 if c <= 0xC8FB => LBH3
+      | let c: U32 if c <= 0xC8FC => LBH2
+      | let c: U32 if c <= 0xC917 => LBH3
+      | let c: U32 if c <= 0xC918 => LBH2
+      | let c: U32 if c <= 0xC933 => LBH3
+      | let c: U32 if c <= 0xC934 => LBH2
+      | let c: U32 if c <= 0xC94F => LBH3
+      | let c: U32 if c <= 0xC950 => LBH2
+      | let c: U32 if c <= 0xC96B => LBH3
+      | let c: U32 if c <= 0xC96C => LBH2
+      | let c: U32 if c <= 0xC987 => LBH3
+      | let c: U32 if c <= 0xC988 => LBH2
+      | let c: U32 if c <= 0xC9A3 => LBH3
+      | let c: U32 if c <= 0xC9A4 => LBH2
+      | let c: U32 if c <= 0xC9BF => LBH3
+      | let c: U32 if c <= 0xC9C0 => LBH2
+      | let c: U32 if c <= 0xC9DB => LBH3
+      | let c: U32 if c <= 0xC9DC => LBH2
+      | let c: U32 if c <= 0xC9F7 => LBH3
+      | let c: U32 if c <= 0xC9F8 => LBH2
+      | let c: U32 if c <= 0xCA13 => LBH3
+      | let c: U32 if c <= 0xCA14 => LBH2
+      | let c: U32 if c <= 0xCA2F => LBH3
+      | let c: U32 if c <= 0xCA30 => LBH2
+      | let c: U32 if c <= 0xCA4B => LBH3
+      | let c: U32 if c <= 0xCA4C => LBH2
+      | let c: U32 if c <= 0xCA67 => LBH3
+      | let c: U32 if c <= 0xCA68 => LBH2
+      | let c: U32 if c <= 0xCA83 => LBH3
+      | let c: U32 if c <= 0xCA84 => LBH2
+      | let c: U32 if c <= 0xCA9F => LBH3
+      | let c: U32 if c <= 0xCAA0 => LBH2
+      | let c: U32 if c <= 0xCABB => LBH3
+      | let c: U32 if c <= 0xCABC => LBH2
+      | let c: U32 if c <= 0xCAD7 => LBH3
+      | let c: U32 if c <= 0xCAD8 => LBH2
+      | let c: U32 if c <= 0xCAF3 => LBH3
+      | let c: U32 if c <= 0xCAF4 => LBH2
+      | let c: U32 if c <= 0xCB0F => LBH3
+      | let c: U32 if c <= 0xCB10 => LBH2
+      | let c: U32 if c <= 0xCB2B => LBH3
+      | let c: U32 if c <= 0xCB2C => LBH2
+      | let c: U32 if c <= 0xCB47 => LBH3
+      | let c: U32 if c <= 0xCB48 => LBH2
+      | let c: U32 if c <= 0xCB63 => LBH3
+      | let c: U32 if c <= 0xCB64 => LBH2
+      | let c: U32 if c <= 0xCB7F => LBH3
+      | let c: U32 if c <= 0xCB80 => LBH2
+      | let c: U32 if c <= 0xCB9B => LBH3
+      | let c: U32 if c <= 0xCB9C => LBH2
+      | let c: U32 if c <= 0xCBB7 => LBH3
+      | let c: U32 if c <= 0xCBB8 => LBH2
+      | let c: U32 if c <= 0xCBD3 => LBH3
+      | let c: U32 if c <= 0xCBD4 => LBH2
+      | let c: U32 if c <= 0xCBEF => LBH3
+      | let c: U32 if c <= 0xCBF0 => LBH2
+      | let c: U32 if c <= 0xCC0B => LBH3
+      | let c: U32 if c <= 0xCC0C => LBH2
+      | let c: U32 if c <= 0xCC27 => LBH3
+      | let c: U32 if c <= 0xCC28 => LBH2
+      | let c: U32 if c <= 0xCC43 => LBH3
+      | let c: U32 if c <= 0xCC44 => LBH2
+      | let c: U32 if c <= 0xCC5F => LBH3
+      | let c: U32 if c <= 0xCC60 => LBH2
+      | let c: U32 if c <= 0xCC7B => LBH3
+      | let c: U32 if c <= 0xCC7C => LBH2
+      | let c: U32 if c <= 0xCC97 => LBH3
+      | let c: U32 if c <= 0xCC98 => LBH2
+      | let c: U32 if c <= 0xCCB3 => LBH3
+      | let c: U32 if c <= 0xCCB4 => LBH2
+      | let c: U32 if c <= 0xCCCF => LBH3
+      | let c: U32 if c <= 0xCCD0 => LBH2
+      | let c: U32 if c <= 0xCCEB => LBH3
+      | let c: U32 if c <= 0xCCEC => LBH2
+      | let c: U32 if c <= 0xCD07 => LBH3
+      | let c: U32 if c <= 0xCD08 => LBH2
+      | let c: U32 if c <= 0xCD23 => LBH3
+      | let c: U32 if c <= 0xCD24 => LBH2
+      | let c: U32 if c <= 0xCD3F => LBH3
+      | let c: U32 if c <= 0xCD40 => LBH2
+      | let c: U32 if c <= 0xCD5B => LBH3
+      | let c: U32 if c <= 0xCD5C => LBH2
+      | let c: U32 if c <= 0xCD77 => LBH3
+      | let c: U32 if c <= 0xCD78 => LBH2
+      | let c: U32 if c <= 0xCD93 => LBH3
+      | let c: U32 if c <= 0xCD94 => LBH2
+      | let c: U32 if c <= 0xCDAF => LBH3
+      | let c: U32 if c <= 0xCDB0 => LBH2
+      | let c: U32 if c <= 0xCDCB => LBH3
+      | let c: U32 if c <= 0xCDCC => LBH2
+      | let c: U32 if c <= 0xCDE7 => LBH3
+      | let c: U32 if c <= 0xCDE8 => LBH2
+      | let c: U32 if c <= 0xCE03 => LBH3
+      | let c: U32 if c <= 0xCE04 => LBH2
+      | let c: U32 if c <= 0xCE1F => LBH3
+      | let c: U32 if c <= 0xCE20 => LBH2
+      | let c: U32 if c <= 0xCE3B => LBH3
+      | let c: U32 if c <= 0xCE3C => LBH2
+      | let c: U32 if c <= 0xCE57 => LBH3
+      | let c: U32 if c <= 0xCE58 => LBH2
+      | let c: U32 if c <= 0xCE73 => LBH3
+      | let c: U32 if c <= 0xCE74 => LBH2
+      | let c: U32 if c <= 0xCE8F => LBH3
+      | let c: U32 if c <= 0xCE90 => LBH2
+      | let c: U32 if c <= 0xCEAB => LBH3
+      | let c: U32 if c <= 0xCEAC => LBH2
+      | let c: U32 if c <= 0xCEC7 => LBH3
+      | let c: U32 if c <= 0xCEC8 => LBH2
+      | let c: U32 if c <= 0xCEE3 => LBH3
+      | let c: U32 if c <= 0xCEE4 => LBH2
+      | let c: U32 if c <= 0xCEFF => LBH3
+      | let c: U32 if c <= 0xCF00 => LBH2
+      | let c: U32 if c <= 0xCF1B => LBH3
+      | let c: U32 if c <= 0xCF1C => LBH2
+      | let c: U32 if c <= 0xCF37 => LBH3
+      | let c: U32 if c <= 0xCF38 => LBH2
+      | let c: U32 if c <= 0xCF53 => LBH3
+      | let c: U32 if c <= 0xCF54 => LBH2
+      | let c: U32 if c <= 0xCF6F => LBH3
+      | let c: U32 if c <= 0xCF70 => LBH2
+      | let c: U32 if c <= 0xCF8B => LBH3
+      | let c: U32 if c <= 0xCF8C => LBH2
+      | let c: U32 if c <= 0xCFA7 => LBH3
+      | let c: U32 if c <= 0xCFA8 => LBH2
+      | let c: U32 if c <= 0xCFC3 => LBH3
+      | let c: U32 if c <= 0xCFC4 => LBH2
+      | let c: U32 if c <= 0xCFDF => LBH3
+      | let c: U32 if c <= 0xCFE0 => LBH2
+      | let c: U32 if c <= 0xCFFB => LBH3
+      | let c: U32 if c <= 0xCFFC => LBH2
+      | let c: U32 if c <= 0xCFFF => LBH3
+      else LBXX
+      end
+    | 0x000D =>
+      match cp
+      | let c: U32 if c <= 0xD017 => LBH3
+      | let c: U32 if c <= 0xD018 => LBH2
+      | let c: U32 if c <= 0xD033 => LBH3
+      | let c: U32 if c <= 0xD034 => LBH2
+      | let c: U32 if c <= 0xD04F => LBH3
+      | let c: U32 if c <= 0xD050 => LBH2
+      | let c: U32 if c <= 0xD06B => LBH3
+      | let c: U32 if c <= 0xD06C => LBH2
+      | let c: U32 if c <= 0xD087 => LBH3
+      | let c: U32 if c <= 0xD088 => LBH2
+      | let c: U32 if c <= 0xD0A3 => LBH3
+      | let c: U32 if c <= 0xD0A4 => LBH2
+      | let c: U32 if c <= 0xD0BF => LBH3
+      | let c: U32 if c <= 0xD0C0 => LBH2
+      | let c: U32 if c <= 0xD0DB => LBH3
+      | let c: U32 if c <= 0xD0DC => LBH2
+      | let c: U32 if c <= 0xD0F7 => LBH3
+      | let c: U32 if c <= 0xD0F8 => LBH2
+      | let c: U32 if c <= 0xD113 => LBH3
+      | let c: U32 if c <= 0xD114 => LBH2
+      | let c: U32 if c <= 0xD12F => LBH3
+      | let c: U32 if c <= 0xD130 => LBH2
+      | let c: U32 if c <= 0xD14B => LBH3
+      | let c: U32 if c <= 0xD14C => LBH2
+      | let c: U32 if c <= 0xD167 => LBH3
+      | let c: U32 if c <= 0xD168 => LBH2
+      | let c: U32 if c <= 0xD183 => LBH3
+      | let c: U32 if c <= 0xD184 => LBH2
+      | let c: U32 if c <= 0xD19F => LBH3
+      | let c: U32 if c <= 0xD1A0 => LBH2
+      | let c: U32 if c <= 0xD1BB => LBH3
+      | let c: U32 if c <= 0xD1BC => LBH2
+      | let c: U32 if c <= 0xD1D7 => LBH3
+      | let c: U32 if c <= 0xD1D8 => LBH2
+      | let c: U32 if c <= 0xD1F3 => LBH3
+      | let c: U32 if c <= 0xD1F4 => LBH2
+      | let c: U32 if c <= 0xD20F => LBH3
+      | let c: U32 if c <= 0xD210 => LBH2
+      | let c: U32 if c <= 0xD22B => LBH3
+      | let c: U32 if c <= 0xD22C => LBH2
+      | let c: U32 if c <= 0xD247 => LBH3
+      | let c: U32 if c <= 0xD248 => LBH2
+      | let c: U32 if c <= 0xD263 => LBH3
+      | let c: U32 if c <= 0xD264 => LBH2
+      | let c: U32 if c <= 0xD27F => LBH3
+      | let c: U32 if c <= 0xD280 => LBH2
+      | let c: U32 if c <= 0xD29B => LBH3
+      | let c: U32 if c <= 0xD29C => LBH2
+      | let c: U32 if c <= 0xD2B7 => LBH3
+      | let c: U32 if c <= 0xD2B8 => LBH2
+      | let c: U32 if c <= 0xD2D3 => LBH3
+      | let c: U32 if c <= 0xD2D4 => LBH2
+      | let c: U32 if c <= 0xD2EF => LBH3
+      | let c: U32 if c <= 0xD2F0 => LBH2
+      | let c: U32 if c <= 0xD30B => LBH3
+      | let c: U32 if c <= 0xD30C => LBH2
+      | let c: U32 if c <= 0xD327 => LBH3
+      | let c: U32 if c <= 0xD328 => LBH2
+      | let c: U32 if c <= 0xD343 => LBH3
+      | let c: U32 if c <= 0xD344 => LBH2
+      | let c: U32 if c <= 0xD35F => LBH3
+      | let c: U32 if c <= 0xD360 => LBH2
+      | let c: U32 if c <= 0xD37B => LBH3
+      | let c: U32 if c <= 0xD37C => LBH2
+      | let c: U32 if c <= 0xD397 => LBH3
+      | let c: U32 if c <= 0xD398 => LBH2
+      | let c: U32 if c <= 0xD3B3 => LBH3
+      | let c: U32 if c <= 0xD3B4 => LBH2
+      | let c: U32 if c <= 0xD3CF => LBH3
+      | let c: U32 if c <= 0xD3D0 => LBH2
+      | let c: U32 if c <= 0xD3EB => LBH3
+      | let c: U32 if c <= 0xD3EC => LBH2
+      | let c: U32 if c <= 0xD407 => LBH3
+      | let c: U32 if c <= 0xD408 => LBH2
+      | let c: U32 if c <= 0xD423 => LBH3
+      | let c: U32 if c <= 0xD424 => LBH2
+      | let c: U32 if c <= 0xD43F => LBH3
+      | let c: U32 if c <= 0xD440 => LBH2
+      | let c: U32 if c <= 0xD45B => LBH3
+      | let c: U32 if c <= 0xD45C => LBH2
+      | let c: U32 if c <= 0xD477 => LBH3
+      | let c: U32 if c <= 0xD478 => LBH2
+      | let c: U32 if c <= 0xD493 => LBH3
+      | let c: U32 if c <= 0xD494 => LBH2
+      | let c: U32 if c <= 0xD4AF => LBH3
+      | let c: U32 if c <= 0xD4B0 => LBH2
+      | let c: U32 if c <= 0xD4CB => LBH3
+      | let c: U32 if c <= 0xD4CC => LBH2
+      | let c: U32 if c <= 0xD4E7 => LBH3
+      | let c: U32 if c <= 0xD4E8 => LBH2
+      | let c: U32 if c <= 0xD503 => LBH3
+      | let c: U32 if c <= 0xD504 => LBH2
+      | let c: U32 if c <= 0xD51F => LBH3
+      | let c: U32 if c <= 0xD520 => LBH2
+      | let c: U32 if c <= 0xD53B => LBH3
+      | let c: U32 if c <= 0xD53C => LBH2
+      | let c: U32 if c <= 0xD557 => LBH3
+      | let c: U32 if c <= 0xD558 => LBH2
+      | let c: U32 if c <= 0xD573 => LBH3
+      | let c: U32 if c <= 0xD574 => LBH2
+      | let c: U32 if c <= 0xD58F => LBH3
+      | let c: U32 if c <= 0xD590 => LBH2
+      | let c: U32 if c <= 0xD5AB => LBH3
+      | let c: U32 if c <= 0xD5AC => LBH2
+      | let c: U32 if c <= 0xD5C7 => LBH3
+      | let c: U32 if c <= 0xD5C8 => LBH2
+      | let c: U32 if c <= 0xD5E3 => LBH3
+      | let c: U32 if c <= 0xD5E4 => LBH2
+      | let c: U32 if c <= 0xD5FF => LBH3
+      | let c: U32 if c <= 0xD600 => LBH2
+      | let c: U32 if c <= 0xD61B => LBH3
+      | let c: U32 if c <= 0xD61C => LBH2
+      | let c: U32 if c <= 0xD637 => LBH3
+      | let c: U32 if c <= 0xD638 => LBH2
+      | let c: U32 if c <= 0xD653 => LBH3
+      | let c: U32 if c <= 0xD654 => LBH2
+      | let c: U32 if c <= 0xD66F => LBH3
+      | let c: U32 if c <= 0xD670 => LBH2
+      | let c: U32 if c <= 0xD68B => LBH3
+      | let c: U32 if c <= 0xD68C => LBH2
+      | let c: U32 if c <= 0xD6A7 => LBH3
+      | let c: U32 if c <= 0xD6A8 => LBH2
+      | let c: U32 if c <= 0xD6C3 => LBH3
+      | let c: U32 if c <= 0xD6C4 => LBH2
+      | let c: U32 if c <= 0xD6DF => LBH3
+      | let c: U32 if c <= 0xD6E0 => LBH2
+      | let c: U32 if c <= 0xD6FB => LBH3
+      | let c: U32 if c <= 0xD6FC => LBH2
+      | let c: U32 if c <= 0xD717 => LBH3
+      | let c: U32 if c <= 0xD718 => LBH2
+      | let c: U32 if c <= 0xD733 => LBH3
+      | let c: U32 if c <= 0xD734 => LBH2
+      | let c: U32 if c <= 0xD74F => LBH3
+      | let c: U32 if c <= 0xD750 => LBH2
+      | let c: U32 if c <= 0xD76B => LBH3
+      | let c: U32 if c <= 0xD76C => LBH2
+      | let c: U32 if c <= 0xD787 => LBH3
+      | let c: U32 if c <= 0xD788 => LBH2
+      | let c: U32 if c <= 0xD7A3 => LBH3
+      | let c: U32 if c <= 0xD7AF => LBXX
+      | let c: U32 if c <= 0xD7C6 => LBJV
+      | let c: U32 if c <= 0xD7CA => LBXX
+      | let c: U32 if c <= 0xD7FB => LBJT
+      | let c: U32 if c <= 0xD7FF => LBXX
+      | let c: U32 if c <= 0xDFFF => LBSG
+      else LBXX
+      end
+    | 0x000E =>
+      match cp
+      | let c: U32 if c <= 0xEFFF => LBXX
+      else LBXX
+      end
+    | 0x000F =>
+      match cp
+      | let c: U32 if c <= 0xF8FF => LBXX
+      | let c: U32 if c <= 0xFAFF => LBID
+      | let c: U32 if c <= 0xFB06 => LBAL
+      | let c: U32 if c <= 0xFB12 => LBXX
+      | let c: U32 if c <= 0xFB17 => LBAL
+      | let c: U32 if c <= 0xFB1C => LBXX
+      | let c: U32 if c <= 0xFB1D => LBHL
+      | let c: U32 if c <= 0xFB1E => LBCM
+      | let c: U32 if c <= 0xFB28 => LBHL
+      | let c: U32 if c <= 0xFB29 => LBAL
+      | let c: U32 if c <= 0xFB36 => LBHL
+      | let c: U32 if c <= 0xFB37 => LBXX
+      | let c: U32 if c <= 0xFB3C => LBHL
+      | let c: U32 if c <= 0xFB3D => LBXX
+      | let c: U32 if c <= 0xFB3E => LBHL
+      | let c: U32 if c <= 0xFB3F => LBXX
+      | let c: U32 if c <= 0xFB41 => LBHL
+      | let c: U32 if c <= 0xFB42 => LBXX
+      | let c: U32 if c <= 0xFB44 => LBHL
+      | let c: U32 if c <= 0xFB45 => LBXX
+      | let c: U32 if c <= 0xFB4F => LBHL
+      | let c: U32 if c <= 0xFBC2 => LBAL
+      | let c: U32 if c <= 0xFBD2 => LBXX
+      | let c: U32 if c <= 0xFD3D => LBAL
+      | let c: U32 if c <= 0xFD3E => LBCL
+      | let c: U32 if c <= 0xFD3F => LBOP
+      | let c: U32 if c <= 0xFD8F => LBAL
+      | let c: U32 if c <= 0xFD91 => LBXX
+      | let c: U32 if c <= 0xFDC7 => LBAL
+      | let c: U32 if c <= 0xFDCE => LBXX
+      | let c: U32 if c <= 0xFDCF => LBAL
+      | let c: U32 if c <= 0xFDEF => LBXX
+      | let c: U32 if c <= 0xFDFB => LBAL
+      | let c: U32 if c <= 0xFDFC => LBPO
+      | let c: U32 if c <= 0xFDFF => LBAL
+      | let c: U32 if c <= 0xFE0F => LBCM
+      | let c: U32 if c <= 0xFE12 => LBCL
+      | let c: U32 if c <= 0xFE14 => LBNS
+      | let c: U32 if c <= 0xFE16 => LBEX
+      | let c: U32 if c <= 0xFE17 => LBOP
+      | let c: U32 if c <= 0xFE18 => LBCL
+      | let c: U32 if c <= 0xFE19 => LBIN
+      | let c: U32 if c <= 0xFE1F => LBXX
+      | let c: U32 if c <= 0xFE20 => LBGL
+      | let c: U32 if c <= 0xFE21 => LBCM
+      | let c: U32 if c <= 0xFE22 => LBGL
+      | let c: U32 if c <= 0xFE23 => LBCM
+      | let c: U32 if c <= 0xFE24 => LBGL
+      | let c: U32 if c <= 0xFE25 => LBCM
+      | let c: U32 if c <= 0xFE27 => LBGL
+      | let c: U32 if c <= 0xFE28 => LBCM
+      | let c: U32 if c <= 0xFE29 => LBGL
+      | let c: U32 if c <= 0xFE2A => LBCM
+      | let c: U32 if c <= 0xFE2B => LBGL
+      | let c: U32 if c <= 0xFE2C => LBCM
+      | let c: U32 if c <= 0xFE2E => LBGL
+      | let c: U32 if c <= 0xFE2F => LBCM
+      | let c: U32 if c <= 0xFE34 => LBID
+      | let c: U32 if c <= 0xFE35 => LBOP
+      | let c: U32 if c <= 0xFE36 => LBCL
+      | let c: U32 if c <= 0xFE37 => LBOP
+      | let c: U32 if c <= 0xFE38 => LBCL
+      | let c: U32 if c <= 0xFE39 => LBOP
+      | let c: U32 if c <= 0xFE3A => LBCL
+      | let c: U32 if c <= 0xFE3B => LBOP
+      | let c: U32 if c <= 0xFE3C => LBCL
+      | let c: U32 if c <= 0xFE3D => LBOP
+      | let c: U32 if c <= 0xFE3E => LBCL
+      | let c: U32 if c <= 0xFE3F => LBOP
+      | let c: U32 if c <= 0xFE40 => LBCL
+      | let c: U32 if c <= 0xFE41 => LBOP
+      | let c: U32 if c <= 0xFE42 => LBCL
+      | let c: U32 if c <= 0xFE43 => LBOP
+      | let c: U32 if c <= 0xFE44 => LBCL
+      | let c: U32 if c <= 0xFE46 => LBID
+      | let c: U32 if c <= 0xFE47 => LBOP
+      | let c: U32 if c <= 0xFE48 => LBCL
+      | let c: U32 if c <= 0xFE4F => LBID
+      | let c: U32 if c <= 0xFE50 => LBCL
+      | let c: U32 if c <= 0xFE51 => LBID
+      | let c: U32 if c <= 0xFE52 => LBCL
+      | let c: U32 if c <= 0xFE53 => LBXX
+      | let c: U32 if c <= 0xFE55 => LBNS
+      | let c: U32 if c <= 0xFE57 => LBEX
+      | let c: U32 if c <= 0xFE58 => LBID
+      | let c: U32 if c <= 0xFE59 => LBOP
+      | let c: U32 if c <= 0xFE5A => LBCL
+      | let c: U32 if c <= 0xFE5B => LBOP
+      | let c: U32 if c <= 0xFE5C => LBCL
+      | let c: U32 if c <= 0xFE5D => LBOP
+      | let c: U32 if c <= 0xFE5E => LBCL
+      | let c: U32 if c <= 0xFE66 => LBID
+      | let c: U32 if c <= 0xFE67 => LBXX
+      | let c: U32 if c <= 0xFE68 => LBID
+      | let c: U32 if c <= 0xFE69 => LBPR
+      | let c: U32 if c <= 0xFE6A => LBPO
+      | let c: U32 if c <= 0xFE6B => LBID
+      | let c: U32 if c <= 0xFE6F => LBXX
+      | let c: U32 if c <= 0xFE74 => LBAL
+      | let c: U32 if c <= 0xFE75 => LBXX
+      | let c: U32 if c <= 0xFEFC => LBAL
+      | let c: U32 if c <= 0xFEFE => LBXX
+      | let c: U32 if c <= 0xFEFF => LBWJ
+      | let c: U32 if c <= 0xFF00 => LBXX
+      | let c: U32 if c <= 0xFF01 => LBEX
+      | let c: U32 if c <= 0xFF03 => LBID
+      | let c: U32 if c <= 0xFF04 => LBPR
+      | let c: U32 if c <= 0xFF05 => LBPO
+      | let c: U32 if c <= 0xFF07 => LBID
+      | let c: U32 if c <= 0xFF08 => LBOP
+      | let c: U32 if c <= 0xFF09 => LBCL
+      | let c: U32 if c <= 0xFF0B => LBID
+      | let c: U32 if c <= 0xFF0C => LBCL
+      | let c: U32 if c <= 0xFF0D => LBID
+      | let c: U32 if c <= 0xFF0E => LBCL
+      | let c: U32 if c <= 0xFF19 => LBID
+      | let c: U32 if c <= 0xFF1B => LBNS
+      | let c: U32 if c <= 0xFF1E => LBID
+      | let c: U32 if c <= 0xFF1F => LBEX
+      | let c: U32 if c <= 0xFF3A => LBID
+      | let c: U32 if c <= 0xFF3B => LBOP
+      | let c: U32 if c <= 0xFF3C => LBID
+      | let c: U32 if c <= 0xFF3D => LBCL
+      | let c: U32 if c <= 0xFF5A => LBID
+      | let c: U32 if c <= 0xFF5B => LBOP
+      | let c: U32 if c <= 0xFF5C => LBID
+      | let c: U32 if c <= 0xFF5D => LBCL
+      | let c: U32 if c <= 0xFF5E => LBID
+      | let c: U32 if c <= 0xFF5F => LBOP
+      | let c: U32 if c <= 0xFF61 => LBCL
+      | let c: U32 if c <= 0xFF62 => LBOP
+      | let c: U32 if c <= 0xFF64 => LBCL
+      | let c: U32 if c <= 0xFF65 => LBNS
+      | let c: U32 if c <= 0xFF66 => LBID
+      | let c: U32 if c <= 0xFF70 => LBCJ
+      | let c: U32 if c <= 0xFF9D => LBID
+      | let c: U32 if c <= 0xFF9F => LBNS
+      | let c: U32 if c <= 0xFFBE => LBID
+      | let c: U32 if c <= 0xFFC1 => LBXX
+      | let c: U32 if c <= 0xFFC7 => LBID
+      | let c: U32 if c <= 0xFFC9 => LBXX
+      | let c: U32 if c <= 0xFFCF => LBID
+      | let c: U32 if c <= 0xFFD1 => LBXX
+      | let c: U32 if c <= 0xFFD7 => LBID
+      | let c: U32 if c <= 0xFFD9 => LBXX
+      | let c: U32 if c <= 0xFFDC => LBID
+      | let c: U32 if c <= 0xFFDF => LBXX
+      | let c: U32 if c <= 0xFFE0 => LBPO
+      | let c: U32 if c <= 0xFFE1 => LBPR
+      | let c: U32 if c <= 0xFFE4 => LBID
+      | let c: U32 if c <= 0xFFE6 => LBPR
+      | let c: U32 if c <= 0xFFE7 => LBXX
+      | let c: U32 if c <= 0xFFEE => LBAL
+      | let c: U32 if c <= 0xFFF8 => LBXX
+      | let c: U32 if c <= 0xFFFB => LBCM
+      | let c: U32 if c <= 0xFFFC => LBCB
+      | let c: U32 if c <= 0xFFFD => LBAI
+      else LBXX
+      end
+    | 0x0010 =>
+      match cp
+      | let c: U32 if c <= 0x1000B => LBAL
+      | let c: U32 if c <= 0x1000C => LBXX
+      | let c: U32 if c <= 0x10026 => LBAL
+      | let c: U32 if c <= 0x10027 => LBXX
+      | let c: U32 if c <= 0x1003A => LBAL
+      | let c: U32 if c <= 0x1003B => LBXX
+      | let c: U32 if c <= 0x1003D => LBAL
+      | let c: U32 if c <= 0x1003E => LBXX
+      | let c: U32 if c <= 0x1004D => LBAL
+      | let c: U32 if c <= 0x1004F => LBXX
+      | let c: U32 if c <= 0x1005D => LBAL
+      | let c: U32 if c <= 0x1007F => LBXX
+      | let c: U32 if c <= 0x100FA => LBAL
+      | let c: U32 if c <= 0x100FF => LBXX
+      | let c: U32 if c <= 0x10102 => LBBA
+      | let c: U32 if c <= 0x10106 => LBXX
+      | let c: U32 if c <= 0x10133 => LBAL
+      | let c: U32 if c <= 0x10136 => LBXX
+      | let c: U32 if c <= 0x1018E => LBAL
+      | let c: U32 if c <= 0x1018F => LBXX
+      | let c: U32 if c <= 0x1019C => LBAL
+      | let c: U32 if c <= 0x1019F => LBXX
+      | let c: U32 if c <= 0x101A0 => LBAL
+      | let c: U32 if c <= 0x101CF => LBXX
+      | let c: U32 if c <= 0x101FC => LBAL
+      | let c: U32 if c <= 0x101FD => LBCM
+      | let c: U32 if c <= 0x1027F => LBXX
+      | let c: U32 if c <= 0x1029C => LBAL
+      | let c: U32 if c <= 0x1029F => LBXX
+      | let c: U32 if c <= 0x102D0 => LBAL
+      | let c: U32 if c <= 0x102DF => LBXX
+      | let c: U32 if c <= 0x102E0 => LBCM
+      | let c: U32 if c <= 0x102FB => LBAL
+      | let c: U32 if c <= 0x102FF => LBXX
+      | let c: U32 if c <= 0x10323 => LBAL
+      | let c: U32 if c <= 0x1032C => LBXX
+      | let c: U32 if c <= 0x1034A => LBAL
+      | let c: U32 if c <= 0x1034F => LBXX
+      | let c: U32 if c <= 0x10375 => LBAL
+      | let c: U32 if c <= 0x1037A => LBCM
+      | let c: U32 if c <= 0x1037F => LBXX
+      | let c: U32 if c <= 0x1039D => LBAL
+      | let c: U32 if c <= 0x1039E => LBXX
+      | let c: U32 if c <= 0x1039F => LBBA
+      | let c: U32 if c <= 0x103C3 => LBAL
+      | let c: U32 if c <= 0x103C7 => LBXX
+      | let c: U32 if c <= 0x103CF => LBAL
+      | let c: U32 if c <= 0x103D0 => LBBA
+      | let c: U32 if c <= 0x103D5 => LBAL
+      | let c: U32 if c <= 0x103FF => LBXX
+      | let c: U32 if c <= 0x1049D => LBAL
+      | let c: U32 if c <= 0x1049F => LBXX
+      | let c: U32 if c <= 0x104A9 => LBNU
+      | let c: U32 if c <= 0x104AF => LBXX
+      | let c: U32 if c <= 0x104D3 => LBAL
+      | let c: U32 if c <= 0x104D7 => LBXX
+      | let c: U32 if c <= 0x104FB => LBAL
+      | let c: U32 if c <= 0x104FF => LBXX
+      | let c: U32 if c <= 0x10527 => LBAL
+      | let c: U32 if c <= 0x1052F => LBXX
+      | let c: U32 if c <= 0x10563 => LBAL
+      | let c: U32 if c <= 0x1056E => LBXX
+      | let c: U32 if c <= 0x1057A => LBAL
+      | let c: U32 if c <= 0x1057B => LBXX
+      | let c: U32 if c <= 0x1058A => LBAL
+      | let c: U32 if c <= 0x1058B => LBXX
+      | let c: U32 if c <= 0x10592 => LBAL
+      | let c: U32 if c <= 0x10593 => LBXX
+      | let c: U32 if c <= 0x10595 => LBAL
+      | let c: U32 if c <= 0x10596 => LBXX
+      | let c: U32 if c <= 0x105A1 => LBAL
+      | let c: U32 if c <= 0x105A2 => LBXX
+      | let c: U32 if c <= 0x105B1 => LBAL
+      | let c: U32 if c <= 0x105B2 => LBXX
+      | let c: U32 if c <= 0x105B9 => LBAL
+      | let c: U32 if c <= 0x105BA => LBXX
+      | let c: U32 if c <= 0x105BC => LBAL
+      | let c: U32 if c <= 0x105BF => LBXX
+      | let c: U32 if c <= 0x105F3 => LBAL
+      | let c: U32 if c <= 0x105FF => LBXX
+      | let c: U32 if c <= 0x10736 => LBAL
+      | let c: U32 if c <= 0x1073F => LBXX
+      | let c: U32 if c <= 0x10755 => LBAL
+      | let c: U32 if c <= 0x1075F => LBXX
+      | let c: U32 if c <= 0x10767 => LBAL
+      | let c: U32 if c <= 0x1077F => LBXX
+      | let c: U32 if c <= 0x10785 => LBAL
+      | let c: U32 if c <= 0x10786 => LBXX
+      | let c: U32 if c <= 0x107B0 => LBAL
+      | let c: U32 if c <= 0x107B1 => LBXX
+      | let c: U32 if c <= 0x107BA => LBAL
+      | let c: U32 if c <= 0x107FF => LBXX
+      | let c: U32 if c <= 0x10805 => LBAL
+      | let c: U32 if c <= 0x10807 => LBXX
+      | let c: U32 if c <= 0x10808 => LBAL
+      | let c: U32 if c <= 0x10809 => LBXX
+      | let c: U32 if c <= 0x10835 => LBAL
+      | let c: U32 if c <= 0x10836 => LBXX
+      | let c: U32 if c <= 0x10838 => LBAL
+      | let c: U32 if c <= 0x1083B => LBXX
+      | let c: U32 if c <= 0x1083C => LBAL
+      | let c: U32 if c <= 0x1083E => LBXX
+      | let c: U32 if c <= 0x10855 => LBAL
+      | let c: U32 if c <= 0x10856 => LBXX
+      | let c: U32 if c <= 0x10857 => LBBA
+      | let c: U32 if c <= 0x1089E => LBAL
+      | let c: U32 if c <= 0x108A6 => LBXX
+      | let c: U32 if c <= 0x108AF => LBAL
+      | let c: U32 if c <= 0x108DF => LBXX
+      | let c: U32 if c <= 0x108F2 => LBAL
+      | let c: U32 if c <= 0x108F3 => LBXX
+      | let c: U32 if c <= 0x108F5 => LBAL
+      | let c: U32 if c <= 0x108FA => LBXX
+      | let c: U32 if c <= 0x1091B => LBAL
+      | let c: U32 if c <= 0x1091E => LBXX
+      | let c: U32 if c <= 0x1091F => LBBA
+      | let c: U32 if c <= 0x10939 => LBAL
+      | let c: U32 if c <= 0x1093E => LBXX
+      | let c: U32 if c <= 0x1093F => LBAL
+      | let c: U32 if c <= 0x1097F => LBXX
+      | let c: U32 if c <= 0x109B7 => LBAL
+      | let c: U32 if c <= 0x109BB => LBXX
+      | let c: U32 if c <= 0x109CF => LBAL
+      | let c: U32 if c <= 0x109D1 => LBXX
+      | let c: U32 if c <= 0x10A00 => LBAL
+      | let c: U32 if c <= 0x10A03 => LBCM
+      | let c: U32 if c <= 0x10A04 => LBXX
+      | let c: U32 if c <= 0x10A06 => LBCM
+      | let c: U32 if c <= 0x10A0B => LBXX
+      | let c: U32 if c <= 0x10A0F => LBCM
+      | let c: U32 if c <= 0x10A13 => LBAL
+      | let c: U32 if c <= 0x10A14 => LBXX
+      | let c: U32 if c <= 0x10A17 => LBAL
+      | let c: U32 if c <= 0x10A18 => LBXX
+      | let c: U32 if c <= 0x10A35 => LBAL
+      | let c: U32 if c <= 0x10A37 => LBXX
+      | let c: U32 if c <= 0x10A3A => LBCM
+      | let c: U32 if c <= 0x10A3E => LBXX
+      | let c: U32 if c <= 0x10A3F => LBCM
+      | let c: U32 if c <= 0x10A48 => LBAL
+      | let c: U32 if c <= 0x10A4F => LBXX
+      | let c: U32 if c <= 0x10A57 => LBBA
+      | let c: U32 if c <= 0x10A58 => LBAL
+      | let c: U32 if c <= 0x10A5F => LBXX
+      | let c: U32 if c <= 0x10A9F => LBAL
+      | let c: U32 if c <= 0x10ABF => LBXX
+      | let c: U32 if c <= 0x10AE4 => LBAL
+      | let c: U32 if c <= 0x10AE6 => LBCM
+      | let c: U32 if c <= 0x10AEA => LBXX
+      | let c: U32 if c <= 0x10AEF => LBAL
+      | let c: U32 if c <= 0x10AF5 => LBBA
+      | let c: U32 if c <= 0x10AF6 => LBIN
+      | let c: U32 if c <= 0x10AFF => LBXX
+      | let c: U32 if c <= 0x10B35 => LBAL
+      | let c: U32 if c <= 0x10B38 => LBXX
+      | let c: U32 if c <= 0x10B3F => LBBA
+      | let c: U32 if c <= 0x10B55 => LBAL
+      | let c: U32 if c <= 0x10B57 => LBXX
+      | let c: U32 if c <= 0x10B72 => LBAL
+      | let c: U32 if c <= 0x10B77 => LBXX
+      | let c: U32 if c <= 0x10B91 => LBAL
+      | let c: U32 if c <= 0x10B98 => LBXX
+      | let c: U32 if c <= 0x10B9C => LBAL
+      | let c: U32 if c <= 0x10BA8 => LBXX
+      | let c: U32 if c <= 0x10BAF => LBAL
+      | let c: U32 if c <= 0x10BFF => LBXX
+      | let c: U32 if c <= 0x10C48 => LBAL
+      | let c: U32 if c <= 0x10C7F => LBXX
+      | let c: U32 if c <= 0x10CB2 => LBAL
+      | let c: U32 if c <= 0x10CBF => LBXX
+      | let c: U32 if c <= 0x10CF2 => LBAL
+      | let c: U32 if c <= 0x10CF9 => LBXX
+      | let c: U32 if c <= 0x10D23 => LBAL
+      | let c: U32 if c <= 0x10D27 => LBCM
+      | let c: U32 if c <= 0x10D2F => LBXX
+      | let c: U32 if c <= 0x10D39 => LBNU
+      | let c: U32 if c <= 0x10D3F => LBXX
+      | let c: U32 if c <= 0x10D49 => LBNU
+      | let c: U32 if c <= 0x10D65 => LBAL
+      | let c: U32 if c <= 0x10D68 => LBXX
+      | let c: U32 if c <= 0x10D6D => LBCM
+      | let c: U32 if c <= 0x10D6E => LBBA
+      | let c: U32 if c <= 0x10D85 => LBAL
+      | let c: U32 if c <= 0x10D8D => LBXX
+      | let c: U32 if c <= 0x10D8F => LBAL
+      | let c: U32 if c <= 0x10E5F => LBXX
+      | let c: U32 if c <= 0x10E7E => LBAL
+      | let c: U32 if c <= 0x10E7F => LBXX
+      | let c: U32 if c <= 0x10EA9 => LBAL
+      | let c: U32 if c <= 0x10EAA => LBXX
+      | let c: U32 if c <= 0x10EAC => LBCM
+      | let c: U32 if c <= 0x10EAD => LBBA
+      | let c: U32 if c <= 0x10EAF => LBXX
+      | let c: U32 if c <= 0x10EB1 => LBAL
+      | let c: U32 if c <= 0x10EC1 => LBXX
+      | let c: U32 if c <= 0x10EC4 => LBAL
+      | let c: U32 if c <= 0x10EFB => LBXX
+      | let c: U32 if c <= 0x10EFF => LBCM
+      | let c: U32 if c <= 0x10F27 => LBAL
+      | let c: U32 if c <= 0x10F2F => LBXX
+      | let c: U32 if c <= 0x10F45 => LBAL
+      | let c: U32 if c <= 0x10F50 => LBCM
+      | let c: U32 if c <= 0x10F59 => LBAL
+      | let c: U32 if c <= 0x10F6F => LBXX
+      | let c: U32 if c <= 0x10F81 => LBAL
+      | let c: U32 if c <= 0x10F85 => LBCM
+      | let c: U32 if c <= 0x10F89 => LBAL
+      | let c: U32 if c <= 0x10FAF => LBXX
+      | let c: U32 if c <= 0x10FCB => LBAL
+      | let c: U32 if c <= 0x10FDF => LBXX
+      | let c: U32 if c <= 0x10FF6 => LBAL
+      else LBXX
+      end
+    | 0x0011 =>
+      match cp
+      | let c: U32 if c <= 0x11002 => LBCM
+      | let c: U32 if c <= 0x11004 => LBAP
+      | let c: U32 if c <= 0x11037 => LBAK
+      | let c: U32 if c <= 0x11045 => LBCM
+      | let c: U32 if c <= 0x11046 => LBVI
+      | let c: U32 if c <= 0x11048 => LBBA
+      | let c: U32 if c <= 0x1104D => LBID
+      | let c: U32 if c <= 0x11051 => LBXX
+      | let c: U32 if c <= 0x11065 => LBID
+      | let c: U32 if c <= 0x1106F => LBAS
+      | let c: U32 if c <= 0x11070 => LBCM
+      | let c: U32 if c <= 0x11072 => LBAK
+      | let c: U32 if c <= 0x11074 => LBCM
+      | let c: U32 if c <= 0x11075 => LBAK
+      | let c: U32 if c <= 0x1107E => LBXX
+      | let c: U32 if c <= 0x1107F => LBGL
+      | let c: U32 if c <= 0x11082 => LBCM
+      | let c: U32 if c <= 0x110AF => LBAL
+      | let c: U32 if c <= 0x110BA => LBCM
+      | let c: U32 if c <= 0x110BC => LBAL
+      | let c: U32 if c <= 0x110BD => LBNU
+      | let c: U32 if c <= 0x110C1 => LBBA
+      | let c: U32 if c <= 0x110C2 => LBCM
+      | let c: U32 if c <= 0x110CC => LBXX
+      | let c: U32 if c <= 0x110CD => LBNU
+      | let c: U32 if c <= 0x110CF => LBXX
+      | let c: U32 if c <= 0x110E8 => LBAL
+      | let c: U32 if c <= 0x110EF => LBXX
+      | let c: U32 if c <= 0x110F9 => LBNU
+      | let c: U32 if c <= 0x110FF => LBXX
+      | let c: U32 if c <= 0x11102 => LBCM
+      | let c: U32 if c <= 0x11126 => LBAL
+      | let c: U32 if c <= 0x11134 => LBCM
+      | let c: U32 if c <= 0x11135 => LBXX
+      | let c: U32 if c <= 0x1113F => LBNU
+      | let c: U32 if c <= 0x11143 => LBBA
+      | let c: U32 if c <= 0x11144 => LBAL
+      | let c: U32 if c <= 0x11146 => LBCM
+      | let c: U32 if c <= 0x11147 => LBAL
+      | let c: U32 if c <= 0x1114F => LBXX
+      | let c: U32 if c <= 0x11172 => LBAL
+      | let c: U32 if c <= 0x11173 => LBCM
+      | let c: U32 if c <= 0x11174 => LBAL
+      | let c: U32 if c <= 0x11175 => LBBB
+      | let c: U32 if c <= 0x11176 => LBAL
+      | let c: U32 if c <= 0x1117F => LBXX
+      | let c: U32 if c <= 0x11182 => LBCM
+      | let c: U32 if c <= 0x111B2 => LBAL
+      | let c: U32 if c <= 0x111C0 => LBCM
+      | let c: U32 if c <= 0x111C4 => LBAL
+      | let c: U32 if c <= 0x111C6 => LBBA
+      | let c: U32 if c <= 0x111C7 => LBAL
+      | let c: U32 if c <= 0x111C8 => LBBA
+      | let c: U32 if c <= 0x111CC => LBCM
+      | let c: U32 if c <= 0x111CD => LBAL
+      | let c: U32 if c <= 0x111CF => LBCM
+      | let c: U32 if c <= 0x111D9 => LBNU
+      | let c: U32 if c <= 0x111DA => LBAL
+      | let c: U32 if c <= 0x111DB => LBBB
+      | let c: U32 if c <= 0x111DC => LBAL
+      | let c: U32 if c <= 0x111DF => LBBA
+      | let c: U32 if c <= 0x111E0 => LBXX
+      | let c: U32 if c <= 0x111F4 => LBAL
+      | let c: U32 if c <= 0x111FF => LBXX
+      | let c: U32 if c <= 0x11211 => LBAL
+      | let c: U32 if c <= 0x11212 => LBXX
+      | let c: U32 if c <= 0x1122B => LBAL
+      | let c: U32 if c <= 0x11237 => LBCM
+      | let c: U32 if c <= 0x11239 => LBBA
+      | let c: U32 if c <= 0x1123A => LBAL
+      | let c: U32 if c <= 0x1123C => LBBA
+      | let c: U32 if c <= 0x1123D => LBAL
+      | let c: U32 if c <= 0x1123E => LBCM
+      | let c: U32 if c <= 0x11240 => LBAL
+      | let c: U32 if c <= 0x11241 => LBCM
+      | let c: U32 if c <= 0x1127F => LBXX
+      | let c: U32 if c <= 0x11286 => LBAL
+      | let c: U32 if c <= 0x11287 => LBXX
+      | let c: U32 if c <= 0x11288 => LBAL
+      | let c: U32 if c <= 0x11289 => LBXX
+      | let c: U32 if c <= 0x1128D => LBAL
+      | let c: U32 if c <= 0x1128E => LBXX
+      | let c: U32 if c <= 0x1129D => LBAL
+      | let c: U32 if c <= 0x1129E => LBXX
+      | let c: U32 if c <= 0x112A8 => LBAL
+      | let c: U32 if c <= 0x112A9 => LBBA
+      | let c: U32 if c <= 0x112AF => LBXX
+      | let c: U32 if c <= 0x112DE => LBAL
+      | let c: U32 if c <= 0x112EA => LBCM
+      | let c: U32 if c <= 0x112EF => LBXX
+      | let c: U32 if c <= 0x112F9 => LBNU
+      | let c: U32 if c <= 0x112FF => LBXX
+      | let c: U32 if c <= 0x11303 => LBCM
+      | let c: U32 if c <= 0x11304 => LBXX
+      | let c: U32 if c <= 0x1130C => LBAK
+      | let c: U32 if c <= 0x1130E => LBXX
+      | let c: U32 if c <= 0x11310 => LBAK
+      | let c: U32 if c <= 0x11312 => LBXX
+      | let c: U32 if c <= 0x11328 => LBAK
+      | let c: U32 if c <= 0x11329 => LBXX
+      | let c: U32 if c <= 0x11330 => LBAK
+      | let c: U32 if c <= 0x11331 => LBXX
+      | let c: U32 if c <= 0x11333 => LBAK
+      | let c: U32 if c <= 0x11334 => LBXX
+      | let c: U32 if c <= 0x11339 => LBAK
+      | let c: U32 if c <= 0x1133A => LBXX
+      | let c: U32 if c <= 0x1133C => LBCM
+      | let c: U32 if c <= 0x1133D => LBBA
+      | let c: U32 if c <= 0x11344 => LBCM
+      | let c: U32 if c <= 0x11346 => LBXX
+      | let c: U32 if c <= 0x11348 => LBCM
+      | let c: U32 if c <= 0x1134A => LBXX
+      | let c: U32 if c <= 0x1134C => LBCM
+      | let c: U32 if c <= 0x1134D => LBVI
+      | let c: U32 if c <= 0x1134F => LBXX
+      | let c: U32 if c <= 0x11350 => LBAS
+      | let c: U32 if c <= 0x11356 => LBXX
+      | let c: U32 if c <= 0x11357 => LBCM
+      | let c: U32 if c <= 0x1135C => LBXX
+      | let c: U32 if c <= 0x1135D => LBBA
+      | let c: U32 if c <= 0x1135F => LBAS
+      | let c: U32 if c <= 0x11361 => LBAK
+      | let c: U32 if c <= 0x11363 => LBCM
+      | let c: U32 if c <= 0x11365 => LBXX
+      | let c: U32 if c <= 0x1136C => LBCM
+      | let c: U32 if c <= 0x1136F => LBXX
+      | let c: U32 if c <= 0x11374 => LBCM
+      | let c: U32 if c <= 0x1137F => LBXX
+      | let c: U32 if c <= 0x11389 => LBAS
+      | let c: U32 if c <= 0x1138A => LBXX
+      | let c: U32 if c <= 0x1138B => LBAS
+      | let c: U32 if c <= 0x1138D => LBXX
+      | let c: U32 if c <= 0x1138E => LBAS
+      | let c: U32 if c <= 0x1138F => LBXX
+      | let c: U32 if c <= 0x11391 => LBAS
+      | let c: U32 if c <= 0x113B5 => LBAK
+      | let c: U32 if c <= 0x113B6 => LBXX
+      | let c: U32 if c <= 0x113B7 => LBID
+      | let c: U32 if c <= 0x113C0 => LBCM
+      | let c: U32 if c <= 0x113C1 => LBXX
+      | let c: U32 if c <= 0x113C2 => LBCM
+      | let c: U32 if c <= 0x113C4 => LBXX
+      | let c: U32 if c <= 0x113C5 => LBCM
+      | let c: U32 if c <= 0x113C6 => LBXX
+      | let c: U32 if c <= 0x113CA => LBCM
+      | let c: U32 if c <= 0x113CB => LBXX
+      | let c: U32 if c <= 0x113CF => LBCM
+      | let c: U32 if c <= 0x113D0 => LBVI
+      | let c: U32 if c <= 0x113D1 => LBAP
+      | let c: U32 if c <= 0x113D2 => LBCM
+      | let c: U32 if c <= 0x113D5 => LBID
+      | let c: U32 if c <= 0x113D6 => LBXX
+      | let c: U32 if c <= 0x113D8 => LBID
+      | let c: U32 if c <= 0x113E0 => LBXX
+      | let c: U32 if c <= 0x113E2 => LBCM
+      | let c: U32 if c <= 0x113FF => LBXX
+      | let c: U32 if c <= 0x11434 => LBAL
+      | let c: U32 if c <= 0x11446 => LBCM
+      | let c: U32 if c <= 0x1144A => LBAL
+      | let c: U32 if c <= 0x1144E => LBBA
+      | let c: U32 if c <= 0x1144F => LBAL
+      | let c: U32 if c <= 0x11459 => LBNU
+      | let c: U32 if c <= 0x1145B => LBBA
+      | let c: U32 if c <= 0x1145C => LBXX
+      | let c: U32 if c <= 0x1145D => LBAL
+      | let c: U32 if c <= 0x1145E => LBCM
+      | let c: U32 if c <= 0x11461 => LBAL
+      | let c: U32 if c <= 0x1147F => LBXX
+      | let c: U32 if c <= 0x114AF => LBAL
+      | let c: U32 if c <= 0x114C3 => LBCM
+      | let c: U32 if c <= 0x114C7 => LBAL
+      | let c: U32 if c <= 0x114CF => LBXX
+      | let c: U32 if c <= 0x114D9 => LBNU
+      | let c: U32 if c <= 0x1157F => LBXX
+      | let c: U32 if c <= 0x115AE => LBAL
+      | let c: U32 if c <= 0x115B5 => LBCM
+      | let c: U32 if c <= 0x115B7 => LBXX
+      | let c: U32 if c <= 0x115C0 => LBCM
+      | let c: U32 if c <= 0x115C1 => LBBB
+      | let c: U32 if c <= 0x115C3 => LBBA
+      | let c: U32 if c <= 0x115C5 => LBEX
+      | let c: U32 if c <= 0x115C8 => LBAL
+      | let c: U32 if c <= 0x115D7 => LBBA
+      | let c: U32 if c <= 0x115DB => LBAL
+      | let c: U32 if c <= 0x115DD => LBCM
+      | let c: U32 if c <= 0x115FF => LBXX
+      | let c: U32 if c <= 0x1162F => LBAL
+      | let c: U32 if c <= 0x11640 => LBCM
+      | let c: U32 if c <= 0x11642 => LBBA
+      | let c: U32 if c <= 0x11644 => LBAL
+      | let c: U32 if c <= 0x1164F => LBXX
+      | let c: U32 if c <= 0x11659 => LBNU
+      | let c: U32 if c <= 0x1165F => LBXX
+      | let c: U32 if c <= 0x1166C => LBBB
+      | let c: U32 if c <= 0x1167F => LBXX
+      | let c: U32 if c <= 0x116AA => LBAL
+      | let c: U32 if c <= 0x116B7 => LBCM
+      | let c: U32 if c <= 0x116B9 => LBAL
+      | let c: U32 if c <= 0x116BF => LBXX
+      | let c: U32 if c <= 0x116C9 => LBNU
+      | let c: U32 if c <= 0x116CF => LBXX
+      | let c: U32 if c <= 0x116E3 => LBNU
+      | let c: U32 if c <= 0x116FF => LBXX
+      | let c: U32 if c <= 0x1171A => LBSA
+      | let c: U32 if c <= 0x1171C => LBXX
+      | let c: U32 if c <= 0x1172B => LBSA
+      | let c: U32 if c <= 0x1172F => LBXX
+      | let c: U32 if c <= 0x11739 => LBNU
+      | let c: U32 if c <= 0x1173B => LBSA
+      | let c: U32 if c <= 0x1173E => LBBA
+      | let c: U32 if c <= 0x11746 => LBSA
+      | let c: U32 if c <= 0x117FF => LBXX
+      | let c: U32 if c <= 0x1182B => LBAL
+      | let c: U32 if c <= 0x1183A => LBCM
+      | let c: U32 if c <= 0x1183B => LBAL
+      | let c: U32 if c <= 0x1189F => LBXX
+      | let c: U32 if c <= 0x118DF => LBAL
+      | let c: U32 if c <= 0x118E9 => LBNU
+      | let c: U32 if c <= 0x118F2 => LBAL
+      | let c: U32 if c <= 0x118FE => LBXX
+      | let c: U32 if c <= 0x118FF => LBAL
+      | let c: U32 if c <= 0x11906 => LBAK
+      | let c: U32 if c <= 0x11908 => LBXX
+      | let c: U32 if c <= 0x11909 => LBAK
+      | let c: U32 if c <= 0x1190B => LBXX
+      | let c: U32 if c <= 0x11913 => LBAK
+      | let c: U32 if c <= 0x11914 => LBXX
+      | let c: U32 if c <= 0x11916 => LBAK
+      | let c: U32 if c <= 0x11917 => LBXX
+      | let c: U32 if c <= 0x1192F => LBAK
+      | let c: U32 if c <= 0x11935 => LBCM
+      | let c: U32 if c <= 0x11936 => LBXX
+      | let c: U32 if c <= 0x11938 => LBCM
+      | let c: U32 if c <= 0x1193A => LBXX
+      | let c: U32 if c <= 0x1193D => LBCM
+      | let c: U32 if c <= 0x1193E => LBVI
+      | let c: U32 if c <= 0x1193F => LBAP
+      | let c: U32 if c <= 0x11940 => LBCM
+      | let c: U32 if c <= 0x11941 => LBAP
+      | let c: U32 if c <= 0x11943 => LBCM
+      | let c: U32 if c <= 0x11946 => LBBA
+      | let c: U32 if c <= 0x1194F => LBXX
+      | let c: U32 if c <= 0x11959 => LBAS
+      | let c: U32 if c <= 0x1199F => LBXX
+      | let c: U32 if c <= 0x119A7 => LBAL
+      | let c: U32 if c <= 0x119A9 => LBXX
+      | let c: U32 if c <= 0x119D0 => LBAL
+      | let c: U32 if c <= 0x119D7 => LBCM
+      | let c: U32 if c <= 0x119D9 => LBXX
+      | let c: U32 if c <= 0x119E0 => LBCM
+      | let c: U32 if c <= 0x119E1 => LBAL
+      | let c: U32 if c <= 0x119E2 => LBBB
+      | let c: U32 if c <= 0x119E3 => LBAL
+      | let c: U32 if c <= 0x119E4 => LBCM
+      | let c: U32 if c <= 0x119FF => LBXX
+      | let c: U32 if c <= 0x11A00 => LBAL
+      | let c: U32 if c <= 0x11A0A => LBCM
+      | let c: U32 if c <= 0x11A32 => LBAL
+      | let c: U32 if c <= 0x11A39 => LBCM
+      | let c: U32 if c <= 0x11A3A => LBAL
+      | let c: U32 if c <= 0x11A3E => LBCM
+      | let c: U32 if c <= 0x11A3F => LBBB
+      | let c: U32 if c <= 0x11A40 => LBAL
+      | let c: U32 if c <= 0x11A44 => LBBA
+      | let c: U32 if c <= 0x11A45 => LBBB
+      | let c: U32 if c <= 0x11A46 => LBAL
+      | let c: U32 if c <= 0x11A47 => LBCM
+      | let c: U32 if c <= 0x11A4F => LBXX
+      | let c: U32 if c <= 0x11A50 => LBAL
+      | let c: U32 if c <= 0x11A5B => LBCM
+      | let c: U32 if c <= 0x11A89 => LBAL
+      | let c: U32 if c <= 0x11A99 => LBCM
+      | let c: U32 if c <= 0x11A9C => LBBA
+      | let c: U32 if c <= 0x11A9D => LBAL
+      | let c: U32 if c <= 0x11AA0 => LBBB
+      | let c: U32 if c <= 0x11AA2 => LBBA
+      | let c: U32 if c <= 0x11AAF => LBXX
+      | let c: U32 if c <= 0x11AF8 => LBAL
+      | let c: U32 if c <= 0x11AFF => LBXX
+      | let c: U32 if c <= 0x11B09 => LBBB
+      | let c: U32 if c <= 0x11BBF => LBXX
+      | let c: U32 if c <= 0x11BE1 => LBAL
+      | let c: U32 if c <= 0x11BEF => LBXX
+      | let c: U32 if c <= 0x11BF9 => LBNU
+      | let c: U32 if c <= 0x11BFF => LBXX
+      | let c: U32 if c <= 0x11C08 => LBAL
+      | let c: U32 if c <= 0x11C09 => LBXX
+      | let c: U32 if c <= 0x11C2E => LBAL
+      | let c: U32 if c <= 0x11C36 => LBCM
+      | let c: U32 if c <= 0x11C37 => LBXX
+      | let c: U32 if c <= 0x11C3F => LBCM
+      | let c: U32 if c <= 0x11C40 => LBAL
+      | let c: U32 if c <= 0x11C45 => LBBA
+      | let c: U32 if c <= 0x11C4F => LBXX
+      | let c: U32 if c <= 0x11C59 => LBNU
+      | let c: U32 if c <= 0x11C6C => LBAL
+      | let c: U32 if c <= 0x11C6F => LBXX
+      | let c: U32 if c <= 0x11C70 => LBBB
+      | let c: U32 if c <= 0x11C71 => LBEX
+      | let c: U32 if c <= 0x11C8F => LBAL
+      | let c: U32 if c <= 0x11C91 => LBXX
+      | let c: U32 if c <= 0x11CA7 => LBCM
+      | let c: U32 if c <= 0x11CA8 => LBXX
+      | let c: U32 if c <= 0x11CB6 => LBCM
+      | let c: U32 if c <= 0x11CFF => LBXX
+      | let c: U32 if c <= 0x11D06 => LBAL
+      | let c: U32 if c <= 0x11D07 => LBXX
+      | let c: U32 if c <= 0x11D09 => LBAL
+      | let c: U32 if c <= 0x11D0A => LBXX
+      | let c: U32 if c <= 0x11D30 => LBAL
+      | let c: U32 if c <= 0x11D36 => LBCM
+      | let c: U32 if c <= 0x11D39 => LBXX
+      | let c: U32 if c <= 0x11D3A => LBCM
+      | let c: U32 if c <= 0x11D3B => LBXX
+      | let c: U32 if c <= 0x11D3D => LBCM
+      | let c: U32 if c <= 0x11D3E => LBXX
+      | let c: U32 if c <= 0x11D45 => LBCM
+      | let c: U32 if c <= 0x11D46 => LBAL
+      | let c: U32 if c <= 0x11D47 => LBCM
+      | let c: U32 if c <= 0x11D4F => LBXX
+      | let c: U32 if c <= 0x11D59 => LBNU
+      | let c: U32 if c <= 0x11D5F => LBXX
+      | let c: U32 if c <= 0x11D65 => LBAL
+      | let c: U32 if c <= 0x11D66 => LBXX
+      | let c: U32 if c <= 0x11D68 => LBAL
+      | let c: U32 if c <= 0x11D69 => LBXX
+      | let c: U32 if c <= 0x11D89 => LBAL
+      | let c: U32 if c <= 0x11D8E => LBCM
+      | let c: U32 if c <= 0x11D8F => LBXX
+      | let c: U32 if c <= 0x11D91 => LBCM
+      | let c: U32 if c <= 0x11D92 => LBXX
+      | let c: U32 if c <= 0x11D97 => LBCM
+      | let c: U32 if c <= 0x11D98 => LBAL
+      | let c: U32 if c <= 0x11D9F => LBXX
+      | let c: U32 if c <= 0x11DA9 => LBNU
+      | let c: U32 if c <= 0x11EDF => LBXX
+      | let c: U32 if c <= 0x11EF1 => LBAS
+      | let c: U32 if c <= 0x11EF2 => LBBA
+      | let c: U32 if c <= 0x11EF6 => LBCM
+      | let c: U32 if c <= 0x11EF8 => LBBA
+      | let c: U32 if c <= 0x11EFF => LBXX
+      | let c: U32 if c <= 0x11F01 => LBCM
+      | let c: U32 if c <= 0x11F02 => LBAP
+      | let c: U32 if c <= 0x11F03 => LBCM
+      | let c: U32 if c <= 0x11F10 => LBAK
+      | let c: U32 if c <= 0x11F11 => LBXX
+      | let c: U32 if c <= 0x11F33 => LBAK
+      | let c: U32 if c <= 0x11F3A => LBCM
+      | let c: U32 if c <= 0x11F3D => LBXX
+      | let c: U32 if c <= 0x11F41 => LBCM
+      | let c: U32 if c <= 0x11F42 => LBVI
+      | let c: U32 if c <= 0x11F44 => LBBA
+      | let c: U32 if c <= 0x11F4F => LBID
+      | let c: U32 if c <= 0x11F59 => LBAS
+      | let c: U32 if c <= 0x11F5A => LBCM
+      | let c: U32 if c <= 0x11FAF => LBXX
+      | let c: U32 if c <= 0x11FB0 => LBAL
+      | let c: U32 if c <= 0x11FBF => LBXX
+      | let c: U32 if c <= 0x11FDC => LBAL
+      | let c: U32 if c <= 0x11FE0 => LBPO
+      | let c: U32 if c <= 0x11FF1 => LBAL
+      | let c: U32 if c <= 0x11FFE => LBXX
+      | let c: U32 if c <= 0x11FFF => LBBA
+      else LBXX
+      end
+    | 0x0012 =>
+      match cp
+      | let c: U32 if c <= 0x12399 => LBAL
+      | let c: U32 if c <= 0x123FF => LBXX
+      | let c: U32 if c <= 0x1246E => LBAL
+      | let c: U32 if c <= 0x1246F => LBXX
+      | let c: U32 if c <= 0x12474 => LBBA
+      | let c: U32 if c <= 0x1247F => LBXX
+      | let c: U32 if c <= 0x12543 => LBAL
+      | let c: U32 if c <= 0x12F8F => LBXX
+      | let c: U32 if c <= 0x12FF2 => LBAL
+      else LBXX
+      end
+    | 0x0013 =>
+      match cp
+      | let c: U32 if c <= 0x13257 => LBAL
+      | let c: U32 if c <= 0x1325A => LBOP
+      | let c: U32 if c <= 0x1325D => LBCL
+      | let c: U32 if c <= 0x13281 => LBAL
+      | let c: U32 if c <= 0x13282 => LBCL
+      | let c: U32 if c <= 0x13285 => LBAL
+      | let c: U32 if c <= 0x13286 => LBOP
+      | let c: U32 if c <= 0x13287 => LBCL
+      | let c: U32 if c <= 0x13288 => LBOP
+      | let c: U32 if c <= 0x13289 => LBCL
+      | let c: U32 if c <= 0x13378 => LBAL
+      | let c: U32 if c <= 0x13379 => LBOP
+      | let c: U32 if c <= 0x1337B => LBCL
+      | let c: U32 if c <= 0x1342E => LBAL
+      | let c: U32 if c <= 0x1342F => LBOP
+      | let c: U32 if c <= 0x13436 => LBGL
+      | let c: U32 if c <= 0x13437 => LBOP
+      | let c: U32 if c <= 0x13438 => LBCL
+      | let c: U32 if c <= 0x1343B => LBGL
+      | let c: U32 if c <= 0x1343C => LBOP
+      | let c: U32 if c <= 0x1343D => LBCL
+      | let c: U32 if c <= 0x1343E => LBOP
+      | let c: U32 if c <= 0x1343F => LBCL
+      | let c: U32 if c <= 0x13440 => LBCM
+      | let c: U32 if c <= 0x13446 => LBAL
+      | let c: U32 if c <= 0x13455 => LBCM
+      | let c: U32 if c <= 0x1345F => LBXX
+      | let c: U32 if c <= 0x13FFF => LBAL
+      else LBXX
+      end
+    | 0x0014 =>
+      match cp
+      | let c: U32 if c <= 0x143FA => LBAL
+      | let c: U32 if c <= 0x143FF => LBXX
+      | let c: U32 if c <= 0x145CD => LBAL
+      | let c: U32 if c <= 0x145CE => LBOP
+      | let c: U32 if c <= 0x145CF => LBCL
+      | let c: U32 if c <= 0x14646 => LBAL
+      else LBXX
+      end
+    | 0x0016 =>
+      match cp
+      | let c: U32 if c <= 0x160FF => LBXX
+      | let c: U32 if c <= 0x1611D => LBAS
+      | let c: U32 if c <= 0x1612F => LBCM
+      | let c: U32 if c <= 0x16139 => LBAS
+      | let c: U32 if c <= 0x167FF => LBXX
+      | let c: U32 if c <= 0x16A38 => LBAL
+      | let c: U32 if c <= 0x16A3F => LBXX
+      | let c: U32 if c <= 0x16A5E => LBAL
+      | let c: U32 if c <= 0x16A5F => LBXX
+      | let c: U32 if c <= 0x16A69 => LBNU
+      | let c: U32 if c <= 0x16A6D => LBXX
+      | let c: U32 if c <= 0x16A6F => LBBA
+      | let c: U32 if c <= 0x16ABE => LBAL
+      | let c: U32 if c <= 0x16ABF => LBXX
+      | let c: U32 if c <= 0x16AC9 => LBNU
+      | let c: U32 if c <= 0x16ACF => LBXX
+      | let c: U32 if c <= 0x16AED => LBAL
+      | let c: U32 if c <= 0x16AEF => LBXX
+      | let c: U32 if c <= 0x16AF4 => LBCM
+      | let c: U32 if c <= 0x16AF5 => LBBA
+      | let c: U32 if c <= 0x16AFF => LBXX
+      | let c: U32 if c <= 0x16B2F => LBAL
+      | let c: U32 if c <= 0x16B36 => LBCM
+      | let c: U32 if c <= 0x16B39 => LBBA
+      | let c: U32 if c <= 0x16B43 => LBAL
+      | let c: U32 if c <= 0x16B44 => LBBA
+      | let c: U32 if c <= 0x16B45 => LBAL
+      | let c: U32 if c <= 0x16B4F => LBXX
+      | let c: U32 if c <= 0x16B59 => LBNU
+      | let c: U32 if c <= 0x16B5A => LBXX
+      | let c: U32 if c <= 0x16B61 => LBAL
+      | let c: U32 if c <= 0x16B62 => LBXX
+      | let c: U32 if c <= 0x16B77 => LBAL
+      | let c: U32 if c <= 0x16B7C => LBXX
+      | let c: U32 if c <= 0x16B8F => LBAL
+      | let c: U32 if c <= 0x16D3F => LBXX
+      | let c: U32 if c <= 0x16D6D => LBAL
+      | let c: U32 if c <= 0x16D6F => LBBA
+      | let c: U32 if c <= 0x16D79 => LBNU
+      | let c: U32 if c <= 0x16E3F => LBXX
+      | let c: U32 if c <= 0x16E96 => LBAL
+      | let c: U32 if c <= 0x16E98 => LBBA
+      | let c: U32 if c <= 0x16E9A => LBAL
+      | let c: U32 if c <= 0x16EFF => LBXX
+      | let c: U32 if c <= 0x16F4A => LBAL
+      | let c: U32 if c <= 0x16F4E => LBXX
+      | let c: U32 if c <= 0x16F4F => LBCM
+      | let c: U32 if c <= 0x16F50 => LBAL
+      | let c: U32 if c <= 0x16F87 => LBCM
+      | let c: U32 if c <= 0x16F8E => LBXX
+      | let c: U32 if c <= 0x16F92 => LBCM
+      | let c: U32 if c <= 0x16F9F => LBAL
+      | let c: U32 if c <= 0x16FDF => LBXX
+      | let c: U32 if c <= 0x16FE3 => LBNS
+      | let c: U32 if c <= 0x16FE4 => LBGL
+      | let c: U32 if c <= 0x16FEF => LBXX
+      | let c: U32 if c <= 0x16FF1 => LBCM
+      else LBXX
+      end
+    | 0x0017 =>
+      match cp
+      | let c: U32 if c <= 0x17FFF => LBID
+      else LBXX
+      end
+    | 0x0018 =>
+      match cp
+      | let c: U32 if c <= 0x187F7 => LBID
+      | let c: U32 if c <= 0x187FF => LBXX
+      | let c: U32 if c <= 0x18AFF => LBID
+      | let c: U32 if c <= 0x18CD5 => LBAL
+      | let c: U32 if c <= 0x18CFE => LBXX
+      | let c: U32 if c <= 0x18CFF => LBAL
+      | let c: U32 if c <= 0x18D08 => LBID
+      else LBXX
+      end
+    | 0x001A =>
+      match cp
+      | let c: U32 if c <= 0x1AFEF => LBXX
+      | let c: U32 if c <= 0x1AFF3 => LBAL
+      | let c: U32 if c <= 0x1AFF4 => LBXX
+      | let c: U32 if c <= 0x1AFFB => LBAL
+      | let c: U32 if c <= 0x1AFFC => LBXX
+      | let c: U32 if c <= 0x1AFFE => LBAL
+      else LBXX
+      end
+    | 0x001B =>
+      match cp
+      | let c: U32 if c <= 0x1B122 => LBID
+      | let c: U32 if c <= 0x1B131 => LBXX
+      | let c: U32 if c <= 0x1B132 => LBCJ
+      | let c: U32 if c <= 0x1B14F => LBXX
+      | let c: U32 if c <= 0x1B152 => LBCJ
+      | let c: U32 if c <= 0x1B154 => LBXX
+      | let c: U32 if c <= 0x1B155 => LBCJ
+      | let c: U32 if c <= 0x1B163 => LBXX
+      | let c: U32 if c <= 0x1B167 => LBCJ
+      | let c: U32 if c <= 0x1B16F => LBXX
+      | let c: U32 if c <= 0x1B2FB => LBID
+      | let c: U32 if c <= 0x1BBFF => LBXX
+      | let c: U32 if c <= 0x1BC6A => LBAL
+      | let c: U32 if c <= 0x1BC6F => LBXX
+      | let c: U32 if c <= 0x1BC7C => LBAL
+      | let c: U32 if c <= 0x1BC7F => LBXX
+      | let c: U32 if c <= 0x1BC88 => LBAL
+      | let c: U32 if c <= 0x1BC8F => LBXX
+      | let c: U32 if c <= 0x1BC99 => LBAL
+      | let c: U32 if c <= 0x1BC9B => LBXX
+      | let c: U32 if c <= 0x1BC9C => LBAL
+      | let c: U32 if c <= 0x1BC9E => LBCM
+      | let c: U32 if c <= 0x1BC9F => LBBA
+      | let c: U32 if c <= 0x1BCA3 => LBCM
+      else LBXX
+      end
+    | 0x001C =>
+      match cp
+      | let c: U32 if c <= 0x1CBFF => LBXX
+      | let c: U32 if c <= 0x1CCEF => LBAL
+      | let c: U32 if c <= 0x1CCF9 => LBNU
+      | let c: U32 if c <= 0x1CCFF => LBXX
+      | let c: U32 if c <= 0x1CEB3 => LBAL
+      | let c: U32 if c <= 0x1CEFF => LBXX
+      | let c: U32 if c <= 0x1CF2D => LBCM
+      | let c: U32 if c <= 0x1CF2F => LBXX
+      | let c: U32 if c <= 0x1CF46 => LBCM
+      | let c: U32 if c <= 0x1CF4F => LBXX
+      | let c: U32 if c <= 0x1CFC3 => LBAL
+      else LBXX
+      end
+    | 0x001D =>
+      match cp
+      | let c: U32 if c <= 0x1D0F5 => LBAL
+      | let c: U32 if c <= 0x1D0FF => LBXX
+      | let c: U32 if c <= 0x1D126 => LBAL
+      | let c: U32 if c <= 0x1D128 => LBXX
+      | let c: U32 if c <= 0x1D164 => LBAL
+      | let c: U32 if c <= 0x1D169 => LBCM
+      | let c: U32 if c <= 0x1D16C => LBAL
+      | let c: U32 if c <= 0x1D182 => LBCM
+      | let c: U32 if c <= 0x1D184 => LBAL
+      | let c: U32 if c <= 0x1D18B => LBCM
+      | let c: U32 if c <= 0x1D1A9 => LBAL
+      | let c: U32 if c <= 0x1D1AD => LBCM
+      | let c: U32 if c <= 0x1D1EA => LBAL
+      | let c: U32 if c <= 0x1D1FF => LBXX
+      | let c: U32 if c <= 0x1D241 => LBAL
+      | let c: U32 if c <= 0x1D244 => LBCM
+      | let c: U32 if c <= 0x1D245 => LBAL
+      | let c: U32 if c <= 0x1D2BF => LBXX
+      | let c: U32 if c <= 0x1D2D3 => LBAL
+      | let c: U32 if c <= 0x1D2DF => LBXX
+      | let c: U32 if c <= 0x1D2F3 => LBAL
+      | let c: U32 if c <= 0x1D2FF => LBXX
+      | let c: U32 if c <= 0x1D356 => LBAL
+      | let c: U32 if c <= 0x1D35F => LBXX
+      | let c: U32 if c <= 0x1D378 => LBAL
+      | let c: U32 if c <= 0x1D3FF => LBXX
+      | let c: U32 if c <= 0x1D454 => LBAL
+      | let c: U32 if c <= 0x1D455 => LBXX
+      | let c: U32 if c <= 0x1D49C => LBAL
+      | let c: U32 if c <= 0x1D49D => LBXX
+      | let c: U32 if c <= 0x1D49F => LBAL
+      | let c: U32 if c <= 0x1D4A1 => LBXX
+      | let c: U32 if c <= 0x1D4A2 => LBAL
+      | let c: U32 if c <= 0x1D4A4 => LBXX
+      | let c: U32 if c <= 0x1D4A6 => LBAL
+      | let c: U32 if c <= 0x1D4A8 => LBXX
+      | let c: U32 if c <= 0x1D4AC => LBAL
+      | let c: U32 if c <= 0x1D4AD => LBXX
+      | let c: U32 if c <= 0x1D4B9 => LBAL
+      | let c: U32 if c <= 0x1D4BA => LBXX
+      | let c: U32 if c <= 0x1D4BB => LBAL
+      | let c: U32 if c <= 0x1D4BC => LBXX
+      | let c: U32 if c <= 0x1D4C3 => LBAL
+      | let c: U32 if c <= 0x1D4C4 => LBXX
+      | let c: U32 if c <= 0x1D505 => LBAL
+      | let c: U32 if c <= 0x1D506 => LBXX
+      | let c: U32 if c <= 0x1D50A => LBAL
+      | let c: U32 if c <= 0x1D50C => LBXX
+      | let c: U32 if c <= 0x1D514 => LBAL
+      | let c: U32 if c <= 0x1D515 => LBXX
+      | let c: U32 if c <= 0x1D51C => LBAL
+      | let c: U32 if c <= 0x1D51D => LBXX
+      | let c: U32 if c <= 0x1D539 => LBAL
+      | let c: U32 if c <= 0x1D53A => LBXX
+      | let c: U32 if c <= 0x1D53E => LBAL
+      | let c: U32 if c <= 0x1D53F => LBXX
+      | let c: U32 if c <= 0x1D544 => LBAL
+      | let c: U32 if c <= 0x1D545 => LBXX
+      | let c: U32 if c <= 0x1D546 => LBAL
+      | let c: U32 if c <= 0x1D549 => LBXX
+      | let c: U32 if c <= 0x1D550 => LBAL
+      | let c: U32 if c <= 0x1D551 => LBXX
+      | let c: U32 if c <= 0x1D6A5 => LBAL
+      | let c: U32 if c <= 0x1D6A7 => LBXX
+      | let c: U32 if c <= 0x1D7CB => LBAL
+      | let c: U32 if c <= 0x1D7CD => LBXX
+      | let c: U32 if c <= 0x1D7FF => LBNU
+      | let c: U32 if c <= 0x1D9FF => LBAL
+      | let c: U32 if c <= 0x1DA36 => LBCM
+      | let c: U32 if c <= 0x1DA3A => LBAL
+      | let c: U32 if c <= 0x1DA6C => LBCM
+      | let c: U32 if c <= 0x1DA74 => LBAL
+      | let c: U32 if c <= 0x1DA75 => LBCM
+      | let c: U32 if c <= 0x1DA83 => LBAL
+      | let c: U32 if c <= 0x1DA84 => LBCM
+      | let c: U32 if c <= 0x1DA86 => LBAL
+      | let c: U32 if c <= 0x1DA8A => LBBA
+      | let c: U32 if c <= 0x1DA8B => LBAL
+      | let c: U32 if c <= 0x1DA9A => LBXX
+      | let c: U32 if c <= 0x1DA9F => LBCM
+      | let c: U32 if c <= 0x1DAA0 => LBXX
+      | let c: U32 if c <= 0x1DAAF => LBCM
+      | let c: U32 if c <= 0x1DEFF => LBXX
+      | let c: U32 if c <= 0x1DF1E => LBAL
+      | let c: U32 if c <= 0x1DF24 => LBXX
+      | let c: U32 if c <= 0x1DF2A => LBAL
+      else LBXX
+      end
+    | 0x001E =>
+      match cp
+      | let c: U32 if c <= 0x1E006 => LBCM
+      | let c: U32 if c <= 0x1E007 => LBXX
+      | let c: U32 if c <= 0x1E018 => LBCM
+      | let c: U32 if c <= 0x1E01A => LBXX
+      | let c: U32 if c <= 0x1E021 => LBCM
+      | let c: U32 if c <= 0x1E022 => LBXX
+      | let c: U32 if c <= 0x1E024 => LBCM
+      | let c: U32 if c <= 0x1E025 => LBXX
+      | let c: U32 if c <= 0x1E02A => LBCM
+      | let c: U32 if c <= 0x1E02F => LBXX
+      | let c: U32 if c <= 0x1E06D => LBAL
+      | let c: U32 if c <= 0x1E08E => LBXX
+      | let c: U32 if c <= 0x1E08F => LBCM
+      | let c: U32 if c <= 0x1E0FF => LBXX
+      | let c: U32 if c <= 0x1E12C => LBAL
+      | let c: U32 if c <= 0x1E12F => LBXX
+      | let c: U32 if c <= 0x1E136 => LBCM
+      | let c: U32 if c <= 0x1E13D => LBAL
+      | let c: U32 if c <= 0x1E13F => LBXX
+      | let c: U32 if c <= 0x1E149 => LBNU
+      | let c: U32 if c <= 0x1E14D => LBXX
+      | let c: U32 if c <= 0x1E14F => LBAL
+      | let c: U32 if c <= 0x1E28F => LBXX
+      | let c: U32 if c <= 0x1E2AD => LBAL
+      | let c: U32 if c <= 0x1E2AE => LBCM
+      | let c: U32 if c <= 0x1E2BF => LBXX
+      | let c: U32 if c <= 0x1E2EB => LBAL
+      | let c: U32 if c <= 0x1E2EF => LBCM
+      | let c: U32 if c <= 0x1E2F9 => LBNU
+      | let c: U32 if c <= 0x1E2FE => LBXX
+      | let c: U32 if c <= 0x1E2FF => LBPR
+      | let c: U32 if c <= 0x1E4CF => LBXX
+      | let c: U32 if c <= 0x1E4EB => LBAL
+      | let c: U32 if c <= 0x1E4EF => LBCM
+      | let c: U32 if c <= 0x1E4F9 => LBNU
+      | let c: U32 if c <= 0x1E5CF => LBXX
+      | let c: U32 if c <= 0x1E5ED => LBAL
+      | let c: U32 if c <= 0x1E5EF => LBCM
+      | let c: U32 if c <= 0x1E5F0 => LBAL
+      | let c: U32 if c <= 0x1E5FA => LBNU
+      | let c: U32 if c <= 0x1E5FE => LBXX
+      | let c: U32 if c <= 0x1E5FF => LBAL
+      | let c: U32 if c <= 0x1E7DF => LBXX
+      | let c: U32 if c <= 0x1E7E6 => LBAL
+      | let c: U32 if c <= 0x1E7E7 => LBXX
+      | let c: U32 if c <= 0x1E7EB => LBAL
+      | let c: U32 if c <= 0x1E7EC => LBXX
+      | let c: U32 if c <= 0x1E7EE => LBAL
+      | let c: U32 if c <= 0x1E7EF => LBXX
+      | let c: U32 if c <= 0x1E7FE => LBAL
+      | let c: U32 if c <= 0x1E7FF => LBXX
+      | let c: U32 if c <= 0x1E8C4 => LBAL
+      | let c: U32 if c <= 0x1E8C6 => LBXX
+      | let c: U32 if c <= 0x1E8CF => LBAL
+      | let c: U32 if c <= 0x1E8D6 => LBCM
+      | let c: U32 if c <= 0x1E8FF => LBXX
+      | let c: U32 if c <= 0x1E943 => LBAL
+      | let c: U32 if c <= 0x1E94A => LBCM
+      | let c: U32 if c <= 0x1E94B => LBAL
+      | let c: U32 if c <= 0x1E94F => LBXX
+      | let c: U32 if c <= 0x1E959 => LBNU
+      | let c: U32 if c <= 0x1E95D => LBXX
+      | let c: U32 if c <= 0x1E95F => LBOP
+      | let c: U32 if c <= 0x1EC70 => LBXX
+      | let c: U32 if c <= 0x1ECAB => LBAL
+      | let c: U32 if c <= 0x1ECAC => LBPO
+      | let c: U32 if c <= 0x1ECAF => LBAL
+      | let c: U32 if c <= 0x1ECB0 => LBPO
+      | let c: U32 if c <= 0x1ECB4 => LBAL
+      | let c: U32 if c <= 0x1ED00 => LBXX
+      | let c: U32 if c <= 0x1ED3D => LBAL
+      | let c: U32 if c <= 0x1EDFF => LBXX
+      | let c: U32 if c <= 0x1EE03 => LBAL
+      | let c: U32 if c <= 0x1EE04 => LBXX
+      | let c: U32 if c <= 0x1EE1F => LBAL
+      | let c: U32 if c <= 0x1EE20 => LBXX
+      | let c: U32 if c <= 0x1EE22 => LBAL
+      | let c: U32 if c <= 0x1EE23 => LBXX
+      | let c: U32 if c <= 0x1EE24 => LBAL
+      | let c: U32 if c <= 0x1EE26 => LBXX
+      | let c: U32 if c <= 0x1EE27 => LBAL
+      | let c: U32 if c <= 0x1EE28 => LBXX
+      | let c: U32 if c <= 0x1EE32 => LBAL
+      | let c: U32 if c <= 0x1EE33 => LBXX
+      | let c: U32 if c <= 0x1EE37 => LBAL
+      | let c: U32 if c <= 0x1EE38 => LBXX
+      | let c: U32 if c <= 0x1EE39 => LBAL
+      | let c: U32 if c <= 0x1EE3A => LBXX
+      | let c: U32 if c <= 0x1EE3B => LBAL
+      | let c: U32 if c <= 0x1EE41 => LBXX
+      | let c: U32 if c <= 0x1EE42 => LBAL
+      | let c: U32 if c <= 0x1EE46 => LBXX
+      | let c: U32 if c <= 0x1EE47 => LBAL
+      | let c: U32 if c <= 0x1EE48 => LBXX
+      | let c: U32 if c <= 0x1EE49 => LBAL
+      | let c: U32 if c <= 0x1EE4A => LBXX
+      | let c: U32 if c <= 0x1EE4B => LBAL
+      | let c: U32 if c <= 0x1EE4C => LBXX
+      | let c: U32 if c <= 0x1EE4F => LBAL
+      | let c: U32 if c <= 0x1EE50 => LBXX
+      | let c: U32 if c <= 0x1EE52 => LBAL
+      | let c: U32 if c <= 0x1EE53 => LBXX
+      | let c: U32 if c <= 0x1EE54 => LBAL
+      | let c: U32 if c <= 0x1EE56 => LBXX
+      | let c: U32 if c <= 0x1EE57 => LBAL
+      | let c: U32 if c <= 0x1EE58 => LBXX
+      | let c: U32 if c <= 0x1EE59 => LBAL
+      | let c: U32 if c <= 0x1EE5A => LBXX
+      | let c: U32 if c <= 0x1EE5B => LBAL
+      | let c: U32 if c <= 0x1EE5C => LBXX
+      | let c: U32 if c <= 0x1EE5D => LBAL
+      | let c: U32 if c <= 0x1EE5E => LBXX
+      | let c: U32 if c <= 0x1EE5F => LBAL
+      | let c: U32 if c <= 0x1EE60 => LBXX
+      | let c: U32 if c <= 0x1EE62 => LBAL
+      | let c: U32 if c <= 0x1EE63 => LBXX
+      | let c: U32 if c <= 0x1EE64 => LBAL
+      | let c: U32 if c <= 0x1EE66 => LBXX
+      | let c: U32 if c <= 0x1EE6A => LBAL
+      | let c: U32 if c <= 0x1EE6B => LBXX
+      | let c: U32 if c <= 0x1EE72 => LBAL
+      | let c: U32 if c <= 0x1EE73 => LBXX
+      | let c: U32 if c <= 0x1EE77 => LBAL
+      | let c: U32 if c <= 0x1EE78 => LBXX
+      | let c: U32 if c <= 0x1EE7C => LBAL
+      | let c: U32 if c <= 0x1EE7D => LBXX
+      | let c: U32 if c <= 0x1EE7E => LBAL
+      | let c: U32 if c <= 0x1EE7F => LBXX
+      | let c: U32 if c <= 0x1EE89 => LBAL
+      | let c: U32 if c <= 0x1EE8A => LBXX
+      | let c: U32 if c <= 0x1EE9B => LBAL
+      | let c: U32 if c <= 0x1EEA0 => LBXX
+      | let c: U32 if c <= 0x1EEA3 => LBAL
+      | let c: U32 if c <= 0x1EEA4 => LBXX
+      | let c: U32 if c <= 0x1EEA9 => LBAL
+      | let c: U32 if c <= 0x1EEAA => LBXX
+      | let c: U32 if c <= 0x1EEBB => LBAL
+      | let c: U32 if c <= 0x1EEEF => LBXX
+      | let c: U32 if c <= 0x1EEF1 => LBAL
+      else LBXX
+      end
+    | 0x001F =>
+      match cp
+      | let c: U32 if c <= 0x1F0FF => LBID
+      | let c: U32 if c <= 0x1F10C => LBAI
+      | let c: U32 if c <= 0x1F10F => LBAL
+      | let c: U32 if c <= 0x1F12D => LBAI
+      | let c: U32 if c <= 0x1F12F => LBAL
+      | let c: U32 if c <= 0x1F169 => LBAI
+      | let c: U32 if c <= 0x1F16F => LBAL
+      | let c: U32 if c <= 0x1F1AC => LBAI
+      | let c: U32 if c <= 0x1F1AD => LBAL
+      | let c: U32 if c <= 0x1F1E5 => LBID
+      | let c: U32 if c <= 0x1F1FF => LBRI
+      | let c: U32 if c <= 0x1F384 => LBID
+      | let c: U32 if c <= 0x1F385 => LBEB
+      | let c: U32 if c <= 0x1F39B => LBID
+      | let c: U32 if c <= 0x1F39D => LBAL
+      | let c: U32 if c <= 0x1F3B4 => LBID
+      | let c: U32 if c <= 0x1F3B6 => LBAL
+      | let c: U32 if c <= 0x1F3BB => LBID
+      | let c: U32 if c <= 0x1F3BC => LBAL
+      | let c: U32 if c <= 0x1F3C1 => LBID
+      | let c: U32 if c <= 0x1F3C4 => LBEB
+      | let c: U32 if c <= 0x1F3C6 => LBID
+      | let c: U32 if c <= 0x1F3C7 => LBEB
+      | let c: U32 if c <= 0x1F3C9 => LBID
+      | let c: U32 if c <= 0x1F3CC => LBEB
+      | let c: U32 if c <= 0x1F3FA => LBID
+      | let c: U32 if c <= 0x1F3FF => LBEM
+      | let c: U32 if c <= 0x1F441 => LBID
+      | let c: U32 if c <= 0x1F443 => LBEB
+      | let c: U32 if c <= 0x1F445 => LBID
+      | let c: U32 if c <= 0x1F450 => LBEB
+      | let c: U32 if c <= 0x1F465 => LBID
+      | let c: U32 if c <= 0x1F478 => LBEB
+      | let c: U32 if c <= 0x1F47B => LBID
+      | let c: U32 if c <= 0x1F47C => LBEB
+      | let c: U32 if c <= 0x1F480 => LBID
+      | let c: U32 if c <= 0x1F483 => LBEB
+      | let c: U32 if c <= 0x1F484 => LBID
+      | let c: U32 if c <= 0x1F487 => LBEB
+      | let c: U32 if c <= 0x1F48E => LBID
+      | let c: U32 if c <= 0x1F48F => LBEB
+      | let c: U32 if c <= 0x1F490 => LBID
+      | let c: U32 if c <= 0x1F491 => LBEB
+      | let c: U32 if c <= 0x1F49F => LBID
+      | let c: U32 if c <= 0x1F4A0 => LBAL
+      | let c: U32 if c <= 0x1F4A1 => LBID
+      | let c: U32 if c <= 0x1F4A2 => LBAL
+      | let c: U32 if c <= 0x1F4A3 => LBID
+      | let c: U32 if c <= 0x1F4A4 => LBAL
+      | let c: U32 if c <= 0x1F4A9 => LBID
+      | let c: U32 if c <= 0x1F4AA => LBEB
+      | let c: U32 if c <= 0x1F4AE => LBID
+      | let c: U32 if c <= 0x1F4AF => LBAL
+      | let c: U32 if c <= 0x1F4B0 => LBID
+      | let c: U32 if c <= 0x1F4B2 => LBAL
+      | let c: U32 if c <= 0x1F4FF => LBID
+      | let c: U32 if c <= 0x1F506 => LBAL
+      | let c: U32 if c <= 0x1F516 => LBID
+      | let c: U32 if c <= 0x1F524 => LBAL
+      | let c: U32 if c <= 0x1F531 => LBID
+      | let c: U32 if c <= 0x1F549 => LBAL
+      | let c: U32 if c <= 0x1F573 => LBID
+      | let c: U32 if c <= 0x1F575 => LBEB
+      | let c: U32 if c <= 0x1F579 => LBID
+      | let c: U32 if c <= 0x1F57A => LBEB
+      | let c: U32 if c <= 0x1F58F => LBID
+      | let c: U32 if c <= 0x1F590 => LBEB
+      | let c: U32 if c <= 0x1F594 => LBID
+      | let c: U32 if c <= 0x1F596 => LBEB
+      | let c: U32 if c <= 0x1F5D3 => LBID
+      | let c: U32 if c <= 0x1F5DB => LBAL
+      | let c: U32 if c <= 0x1F5F3 => LBID
+      | let c: U32 if c <= 0x1F5F9 => LBAL
+      | let c: U32 if c <= 0x1F644 => LBID
+      | let c: U32 if c <= 0x1F647 => LBEB
+      | let c: U32 if c <= 0x1F64A => LBID
+      | let c: U32 if c <= 0x1F64F => LBEB
+      | let c: U32 if c <= 0x1F675 => LBAL
+      | let c: U32 if c <= 0x1F678 => LBQU
+      | let c: U32 if c <= 0x1F67B => LBNS
+      | let c: U32 if c <= 0x1F67F => LBAL
+      | let c: U32 if c <= 0x1F6A2 => LBID
+      | let c: U32 if c <= 0x1F6A3 => LBEB
+      | let c: U32 if c <= 0x1F6B3 => LBID
+      | let c: U32 if c <= 0x1F6B6 => LBEB
+      | let c: U32 if c <= 0x1F6BF => LBID
+      | let c: U32 if c <= 0x1F6C0 => LBEB
+      | let c: U32 if c <= 0x1F6CB => LBID
+      | let c: U32 if c <= 0x1F6CC => LBEB
+      | let c: U32 if c <= 0x1F6FF => LBID
+      | let c: U32 if c <= 0x1F773 => LBAL
+      | let c: U32 if c <= 0x1F77F => LBID
+      | let c: U32 if c <= 0x1F7D4 => LBAL
+      | let c: U32 if c <= 0x1F7FF => LBID
+      | let c: U32 if c <= 0x1F80B => LBAL
+      | let c: U32 if c <= 0x1F80F => LBXX
+      | let c: U32 if c <= 0x1F847 => LBAL
+      | let c: U32 if c <= 0x1F84F => LBXX
+      | let c: U32 if c <= 0x1F859 => LBAL
+      | let c: U32 if c <= 0x1F85F => LBXX
+      | let c: U32 if c <= 0x1F887 => LBAL
+      | let c: U32 if c <= 0x1F88F => LBXX
+      | let c: U32 if c <= 0x1F8AD => LBAL
+      | let c: U32 if c <= 0x1F8AF => LBXX
+      | let c: U32 if c <= 0x1F8BB => LBAL
+      | let c: U32 if c <= 0x1F8BF => LBXX
+      | let c: U32 if c <= 0x1F8C1 => LBAL
+      | let c: U32 if c <= 0x1F8FF => LBXX
+      | let c: U32 if c <= 0x1F90B => LBAL
+      | let c: U32 if c <= 0x1F90C => LBEB
+      | let c: U32 if c <= 0x1F90E => LBID
+      | let c: U32 if c <= 0x1F90F => LBEB
+      | let c: U32 if c <= 0x1F917 => LBID
+      | let c: U32 if c <= 0x1F91F => LBEB
+      | let c: U32 if c <= 0x1F925 => LBID
+      | let c: U32 if c <= 0x1F926 => LBEB
+      | let c: U32 if c <= 0x1F92F => LBID
+      | let c: U32 if c <= 0x1F939 => LBEB
+      | let c: U32 if c <= 0x1F93B => LBID
+      | let c: U32 if c <= 0x1F93E => LBEB
+      | let c: U32 if c <= 0x1F976 => LBID
+      | let c: U32 if c <= 0x1F977 => LBEB
+      | let c: U32 if c <= 0x1F9B4 => LBID
+      | let c: U32 if c <= 0x1F9B6 => LBEB
+      | let c: U32 if c <= 0x1F9B7 => LBID
+      | let c: U32 if c <= 0x1F9B9 => LBEB
+      | let c: U32 if c <= 0x1F9BA => LBID
+      | let c: U32 if c <= 0x1F9BB => LBEB
+      | let c: U32 if c <= 0x1F9CC => LBID
+      | let c: U32 if c <= 0x1F9CF => LBEB
+      | let c: U32 if c <= 0x1F9D0 => LBID
+      | let c: U32 if c <= 0x1F9DD => LBEB
+      | let c: U32 if c <= 0x1F9FF => LBID
+      | let c: U32 if c <= 0x1FA53 => LBAL
+      | let c: U32 if c <= 0x1FAC2 => LBID
+      | let c: U32 if c <= 0x1FAC5 => LBEB
+      | let c: U32 if c <= 0x1FAEF => LBID
+      | let c: U32 if c <= 0x1FAF8 => LBEB
+      | let c: U32 if c <= 0x1FAFF => LBID
+      | let c: U32 if c <= 0x1FB92 => LBAL
+      | let c: U32 if c <= 0x1FB93 => LBXX
+      | let c: U32 if c <= 0x1FBEF => LBAL
+      | let c: U32 if c <= 0x1FBF9 => LBNU
+      | let c: U32 if c <= 0x1FBFF => LBXX
+      | let c: U32 if c <= 0x1FFFD => LBID
+      else LBXX
+      end
+    | 0x0020 =>
+      match cp
+      | let c: U32 if c <= 0x20FFF => LBID
+      else LBXX
+      end
+    | 0x0021 =>
+      match cp
+      | let c: U32 if c <= 0x21FFF => LBID
+      else LBXX
+      end
+    | 0x0022 =>
+      match cp
+      | let c: U32 if c <= 0x22FFF => LBID
+      else LBXX
+      end
+    | 0x0023 =>
+      match cp
+      | let c: U32 if c <= 0x23FFF => LBID
+      else LBXX
+      end
+    | 0x0024 =>
+      match cp
+      | let c: U32 if c <= 0x24FFF => LBID
+      else LBXX
+      end
+    | 0x0025 =>
+      match cp
+      | let c: U32 if c <= 0x25FFF => LBID
+      else LBXX
+      end
+    | 0x0026 =>
+      match cp
+      | let c: U32 if c <= 0x26FFF => LBID
+      else LBXX
+      end
+    | 0x0027 =>
+      match cp
+      | let c: U32 if c <= 0x27FFF => LBID
+      else LBXX
+      end
+    | 0x0028 =>
+      match cp
+      | let c: U32 if c <= 0x28FFF => LBID
+      else LBXX
+      end
+    | 0x0029 =>
+      match cp
+      | let c: U32 if c <= 0x29FFF => LBID
+      else LBXX
+      end
+    | 0x002A =>
+      match cp
+      | let c: U32 if c <= 0x2AFFF => LBID
+      else LBXX
+      end
+    | 0x002B =>
+      match cp
+      | let c: U32 if c <= 0x2BFFF => LBID
+      else LBXX
+      end
+    | 0x002C =>
+      match cp
+      | let c: U32 if c <= 0x2CFFF => LBID
+      else LBXX
+      end
+    | 0x002D =>
+      match cp
+      | let c: U32 if c <= 0x2DFFF => LBID
+      else LBXX
+      end
+    | 0x002E =>
+      match cp
+      | let c: U32 if c <= 0x2EFFF => LBID
+      else LBXX
+      end
+    | 0x002F =>
+      match cp
+      | let c: U32 if c <= 0x2FFFD => LBID
+      else LBXX
+      end
+    | 0x0030 =>
+      match cp
+      | let c: U32 if c <= 0x30FFF => LBID
+      else LBXX
+      end
+    | 0x0031 =>
+      match cp
+      | let c: U32 if c <= 0x31FFF => LBID
+      else LBXX
+      end
+    | 0x0032 =>
+      match cp
+      | let c: U32 if c <= 0x32FFF => LBID
+      else LBXX
+      end
+    | 0x0033 =>
+      match cp
+      | let c: U32 if c <= 0x33FFF => LBID
+      else LBXX
+      end
+    | 0x0034 =>
+      match cp
+      | let c: U32 if c <= 0x34FFF => LBID
+      else LBXX
+      end
+    | 0x0035 =>
+      match cp
+      | let c: U32 if c <= 0x35FFF => LBID
+      else LBXX
+      end
+    | 0x0036 =>
+      match cp
+      | let c: U32 if c <= 0x36FFF => LBID
+      else LBXX
+      end
+    | 0x0037 =>
+      match cp
+      | let c: U32 if c <= 0x37FFF => LBID
+      else LBXX
+      end
+    | 0x0038 =>
+      match cp
+      | let c: U32 if c <= 0x38FFF => LBID
+      else LBXX
+      end
+    | 0x0039 =>
+      match cp
+      | let c: U32 if c <= 0x39FFF => LBID
+      else LBXX
+      end
+    | 0x003A =>
+      match cp
+      | let c: U32 if c <= 0x3AFFF => LBID
+      else LBXX
+      end
+    | 0x003B =>
+      match cp
+      | let c: U32 if c <= 0x3BFFF => LBID
+      else LBXX
+      end
+    | 0x003C =>
+      match cp
+      | let c: U32 if c <= 0x3CFFF => LBID
+      else LBXX
+      end
+    | 0x003D =>
+      match cp
+      | let c: U32 if c <= 0x3DFFF => LBID
+      else LBXX
+      end
+    | 0x003E =>
+      match cp
+      | let c: U32 if c <= 0x3EFFF => LBID
+      else LBXX
+      end
+    | 0x003F =>
+      match cp
+      | let c: U32 if c <= 0x3FFFD => LBID
+      else LBXX
+      end
+    | 0x00E0 =>
+      match cp
+      | let c: U32 if c <= 0xE0000 => LBXX
+      | let c: U32 if c <= 0xE0001 => LBCM
+      | let c: U32 if c <= 0xE001F => LBXX
+      | let c: U32 if c <= 0xE007F => LBCM
+      | let c: U32 if c <= 0xE00FF => LBXX
+      | let c: U32 if c <= 0xE01EF => LBCM
+      else LBXX
+      end
+    | 0x00F0 =>
+      match cp
+      | let c: U32 if c <= 0xF0FFF => LBXX
+      else LBXX
+      end
+    | 0x00F1 =>
+      match cp
+      | let c: U32 if c <= 0xF1FFF => LBXX
+      else LBXX
+      end
+    | 0x00F2 =>
+      match cp
+      | let c: U32 if c <= 0xF2FFF => LBXX
+      else LBXX
+      end
+    | 0x00F3 =>
+      match cp
+      | let c: U32 if c <= 0xF3FFF => LBXX
+      else LBXX
+      end
+    | 0x00F4 =>
+      match cp
+      | let c: U32 if c <= 0xF4FFF => LBXX
+      else LBXX
+      end
+    | 0x00F5 =>
+      match cp
+      | let c: U32 if c <= 0xF5FFF => LBXX
+      else LBXX
+      end
+    | 0x00F6 =>
+      match cp
+      | let c: U32 if c <= 0xF6FFF => LBXX
+      else LBXX
+      end
+    | 0x00F7 =>
+      match cp
+      | let c: U32 if c <= 0xF7FFF => LBXX
+      else LBXX
+      end
+    | 0x00F8 =>
+      match cp
+      | let c: U32 if c <= 0xF8FFF => LBXX
+      else LBXX
+      end
+    | 0x00F9 =>
+      match cp
+      | let c: U32 if c <= 0xF9FFF => LBXX
+      else LBXX
+      end
+    | 0x00FA =>
+      match cp
+      | let c: U32 if c <= 0xFAFFF => LBXX
+      else LBXX
+      end
+    | 0x00FB =>
+      match cp
+      | let c: U32 if c <= 0xFBFFF => LBXX
+      else LBXX
+      end
+    | 0x00FC =>
+      match cp
+      | let c: U32 if c <= 0xFCFFF => LBXX
+      else LBXX
+      end
+    | 0x00FD =>
+      match cp
+      | let c: U32 if c <= 0xFDFFF => LBXX
+      else LBXX
+      end
+    | 0x00FE =>
+      match cp
+      | let c: U32 if c <= 0xFEFFF => LBXX
+      else LBXX
+      end
+    | 0x00FF =>
+      match cp
+      | let c: U32 if c <= 0xFFFFD => LBXX
+      else LBXX
+      end
+    | 0x0100 =>
+      match cp
+      | let c: U32 if c <= 0x100FFF => LBXX
+      else LBXX
+      end
+    | 0x0101 =>
+      match cp
+      | let c: U32 if c <= 0x101FFF => LBXX
+      else LBXX
+      end
+    | 0x0102 =>
+      match cp
+      | let c: U32 if c <= 0x102FFF => LBXX
+      else LBXX
+      end
+    | 0x0103 =>
+      match cp
+      | let c: U32 if c <= 0x103FFF => LBXX
+      else LBXX
+      end
+    | 0x0104 =>
+      match cp
+      | let c: U32 if c <= 0x104FFF => LBXX
+      else LBXX
+      end
+    | 0x0105 =>
+      match cp
+      | let c: U32 if c <= 0x105FFF => LBXX
+      else LBXX
+      end
+    | 0x0106 =>
+      match cp
+      | let c: U32 if c <= 0x106FFF => LBXX
+      else LBXX
+      end
+    | 0x0107 =>
+      match cp
+      | let c: U32 if c <= 0x107FFF => LBXX
+      else LBXX
+      end
+    | 0x0108 =>
+      match cp
+      | let c: U32 if c <= 0x108FFF => LBXX
+      else LBXX
+      end
+    | 0x0109 =>
+      match cp
+      | let c: U32 if c <= 0x109FFF => LBXX
+      else LBXX
+      end
+    | 0x010A =>
+      match cp
+      | let c: U32 if c <= 0x10AFFF => LBXX
+      else LBXX
+      end
+    | 0x010B =>
+      match cp
+      | let c: U32 if c <= 0x10BFFF => LBXX
+      else LBXX
+      end
+    | 0x010C =>
+      match cp
+      | let c: U32 if c <= 0x10CFFF => LBXX
+      else LBXX
+      end
+    | 0x010D =>
+      match cp
+      | let c: U32 if c <= 0x10DFFF => LBXX
+      else LBXX
+      end
+    | 0x010E =>
+      match cp
+      | let c: U32 if c <= 0x10EFFF => LBXX
+      else LBXX
+      end
+    | 0x010F =>
+      match cp
+      | let c: U32 if c <= 0x10FFFD => LBXX
+      else LBXX
+      end
+    else
+      LBXX
     end
-    LBXX
-
-  fun _table(): String val =>
-    "00000000080000000D0900000009000000070A0000000A0000001E0B0000000C000000090D0000000D0000000F0E0000001F0000000D20000000200000002921000000210000001222000000220000002523000000230000000324000000240000002425000000250000002326000000260000000327000000270000002528000000280000002229000000290000000E2A0000002A000000032B0000002B000000242C0000002C0000001A2D0000002D000000172E0000002E0000001A2F0000002F0000002A3000000039000000213A0000003B0000001A3C0000003E000000033F0000003F00000012400000005A000000035B0000005B000000225C0000005C000000245D0000005D0000000E5E0000007A000000037B0000007B000000227C0000007C000000077D0000007D0000000C7E0000007E000000037F000000840000000D85000000850000001F860000009F0000000DA0000000A000000013A1000000A100000022A2000000A200000023A3000000A500000024A6000000A600000003A7000000A800000001A9000000A900000003AA000000AA00000001AB000000AB00000025AC000000AC00000003AD000000AD00000007AE000000AF00000003B0000000B000000023B1000000B100000024B2000000B300000001B4000000B400000008B5000000B500000003B6000000BA00000001BB000000BB00000025BC000000BE00000001BF000000BF00000022C0000000D600000003D7000000D700000001D8000000F600000003F7000000F700000001F8000000C602000003C7020000C702000001C8020000C802000008C9020000CB02000001CC020000CC02000008CD020000CD02000001CE020000CF02000003D0020000D002000001D1020000D702000003D8020000DB02000001DC020000DC02000003DD020000DD02000001DE020000DE02000003DF020000DF02000008E0020000FF02000003000300004E0300000D4F0300004F03000013500300005B0300000D5C0300006203000013630300006F0300000D7003000077030000037A0300007D030000037E0300007E0300001A7F0300007F03000003840300008A030000038C0300008C030000038E030000A103000003A3030000820400000383040000890400000D8A0400002F0500000331050000560500000359050000880500000389050000890500001A8A0500008A050000078D0500008E050000038F0500008F0500002491050000BD0500000DBE050000BE05000007BF050000BF0500000DC0050000C005000003C1050000C20500000DC3050000C305000003C4050000C50500000DC6050000C605000012C7050000C70500000DD0050000EA05000016EF050000F205000016F3050000F405000003000600000506000021060600000806000003090600000B060000230C0600000D0600001A0E0600000F06000003100600001A0600000D1B0600001B060000121C0600001C0600000D1D0600001F06000012200600004A060000034B0600005F0600000D6006000069060000216A0600006A060000236B0600006C060000216D0600006F0600000370060000700600000D71060000D306000003D4060000D406000012D5060000D506000003D6060000DC0600000DDD060000DD06000021DE060000DE06000003DF060000E40600000DE5060000E606000003E7060000E80600000DE9060000E906000003EA060000ED0600000DEE060000EF06000003F0060000F906000021FA0600000D070000030F070000100700000311070000110700000D120700002F07000003300700004A0700000D4D070000A507000003A6070000B00700000DB1070000B107000003C0070000C907000021CA070000EA07000003EB070000F30700000DF4070000F707000003F8070000F80700001AF9070000F907000012FA070000FA07000003FD070000FD0700000DFE070000FF0700002400080000150800000316080000190800000D1A0800001A080000031B080000230800000D24080000240800000325080000270800000D280800002808000003290800002D0800000D300800003E08000003400800005808000003590800005B0800000D5E0800005E08000003600800006A08000003700800008E08000003900800009108000021970800009F0800000DA0080000C908000003CA080000E10800000DE2080000E208000021E3080000030900000D0409000039090000033A0900003C0900000D3D0900003D090000033E0900004F0900000D50090000500900000351090000570900000D58090000610900000362090000630900000D640900006509000007660900006F0900002170090000800900000381090000830900000D850900008C090000038F090000900900000393090000A809000003AA090000B009000003B2090000B209000003B6090000B909000003BC090000BC0900000DBD090000BD09000003BE090000C40900000DC7090000C80900000DCB090000CD0900000DCE090000CE09000003D7090000D70900000DDC090000DD09000003DF090000E109000003E2090000E30900000DE6090000EF09000021F0090000F109000003F2090000F309000023F4090000F809000003F9090000F909000023FA090000FA09000003FB090000FB09000024FC090000FD09000003FE090000FE0900000D010A0000030A00000D050A00000A0A0000030F0A0000100A000003130A0000280A0000032A0A0000300A000003320A0000330A000003350A0000360A000003380A0000390A0000033C0A00003C0A00000D3E0A0000420A00000D470A0000480A00000D4B0A00004D0A00000D510A0000510A00000D590A00005C0A0000035E0A00005E0A000003660A00006F0A000021700A0000710A00000D720A0000740A000003750A0000750A00000D760A0000760A000003810A0000830A00000D850A00008D0A0000038F0A0000910A000003930A0000A80A000003AA0A0000B00A000003B20A0000B30A000003B50A0000B90A000003BC0A0000BC0A00000DBD0A0000BD0A000003BE0A0000C50A00000DC70A0000C90A00000DCB0A0000CD0A00000DD00A0000D00A000003E00A0000E10A000003E20A0000E30A00000DE60A0000EF0A000021F00A0000F00A000003F10A0000F10A000024F90A0000F90A000003FA0A0000FF0A00000D010B0000030B00000D050B00000C0B0000030F0B0000100B000003130B0000280B0000032A0B0000300B000003320B0000330B000003350B0000390B0000033C0B00003C0B00000D3D0B00003D0B0000033E0B0000440B00000D470B0000480B00000D4B0B00004D0B00000D550B0000570B00000D5C0B00005D0B0000035F0B0000610B000003620B0000630B00000D660B00006F0B000021700B0000770B000003820B0000820B00000D830B0000830B000003850B00008A0B0000038E0B0000900B000003920B0000950B000003990B00009A0B0000039C0B00009C0B0000039E0B00009F0B000003A30B0000A40B000003A80B0000AA0B000003AE0B0000B90B000003BE0B0000C20B00000DC60B0000C80B00000DCA0B0000CD0B00000DD00B0000D00B000003D70B0000D70B00000DE60B0000EF0B000021F00B0000F80B000003F90B0000F90B000024FA0B0000FA0B000003000C0000040C00000D050C00000C0C0000030E0C0000100C000003120C0000280C0000032A0C0000390C0000033C0C00003C0C00000D3D0C00003D0C0000033E0C0000440C00000D460C0000480C00000D4A0C00004D0C00000D550C0000560C00000D580C00005A0C0000035D0C00005D0C000003600C0000610C000003620C0000630C00000D660C00006F0C000021770C0000770C000008780C0000800C000003810C0000830C00000D840C0000840C000008850C00008C0C0000038E0C0000900C000003920C0000A80C000003AA0C0000B30C000003B50C0000B90C000003BC0C0000BC0C00000DBD0C0000BD0C000003BE0C0000C40C00000DC60C0000C80C00000DCA0C0000CD0C00000DD50C0000D60C00000DDD0C0000DE0C000003E00C0000E10C000003E20C0000E30C00000DE60C0000EF0C000021F10C0000F20C000003F30C0000F30C00000D000D0000030D00000D040D00000C0D0000030E0D0000100D000003120D00003A0D0000033B0D00003C0D00000D3D0D00003D0D0000033E0D0000440D00000D460D0000480D00000D4A0D00004D0D00000D4E0D00004F0D000003540D0000560D000003570D0000570D00000D580D0000610D000003620D0000630D00000D660D00006F0D000021700D0000780D000003790D0000790D0000237A0D00007F0D000003810D0000830D00000D850D0000960D0000039A0D0000B10D000003B30D0000BB0D000003BD0D0000BD0D000003C00D0000C60D000003CA0D0000CA0D00000DCF0D0000D40D00000DD60D0000D60D00000DD80D0000DF0D00000DE60D0000EF0D000021F20D0000F30D00000DF40D0000F40D000003010E00003A0E0000273F0E00003F0E000024400E00004E0E0000274F0E00004F0E000003500E0000590E0000215A0E00005B0E000007810E0000820E000027840E0000840E000027860E00008A0E0000278C0E0000A30E000027A50E0000A50E000027A70E0000BD0E000027C00E0000C40E000027C60E0000C60E000027C80E0000CE0E000027D00E0000D90E000021DC0E0000DF0E000027000F0000000F000003010F0000040F000008050F0000050F000003060F0000070F000008080F0000080F000013090F00000A0F0000080B0F00000B0F0000070C0F00000C0F0000130D0F0000110F000012120F0000120F000013130F0000130F000003140F0000140F000012150F0000170F000003180F0000190F00000D1A0F00001F0F000003200F0000290F0000212A0F0000330F000003340F0000340F000007350F0000350F00000D360F0000360F000003370F0000370F00000D380F0000380F000003390F0000390F00000D3A0F00003A0F0000223B0F00003B0F00000C3C0F00003C0F0000223D0F00003D0F00000C3E0F00003F0F00000D400F0000470F000003490F00006C0F000003710F00007E0F00000D7F0F00007F0F000007800F0000840F00000D850F0000850F000007860F0000870F00000D880F00008C0F0000038D0F0000970F00000D990F0000BC0F00000DBE0F0000BF0F000007C00F0000C50F000003C60F0000C60F00000DC70F0000CC0F000003CE0F0000CF0F000003D00F0000D10F000008D20F0000D20F000007D30F0000D30F000008D40F0000D80F000003D90F0000DA0F000013001000003F100000274010000049100000214A1000004B100000074C1000004F10000003501000008F100000279010000099100000219A1000009F10000027A0100000C510000003C7100000C710000003CD100000CD10000003D0100000FF10000003001100005F1100001B60110000A71100001DA8110000FF1100001C0012000048120000034A1200004D120000035012000056120000035812000058120000035A1200005D120000036012000088120000038A1200008D1200000390120000B012000003B2120000B512000003B8120000BE12000003C0120000C012000003C2120000C512000003C8120000D612000003D81200001013000003121300001513000003181300005A130000035D1300005F1300000D601300006013000003611300006113000007621300007C13000003801300009913000003A0130000F513000003F8130000FD13000003001400000014000007011400007F16000003801600008016000007811600009A160000039B1600009B160000229C1600009C1600000CA0160000EA16000003EB160000ED16000007EE160000F81600000300170000111700000312170000151700000D1F170000311700000332170000341700000D35170000361700000740170000511700000352170000531700000D601700006C170000036E170000701700000372170000731700000D80170000D317000027D4170000D517000007D6170000D617000020D7170000D717000027D8170000D817000007D9170000D917000003DA170000DA17000007DB170000DB17000024DC170000DD17000027E0170000E917000021F0170000F9170000030018000001180000030218000003180000120418000005180000070618000006180000080718000007180000030818000009180000120A1800000A180000030B1800000D1800000D0E1800000E180000130F1800000F1800000D10180000191800002120180000781800000380180000841800000385180000861800000D87180000A818000003A9180000A91800000DAA180000AA18000003B0180000F518000003001900001E19000003201900002B1900000D301900003B1900000D401900004019000003441900004519000012461900004F19000021501900006D1900002770190000741900002780190000AB19000027B0190000C919000027D0190000DA19000021DE190000DF19000027E0190000161A000003171A00001B1A00000D1E1A00001F1A000003201A00005E1A000027601A00007C1A0000277F1A00007F1A00000D801A0000891A000021901A0000991A000021A01A0000AD1A000027B01A0000CE1A00000D001B0000041B00000D051B0000331B000002341B0000431B00000D441B0000441B00002C451B00004C1B0000024E1B00004F1B000007501B0000591B0000055A1B00005B1B0000075C1B00005C1B0000185D1B0000601B000007611B00006A1B0000186B1B0000731B00000D741B00007C1B0000187D1B00007F1B000007801B0000821B00000D831B0000A01B000003A11B0000AD1B00000DAE1B0000AF1B000003B01B0000B91B000021BA1B0000BF1B000003C01B0000E51B000005E61B0000F11B00000DF21B0000F31B00002BFC1B0000231C000003241C0000371C00000D3B1C00003F1C000007401C0000491C0000214D1C00004F1C000003501C0000591C0000215A1C00007D1C0000037E1C00007F1C000007801C00008A1C000003901C0000BA1C000003BD1C0000C71C000003D01C0000D21C00000DD31C0000D31C000003D41C0000E81C00000DE91C0000EC1C000003ED1C0000ED1C00000DEE1C0000F31C000003F41C0000F41C00000DF51C0000F61C000003F71C0000F91C00000DFA1C0000FA1C000003001D0000BF1D000003C01D0000CC1D00000DCD1D0000CD1D000013CE1D0000FB1D00000DFC1D0000FC1D000013FD1D0000FF1D00000D001E0000151F000003181F00001D1F000003201F0000451F000003481F00004D1F000003501F0000571F000003591F0000591F0000035B1F00005B1F0000035D1F00005D1F0000035F1F00007D1F000003801F0000B41F000003B61F0000C41F000003C61F0000D31F000003D61F0000DB1F000003DD1F0000EF1F000003F21F0000F41F000003F61F0000FC1F000003FD1F0000FD1F000008FE1F0000FE1F000003002000000620000007072000000720000013082000000A200000070B2000000B2000002E0C2000000C2000000D0D2000000D2000002F0E2000000F2000000D1020000010200000071120000011200000131220000013200000071420000014200000061520000016200000011720000017200000031820000019200000251A2000001A200000221B2000001D200000251E2000001E200000221F2000001F200000252020000021200000012220000023200000032420000026200000192720000027200000072820000029200000092A2000002E2000000D2F2000002F20000013302000003720000023382000003820000003392000003A200000253B2000003B200000013C2000003D200000203E200000432000000344200000442000001A45200000452000002246200000462000000C4720000049200000204A2000005520000003562000005620000007572000005720000023582000005B200000075C2000005C200000035D2000005F2000000760200000602000002D612000006420000003662000006F2000000D702000007120000003742000007420000001752000007C200000037D2000007D200000227E2000007E2000000C7F2000007F20000001802000008020000003812000008420000001852000008C200000038D2000008D200000228E2000008E2000000C902000009C20000003A0200000A620000024A7200000A720000023A8200000B520000024B6200000B620000023B7200000BA20000024BB200000BB20000023BC200000BD20000024BE200000BE20000023BF200000BF20000024C0200000C020000023C1200000CF20000024D0200000F02000000D0021000002210000030321000003210000230421000004210000030521000005210000010621000008210000030921000009210000230A2100001221000003132100001321000001142100001521000003162100001621000024172100002021000003212100002221000001232100002A210000032B2100002B210000012C2100004F21000003502100005E210000015F2100005F21000003602100006B210000016C2100006F210000037021000079210000017A21000088210000038921000089210000018A2100008B210000039021000099210000019A210000D121000003D2210000D221000001D3210000D321000003D4210000D421000001D5210000FF21000003002200000022000001012200000122000003022200000322000001042200000622000003072200000822000001092200000A220000030B2200000B220000010C2200000E220000030F2200000F220000011022000010220000031122000011220000011222000013220000241422000014220000031522000015220000011622000019220000031A2200001A220000011B2200001C220000031D2200002022000001212200002222000003232200002322000001242200002422000003252200002522000001262200002622000003272200002C220000012D2200002D220000032E2200002E220000012F2200003322000003342200003722000001382200003B220000033C2200003D220000013E2200004722000003482200004822000001492200004B220000034C2200004C220000014D2200005122000003522200005222000001532200005F220000036022000061220000016222000063220000036422000067220000016822000069220000036A2200006B220000016C2200006D220000036E2200006F220000017022000081220000038222000083220000018422000085220000038622000087220000018822000094220000039522000095220000019622000098220000039922000099220000019A220000A422000003A5220000A522000001A6220000BE22000003BF220000BF22000001C0220000EE22000003EF220000EF22000019F0220000072300000308230000082300002209230000092300000C0A2300000A230000220B2300000B2300000C0C23000011230000031223000012230000011323000019230000031A2300001B230000181C23000028230000032923000029230000222A2300002A2300000C2B230000EF23000003F0230000F323000018F42300002924000003402400004A2400000360240000FE24000001FF240000FF24000003002500004B250000014C2500004F25000003502500007425000001752500007F25000003802500008F25000001902500009125000003922500009525000001962500009F25000003A0250000A125000001A2250000A225000003A3250000A925000001AA250000B125000003B2250000B325000001B4250000B525000003B6250000B725000001B8250000BB25000003BC250000BD25000001BE250000BF25000003C0250000C125000001C2250000C525000003C6250000C825000001C9250000CA25000003CB250000CB25000001CC250000CD25000003CE250000D125000001D2250000E125000003E2250000E525000001E6250000EE25000003EF250000EF25000001F0250000FF250000030026000003260000180426000004260000030526000006260000010726000008260000030926000009260000010A2600000D260000030E2600000F260000011026000013260000031426000015260000181626000017260000011826000018260000181926000019260000031A2600001C260000181D2600001D260000101E2600001F26000018202600003826000003392600003B260000183C2600003F26000003402600004026000001412600004126000003422600004226000001432600005F26000003602600006126000001622600006226000003632600006526000001662600006626000003672600006726000001682600006826000018692600006A260000016B2600006B260000036C2600006D260000016E2600006E260000036F2600006F26000001702600007E260000037F2600007F26000018802600009D260000039E2600009F26000001A0260000BC26000003BD260000C826000018C9260000CC26000001CD260000CD26000018CE260000CE26000003CF260000D126000018D2260000D226000001D3260000D426000018D5260000D726000001D8260000D926000018DA260000DB26000001DC260000DC26000018DD260000DE26000001DF260000E126000018E2260000E226000003E3260000E326000001E4260000E726000003E8260000E926000001EA260000EA26000018EB260000F026000001F1260000F526000018F6260000F626000001F7260000F826000018F9260000F926000010FA260000FA26000018FB260000FC26000001FD26000004270000180527000007270000030827000009270000180A2700000D270000100E2700005627000003572700005727000001582700005A270000035B270000602700002561270000612700000362270000632700001264270000642700001865270000672700000368270000682700002269270000692700000C6A2700006A270000226B2700006B2700000C6C2700006C270000226D2700006D2700000C6E2700006E270000226F2700006F2700000C70270000702700002271270000712700000C72270000722700002273270000732700000C74270000742700002275270000752700000C76270000932700000194270000C427000003C5270000C527000022C6270000C62700000CC7270000E527000003E6270000E627000022E7270000E72700000CE8270000E827000022E9270000E92700000CEA270000EA27000022EB270000EB2700000CEC270000EC27000022ED270000ED2700000CEE270000EE27000022EF270000EF2700000CF0270000822900000383290000832900002284290000842900000C85290000852900002286290000862900000C87290000872900002288290000882900000C8929000089290000228A2900008A2900000C8B2900008B290000228C2900008C2900000C8D2900008D290000228E2900008E2900000C8F2900008F2900002290290000902900000C91290000912900002292290000922900000C93290000932900002294290000942900000C95290000952900002296290000962900000C97290000972900002298290000982900000C99290000D729000003D8290000D829000022D9290000D92900000CDA290000DA29000022DB290000DB2900000CDC290000FB29000003FC290000FC29000022FD290000FD2900000CFE290000542B000003552B0000592B0000015A2B0000732B000003762B0000952B000003972B0000EE2C000003EF2C0000F12C00000DF22C0000F32C000003F92C0000F92C000012FA2C0000FC2C000007FD2C0000FD2C000003FE2C0000FE2C000012FF2C0000FF2C000007002D0000252D000003272D0000272D0000032D2D00002D2D000003302D0000672D0000036F2D00006F2D000003702D0000702D0000077F2D00007F2D00000D802D0000962D000003A02D0000A62D000003A82D0000AE2D000003B02D0000B62D000003B82D0000BE2D000003C02D0000C62D000003C82D0000CE2D000003D02D0000D62D000003D82D0000DE2D000003E02D0000FF2D00000D002E00000D2E0000250E2E0000152E000007162E0000162E000003172E0000172E000007182E0000182E000022192E0000192E0000071A2E00001B2E0000031C2E00001D2E0000251E2E00001F2E000003202E0000212E000025222E0000222E000022232E0000232E00000C242E0000242E000022252E0000252E00000C262E0000262E000022272E0000272E00000C282E0000282E000022292E0000292E00000C2A2E00002D2E0000072E2E00002E2E0000122F2E00002F2E000003302E0000312E000007322E0000322E000003332E0000342E000007352E0000392E0000033A2E00003B2E0000063C2E00003E2E0000073F2E00003F2E000003402E0000412E000007422E0000422E000022432E00004A2E0000074B2E00004B2E0000034C2E00004C2E0000074D2E00004D2E0000034E2E00004F2E000007502E0000522E000003532E0000542E000012552E0000552E000022562E0000562E00000E572E0000572E000022582E0000582E00000E592E0000592E0000225A2E00005A2E00000E5B2E00005B2E0000225C2E00005C2E00000E5D2E00005D2E000007802E0000992E0000189B2E0000F32E000018002F0000D52F000018F02F0000FF2F00001800300000003000000701300000023000000C03300000043000001805300000053000002006300000073000001808300000083000002209300000093000000C0A3000000A300000220B3000000B3000000C0C3000000C300000220D3000000D3000000C0E3000000E300000220F3000000F3000000C10300000103000002211300000113000000C12300000133000001814300000143000002215300000153000000C16300000163000002217300000173000000C18300000183000002219300000193000000C1A3000001A300000221B3000001B3000000C1C3000001C300000201D3000001D300000221E3000001F3000000C2030000029300000182A3000002F3000000D30300000343000001835300000353000000D363000003A300000183B3000003C300000203D3000003F3000001841300000413000000B42300000423000001843300000433000000B44300000443000001845300000453000000B46300000463000001847300000473000000B48300000483000001849300000493000000B4A300000623000001863300000633000000B64300000823000001883300000833000000B84300000843000001885300000853000000B86300000863000001887300000873000000B883000008D300000188E3000008E3000000B8F300000943000001895300000963000000B993000009A3000000D9B3000009E300000209F3000009F30000018A0300000A030000020A1300000A13000000BA2300000A230000018A3300000A33000000BA4300000A430000018A5300000A53000000BA6300000A630000018A7300000A73000000BA8300000A830000018A9300000A93000000BAA300000C230000018C3300000C33000000BC4300000E230000018E3300000E33000000BE4300000E430000018E5300000E53000000BE6300000E630000018E7300000E73000000BE8300000ED30000018EE300000EE3000000BEF300000F430000018F5300000F63000000BF7300000FA30000018FB300000FB30000020FC300000FC3000000BFD300000FE30000020FF300000FF30000018053100002F31000018313100008E3100001890310000E531000018EF310000EF31000018F0310000FF3100000B003200001E32000018203200004732000018483200004F3200000150320000BF4D000018C04D0000FF4D000003004E000014A000001815A0000015A000002016A000008CA400001890A40000C6A4000018D0A40000FDA4000003FEA40000FFA400000700A500000CA60000030DA600000DA60000070EA600000EA60000120FA600000FA600000710A600001FA600000320A6000029A60000212AA600002BA600000340A600006EA60000036FA6000072A600000D73A6000073A600000374A600007DA600000D7EA600009DA60000039EA600009FA600000DA0A60000EFA6000003F0A60000F1A600000DF2A60000F2A6000003F3A60000F7A600000700A70000CDA7000003D0A70000D1A7000003D3A70000D3A7000003D5A70000DCA7000003F2A7000001A800000302A8000002A800000D03A8000005A800000306A8000006A800000D07A800000AA80000030BA800000BA800000D0CA8000022A800000323A8000027A800000D28A800002BA80000032CA800002CA800000D30A8000037A800000338A8000038A800002339A8000039A800000340A8000073A800000374A8000075A800000876A8000077A800001280A8000081A800000D82A80000B3A8000003B4A80000C5A800000DCEA80000CFA8000007D0A80000D9A8000021E0A80000F1A800000DF2A80000FBA8000003FCA80000FCA8000008FDA80000FEA8000003FFA80000FFA800000D00A9000009A90000210AA9000025A900000326A900002DA900000D2EA900002FA900000730A9000046A900000347A9000053A900000D5FA900005FA900000360A900007CA900001B80A9000083A900000D84A90000B2A9000002B3A90000BFA900000DC0A90000C0A900002CC1A90000C6A9000018C7A90000C9A9000007CAA90000CDA9000018CFA90000CFA9000007D0A90000D9A9000005DEA90000DFA9000018E0A90000EFA9000027F0A90000F9A9000021FAA90000FEA900002700AA000028AA00000529AA000036AA00000D40AA000042AA00000743AA000043AA00000D44AA00004BAA0000074CAA00004DAA00000D50AA000059AA0000055CAA00005CAA0000185DAA00005FAA00000760AA0000C2AA000027DBAA0000DFAA000027E0AA0000EAAA000003EBAA0000EFAA00000DF0AA0000F1AA000007F2AA0000F4AA000003F5AA0000F6AA00000D01AB000006AB00000309AB00000EAB00000311AB000016AB00000320AB000026AB00000328AB00002EAB00000330AB00006BAB00000370AB0000E2AB000003E3AB0000EAAB00000DEBAB0000EBAB000007ECAB0000EDAB00000DF0AB0000F9AB00002100AC000000AC00001401AC00001BAC0000151CAC00001CAC0000141DAC000037AC00001538AC000038AC00001439AC000053AC00001554AC000054AC00001455AC00006FAC00001570AC000070AC00001471AC00008BAC0000158CAC00008CAC0000148DAC0000A7AC000015A8AC0000A8AC000014A9AC0000C3AC000015C4AC0000C4AC000014C5AC0000DFAC000015E0AC0000E0AC000014E1AC0000FBAC000015FCAC0000FCAC000014FDAC000017AD00001518AD000018AD00001419AD000033AD00001534AD000034AD00001435AD00004FAD00001550AD000050AD00001451AD00006BAD0000156CAD00006CAD0000146DAD000087AD00001588AD000088AD00001489AD0000A3AD000015A4AD0000A4AD000014A5AD0000BFAD000015C0AD0000C0AD000014C1AD0000DBAD000015DCAD0000DCAD000014DDAD0000F7AD000015F8AD0000F8AD000014F9AD000013AE00001514AE000014AE00001415AE00002FAE00001530AE000030AE00001431AE00004BAE0000154CAE00004CAE0000144DAE000067AE00001568AE000068AE00001469AE000083AE00001584AE000084AE00001485AE00009FAE000015A0AE0000A0AE000014A1AE0000BBAE000015BCAE0000BCAE000014BDAE0000D7AE000015D8AE0000D8AE000014D9AE0000F3AE000015F4AE0000F4AE000014F5AE00000FAF00001510AF000010AF00001411AF00002BAF0000152CAF00002CAF0000142DAF000047AF00001548AF000048AF00001449AF000063AF00001564AF000064AF00001465AF00007FAF00001580AF000080AF00001481AF00009BAF0000159CAF00009CAF0000149DAF0000B7AF000015B8AF0000B8AF000014B9AF0000D3AF000015D4AF0000D4AF000014D5AF0000EFAF000015F0AF0000F0AF000014F1AF00000BB00000150CB000000CB00000140DB0000027B000001528B0000028B000001429B0000043B000001544B0000044B000001445B000005FB000001560B0000060B000001461B000007BB00000157CB000007CB00000147DB0000097B000001598B0000098B000001499B00000B3B0000015B4B00000B4B0000014B5B00000CFB0000015D0B00000D0B0000014D1B00000EBB0000015ECB00000ECB0000014EDB0000007B100001508B1000008B100001409B1000023B100001524B1000024B100001425B100003FB100001540B1000040B100001441B100005BB10000155CB100005CB10000145DB1000077B100001578B1000078B100001479B1000093B100001594B1000094B100001495B10000AFB1000015B0B10000B0B1000014B1B10000CBB1000015CCB10000CCB1000014CDB10000E7B1000015E8B10000E8B1000014E9B1000003B200001504B2000004B200001405B200001FB200001520B2000020B200001421B200003BB20000153CB200003CB20000143DB2000057B200001558B2000058B200001459B2000073B200001574B2000074B200001475B200008FB200001590B2000090B200001491B20000ABB2000015ACB20000ACB2000014ADB20000C7B2000015C8B20000C8B2000014C9B20000E3B2000015E4B20000E4B2000014E5B20000FFB200001500B3000000B300001401B300001BB30000151CB300001CB30000141DB3000037B300001538B3000038B300001439B3000053B300001554B3000054B300001455B300006FB300001570B3000070B300001471B300008BB30000158CB300008CB30000148DB30000A7B3000015A8B30000A8B3000014A9B30000C3B3000015C4B30000C4B3000014C5B30000DFB3000015E0B30000E0B3000014E1B30000FBB3000015FCB30000FCB3000014FDB3000017B400001518B4000018B400001419B4000033B400001534B4000034B400001435B400004FB400001550B4000050B400001451B400006BB40000156CB400006CB40000146DB4000087B400001588B4000088B400001489B40000A3B4000015A4B40000A4B4000014A5B40000BFB4000015C0B40000C0B4000014C1B40000DBB4000015DCB40000DCB4000014DDB40000F7B4000015F8B40000F8B4000014F9B4000013B500001514B5000014B500001415B500002FB500001530B5000030B500001431B500004BB50000154CB500004CB50000144DB5000067B500001568B5000068B500001469B5000083B500001584B5000084B500001485B500009FB5000015A0B50000A0B5000014A1B50000BBB5000015BCB50000BCB5000014BDB50000D7B5000015D8B50000D8B5000014D9B50000F3B5000015F4B50000F4B5000014F5B500000FB600001510B6000010B600001411B600002BB60000152CB600002CB60000142DB6000047B600001548B6000048B600001449B6000063B600001564B6000064B600001465B600007FB600001580B6000080B600001481B600009BB60000159CB600009CB60000149DB60000B7B6000015B8B60000B8B6000014B9B60000D3B6000015D4B60000D4B6000014D5B60000EFB6000015F0B60000F0B6000014F1B600000BB70000150CB700000CB70000140DB7000027B700001528B7000028B700001429B7000043B700001544B7000044B700001445B700005FB700001560B7000060B700001461B700007BB70000157CB700007CB70000147DB7000097B700001598B7000098B700001499B70000B3B7000015B4B70000B4B7000014B5B70000CFB7000015D0B70000D0B7000014D1B70000EBB7000015ECB70000ECB7000014EDB7000007B800001508B8000008B800001409B8000023B800001524B8000024B800001425B800003FB800001540B8000040B800001441B800005BB80000155CB800005CB80000145DB8000077B800001578B8000078B800001479B8000093B800001594B8000094B800001495B80000AFB8000015B0B80000B0B8000014B1B80000CBB8000015CCB80000CCB8000014CDB80000E7B8000015E8B80000E8B8000014E9B8000003B900001504B9000004B900001405B900001FB900001520B9000020B900001421B900003BB90000153CB900003CB90000143DB9000057B900001558B9000058B900001459B9000073B900001574B9000074B900001475B900008FB900001590B9000090B900001491B90000ABB9000015ACB90000ACB9000014ADB90000C7B9000015C8B90000C8B9000014C9B90000E3B9000015E4B90000E4B9000014E5B90000FFB900001500BA000000BA00001401BA00001BBA0000151CBA00001CBA0000141DBA000037BA00001538BA000038BA00001439BA000053BA00001554BA000054BA00001455BA00006FBA00001570BA000070BA00001471BA00008BBA0000158CBA00008CBA0000148DBA0000A7BA000015A8BA0000A8BA000014A9BA0000C3BA000015C4BA0000C4BA000014C5BA0000DFBA000015E0BA0000E0BA000014E1BA0000FBBA000015FCBA0000FCBA000014FDBA000017BB00001518BB000018BB00001419BB000033BB00001534BB000034BB00001435BB00004FBB00001550BB000050BB00001451BB00006BBB0000156CBB00006CBB0000146DBB000087BB00001588BB000088BB00001489BB0000A3BB000015A4BB0000A4BB000014A5BB0000BFBB000015C0BB0000C0BB000014C1BB0000DBBB000015DCBB0000DCBB000014DDBB0000F7BB000015F8BB0000F8BB000014F9BB000013BC00001514BC000014BC00001415BC00002FBC00001530BC000030BC00001431BC00004BBC0000154CBC00004CBC0000144DBC000067BC00001568BC000068BC00001469BC000083BC00001584BC000084BC00001485BC00009FBC000015A0BC0000A0BC000014A1BC0000BBBC000015BCBC0000BCBC000014BDBC0000D7BC000015D8BC0000D8BC000014D9BC0000F3BC000015F4BC0000F4BC000014F5BC00000FBD00001510BD000010BD00001411BD00002BBD0000152CBD00002CBD0000142DBD000047BD00001548BD000048BD00001449BD000063BD00001564BD000064BD00001465BD00007FBD00001580BD000080BD00001481BD00009BBD0000159CBD00009CBD0000149DBD0000B7BD000015B8BD0000B8BD000014B9BD0000D3BD000015D4BD0000D4BD000014D5BD0000EFBD000015F0BD0000F0BD000014F1BD00000BBE0000150CBE00000CBE0000140DBE000027BE00001528BE000028BE00001429BE000043BE00001544BE000044BE00001445BE00005FBE00001560BE000060BE00001461BE00007BBE0000157CBE00007CBE0000147DBE000097BE00001598BE000098BE00001499BE0000B3BE000015B4BE0000B4BE000014B5BE0000CFBE000015D0BE0000D0BE000014D1BE0000EBBE000015ECBE0000ECBE000014EDBE000007BF00001508BF000008BF00001409BF000023BF00001524BF000024BF00001425BF00003FBF00001540BF000040BF00001441BF00005BBF0000155CBF00005CBF0000145DBF000077BF00001578BF000078BF00001479BF000093BF00001594BF000094BF00001495BF0000AFBF000015B0BF0000B0BF000014B1BF0000CBBF000015CCBF0000CCBF000014CDBF0000E7BF000015E8BF0000E8BF000014E9BF000003C000001504C0000004C000001405C000001FC000001520C0000020C000001421C000003BC00000153CC000003CC00000143DC0000057C000001558C0000058C000001459C0000073C000001574C0000074C000001475C000008FC000001590C0000090C000001491C00000ABC0000015ACC00000ACC0000014ADC00000C7C0000015C8C00000C8C0000014C9C00000E3C0000015E4C00000E4C0000014E5C00000FFC000001500C1000000C100001401C100001BC10000151CC100001CC10000141DC1000037C100001538C1000038C100001439C1000053C100001554C1000054C100001455C100006FC100001570C1000070C100001471C100008BC10000158CC100008CC10000148DC10000A7C1000015A8C10000A8C1000014A9C10000C3C1000015C4C10000C4C1000014C5C10000DFC1000015E0C10000E0C1000014E1C10000FBC1000015FCC10000FCC1000014FDC1000017C200001518C2000018C200001419C2000033C200001534C2000034C200001435C200004FC200001550C2000050C200001451C200006BC20000156CC200006CC20000146DC2000087C200001588C2000088C200001489C20000A3C2000015A4C20000A4C2000014A5C20000BFC2000015C0C20000C0C2000014C1C20000DBC2000015DCC20000DCC2000014DDC20000F7C2000015F8C20000F8C2000014F9C2000013C300001514C3000014C300001415C300002FC300001530C3000030C300001431C300004BC30000154CC300004CC30000144DC3000067C300001568C3000068C300001469C3000083C300001584C3000084C300001485C300009FC3000015A0C30000A0C3000014A1C30000BBC3000015BCC30000BCC3000014BDC30000D7C3000015D8C30000D8C3000014D9C30000F3C3000015F4C30000F4C3000014F5C300000FC400001510C4000010C400001411C400002BC40000152CC400002CC40000142DC4000047C400001548C4000048C400001449C4000063C400001564C4000064C400001465C400007FC400001580C4000080C400001481C400009BC40000159CC400009CC40000149DC40000B7C4000015B8C40000B8C4000014B9C40000D3C4000015D4C40000D4C4000014D5C40000EFC4000015F0C40000F0C4000014F1C400000BC50000150CC500000CC50000140DC5000027C500001528C5000028C500001429C5000043C500001544C5000044C500001445C500005FC500001560C5000060C500001461C500007BC50000157CC500007CC50000147DC5000097C500001598C5000098C500001499C50000B3C5000015B4C50000B4C5000014B5C50000CFC5000015D0C50000D0C5000014D1C50000EBC5000015ECC50000ECC5000014EDC5000007C600001508C6000008C600001409C6000023C600001524C6000024C600001425C600003FC600001540C6000040C600001441C600005BC60000155CC600005CC60000145DC6000077C600001578C6000078C600001479C6000093C600001594C6000094C600001495C60000AFC6000015B0C60000B0C6000014B1C60000CBC6000015CCC60000CCC6000014CDC60000E7C6000015E8C60000E8C6000014E9C6000003C700001504C7000004C700001405C700001FC700001520C7000020C700001421C700003BC70000153CC700003CC70000143DC7000057C700001558C7000058C700001459C7000073C700001574C7000074C700001475C700008FC700001590C7000090C700001491C70000ABC7000015ACC70000ACC7000014ADC70000C7C7000015C8C70000C8C7000014C9C70000E3C7000015E4C70000E4C7000014E5C70000FFC700001500C8000000C800001401C800001BC80000151CC800001CC80000141DC8000037C800001538C8000038C800001439C8000053C800001554C8000054C800001455C800006FC800001570C8000070C800001471C800008BC80000158CC800008CC80000148DC80000A7C8000015A8C80000A8C8000014A9C80000C3C8000015C4C80000C4C8000014C5C80000DFC8000015E0C80000E0C8000014E1C80000FBC8000015FCC80000FCC8000014FDC8000017C900001518C9000018C900001419C9000033C900001534C9000034C900001435C900004FC900001550C9000050C900001451C900006BC90000156CC900006CC90000146DC9000087C900001588C9000088C900001489C90000A3C9000015A4C90000A4C9000014A5C90000BFC9000015C0C90000C0C9000014C1C90000DBC9000015DCC90000DCC9000014DDC90000F7C9000015F8C90000F8C9000014F9C9000013CA00001514CA000014CA00001415CA00002FCA00001530CA000030CA00001431CA00004BCA0000154CCA00004CCA0000144DCA000067CA00001568CA000068CA00001469CA000083CA00001584CA000084CA00001485CA00009FCA000015A0CA0000A0CA000014A1CA0000BBCA000015BCCA0000BCCA000014BDCA0000D7CA000015D8CA0000D8CA000014D9CA0000F3CA000015F4CA0000F4CA000014F5CA00000FCB00001510CB000010CB00001411CB00002BCB0000152CCB00002CCB0000142DCB000047CB00001548CB000048CB00001449CB000063CB00001564CB000064CB00001465CB00007FCB00001580CB000080CB00001481CB00009BCB0000159CCB00009CCB0000149DCB0000B7CB000015B8CB0000B8CB000014B9CB0000D3CB000015D4CB0000D4CB000014D5CB0000EFCB000015F0CB0000F0CB000014F1CB00000BCC0000150CCC00000CCC0000140DCC000027CC00001528CC000028CC00001429CC000043CC00001544CC000044CC00001445CC00005FCC00001560CC000060CC00001461CC00007BCC0000157CCC00007CCC0000147DCC000097CC00001598CC000098CC00001499CC0000B3CC000015B4CC0000B4CC000014B5CC0000CFCC000015D0CC0000D0CC000014D1CC0000EBCC000015ECCC0000ECCC000014EDCC000007CD00001508CD000008CD00001409CD000023CD00001524CD000024CD00001425CD00003FCD00001540CD000040CD00001441CD00005BCD0000155CCD00005CCD0000145DCD000077CD00001578CD000078CD00001479CD000093CD00001594CD000094CD00001495CD0000AFCD000015B0CD0000B0CD000014B1CD0000CBCD000015CCCD0000CCCD000014CDCD0000E7CD000015E8CD0000E8CD000014E9CD000003CE00001504CE000004CE00001405CE00001FCE00001520CE000020CE00001421CE00003BCE0000153CCE00003CCE0000143DCE000057CE00001558CE000058CE00001459CE000073CE00001574CE000074CE00001475CE00008FCE00001590CE000090CE00001491CE0000ABCE000015ACCE0000ACCE000014ADCE0000C7CE000015C8CE0000C8CE000014C9CE0000E3CE000015E4CE0000E4CE000014E5CE0000FFCE00001500CF000000CF00001401CF00001BCF0000151CCF00001CCF0000141DCF000037CF00001538CF000038CF00001439CF000053CF00001554CF000054CF00001455CF00006FCF00001570CF000070CF00001471CF00008BCF0000158CCF00008CCF0000148DCF0000A7CF000015A8CF0000A8CF000014A9CF0000C3CF000015C4CF0000C4CF000014C5CF0000DFCF000015E0CF0000E0CF000014E1CF0000FBCF000015FCCF0000FCCF000014FDCF000017D000001518D0000018D000001419D0000033D000001534D0000034D000001435D000004FD000001550D0000050D000001451D000006BD00000156CD000006CD00000146DD0000087D000001588D0000088D000001489D00000A3D0000015A4D00000A4D0000014A5D00000BFD0000015C0D00000C0D0000014C1D00000DBD0000015DCD00000DCD0000014DDD00000F7D0000015F8D00000F8D0000014F9D0000013D100001514D1000014D100001415D100002FD100001530D1000030D100001431D100004BD10000154CD100004CD10000144DD1000067D100001568D1000068D100001469D1000083D100001584D1000084D100001485D100009FD1000015A0D10000A0D1000014A1D10000BBD1000015BCD10000BCD1000014BDD10000D7D1000015D8D10000D8D1000014D9D10000F3D1000015F4D10000F4D1000014F5D100000FD200001510D2000010D200001411D200002BD20000152CD200002CD20000142DD2000047D200001548D2000048D200001449D2000063D200001564D2000064D200001465D200007FD200001580D2000080D200001481D200009BD20000159CD200009CD20000149DD20000B7D2000015B8D20000B8D2000014B9D20000D3D2000015D4D20000D4D2000014D5D20000EFD2000015F0D20000F0D2000014F1D200000BD30000150CD300000CD30000140DD3000027D300001528D3000028D300001429D3000043D300001544D3000044D300001445D300005FD300001560D3000060D300001461D300007BD30000157CD300007CD30000147DD3000097D300001598D3000098D300001499D30000B3D3000015B4D30000B4D3000014B5D30000CFD3000015D0D30000D0D3000014D1D30000EBD3000015ECD30000ECD3000014EDD3000007D400001508D4000008D400001409D4000023D400001524D4000024D400001425D400003FD400001540D4000040D400001441D400005BD40000155CD400005CD40000145DD4000077D400001578D4000078D400001479D4000093D400001594D4000094D400001495D40000AFD4000015B0D40000B0D4000014B1D40000CBD4000015CCD40000CCD4000014CDD40000E7D4000015E8D40000E8D4000014E9D4000003D500001504D5000004D500001405D500001FD500001520D5000020D500001421D500003BD50000153CD500003CD50000143DD5000057D500001558D5000058D500001459D5000073D500001574D5000074D500001475D500008FD500001590D5000090D500001491D50000ABD5000015ACD50000ACD5000014ADD50000C7D5000015C8D50000C8D5000014C9D50000E3D5000015E4D50000E4D5000014E5D50000FFD500001500D6000000D600001401D600001BD60000151CD600001CD60000141DD6000037D600001538D6000038D600001439D6000053D600001554D6000054D600001455D600006FD600001570D6000070D600001471D600008BD60000158CD600008CD60000148DD60000A7D6000015A8D60000A8D6000014A9D60000C3D6000015C4D60000C4D6000014C5D60000DFD6000015E0D60000E0D6000014E1D60000FBD6000015FCD60000FCD6000014FDD6000017D700001518D7000018D700001419D7000033D700001534D7000034D700001435D700004FD700001550D7000050D700001451D700006BD70000156CD700006CD70000146DD7000087D700001588D7000088D700001489D70000A3D7000015B0D70000C6D700001DCBD70000FBD700001C00D80000FFDF00002800E00000FFF800000000F90000FFFA00001800FB000006FB00000313FB000017FB0000031DFB00001DFB0000161EFB00001EFB00000D1FFB000028FB00001629FB000029FB0000032AFB000036FB00001638FB00003CFB0000163EFB00003EFB00001640FB000041FB00001643FB000044FB00001646FB00004FFB00001650FB0000C2FB000003D3FB00003DFD0000033EFD00003EFD00000C3FFD00003FFD00002240FD00008FFD00000392FD0000C7FD000003CFFD0000CFFD000003F0FD0000FBFD000003FCFD0000FCFD000023FDFD0000FFFD00000300FE00000FFE00000D10FE000012FE00000C13FE000014FE00002015FE000016FE00001217FE000017FE00002218FE000018FE00000C19FE000019FE00001920FE000020FE00001321FE000021FE00000D22FE000022FE00001323FE000023FE00000D24FE000024FE00001325FE000025FE00000D26FE000027FE00001328FE000028FE00000D29FE000029FE0000132AFE00002AFE00000D2BFE00002BFE0000132CFE00002CFE00000D2DFE00002EFE0000132FFE00002FFE00000D30FE000034FE00001835FE000035FE00002236FE000036FE00000C37FE000037FE00002238FE000038FE00000C39FE000039FE0000223AFE00003AFE00000C3BFE00003BFE0000223CFE00003CFE00000C3DFE00003DFE0000223EFE00003EFE00000C3FFE00003FFE00002240FE000040FE00000C41FE000041FE00002242FE000042FE00000C43FE000043FE00002244FE000044FE00000C45FE000046FE00001847FE000047FE00002248FE000048FE00000C49FE00004FFE00001850FE000050FE00000C51FE000051FE00001852FE000052FE00000C54FE000055FE00002056FE000057FE00001258FE000058FE00001859FE000059FE0000225AFE00005AFE00000C5BFE00005BFE0000225CFE00005CFE00000C5DFE00005DFE0000225EFE00005EFE00000C5FFE000066FE00001868FE000068FE00001869FE000069FE0000246AFE00006AFE0000236BFE00006BFE00001870FE000074FE00000376FE0000FCFE000003FFFE0000FFFE00002D01FF000001FF00001202FF000003FF00001804FF000004FF00002405FF000005FF00002306FF000007FF00001808FF000008FF00002209FF000009FF00000C0AFF00000BFF0000180CFF00000CFF00000C0DFF00000DFF0000180EFF00000EFF00000C0FFF000019FF0000181AFF00001BFF0000201CFF00001EFF0000181FFF00001FFF00001220FF00003AFF0000183BFF00003BFF0000223CFF00003CFF0000183DFF00003DFF00000C3EFF00005AFF0000185BFF00005BFF0000225CFF00005CFF0000185DFF00005DFF00000C5EFF00005EFF0000185FFF00005FFF00002260FF000061FF00000C62FF000062FF00002263FF000064FF00000C65FF000065FF00002066FF000066FF00001867FF000070FF00000B71FF00009DFF0000189EFF00009FFF000020A0FF0000BEFF000018C2FF0000C7FF000018CAFF0000CFFF000018D2FF0000D7FF000018DAFF0000DCFF000018E0FF0000E0FF000023E1FF0000E1FF000024E2FF0000E4FF000018E5FF0000E6FF000024E8FF0000EEFF000003F9FF0000FBFF00000DFCFF0000FCFF00000AFDFF0000FDFF000001000001000B000100030D0001002600010003280001003A000100033C0001003D000100033F0001004D00010003500001005D0001000380000100FA00010003000101000201010007070101003301010003370101008E01010003900101009C01010003A0010100A001010003D0010100FC01010003FD010100FD0101000D800201009C02010003A0020100D002010003E0020100E00201000DE1020100FB020100030003010023030100032D0301004A03010003500301007503010003760301007A0301000D800301009D030100039F0301009F03010007A0030100C303010003C8030100CF03010003D0030100D003010007D1030100D503010003000401009D04010003A0040100A904010021B0040100D304010003D8040100FB040100030005010027050100033005010063050100036F0501007A050100037C0501008A050100038C050100920501000394050100950501000397050100A105010003A3050100B105010003B3050100B905010003BB050100BC05010003C0050100F30501000300060100360701000340070100550701000360070100670701000380070100850701000387070100B007010003B2070100BA070100030008010005080100030808010008080100030A08010035080100033708010038080100033C0801003C080100033F0801005508010003570801005708010007580801009E08010003A7080100AF08010003E0080100F208010003F4080100F508010003FB0801001B090100031F0901001F090100072009010039090100033F0901003F0901000380090100B709010003BC090100CF09010003D2090100000A010003010A0100030A01000D050A0100060A01000D0C0A01000F0A01000D100A0100130A010003150A0100170A010003190A0100350A010003380A01003A0A01000D3F0A01003F0A01000D400A0100480A010003500A0100570A010007580A0100580A010003600A01009F0A010003C00A0100E40A010003E50A0100E60A01000DEB0A0100EF0A010003F00A0100F50A010007F60A0100F60A010019000B0100350B010003390B01003F0B010007400B0100550B010003580B0100720B010003780B0100910B010003990B01009C0B010003A90B0100AF0B010003000C0100480C010003800C0100B20C010003C00C0100F20C010003FA0C0100230D010003240D0100270D01000D300D0100390D010021400D0100490D0100214A0D0100650D010003690D01006D0D01000D6E0D01006E0D0100076F0D0100850D0100038E0D01008F0D010003600E01007E0E010003800E0100A90E010003AB0E0100AC0E01000DAD0E0100AD0E010007B00E0100B10E010003C20E0100C40E010003FC0E0100FF0E01000D000F0100270F010003300F0100450F010003460F0100500F01000D510F0100590F010003700F0100810F010003820F0100850F01000D860F0100890F010003B00F0100CB0F010003E00F0100F60F01000300100100021001000D03100100041001000405100100371001000238100100451001000D46100100461001002C471001004810010007491001004D10010018521001006510010018661001006F1001000570100100701001000D71100100721001000273100100741001000D7510010075100100027F1001007F1001001380100100821001000D83100100AF10010003B0100100BA1001000DBB100100BC10010003BD100100BD10010021BE100100C110010007C2100100C21001000DCD100100CD10010021D0100100E810010003F0100100F91001002100110100021101000D03110100261101000327110100341101000D361101003F1101002140110100431101000744110100441101000345110100461101000D47110100471101000350110100721101000373110100731101000D74110100741101000375110100751101000876110100761101000380110100821101000D83110100B211010003B3110100C01101000DC1110100C411010003C5110100C611010007C7110100C711010003C8110100C811010007C9110100CC1101000DCD110100CD11010003CE110100CF1101000DD0110100D911010021DA110100DA11010003DB110100DB11010008DC110100DC11010003DD110100DF11010007E1110100F411010003001201001112010003131201002B120100032C120100371201000D3812010039120100073A1201003A120100033B1201003C120100073D1201003D120100033E1201003E1201000D3F120100401201000341120100411201000D8012010086120100038812010088120100038A1201008D120100038F1201009D120100039F120100A812010003A9120100A912010007B0120100DE12010003DF120100EA1201000DF0120100F91201002100130100031301000D051301000C130100020F13010010130100021313010028130100022A13010030130100023213010033130100023513010039130100023B1301003C1301000D3D1301003D130100073E130100441301000D47130100481301000D4B1301004C1301000D4D1301004D1301002C50130100501301000557130100571301000D5D1301005D130100075E1301005F1301000560130100611301000262130100631301000D661301006C1301000D70130100741301000D8013010089130100058B1301008B130100058E1301008E1301000590130100911301000592130100B513010002B7130100B713010018B8130100C01301000DC2130100C21301000DC5130100C51301000DC7130100CA1301000DCC130100CF1301000DD0130100D01301002CD1130100D113010004D2130100D21301000DD3130100D513010018D7130100D813010018E1130100E21301000D00140100341401000335140100461401000D471401004A140100034B1401004E140100074F1401004F140100035014010059140100215A1401005B140100075D1401005D140100035E1401005E1401000D5F140100611401000380140100AF14010003B0140100C31401000DC4140100C714010003D0140100D91401002180150100AE15010003AF150100B51501000DB8150100C01501000DC1150100C115010008C2150100C315010007C4150100C515010012C6150100C815010003C9150100D715010007D8150100DB15010003DC150100DD1501000D001601002F1601000330160100401601000D411601004216010007431601004416010003501601005916010021601601006C1601000880160100AA16010003AB160100B71601000DB8160100B916010003C0160100C916010021D0160100E316010021001701001A170100271D1701002B170100273017010039170100213A1701003B170100273C1701003E170100073F1701004617010027001801002B180100032C1801003A1801000D3B1801003B18010003A0180100DF18010003E0180100E918010021EA180100F218010003FF180100FF180100030019010006190100020919010009190100020C1901001319010002151901001619010002181901002F1901000230190100351901000D37190100381901000D3B1901003D1901000D3E1901003E1901002C3F1901003F1901000440190100401901000D41190100411901000442190100431901000D441901004619010007501901005919010005A0190100A719010003AA190100D019010003D1190100D71901000DDA190100E01901000DE1190100E119010003E2190100E219010008E3190100E319010003E4190100E41901000D001A0100001A010003011A01000A1A01000D0B1A0100321A010003331A0100391A01000D3A1A01003A1A0100033B1A01003E1A01000D3F1A01003F1A010008401A0100401A010003411A0100441A010007451A0100451A010008461A0100461A010003471A0100471A01000D501A0100501A010003511A01005B1A01000D5C1A0100891A0100038A1A0100991A01000D9A1A01009C1A0100079D1A01009D1A0100039E1A0100A01A010008A11A0100A21A010007B01A0100F81A010003001B0100091B010008C01B0100E11B010003F01B0100F91B010021001C0100081C0100030A1C01002E1C0100032F1C0100361C01000D381C01003F1C01000D401C0100401C010003411C0100451C010007501C0100591C0100215A1C01006C1C010003701C0100701C010008711C0100711C010012721C01008F1C010003921C0100A71C01000DA91C0100B61C01000D001D0100061D010003081D0100091D0100030B1D0100301D010003311D0100361D01000D3A1D01003A1D01000D3C1D01003D1D01000D3F1D0100451D01000D461D0100461D010003471D0100471D01000D501D0100591D010021601D0100651D010003671D0100681D0100036A1D0100891D0100038A1D01008E1D01000D901D0100911D01000D931D0100971D01000D981D0100981D010003A01D0100A91D010021E01E0100F11E010005F21E0100F21E010007F31E0100F61E01000DF71E0100F81E010007001F0100011F01000D021F0100021F010004031F0100031F01000D041F0100101F010002121F0100331F010002341F01003A1F01000D3E1F0100411F01000D421F0100421F01002C431F0100441F010007451F01004F1F010018501F0100591F0100055A1F01005A1F01000DB01F0100B01F010003C01F0100DC1F010003DD1F0100E01F010023E11F0100F11F010003FF1F0100FF1F010007002001009923010003002401006E24010003702401007424010007802401004325010003902F0100F22F010003003001005732010003583201005A320100225B3201005D3201000C5E320100813201000382320100823201000C83320100853201000386320100863201002287320100873201000C88320100883201002289320100893201000C8A32010078330100037933010079330100227A3301007B3301000C7C3301002E340100032F3401002F3401002230340100363401001337340100373401002238340100383401000C393401003B340100133C3401003C340100223D3401003D3401000C3E3401003E340100223F3401003F3401000C40340100403401000D41340100463401000347340100553401000D60340100FA4301000300440100CD45010003CE450100CE45010022CF450100CF4501000CD04501004646010003006101001D610100051E6101002F6101000D30610100396101000500680100386A010003406A01005E6A010003606A0100696A0100216E6A01006F6A010007706A0100BE6A010003C06A0100C96A010021D06A0100ED6A010003F06A0100F46A01000DF56A0100F56A010007006B01002F6B010003306B0100366B01000D376B0100396B0100073A6B0100436B010003446B0100446B010007456B0100456B010003506B0100596B0100215B6B0100616B010003636B0100776B0100037D6B01008F6B010003406D01006D6D0100036E6D01006F6D010007706D0100796D010021406E0100966E010003976E0100986E010007996E01009A6E010003006F01004A6F0100034F6F01004F6F01000D506F0100506F010003516F0100876F01000D8F6F0100926F01000D936F01009F6F010003E06F0100E36F010020E46F0100E46F010013F06F0100F16F01000D00700100F78701001800880100FF8A010018008B0100D58C010003FF8C0100FF8C010003008D0100088D010018F0AF0100F3AF010003F5AF0100FBAF010003FDAF0100FEAF01000300B0010022B101001832B1010032B101000B50B1010052B101000B55B1010055B101000B64B1010067B101000B70B10100FBB201001800BC01006ABC01000370BC01007CBC01000380BC010088BC01000390BC010099BC0100039CBC01009CBC0100039DBC01009EBC01000D9FBC01009FBC010007A0BC0100A3BC01000D00CC0100EFCC010003F0CC0100F9CC01002100CD0100B3CE01000300CF01002DCF01000D30CF010046CF01000D50CF0100C3CF01000300D00100F5D001000300D1010026D101000329D1010064D101000365D1010069D101000D6AD101006CD10100036DD1010082D101000D83D1010084D101000385D101008BD101000D8CD10100A9D1010003AAD10100ADD101000DAED10100EAD101000300D2010041D201000342D2010044D201000D45D2010045D2010003C0D20100D3D2010003E0D20100F3D201000300D3010056D301000360D3010078D301000300D4010054D401000356D401009CD40100039ED401009FD4010003A2D40100A2D4010003A5D40100A6D4010003A9D40100ACD4010003AED40100B9D4010003BBD40100BBD4010003BDD40100C3D4010003C5D4010005D501000307D501000AD50100030DD5010014D501000316D501001CD50100031ED5010039D50100033BD501003ED501000340D5010044D501000346D5010046D50100034AD5010050D501000352D50100A5D6010003A8D60100CBD7010003CED70100FFD701002100D80100FFD901000300DA010036DA01000D37DA01003ADA0100033BDA01006CDA01000D6DDA010074DA01000375DA010075DA01000D76DA010083DA01000384DA010084DA01000D85DA010086DA01000387DA01008ADA0100078BDA01008BDA0100039BDA01009FDA01000DA1DA0100AFDA01000D00DF01001EDF01000325DF01002ADF01000300E0010006E001000D08E0010018E001000D1BE0010021E001000D23E0010024E001000D26E001002AE001000D30E001006DE00100038FE001008FE001000D00E101002CE101000330E1010036E101000D37E101003DE101000340E1010049E10100214EE101004FE101000390E20100ADE2010003AEE20100AEE201000DC0E20100EBE2010003ECE20100EFE201000DF0E20100F9E2010021FFE20100FFE2010024D0E40100EBE4010003ECE40100EFE401000DF0E40100F9E4010021D0E50100EDE5010003EEE50100EFE501000DF0E50100F0E5010003F1E50100FAE5010021FFE50100FFE5010003E0E70100E6E7010003E8E70100EBE7010003EDE70100EEE7010003F0E70100FEE701000300E80100C4E8010003C7E80100CFE8010003D0E80100D6E801000D00E9010043E901000344E901004AE901000D4BE901004BE901000350E9010059E90100215EE901005FE901002271EC0100ABEC010003ACEC0100ACEC010023ADEC0100AFEC010003B0EC0100B0EC010023B1EC0100B4EC01000301ED01003DED01000300EE010003EE01000305EE01001FEE01000321EE010022EE01000324EE010024EE01000327EE010027EE01000329EE010032EE01000334EE010037EE01000339EE010039EE0100033BEE01003BEE01000342EE010042EE01000347EE010047EE01000349EE010049EE0100034BEE01004BEE0100034DEE01004FEE01000351EE010052EE01000354EE010054EE01000357EE010057EE01000359EE010059EE0100035BEE01005BEE0100035DEE01005DEE0100035FEE01005FEE01000361EE010062EE01000364EE010064EE01000367EE01006AEE0100036CEE010072EE01000374EE010077EE01000379EE01007CEE0100037EEE01007EEE01000380EE010089EE0100038BEE01009BEE010003A1EE0100A3EE010003A5EE0100A9EE010003ABEE0100BBEE010003F0EE0100F1EE01000300F00100FFF001001800F101000CF10100010DF101000FF101000310F101002DF10100012EF101002FF101000330F1010069F10100016AF101006FF101000370F10100ACF1010001ADF10100ADF1010003AEF10100E5F1010018E6F10100FFF101002600F2010084F301001885F3010085F301001086F301009BF30100189CF301009DF30100039EF30100B4F3010018B5F30100B6F3010003B7F30100BBF3010018BCF30100BCF3010003BDF30100C1F3010018C2F30100C4F3010010C5F30100C6F3010018C7F30100C7F3010010C8F30100C9F3010018CAF30100CCF3010010CDF30100FAF3010018FBF30100FFF301001100F4010041F401001842F4010043F401001044F4010045F401001846F4010050F401001051F4010065F401001866F4010078F401001079F401007BF40100187CF401007CF40100107DF4010080F401001881F4010083F401001084F4010084F401001885F4010087F401001088F401008EF40100188FF401008FF401001090F4010090F401001891F4010091F401001092F401009FF4010018A0F40100A0F4010003A1F40100A1F4010018A2F40100A2F4010003A3F40100A3F4010018A4F40100A4F4010003A5F40100A9F4010018AAF40100AAF4010010ABF40100AEF4010018AFF40100AFF4010003B0F40100B0F4010018B1F40100B2F4010003B3F40100FFF401001800F5010006F501000307F5010016F501001817F5010024F501000325F5010031F501001832F5010049F50100034AF5010073F501001874F5010075F501001076F5010079F50100187AF501007AF50100107BF501008FF501001890F5010090F501001091F5010094F501001895F5010096F501001097F50100D3F5010018D4F50100DBF5010003DCF50100F3F5010018F4F50100F9F5010003FAF5010044F601001845F6010047F601001048F601004AF60100184BF601004FF601001050F6010075F601000376F6010078F601002579F601007BF60100207CF601007FF601000380F60100A2F6010018A3F60100A3F6010010A4F60100B3F6010018B4F60100B6F6010010B7F60100BFF6010018C0F60100C0F6010010C1F60100CBF6010018CCF60100CCF6010010CDF60100FFF601001800F7010073F701000374F701007FF701001880F70100D4F7010003D5F70100FFF701001800F801000BF801000310F8010047F801000350F8010059F801000360F8010087F801000390F80100ADF8010003B0F80100BBF8010003C0F80100C1F801000300F901000BF90100030CF901000CF90100100DF901000EF90100180FF901000FF901001010F9010017F901001818F901001FF901001020F9010025F901001826F9010026F901001027F901002FF901001830F9010039F90100103AF901003BF90100183CF901003EF90100103FF9010076F901001877F9010077F901001078F90100B4F9010018B5F90100B6F9010010B7F90100B7F9010018B8F90100B9F9010010BAF90100BAF9010018BBF90100BBF9010010BCF90100CCF9010018CDF90100CFF9010010D0F90100D0F9010018D1F90100DDF9010010DEF90100FFF901001800FA010053FA01000354FA0100C2FA010018C3FA0100C5FA010010C6FA0100EFFA010018F0FA0100F8FA010010F9FA0100FFFA01001800FB010092FB01000394FB0100EFFB010003F0FB0100F9FB01002100FC0100FDFF01001800000200FDFF02001800000300FDFF03001801000E0001000E000D20000E007F000E000D00010E00EF010E000D00000F00FDFF0F000000001000FDFF100000"

@@ -7,33 +7,1926 @@
 
 primitive _UcdScript
   fun of(cp: U32): Script =>
-    let t = _table()
-    var lo: USize = 0
-    var hi: USize = t.size() / 18
-    while lo < hi do
-      let mid = lo + ((hi - lo) / 2)
-      let base = mid * 18
-      try
-        let range_lo: U32 =
-          _UcdHex.byte(t, base)?
-            or (_UcdHex.byte(t, base + 2)? << 8)
-            or (_UcdHex.byte(t, base + 4)? << 16)
-            or (_UcdHex.byte(t, base + 6)? << 24)
-        let range_hi: U32 =
-          _UcdHex.byte(t, base + 8)?
-            or (_UcdHex.byte(t, base + 10)? << 8)
-            or (_UcdHex.byte(t, base + 12)? << 16)
-            or (_UcdHex.byte(t, base + 14)? << 24)
-        if cp < range_lo then hi = mid
-        elseif cp > range_hi then lo = mid + 1
-        else
-          return _ScriptCodec.from_byte(
-            U8.from[U32](_UcdHex.byte(t, base + 16)?))
-        end
-      else return ScriptUnknown
+    match cp >> 12
+    | 0x0000 =>
+      match cp
+      | let c: U32 if c <= 0x0040 => ScriptCommon
+      | let c: U32 if c <= 0x005A => ScriptLatin
+      | let c: U32 if c <= 0x0060 => ScriptCommon
+      | let c: U32 if c <= 0x007A => ScriptLatin
+      | let c: U32 if c <= 0x00A9 => ScriptCommon
+      | let c: U32 if c <= 0x00AA => ScriptLatin
+      | let c: U32 if c <= 0x00B9 => ScriptCommon
+      | let c: U32 if c <= 0x00BA => ScriptLatin
+      | let c: U32 if c <= 0x00BF => ScriptCommon
+      | let c: U32 if c <= 0x00D6 => ScriptLatin
+      | let c: U32 if c <= 0x00D7 => ScriptCommon
+      | let c: U32 if c <= 0x00F6 => ScriptLatin
+      | let c: U32 if c <= 0x00F7 => ScriptCommon
+      | let c: U32 if c <= 0x02B8 => ScriptLatin
+      | let c: U32 if c <= 0x02DF => ScriptCommon
+      | let c: U32 if c <= 0x02E4 => ScriptLatin
+      | let c: U32 if c <= 0x02E9 => ScriptCommon
+      | let c: U32 if c <= 0x02EB => ScriptBopomofo
+      | let c: U32 if c <= 0x02FF => ScriptCommon
+      | let c: U32 if c <= 0x036F => ScriptInherited
+      | let c: U32 if c <= 0x0373 => ScriptGreek
+      | let c: U32 if c <= 0x0374 => ScriptCommon
+      | let c: U32 if c <= 0x0377 => ScriptGreek
+      | let c: U32 if c <= 0x0379 => ScriptUnknown
+      | let c: U32 if c <= 0x037D => ScriptGreek
+      | let c: U32 if c <= 0x037E => ScriptCommon
+      | let c: U32 if c <= 0x037F => ScriptGreek
+      | let c: U32 if c <= 0x0383 => ScriptUnknown
+      | let c: U32 if c <= 0x0384 => ScriptGreek
+      | let c: U32 if c <= 0x0385 => ScriptCommon
+      | let c: U32 if c <= 0x0386 => ScriptGreek
+      | let c: U32 if c <= 0x0387 => ScriptCommon
+      | let c: U32 if c <= 0x038A => ScriptGreek
+      | let c: U32 if c <= 0x038B => ScriptUnknown
+      | let c: U32 if c <= 0x038C => ScriptGreek
+      | let c: U32 if c <= 0x038D => ScriptUnknown
+      | let c: U32 if c <= 0x03A1 => ScriptGreek
+      | let c: U32 if c <= 0x03A2 => ScriptUnknown
+      | let c: U32 if c <= 0x03E1 => ScriptGreek
+      | let c: U32 if c <= 0x03EF => ScriptCoptic
+      | let c: U32 if c <= 0x03FF => ScriptGreek
+      | let c: U32 if c <= 0x0484 => ScriptCyrillic
+      | let c: U32 if c <= 0x0486 => ScriptInherited
+      | let c: U32 if c <= 0x052F => ScriptCyrillic
+      | let c: U32 if c <= 0x0530 => ScriptUnknown
+      | let c: U32 if c <= 0x0556 => ScriptArmenian
+      | let c: U32 if c <= 0x0558 => ScriptUnknown
+      | let c: U32 if c <= 0x058A => ScriptArmenian
+      | let c: U32 if c <= 0x058C => ScriptUnknown
+      | let c: U32 if c <= 0x058F => ScriptArmenian
+      | let c: U32 if c <= 0x0590 => ScriptUnknown
+      | let c: U32 if c <= 0x05C7 => ScriptHebrew
+      | let c: U32 if c <= 0x05CF => ScriptUnknown
+      | let c: U32 if c <= 0x05EA => ScriptHebrew
+      | let c: U32 if c <= 0x05EE => ScriptUnknown
+      | let c: U32 if c <= 0x05F4 => ScriptHebrew
+      | let c: U32 if c <= 0x05FF => ScriptUnknown
+      | let c: U32 if c <= 0x0604 => ScriptArabic
+      | let c: U32 if c <= 0x0605 => ScriptCommon
+      | let c: U32 if c <= 0x060B => ScriptArabic
+      | let c: U32 if c <= 0x060C => ScriptCommon
+      | let c: U32 if c <= 0x061A => ScriptArabic
+      | let c: U32 if c <= 0x061B => ScriptCommon
+      | let c: U32 if c <= 0x061E => ScriptArabic
+      | let c: U32 if c <= 0x061F => ScriptCommon
+      | let c: U32 if c <= 0x063F => ScriptArabic
+      | let c: U32 if c <= 0x0640 => ScriptCommon
+      | let c: U32 if c <= 0x064A => ScriptArabic
+      | let c: U32 if c <= 0x0655 => ScriptInherited
+      | let c: U32 if c <= 0x066F => ScriptArabic
+      | let c: U32 if c <= 0x0670 => ScriptInherited
+      | let c: U32 if c <= 0x06DC => ScriptArabic
+      | let c: U32 if c <= 0x06DD => ScriptCommon
+      | let c: U32 if c <= 0x06FF => ScriptArabic
+      | let c: U32 if c <= 0x070D => ScriptSyriac
+      | let c: U32 if c <= 0x070E => ScriptUnknown
+      | let c: U32 if c <= 0x074A => ScriptSyriac
+      | let c: U32 if c <= 0x074C => ScriptUnknown
+      | let c: U32 if c <= 0x074F => ScriptSyriac
+      | let c: U32 if c <= 0x077F => ScriptArabic
+      | let c: U32 if c <= 0x07B1 => ScriptThaana
+      | let c: U32 if c <= 0x07BF => ScriptUnknown
+      | let c: U32 if c <= 0x07FA => ScriptNko
+      | let c: U32 if c <= 0x07FC => ScriptUnknown
+      | let c: U32 if c <= 0x07FF => ScriptNko
+      | let c: U32 if c <= 0x082D => ScriptSamaritan
+      | let c: U32 if c <= 0x082F => ScriptUnknown
+      | let c: U32 if c <= 0x083E => ScriptSamaritan
+      | let c: U32 if c <= 0x083F => ScriptUnknown
+      | let c: U32 if c <= 0x085B => ScriptMandaic
+      | let c: U32 if c <= 0x085D => ScriptUnknown
+      | let c: U32 if c <= 0x085E => ScriptMandaic
+      | let c: U32 if c <= 0x085F => ScriptUnknown
+      | let c: U32 if c <= 0x086A => ScriptSyriac
+      | let c: U32 if c <= 0x086F => ScriptUnknown
+      | let c: U32 if c <= 0x088E => ScriptArabic
+      | let c: U32 if c <= 0x088F => ScriptUnknown
+      | let c: U32 if c <= 0x0891 => ScriptArabic
+      | let c: U32 if c <= 0x0896 => ScriptUnknown
+      | let c: U32 if c <= 0x08E1 => ScriptArabic
+      | let c: U32 if c <= 0x08E2 => ScriptCommon
+      | let c: U32 if c <= 0x08FF => ScriptArabic
+      | let c: U32 if c <= 0x0950 => ScriptDevanagari
+      | let c: U32 if c <= 0x0954 => ScriptInherited
+      | let c: U32 if c <= 0x0963 => ScriptDevanagari
+      | let c: U32 if c <= 0x0965 => ScriptCommon
+      | let c: U32 if c <= 0x097F => ScriptDevanagari
+      | let c: U32 if c <= 0x0983 => ScriptBengali
+      | let c: U32 if c <= 0x0984 => ScriptUnknown
+      | let c: U32 if c <= 0x098C => ScriptBengali
+      | let c: U32 if c <= 0x098E => ScriptUnknown
+      | let c: U32 if c <= 0x0990 => ScriptBengali
+      | let c: U32 if c <= 0x0992 => ScriptUnknown
+      | let c: U32 if c <= 0x09A8 => ScriptBengali
+      | let c: U32 if c <= 0x09A9 => ScriptUnknown
+      | let c: U32 if c <= 0x09B0 => ScriptBengali
+      | let c: U32 if c <= 0x09B1 => ScriptUnknown
+      | let c: U32 if c <= 0x09B2 => ScriptBengali
+      | let c: U32 if c <= 0x09B5 => ScriptUnknown
+      | let c: U32 if c <= 0x09B9 => ScriptBengali
+      | let c: U32 if c <= 0x09BB => ScriptUnknown
+      | let c: U32 if c <= 0x09C4 => ScriptBengali
+      | let c: U32 if c <= 0x09C6 => ScriptUnknown
+      | let c: U32 if c <= 0x09C8 => ScriptBengali
+      | let c: U32 if c <= 0x09CA => ScriptUnknown
+      | let c: U32 if c <= 0x09CE => ScriptBengali
+      | let c: U32 if c <= 0x09D6 => ScriptUnknown
+      | let c: U32 if c <= 0x09D7 => ScriptBengali
+      | let c: U32 if c <= 0x09DB => ScriptUnknown
+      | let c: U32 if c <= 0x09DD => ScriptBengali
+      | let c: U32 if c <= 0x09DE => ScriptUnknown
+      | let c: U32 if c <= 0x09E3 => ScriptBengali
+      | let c: U32 if c <= 0x09E5 => ScriptUnknown
+      | let c: U32 if c <= 0x09FE => ScriptBengali
+      | let c: U32 if c <= 0x0A00 => ScriptUnknown
+      | let c: U32 if c <= 0x0A03 => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A04 => ScriptUnknown
+      | let c: U32 if c <= 0x0A0A => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A0E => ScriptUnknown
+      | let c: U32 if c <= 0x0A10 => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A12 => ScriptUnknown
+      | let c: U32 if c <= 0x0A28 => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A29 => ScriptUnknown
+      | let c: U32 if c <= 0x0A30 => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A31 => ScriptUnknown
+      | let c: U32 if c <= 0x0A33 => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A34 => ScriptUnknown
+      | let c: U32 if c <= 0x0A36 => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A37 => ScriptUnknown
+      | let c: U32 if c <= 0x0A39 => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A3B => ScriptUnknown
+      | let c: U32 if c <= 0x0A3C => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A3D => ScriptUnknown
+      | let c: U32 if c <= 0x0A42 => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A46 => ScriptUnknown
+      | let c: U32 if c <= 0x0A48 => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A4A => ScriptUnknown
+      | let c: U32 if c <= 0x0A4D => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A50 => ScriptUnknown
+      | let c: U32 if c <= 0x0A51 => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A58 => ScriptUnknown
+      | let c: U32 if c <= 0x0A5C => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A5D => ScriptUnknown
+      | let c: U32 if c <= 0x0A5E => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A65 => ScriptUnknown
+      | let c: U32 if c <= 0x0A76 => ScriptGurmukhi
+      | let c: U32 if c <= 0x0A80 => ScriptUnknown
+      | let c: U32 if c <= 0x0A83 => ScriptGujarati
+      | let c: U32 if c <= 0x0A84 => ScriptUnknown
+      | let c: U32 if c <= 0x0A8D => ScriptGujarati
+      | let c: U32 if c <= 0x0A8E => ScriptUnknown
+      | let c: U32 if c <= 0x0A91 => ScriptGujarati
+      | let c: U32 if c <= 0x0A92 => ScriptUnknown
+      | let c: U32 if c <= 0x0AA8 => ScriptGujarati
+      | let c: U32 if c <= 0x0AA9 => ScriptUnknown
+      | let c: U32 if c <= 0x0AB0 => ScriptGujarati
+      | let c: U32 if c <= 0x0AB1 => ScriptUnknown
+      | let c: U32 if c <= 0x0AB3 => ScriptGujarati
+      | let c: U32 if c <= 0x0AB4 => ScriptUnknown
+      | let c: U32 if c <= 0x0AB9 => ScriptGujarati
+      | let c: U32 if c <= 0x0ABB => ScriptUnknown
+      | let c: U32 if c <= 0x0AC5 => ScriptGujarati
+      | let c: U32 if c <= 0x0AC6 => ScriptUnknown
+      | let c: U32 if c <= 0x0AC9 => ScriptGujarati
+      | let c: U32 if c <= 0x0ACA => ScriptUnknown
+      | let c: U32 if c <= 0x0ACD => ScriptGujarati
+      | let c: U32 if c <= 0x0ACF => ScriptUnknown
+      | let c: U32 if c <= 0x0AD0 => ScriptGujarati
+      | let c: U32 if c <= 0x0ADF => ScriptUnknown
+      | let c: U32 if c <= 0x0AE3 => ScriptGujarati
+      | let c: U32 if c <= 0x0AE5 => ScriptUnknown
+      | let c: U32 if c <= 0x0AF1 => ScriptGujarati
+      | let c: U32 if c <= 0x0AF8 => ScriptUnknown
+      | let c: U32 if c <= 0x0AFF => ScriptGujarati
+      | let c: U32 if c <= 0x0B00 => ScriptUnknown
+      | let c: U32 if c <= 0x0B03 => ScriptOriya
+      | let c: U32 if c <= 0x0B04 => ScriptUnknown
+      | let c: U32 if c <= 0x0B0C => ScriptOriya
+      | let c: U32 if c <= 0x0B0E => ScriptUnknown
+      | let c: U32 if c <= 0x0B10 => ScriptOriya
+      | let c: U32 if c <= 0x0B12 => ScriptUnknown
+      | let c: U32 if c <= 0x0B28 => ScriptOriya
+      | let c: U32 if c <= 0x0B29 => ScriptUnknown
+      | let c: U32 if c <= 0x0B30 => ScriptOriya
+      | let c: U32 if c <= 0x0B31 => ScriptUnknown
+      | let c: U32 if c <= 0x0B33 => ScriptOriya
+      | let c: U32 if c <= 0x0B34 => ScriptUnknown
+      | let c: U32 if c <= 0x0B39 => ScriptOriya
+      | let c: U32 if c <= 0x0B3B => ScriptUnknown
+      | let c: U32 if c <= 0x0B44 => ScriptOriya
+      | let c: U32 if c <= 0x0B46 => ScriptUnknown
+      | let c: U32 if c <= 0x0B48 => ScriptOriya
+      | let c: U32 if c <= 0x0B4A => ScriptUnknown
+      | let c: U32 if c <= 0x0B4D => ScriptOriya
+      | let c: U32 if c <= 0x0B54 => ScriptUnknown
+      | let c: U32 if c <= 0x0B57 => ScriptOriya
+      | let c: U32 if c <= 0x0B5B => ScriptUnknown
+      | let c: U32 if c <= 0x0B5D => ScriptOriya
+      | let c: U32 if c <= 0x0B5E => ScriptUnknown
+      | let c: U32 if c <= 0x0B63 => ScriptOriya
+      | let c: U32 if c <= 0x0B65 => ScriptUnknown
+      | let c: U32 if c <= 0x0B77 => ScriptOriya
+      | let c: U32 if c <= 0x0B81 => ScriptUnknown
+      | let c: U32 if c <= 0x0B83 => ScriptTamil
+      | let c: U32 if c <= 0x0B84 => ScriptUnknown
+      | let c: U32 if c <= 0x0B8A => ScriptTamil
+      | let c: U32 if c <= 0x0B8D => ScriptUnknown
+      | let c: U32 if c <= 0x0B90 => ScriptTamil
+      | let c: U32 if c <= 0x0B91 => ScriptUnknown
+      | let c: U32 if c <= 0x0B95 => ScriptTamil
+      | let c: U32 if c <= 0x0B98 => ScriptUnknown
+      | let c: U32 if c <= 0x0B9A => ScriptTamil
+      | let c: U32 if c <= 0x0B9B => ScriptUnknown
+      | let c: U32 if c <= 0x0B9C => ScriptTamil
+      | let c: U32 if c <= 0x0B9D => ScriptUnknown
+      | let c: U32 if c <= 0x0B9F => ScriptTamil
+      | let c: U32 if c <= 0x0BA2 => ScriptUnknown
+      | let c: U32 if c <= 0x0BA4 => ScriptTamil
+      | let c: U32 if c <= 0x0BA7 => ScriptUnknown
+      | let c: U32 if c <= 0x0BAA => ScriptTamil
+      | let c: U32 if c <= 0x0BAD => ScriptUnknown
+      | let c: U32 if c <= 0x0BB9 => ScriptTamil
+      | let c: U32 if c <= 0x0BBD => ScriptUnknown
+      | let c: U32 if c <= 0x0BC2 => ScriptTamil
+      | let c: U32 if c <= 0x0BC5 => ScriptUnknown
+      | let c: U32 if c <= 0x0BC8 => ScriptTamil
+      | let c: U32 if c <= 0x0BC9 => ScriptUnknown
+      | let c: U32 if c <= 0x0BCD => ScriptTamil
+      | let c: U32 if c <= 0x0BCF => ScriptUnknown
+      | let c: U32 if c <= 0x0BD0 => ScriptTamil
+      | let c: U32 if c <= 0x0BD6 => ScriptUnknown
+      | let c: U32 if c <= 0x0BD7 => ScriptTamil
+      | let c: U32 if c <= 0x0BE5 => ScriptUnknown
+      | let c: U32 if c <= 0x0BFA => ScriptTamil
+      | let c: U32 if c <= 0x0BFF => ScriptUnknown
+      | let c: U32 if c <= 0x0C0C => ScriptTelugu
+      | let c: U32 if c <= 0x0C0D => ScriptUnknown
+      | let c: U32 if c <= 0x0C10 => ScriptTelugu
+      | let c: U32 if c <= 0x0C11 => ScriptUnknown
+      | let c: U32 if c <= 0x0C28 => ScriptTelugu
+      | let c: U32 if c <= 0x0C29 => ScriptUnknown
+      | let c: U32 if c <= 0x0C39 => ScriptTelugu
+      | let c: U32 if c <= 0x0C3B => ScriptUnknown
+      | let c: U32 if c <= 0x0C44 => ScriptTelugu
+      | let c: U32 if c <= 0x0C45 => ScriptUnknown
+      | let c: U32 if c <= 0x0C48 => ScriptTelugu
+      | let c: U32 if c <= 0x0C49 => ScriptUnknown
+      | let c: U32 if c <= 0x0C4D => ScriptTelugu
+      | let c: U32 if c <= 0x0C54 => ScriptUnknown
+      | let c: U32 if c <= 0x0C56 => ScriptTelugu
+      | let c: U32 if c <= 0x0C57 => ScriptUnknown
+      | let c: U32 if c <= 0x0C5A => ScriptTelugu
+      | let c: U32 if c <= 0x0C5C => ScriptUnknown
+      | let c: U32 if c <= 0x0C5D => ScriptTelugu
+      | let c: U32 if c <= 0x0C5F => ScriptUnknown
+      | let c: U32 if c <= 0x0C63 => ScriptTelugu
+      | let c: U32 if c <= 0x0C65 => ScriptUnknown
+      | let c: U32 if c <= 0x0C6F => ScriptTelugu
+      | let c: U32 if c <= 0x0C76 => ScriptUnknown
+      | let c: U32 if c <= 0x0C7F => ScriptTelugu
+      | let c: U32 if c <= 0x0C8C => ScriptKannada
+      | let c: U32 if c <= 0x0C8D => ScriptUnknown
+      | let c: U32 if c <= 0x0C90 => ScriptKannada
+      | let c: U32 if c <= 0x0C91 => ScriptUnknown
+      | let c: U32 if c <= 0x0CA8 => ScriptKannada
+      | let c: U32 if c <= 0x0CA9 => ScriptUnknown
+      | let c: U32 if c <= 0x0CB3 => ScriptKannada
+      | let c: U32 if c <= 0x0CB4 => ScriptUnknown
+      | let c: U32 if c <= 0x0CB9 => ScriptKannada
+      | let c: U32 if c <= 0x0CBB => ScriptUnknown
+      | let c: U32 if c <= 0x0CC4 => ScriptKannada
+      | let c: U32 if c <= 0x0CC5 => ScriptUnknown
+      | let c: U32 if c <= 0x0CC8 => ScriptKannada
+      | let c: U32 if c <= 0x0CC9 => ScriptUnknown
+      | let c: U32 if c <= 0x0CCD => ScriptKannada
+      | let c: U32 if c <= 0x0CD4 => ScriptUnknown
+      | let c: U32 if c <= 0x0CD6 => ScriptKannada
+      | let c: U32 if c <= 0x0CDC => ScriptUnknown
+      | let c: U32 if c <= 0x0CDE => ScriptKannada
+      | let c: U32 if c <= 0x0CDF => ScriptUnknown
+      | let c: U32 if c <= 0x0CE3 => ScriptKannada
+      | let c: U32 if c <= 0x0CE5 => ScriptUnknown
+      | let c: U32 if c <= 0x0CEF => ScriptKannada
+      | let c: U32 if c <= 0x0CF0 => ScriptUnknown
+      | let c: U32 if c <= 0x0CF3 => ScriptKannada
+      | let c: U32 if c <= 0x0CFF => ScriptUnknown
+      | let c: U32 if c <= 0x0D0C => ScriptMalayalam
+      | let c: U32 if c <= 0x0D0D => ScriptUnknown
+      | let c: U32 if c <= 0x0D10 => ScriptMalayalam
+      | let c: U32 if c <= 0x0D11 => ScriptUnknown
+      | let c: U32 if c <= 0x0D44 => ScriptMalayalam
+      | let c: U32 if c <= 0x0D45 => ScriptUnknown
+      | let c: U32 if c <= 0x0D48 => ScriptMalayalam
+      | let c: U32 if c <= 0x0D49 => ScriptUnknown
+      | let c: U32 if c <= 0x0D4F => ScriptMalayalam
+      | let c: U32 if c <= 0x0D53 => ScriptUnknown
+      | let c: U32 if c <= 0x0D63 => ScriptMalayalam
+      | let c: U32 if c <= 0x0D65 => ScriptUnknown
+      | let c: U32 if c <= 0x0D7F => ScriptMalayalam
+      | let c: U32 if c <= 0x0D80 => ScriptUnknown
+      | let c: U32 if c <= 0x0D83 => ScriptSinhala
+      | let c: U32 if c <= 0x0D84 => ScriptUnknown
+      | let c: U32 if c <= 0x0D96 => ScriptSinhala
+      | let c: U32 if c <= 0x0D99 => ScriptUnknown
+      | let c: U32 if c <= 0x0DB1 => ScriptSinhala
+      | let c: U32 if c <= 0x0DB2 => ScriptUnknown
+      | let c: U32 if c <= 0x0DBB => ScriptSinhala
+      | let c: U32 if c <= 0x0DBC => ScriptUnknown
+      | let c: U32 if c <= 0x0DBD => ScriptSinhala
+      | let c: U32 if c <= 0x0DBF => ScriptUnknown
+      | let c: U32 if c <= 0x0DC6 => ScriptSinhala
+      | let c: U32 if c <= 0x0DC9 => ScriptUnknown
+      | let c: U32 if c <= 0x0DCA => ScriptSinhala
+      | let c: U32 if c <= 0x0DCE => ScriptUnknown
+      | let c: U32 if c <= 0x0DD4 => ScriptSinhala
+      | let c: U32 if c <= 0x0DD5 => ScriptUnknown
+      | let c: U32 if c <= 0x0DD6 => ScriptSinhala
+      | let c: U32 if c <= 0x0DD7 => ScriptUnknown
+      | let c: U32 if c <= 0x0DDF => ScriptSinhala
+      | let c: U32 if c <= 0x0DE5 => ScriptUnknown
+      | let c: U32 if c <= 0x0DEF => ScriptSinhala
+      | let c: U32 if c <= 0x0DF1 => ScriptUnknown
+      | let c: U32 if c <= 0x0DF4 => ScriptSinhala
+      | let c: U32 if c <= 0x0E00 => ScriptUnknown
+      | let c: U32 if c <= 0x0E3A => ScriptThai
+      | let c: U32 if c <= 0x0E3E => ScriptUnknown
+      | let c: U32 if c <= 0x0E3F => ScriptCommon
+      | let c: U32 if c <= 0x0E5B => ScriptThai
+      | let c: U32 if c <= 0x0E80 => ScriptUnknown
+      | let c: U32 if c <= 0x0E82 => ScriptLao
+      | let c: U32 if c <= 0x0E83 => ScriptUnknown
+      | let c: U32 if c <= 0x0E84 => ScriptLao
+      | let c: U32 if c <= 0x0E85 => ScriptUnknown
+      | let c: U32 if c <= 0x0E8A => ScriptLao
+      | let c: U32 if c <= 0x0E8B => ScriptUnknown
+      | let c: U32 if c <= 0x0EA3 => ScriptLao
+      | let c: U32 if c <= 0x0EA4 => ScriptUnknown
+      | let c: U32 if c <= 0x0EA5 => ScriptLao
+      | let c: U32 if c <= 0x0EA6 => ScriptUnknown
+      | let c: U32 if c <= 0x0EBD => ScriptLao
+      | let c: U32 if c <= 0x0EBF => ScriptUnknown
+      | let c: U32 if c <= 0x0EC4 => ScriptLao
+      | let c: U32 if c <= 0x0EC5 => ScriptUnknown
+      | let c: U32 if c <= 0x0EC6 => ScriptLao
+      | let c: U32 if c <= 0x0EC7 => ScriptUnknown
+      | let c: U32 if c <= 0x0ECE => ScriptLao
+      | let c: U32 if c <= 0x0ECF => ScriptUnknown
+      | let c: U32 if c <= 0x0ED9 => ScriptLao
+      | let c: U32 if c <= 0x0EDB => ScriptUnknown
+      | let c: U32 if c <= 0x0EDF => ScriptLao
+      | let c: U32 if c <= 0x0EFF => ScriptUnknown
+      | let c: U32 if c <= 0x0F47 => ScriptTibetan
+      | let c: U32 if c <= 0x0F48 => ScriptUnknown
+      | let c: U32 if c <= 0x0F6C => ScriptTibetan
+      | let c: U32 if c <= 0x0F70 => ScriptUnknown
+      | let c: U32 if c <= 0x0F97 => ScriptTibetan
+      | let c: U32 if c <= 0x0F98 => ScriptUnknown
+      | let c: U32 if c <= 0x0FBC => ScriptTibetan
+      | let c: U32 if c <= 0x0FBD => ScriptUnknown
+      | let c: U32 if c <= 0x0FCC => ScriptTibetan
+      | let c: U32 if c <= 0x0FCD => ScriptUnknown
+      | let c: U32 if c <= 0x0FD4 => ScriptTibetan
+      | let c: U32 if c <= 0x0FD8 => ScriptCommon
+      | let c: U32 if c <= 0x0FDA => ScriptTibetan
+      else ScriptUnknown
       end
+    | 0x0001 =>
+      match cp
+      | let c: U32 if c <= 0x109F => ScriptMyanmar
+      | let c: U32 if c <= 0x10C5 => ScriptGeorgian
+      | let c: U32 if c <= 0x10C6 => ScriptUnknown
+      | let c: U32 if c <= 0x10C7 => ScriptGeorgian
+      | let c: U32 if c <= 0x10CC => ScriptUnknown
+      | let c: U32 if c <= 0x10CD => ScriptGeorgian
+      | let c: U32 if c <= 0x10CF => ScriptUnknown
+      | let c: U32 if c <= 0x10FA => ScriptGeorgian
+      | let c: U32 if c <= 0x10FB => ScriptCommon
+      | let c: U32 if c <= 0x10FF => ScriptGeorgian
+      | let c: U32 if c <= 0x11FF => ScriptHangul
+      | let c: U32 if c <= 0x1248 => ScriptEthiopic
+      | let c: U32 if c <= 0x1249 => ScriptUnknown
+      | let c: U32 if c <= 0x124D => ScriptEthiopic
+      | let c: U32 if c <= 0x124F => ScriptUnknown
+      | let c: U32 if c <= 0x1256 => ScriptEthiopic
+      | let c: U32 if c <= 0x1257 => ScriptUnknown
+      | let c: U32 if c <= 0x1258 => ScriptEthiopic
+      | let c: U32 if c <= 0x1259 => ScriptUnknown
+      | let c: U32 if c <= 0x125D => ScriptEthiopic
+      | let c: U32 if c <= 0x125F => ScriptUnknown
+      | let c: U32 if c <= 0x1288 => ScriptEthiopic
+      | let c: U32 if c <= 0x1289 => ScriptUnknown
+      | let c: U32 if c <= 0x128D => ScriptEthiopic
+      | let c: U32 if c <= 0x128F => ScriptUnknown
+      | let c: U32 if c <= 0x12B0 => ScriptEthiopic
+      | let c: U32 if c <= 0x12B1 => ScriptUnknown
+      | let c: U32 if c <= 0x12B5 => ScriptEthiopic
+      | let c: U32 if c <= 0x12B7 => ScriptUnknown
+      | let c: U32 if c <= 0x12BE => ScriptEthiopic
+      | let c: U32 if c <= 0x12BF => ScriptUnknown
+      | let c: U32 if c <= 0x12C0 => ScriptEthiopic
+      | let c: U32 if c <= 0x12C1 => ScriptUnknown
+      | let c: U32 if c <= 0x12C5 => ScriptEthiopic
+      | let c: U32 if c <= 0x12C7 => ScriptUnknown
+      | let c: U32 if c <= 0x12D6 => ScriptEthiopic
+      | let c: U32 if c <= 0x12D7 => ScriptUnknown
+      | let c: U32 if c <= 0x1310 => ScriptEthiopic
+      | let c: U32 if c <= 0x1311 => ScriptUnknown
+      | let c: U32 if c <= 0x1315 => ScriptEthiopic
+      | let c: U32 if c <= 0x1317 => ScriptUnknown
+      | let c: U32 if c <= 0x135A => ScriptEthiopic
+      | let c: U32 if c <= 0x135C => ScriptUnknown
+      | let c: U32 if c <= 0x137C => ScriptEthiopic
+      | let c: U32 if c <= 0x137F => ScriptUnknown
+      | let c: U32 if c <= 0x1399 => ScriptEthiopic
+      | let c: U32 if c <= 0x139F => ScriptUnknown
+      | let c: U32 if c <= 0x13F5 => ScriptCherokee
+      | let c: U32 if c <= 0x13F7 => ScriptUnknown
+      | let c: U32 if c <= 0x13FD => ScriptCherokee
+      | let c: U32 if c <= 0x13FF => ScriptUnknown
+      | let c: U32 if c <= 0x167F => ScriptCanadianAboriginal
+      | let c: U32 if c <= 0x169C => ScriptOgham
+      | let c: U32 if c <= 0x169F => ScriptUnknown
+      | let c: U32 if c <= 0x16EA => ScriptRunic
+      | let c: U32 if c <= 0x16ED => ScriptCommon
+      | let c: U32 if c <= 0x16F8 => ScriptRunic
+      | let c: U32 if c <= 0x16FF => ScriptUnknown
+      | let c: U32 if c <= 0x1715 => ScriptTagalog
+      | let c: U32 if c <= 0x171E => ScriptUnknown
+      | let c: U32 if c <= 0x171F => ScriptTagalog
+      | let c: U32 if c <= 0x1734 => ScriptHanunoo
+      | let c: U32 if c <= 0x1736 => ScriptCommon
+      | let c: U32 if c <= 0x173F => ScriptUnknown
+      | let c: U32 if c <= 0x1753 => ScriptBuhid
+      | let c: U32 if c <= 0x175F => ScriptUnknown
+      | let c: U32 if c <= 0x176C => ScriptTagbanwa
+      | let c: U32 if c <= 0x176D => ScriptUnknown
+      | let c: U32 if c <= 0x1770 => ScriptTagbanwa
+      | let c: U32 if c <= 0x1771 => ScriptUnknown
+      | let c: U32 if c <= 0x1773 => ScriptTagbanwa
+      | let c: U32 if c <= 0x177F => ScriptUnknown
+      | let c: U32 if c <= 0x17DD => ScriptKhmer
+      | let c: U32 if c <= 0x17DF => ScriptUnknown
+      | let c: U32 if c <= 0x17E9 => ScriptKhmer
+      | let c: U32 if c <= 0x17EF => ScriptUnknown
+      | let c: U32 if c <= 0x17F9 => ScriptKhmer
+      | let c: U32 if c <= 0x17FF => ScriptUnknown
+      | let c: U32 if c <= 0x1801 => ScriptMongolian
+      | let c: U32 if c <= 0x1803 => ScriptCommon
+      | let c: U32 if c <= 0x1804 => ScriptMongolian
+      | let c: U32 if c <= 0x1805 => ScriptCommon
+      | let c: U32 if c <= 0x1819 => ScriptMongolian
+      | let c: U32 if c <= 0x181F => ScriptUnknown
+      | let c: U32 if c <= 0x1878 => ScriptMongolian
+      | let c: U32 if c <= 0x187F => ScriptUnknown
+      | let c: U32 if c <= 0x18AA => ScriptMongolian
+      | let c: U32 if c <= 0x18AF => ScriptUnknown
+      | let c: U32 if c <= 0x18F5 => ScriptCanadianAboriginal
+      | let c: U32 if c <= 0x18FF => ScriptUnknown
+      | let c: U32 if c <= 0x191E => ScriptLimbu
+      | let c: U32 if c <= 0x191F => ScriptUnknown
+      | let c: U32 if c <= 0x192B => ScriptLimbu
+      | let c: U32 if c <= 0x192F => ScriptUnknown
+      | let c: U32 if c <= 0x193B => ScriptLimbu
+      | let c: U32 if c <= 0x193F => ScriptUnknown
+      | let c: U32 if c <= 0x1940 => ScriptLimbu
+      | let c: U32 if c <= 0x1943 => ScriptUnknown
+      | let c: U32 if c <= 0x194F => ScriptLimbu
+      | let c: U32 if c <= 0x196D => ScriptTaiLe
+      | let c: U32 if c <= 0x196F => ScriptUnknown
+      | let c: U32 if c <= 0x1974 => ScriptTaiLe
+      | let c: U32 if c <= 0x197F => ScriptUnknown
+      | let c: U32 if c <= 0x19AB => ScriptNewTaiLue
+      | let c: U32 if c <= 0x19AF => ScriptUnknown
+      | let c: U32 if c <= 0x19C9 => ScriptNewTaiLue
+      | let c: U32 if c <= 0x19CF => ScriptUnknown
+      | let c: U32 if c <= 0x19DA => ScriptNewTaiLue
+      | let c: U32 if c <= 0x19DD => ScriptUnknown
+      | let c: U32 if c <= 0x19DF => ScriptNewTaiLue
+      | let c: U32 if c <= 0x19FF => ScriptKhmer
+      | let c: U32 if c <= 0x1A1B => ScriptBuginese
+      | let c: U32 if c <= 0x1A1D => ScriptUnknown
+      | let c: U32 if c <= 0x1A1F => ScriptBuginese
+      | let c: U32 if c <= 0x1A5E => ScriptTaiTham
+      | let c: U32 if c <= 0x1A5F => ScriptUnknown
+      | let c: U32 if c <= 0x1A7C => ScriptTaiTham
+      | let c: U32 if c <= 0x1A7E => ScriptUnknown
+      | let c: U32 if c <= 0x1A89 => ScriptTaiTham
+      | let c: U32 if c <= 0x1A8F => ScriptUnknown
+      | let c: U32 if c <= 0x1A99 => ScriptTaiTham
+      | let c: U32 if c <= 0x1A9F => ScriptUnknown
+      | let c: U32 if c <= 0x1AAD => ScriptTaiTham
+      | let c: U32 if c <= 0x1AAF => ScriptUnknown
+      | let c: U32 if c <= 0x1ACE => ScriptInherited
+      | let c: U32 if c <= 0x1AFF => ScriptUnknown
+      | let c: U32 if c <= 0x1B4C => ScriptBalinese
+      | let c: U32 if c <= 0x1B4D => ScriptUnknown
+      | let c: U32 if c <= 0x1B7F => ScriptBalinese
+      | let c: U32 if c <= 0x1BBF => ScriptSundanese
+      | let c: U32 if c <= 0x1BF3 => ScriptBatak
+      | let c: U32 if c <= 0x1BFB => ScriptUnknown
+      | let c: U32 if c <= 0x1BFF => ScriptBatak
+      | let c: U32 if c <= 0x1C37 => ScriptLepcha
+      | let c: U32 if c <= 0x1C3A => ScriptUnknown
+      | let c: U32 if c <= 0x1C49 => ScriptLepcha
+      | let c: U32 if c <= 0x1C4C => ScriptUnknown
+      | let c: U32 if c <= 0x1C4F => ScriptLepcha
+      | let c: U32 if c <= 0x1C7F => ScriptOlChiki
+      | let c: U32 if c <= 0x1C8A => ScriptCyrillic
+      | let c: U32 if c <= 0x1C8F => ScriptUnknown
+      | let c: U32 if c <= 0x1CBA => ScriptGeorgian
+      | let c: U32 if c <= 0x1CBC => ScriptUnknown
+      | let c: U32 if c <= 0x1CBF => ScriptGeorgian
+      | let c: U32 if c <= 0x1CC7 => ScriptSundanese
+      | let c: U32 if c <= 0x1CCF => ScriptUnknown
+      | let c: U32 if c <= 0x1CD2 => ScriptInherited
+      | let c: U32 if c <= 0x1CD3 => ScriptCommon
+      | let c: U32 if c <= 0x1CE0 => ScriptInherited
+      | let c: U32 if c <= 0x1CE1 => ScriptCommon
+      | let c: U32 if c <= 0x1CE8 => ScriptInherited
+      | let c: U32 if c <= 0x1CEC => ScriptCommon
+      | let c: U32 if c <= 0x1CED => ScriptInherited
+      | let c: U32 if c <= 0x1CF3 => ScriptCommon
+      | let c: U32 if c <= 0x1CF4 => ScriptInherited
+      | let c: U32 if c <= 0x1CF7 => ScriptCommon
+      | let c: U32 if c <= 0x1CF9 => ScriptInherited
+      | let c: U32 if c <= 0x1CFA => ScriptCommon
+      | let c: U32 if c <= 0x1CFF => ScriptUnknown
+      | let c: U32 if c <= 0x1D25 => ScriptLatin
+      | let c: U32 if c <= 0x1D2A => ScriptGreek
+      | let c: U32 if c <= 0x1D2B => ScriptCyrillic
+      | let c: U32 if c <= 0x1D5C => ScriptLatin
+      | let c: U32 if c <= 0x1D61 => ScriptGreek
+      | let c: U32 if c <= 0x1D65 => ScriptLatin
+      | let c: U32 if c <= 0x1D6A => ScriptGreek
+      | let c: U32 if c <= 0x1D77 => ScriptLatin
+      | let c: U32 if c <= 0x1D78 => ScriptCyrillic
+      | let c: U32 if c <= 0x1DBE => ScriptLatin
+      | let c: U32 if c <= 0x1DBF => ScriptGreek
+      | let c: U32 if c <= 0x1DFF => ScriptInherited
+      | let c: U32 if c <= 0x1EFF => ScriptLatin
+      | let c: U32 if c <= 0x1F15 => ScriptGreek
+      | let c: U32 if c <= 0x1F17 => ScriptUnknown
+      | let c: U32 if c <= 0x1F1D => ScriptGreek
+      | let c: U32 if c <= 0x1F1F => ScriptUnknown
+      | let c: U32 if c <= 0x1F45 => ScriptGreek
+      | let c: U32 if c <= 0x1F47 => ScriptUnknown
+      | let c: U32 if c <= 0x1F4D => ScriptGreek
+      | let c: U32 if c <= 0x1F4F => ScriptUnknown
+      | let c: U32 if c <= 0x1F57 => ScriptGreek
+      | let c: U32 if c <= 0x1F58 => ScriptUnknown
+      | let c: U32 if c <= 0x1F59 => ScriptGreek
+      | let c: U32 if c <= 0x1F5A => ScriptUnknown
+      | let c: U32 if c <= 0x1F5B => ScriptGreek
+      | let c: U32 if c <= 0x1F5C => ScriptUnknown
+      | let c: U32 if c <= 0x1F5D => ScriptGreek
+      | let c: U32 if c <= 0x1F5E => ScriptUnknown
+      | let c: U32 if c <= 0x1F7D => ScriptGreek
+      | let c: U32 if c <= 0x1F7F => ScriptUnknown
+      | let c: U32 if c <= 0x1FB4 => ScriptGreek
+      | let c: U32 if c <= 0x1FB5 => ScriptUnknown
+      | let c: U32 if c <= 0x1FC4 => ScriptGreek
+      | let c: U32 if c <= 0x1FC5 => ScriptUnknown
+      | let c: U32 if c <= 0x1FD3 => ScriptGreek
+      | let c: U32 if c <= 0x1FD5 => ScriptUnknown
+      | let c: U32 if c <= 0x1FDB => ScriptGreek
+      | let c: U32 if c <= 0x1FDC => ScriptUnknown
+      | let c: U32 if c <= 0x1FEF => ScriptGreek
+      | let c: U32 if c <= 0x1FF1 => ScriptUnknown
+      | let c: U32 if c <= 0x1FF4 => ScriptGreek
+      | let c: U32 if c <= 0x1FF5 => ScriptUnknown
+      | let c: U32 if c <= 0x1FFE => ScriptGreek
+      else ScriptUnknown
+      end
+    | 0x0002 =>
+      match cp
+      | let c: U32 if c <= 0x200B => ScriptCommon
+      | let c: U32 if c <= 0x200D => ScriptInherited
+      | let c: U32 if c <= 0x2064 => ScriptCommon
+      | let c: U32 if c <= 0x2065 => ScriptUnknown
+      | let c: U32 if c <= 0x2070 => ScriptCommon
+      | let c: U32 if c <= 0x2071 => ScriptLatin
+      | let c: U32 if c <= 0x2073 => ScriptUnknown
+      | let c: U32 if c <= 0x207E => ScriptCommon
+      | let c: U32 if c <= 0x207F => ScriptLatin
+      | let c: U32 if c <= 0x208E => ScriptCommon
+      | let c: U32 if c <= 0x208F => ScriptUnknown
+      | let c: U32 if c <= 0x209C => ScriptLatin
+      | let c: U32 if c <= 0x209F => ScriptUnknown
+      | let c: U32 if c <= 0x20C0 => ScriptCommon
+      | let c: U32 if c <= 0x20CF => ScriptUnknown
+      | let c: U32 if c <= 0x20F0 => ScriptInherited
+      | let c: U32 if c <= 0x20FF => ScriptUnknown
+      | let c: U32 if c <= 0x2125 => ScriptCommon
+      | let c: U32 if c <= 0x2126 => ScriptGreek
+      | let c: U32 if c <= 0x2129 => ScriptCommon
+      | let c: U32 if c <= 0x212B => ScriptLatin
+      | let c: U32 if c <= 0x2131 => ScriptCommon
+      | let c: U32 if c <= 0x2132 => ScriptLatin
+      | let c: U32 if c <= 0x214D => ScriptCommon
+      | let c: U32 if c <= 0x214E => ScriptLatin
+      | let c: U32 if c <= 0x215F => ScriptCommon
+      | let c: U32 if c <= 0x2188 => ScriptLatin
+      | let c: U32 if c <= 0x218B => ScriptCommon
+      | let c: U32 if c <= 0x218F => ScriptUnknown
+      | let c: U32 if c <= 0x2429 => ScriptCommon
+      | let c: U32 if c <= 0x243F => ScriptUnknown
+      | let c: U32 if c <= 0x244A => ScriptCommon
+      | let c: U32 if c <= 0x245F => ScriptUnknown
+      | let c: U32 if c <= 0x27FF => ScriptCommon
+      | let c: U32 if c <= 0x28FF => ScriptBraille
+      | let c: U32 if c <= 0x2B73 => ScriptCommon
+      | let c: U32 if c <= 0x2B75 => ScriptUnknown
+      | let c: U32 if c <= 0x2B95 => ScriptCommon
+      | let c: U32 if c <= 0x2B96 => ScriptUnknown
+      | let c: U32 if c <= 0x2BFF => ScriptCommon
+      | let c: U32 if c <= 0x2C5F => ScriptGlagolitic
+      | let c: U32 if c <= 0x2C7F => ScriptLatin
+      | let c: U32 if c <= 0x2CF3 => ScriptCoptic
+      | let c: U32 if c <= 0x2CF8 => ScriptUnknown
+      | let c: U32 if c <= 0x2CFF => ScriptCoptic
+      | let c: U32 if c <= 0x2D25 => ScriptGeorgian
+      | let c: U32 if c <= 0x2D26 => ScriptUnknown
+      | let c: U32 if c <= 0x2D27 => ScriptGeorgian
+      | let c: U32 if c <= 0x2D2C => ScriptUnknown
+      | let c: U32 if c <= 0x2D2D => ScriptGeorgian
+      | let c: U32 if c <= 0x2D2F => ScriptUnknown
+      | let c: U32 if c <= 0x2D67 => ScriptTifinagh
+      | let c: U32 if c <= 0x2D6E => ScriptUnknown
+      | let c: U32 if c <= 0x2D70 => ScriptTifinagh
+      | let c: U32 if c <= 0x2D7E => ScriptUnknown
+      | let c: U32 if c <= 0x2D7F => ScriptTifinagh
+      | let c: U32 if c <= 0x2D96 => ScriptEthiopic
+      | let c: U32 if c <= 0x2D9F => ScriptUnknown
+      | let c: U32 if c <= 0x2DA6 => ScriptEthiopic
+      | let c: U32 if c <= 0x2DA7 => ScriptUnknown
+      | let c: U32 if c <= 0x2DAE => ScriptEthiopic
+      | let c: U32 if c <= 0x2DAF => ScriptUnknown
+      | let c: U32 if c <= 0x2DB6 => ScriptEthiopic
+      | let c: U32 if c <= 0x2DB7 => ScriptUnknown
+      | let c: U32 if c <= 0x2DBE => ScriptEthiopic
+      | let c: U32 if c <= 0x2DBF => ScriptUnknown
+      | let c: U32 if c <= 0x2DC6 => ScriptEthiopic
+      | let c: U32 if c <= 0x2DC7 => ScriptUnknown
+      | let c: U32 if c <= 0x2DCE => ScriptEthiopic
+      | let c: U32 if c <= 0x2DCF => ScriptUnknown
+      | let c: U32 if c <= 0x2DD6 => ScriptEthiopic
+      | let c: U32 if c <= 0x2DD7 => ScriptUnknown
+      | let c: U32 if c <= 0x2DDE => ScriptEthiopic
+      | let c: U32 if c <= 0x2DDF => ScriptUnknown
+      | let c: U32 if c <= 0x2DFF => ScriptCyrillic
+      | let c: U32 if c <= 0x2E5D => ScriptCommon
+      | let c: U32 if c <= 0x2E7F => ScriptUnknown
+      | let c: U32 if c <= 0x2E99 => ScriptHan
+      | let c: U32 if c <= 0x2E9A => ScriptUnknown
+      | let c: U32 if c <= 0x2EF3 => ScriptHan
+      | let c: U32 if c <= 0x2EFF => ScriptUnknown
+      | let c: U32 if c <= 0x2FD5 => ScriptHan
+      | let c: U32 if c <= 0x2FEF => ScriptUnknown
+      | let c: U32 if c <= 0x2FFF => ScriptCommon
+      else ScriptUnknown
+      end
+    | 0x0003 =>
+      match cp
+      | let c: U32 if c <= 0x3004 => ScriptCommon
+      | let c: U32 if c <= 0x3005 => ScriptHan
+      | let c: U32 if c <= 0x3006 => ScriptCommon
+      | let c: U32 if c <= 0x3007 => ScriptHan
+      | let c: U32 if c <= 0x3020 => ScriptCommon
+      | let c: U32 if c <= 0x3029 => ScriptHan
+      | let c: U32 if c <= 0x302D => ScriptInherited
+      | let c: U32 if c <= 0x302F => ScriptHangul
+      | let c: U32 if c <= 0x3037 => ScriptCommon
+      | let c: U32 if c <= 0x303B => ScriptHan
+      | let c: U32 if c <= 0x303F => ScriptCommon
+      | let c: U32 if c <= 0x3040 => ScriptUnknown
+      | let c: U32 if c <= 0x3096 => ScriptHiragana
+      | let c: U32 if c <= 0x3098 => ScriptUnknown
+      | let c: U32 if c <= 0x309A => ScriptInherited
+      | let c: U32 if c <= 0x309C => ScriptCommon
+      | let c: U32 if c <= 0x309F => ScriptHiragana
+      | let c: U32 if c <= 0x30A0 => ScriptCommon
+      | let c: U32 if c <= 0x30FA => ScriptKatakana
+      | let c: U32 if c <= 0x30FC => ScriptCommon
+      | let c: U32 if c <= 0x30FF => ScriptKatakana
+      | let c: U32 if c <= 0x3104 => ScriptUnknown
+      | let c: U32 if c <= 0x312F => ScriptBopomofo
+      | let c: U32 if c <= 0x3130 => ScriptUnknown
+      | let c: U32 if c <= 0x318E => ScriptHangul
+      | let c: U32 if c <= 0x318F => ScriptUnknown
+      | let c: U32 if c <= 0x319F => ScriptCommon
+      | let c: U32 if c <= 0x31BF => ScriptBopomofo
+      | let c: U32 if c <= 0x31E5 => ScriptCommon
+      | let c: U32 if c <= 0x31EE => ScriptUnknown
+      | let c: U32 if c <= 0x31EF => ScriptCommon
+      | let c: U32 if c <= 0x31FF => ScriptKatakana
+      | let c: U32 if c <= 0x321E => ScriptHangul
+      | let c: U32 if c <= 0x321F => ScriptUnknown
+      | let c: U32 if c <= 0x325F => ScriptCommon
+      | let c: U32 if c <= 0x327E => ScriptHangul
+      | let c: U32 if c <= 0x32CF => ScriptCommon
+      | let c: U32 if c <= 0x32FE => ScriptKatakana
+      | let c: U32 if c <= 0x32FF => ScriptCommon
+      | let c: U32 if c <= 0x3357 => ScriptKatakana
+      | let c: U32 if c <= 0x33FF => ScriptCommon
+      | let c: U32 if c <= 0x3FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0004 =>
+      match cp
+      | let c: U32 if c <= 0x4DBF => ScriptHan
+      | let c: U32 if c <= 0x4DFF => ScriptCommon
+      | let c: U32 if c <= 0x4FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0005 =>
+      match cp
+      | let c: U32 if c <= 0x5FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0006 =>
+      match cp
+      | let c: U32 if c <= 0x6FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0007 =>
+      match cp
+      | let c: U32 if c <= 0x7FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0008 =>
+      match cp
+      | let c: U32 if c <= 0x8FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0009 =>
+      match cp
+      | let c: U32 if c <= 0x9FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x000A =>
+      match cp
+      | let c: U32 if c <= 0xA48C => ScriptYi
+      | let c: U32 if c <= 0xA48F => ScriptUnknown
+      | let c: U32 if c <= 0xA4C6 => ScriptYi
+      | let c: U32 if c <= 0xA4CF => ScriptUnknown
+      | let c: U32 if c <= 0xA4FF => ScriptLisu
+      | let c: U32 if c <= 0xA62B => ScriptVai
+      | let c: U32 if c <= 0xA63F => ScriptUnknown
+      | let c: U32 if c <= 0xA69F => ScriptCyrillic
+      | let c: U32 if c <= 0xA6F7 => ScriptBamum
+      | let c: U32 if c <= 0xA6FF => ScriptUnknown
+      | let c: U32 if c <= 0xA721 => ScriptCommon
+      | let c: U32 if c <= 0xA787 => ScriptLatin
+      | let c: U32 if c <= 0xA78A => ScriptCommon
+      | let c: U32 if c <= 0xA7CD => ScriptLatin
+      | let c: U32 if c <= 0xA7CF => ScriptUnknown
+      | let c: U32 if c <= 0xA7D1 => ScriptLatin
+      | let c: U32 if c <= 0xA7D2 => ScriptUnknown
+      | let c: U32 if c <= 0xA7D3 => ScriptLatin
+      | let c: U32 if c <= 0xA7D4 => ScriptUnknown
+      | let c: U32 if c <= 0xA7DC => ScriptLatin
+      | let c: U32 if c <= 0xA7F1 => ScriptUnknown
+      | let c: U32 if c <= 0xA7FF => ScriptLatin
+      | let c: U32 if c <= 0xA82C => ScriptSylotiNagri
+      | let c: U32 if c <= 0xA82F => ScriptUnknown
+      | let c: U32 if c <= 0xA839 => ScriptCommon
+      | let c: U32 if c <= 0xA83F => ScriptUnknown
+      | let c: U32 if c <= 0xA877 => ScriptPhagsPa
+      | let c: U32 if c <= 0xA87F => ScriptUnknown
+      | let c: U32 if c <= 0xA8C5 => ScriptSaurashtra
+      | let c: U32 if c <= 0xA8CD => ScriptUnknown
+      | let c: U32 if c <= 0xA8D9 => ScriptSaurashtra
+      | let c: U32 if c <= 0xA8DF => ScriptUnknown
+      | let c: U32 if c <= 0xA8FF => ScriptDevanagari
+      | let c: U32 if c <= 0xA92D => ScriptKayahLi
+      | let c: U32 if c <= 0xA92E => ScriptCommon
+      | let c: U32 if c <= 0xA92F => ScriptKayahLi
+      | let c: U32 if c <= 0xA953 => ScriptRejang
+      | let c: U32 if c <= 0xA95E => ScriptUnknown
+      | let c: U32 if c <= 0xA95F => ScriptRejang
+      | let c: U32 if c <= 0xA97C => ScriptHangul
+      | let c: U32 if c <= 0xA97F => ScriptUnknown
+      | let c: U32 if c <= 0xA9CD => ScriptJavanese
+      | let c: U32 if c <= 0xA9CE => ScriptUnknown
+      | let c: U32 if c <= 0xA9CF => ScriptCommon
+      | let c: U32 if c <= 0xA9D9 => ScriptJavanese
+      | let c: U32 if c <= 0xA9DD => ScriptUnknown
+      | let c: U32 if c <= 0xA9DF => ScriptJavanese
+      | let c: U32 if c <= 0xA9FE => ScriptMyanmar
+      | let c: U32 if c <= 0xA9FF => ScriptUnknown
+      | let c: U32 if c <= 0xAA36 => ScriptCham
+      | let c: U32 if c <= 0xAA3F => ScriptUnknown
+      | let c: U32 if c <= 0xAA4D => ScriptCham
+      | let c: U32 if c <= 0xAA4F => ScriptUnknown
+      | let c: U32 if c <= 0xAA59 => ScriptCham
+      | let c: U32 if c <= 0xAA5B => ScriptUnknown
+      | let c: U32 if c <= 0xAA5F => ScriptCham
+      | let c: U32 if c <= 0xAA7F => ScriptMyanmar
+      | let c: U32 if c <= 0xAAC2 => ScriptTaiViet
+      | let c: U32 if c <= 0xAADA => ScriptUnknown
+      | let c: U32 if c <= 0xAADF => ScriptTaiViet
+      | let c: U32 if c <= 0xAAF6 => ScriptMeeteiMayek
+      | let c: U32 if c <= 0xAB00 => ScriptUnknown
+      | let c: U32 if c <= 0xAB06 => ScriptEthiopic
+      | let c: U32 if c <= 0xAB08 => ScriptUnknown
+      | let c: U32 if c <= 0xAB0E => ScriptEthiopic
+      | let c: U32 if c <= 0xAB10 => ScriptUnknown
+      | let c: U32 if c <= 0xAB16 => ScriptEthiopic
+      | let c: U32 if c <= 0xAB1F => ScriptUnknown
+      | let c: U32 if c <= 0xAB26 => ScriptEthiopic
+      | let c: U32 if c <= 0xAB27 => ScriptUnknown
+      | let c: U32 if c <= 0xAB2E => ScriptEthiopic
+      | let c: U32 if c <= 0xAB2F => ScriptUnknown
+      | let c: U32 if c <= 0xAB5A => ScriptLatin
+      | let c: U32 if c <= 0xAB5B => ScriptCommon
+      | let c: U32 if c <= 0xAB64 => ScriptLatin
+      | let c: U32 if c <= 0xAB65 => ScriptGreek
+      | let c: U32 if c <= 0xAB69 => ScriptLatin
+      | let c: U32 if c <= 0xAB6B => ScriptCommon
+      | let c: U32 if c <= 0xAB6F => ScriptUnknown
+      | let c: U32 if c <= 0xABBF => ScriptCherokee
+      | let c: U32 if c <= 0xABED => ScriptMeeteiMayek
+      | let c: U32 if c <= 0xABEF => ScriptUnknown
+      | let c: U32 if c <= 0xABF9 => ScriptMeeteiMayek
+      | let c: U32 if c <= 0xABFF => ScriptUnknown
+      | let c: U32 if c <= 0xAFFF => ScriptHangul
+      else ScriptUnknown
+      end
+    | 0x000B =>
+      match cp
+      | let c: U32 if c <= 0xBFFF => ScriptHangul
+      else ScriptUnknown
+      end
+    | 0x000C =>
+      match cp
+      | let c: U32 if c <= 0xCFFF => ScriptHangul
+      else ScriptUnknown
+      end
+    | 0x000D =>
+      match cp
+      | let c: U32 if c <= 0xD7A3 => ScriptHangul
+      | let c: U32 if c <= 0xD7AF => ScriptUnknown
+      | let c: U32 if c <= 0xD7C6 => ScriptHangul
+      | let c: U32 if c <= 0xD7CA => ScriptUnknown
+      | let c: U32 if c <= 0xD7FB => ScriptHangul
+      else ScriptUnknown
+      end
+    | 0x000F =>
+      match cp
+      | let c: U32 if c <= 0xF8FF => ScriptUnknown
+      | let c: U32 if c <= 0xFA6D => ScriptHan
+      | let c: U32 if c <= 0xFA6F => ScriptUnknown
+      | let c: U32 if c <= 0xFAD9 => ScriptHan
+      | let c: U32 if c <= 0xFAFF => ScriptUnknown
+      | let c: U32 if c <= 0xFB06 => ScriptLatin
+      | let c: U32 if c <= 0xFB12 => ScriptUnknown
+      | let c: U32 if c <= 0xFB17 => ScriptArmenian
+      | let c: U32 if c <= 0xFB1C => ScriptUnknown
+      | let c: U32 if c <= 0xFB36 => ScriptHebrew
+      | let c: U32 if c <= 0xFB37 => ScriptUnknown
+      | let c: U32 if c <= 0xFB3C => ScriptHebrew
+      | let c: U32 if c <= 0xFB3D => ScriptUnknown
+      | let c: U32 if c <= 0xFB3E => ScriptHebrew
+      | let c: U32 if c <= 0xFB3F => ScriptUnknown
+      | let c: U32 if c <= 0xFB41 => ScriptHebrew
+      | let c: U32 if c <= 0xFB42 => ScriptUnknown
+      | let c: U32 if c <= 0xFB44 => ScriptHebrew
+      | let c: U32 if c <= 0xFB45 => ScriptUnknown
+      | let c: U32 if c <= 0xFB4F => ScriptHebrew
+      | let c: U32 if c <= 0xFBC2 => ScriptArabic
+      | let c: U32 if c <= 0xFBD2 => ScriptUnknown
+      | let c: U32 if c <= 0xFD3D => ScriptArabic
+      | let c: U32 if c <= 0xFD3F => ScriptCommon
+      | let c: U32 if c <= 0xFD8F => ScriptArabic
+      | let c: U32 if c <= 0xFD91 => ScriptUnknown
+      | let c: U32 if c <= 0xFDC7 => ScriptArabic
+      | let c: U32 if c <= 0xFDCE => ScriptUnknown
+      | let c: U32 if c <= 0xFDCF => ScriptArabic
+      | let c: U32 if c <= 0xFDEF => ScriptUnknown
+      | let c: U32 if c <= 0xFDFF => ScriptArabic
+      | let c: U32 if c <= 0xFE0F => ScriptInherited
+      | let c: U32 if c <= 0xFE19 => ScriptCommon
+      | let c: U32 if c <= 0xFE1F => ScriptUnknown
+      | let c: U32 if c <= 0xFE2D => ScriptInherited
+      | let c: U32 if c <= 0xFE2F => ScriptCyrillic
+      | let c: U32 if c <= 0xFE52 => ScriptCommon
+      | let c: U32 if c <= 0xFE53 => ScriptUnknown
+      | let c: U32 if c <= 0xFE66 => ScriptCommon
+      | let c: U32 if c <= 0xFE67 => ScriptUnknown
+      | let c: U32 if c <= 0xFE6B => ScriptCommon
+      | let c: U32 if c <= 0xFE6F => ScriptUnknown
+      | let c: U32 if c <= 0xFE74 => ScriptArabic
+      | let c: U32 if c <= 0xFE75 => ScriptUnknown
+      | let c: U32 if c <= 0xFEFC => ScriptArabic
+      | let c: U32 if c <= 0xFEFE => ScriptUnknown
+      | let c: U32 if c <= 0xFEFF => ScriptCommon
+      | let c: U32 if c <= 0xFF00 => ScriptUnknown
+      | let c: U32 if c <= 0xFF20 => ScriptCommon
+      | let c: U32 if c <= 0xFF3A => ScriptLatin
+      | let c: U32 if c <= 0xFF40 => ScriptCommon
+      | let c: U32 if c <= 0xFF5A => ScriptLatin
+      | let c: U32 if c <= 0xFF65 => ScriptCommon
+      | let c: U32 if c <= 0xFF6F => ScriptKatakana
+      | let c: U32 if c <= 0xFF70 => ScriptCommon
+      | let c: U32 if c <= 0xFF9D => ScriptKatakana
+      | let c: U32 if c <= 0xFF9F => ScriptCommon
+      | let c: U32 if c <= 0xFFBE => ScriptHangul
+      | let c: U32 if c <= 0xFFC1 => ScriptUnknown
+      | let c: U32 if c <= 0xFFC7 => ScriptHangul
+      | let c: U32 if c <= 0xFFC9 => ScriptUnknown
+      | let c: U32 if c <= 0xFFCF => ScriptHangul
+      | let c: U32 if c <= 0xFFD1 => ScriptUnknown
+      | let c: U32 if c <= 0xFFD7 => ScriptHangul
+      | let c: U32 if c <= 0xFFD9 => ScriptUnknown
+      | let c: U32 if c <= 0xFFDC => ScriptHangul
+      | let c: U32 if c <= 0xFFDF => ScriptUnknown
+      | let c: U32 if c <= 0xFFE6 => ScriptCommon
+      | let c: U32 if c <= 0xFFE7 => ScriptUnknown
+      | let c: U32 if c <= 0xFFEE => ScriptCommon
+      | let c: U32 if c <= 0xFFF8 => ScriptUnknown
+      | let c: U32 if c <= 0xFFFD => ScriptCommon
+      else ScriptUnknown
+      end
+    | 0x0010 =>
+      match cp
+      | let c: U32 if c <= 0x1000B => ScriptLinearB
+      | let c: U32 if c <= 0x1000C => ScriptUnknown
+      | let c: U32 if c <= 0x10026 => ScriptLinearB
+      | let c: U32 if c <= 0x10027 => ScriptUnknown
+      | let c: U32 if c <= 0x1003A => ScriptLinearB
+      | let c: U32 if c <= 0x1003B => ScriptUnknown
+      | let c: U32 if c <= 0x1003D => ScriptLinearB
+      | let c: U32 if c <= 0x1003E => ScriptUnknown
+      | let c: U32 if c <= 0x1004D => ScriptLinearB
+      | let c: U32 if c <= 0x1004F => ScriptUnknown
+      | let c: U32 if c <= 0x1005D => ScriptLinearB
+      | let c: U32 if c <= 0x1007F => ScriptUnknown
+      | let c: U32 if c <= 0x100FA => ScriptLinearB
+      | let c: U32 if c <= 0x100FF => ScriptUnknown
+      | let c: U32 if c <= 0x10102 => ScriptCommon
+      | let c: U32 if c <= 0x10106 => ScriptUnknown
+      | let c: U32 if c <= 0x10133 => ScriptCommon
+      | let c: U32 if c <= 0x10136 => ScriptUnknown
+      | let c: U32 if c <= 0x1013F => ScriptCommon
+      | let c: U32 if c <= 0x1018E => ScriptGreek
+      | let c: U32 if c <= 0x1018F => ScriptUnknown
+      | let c: U32 if c <= 0x1019C => ScriptCommon
+      | let c: U32 if c <= 0x1019F => ScriptUnknown
+      | let c: U32 if c <= 0x101A0 => ScriptGreek
+      | let c: U32 if c <= 0x101CF => ScriptUnknown
+      | let c: U32 if c <= 0x101FC => ScriptCommon
+      | let c: U32 if c <= 0x101FD => ScriptInherited
+      | let c: U32 if c <= 0x1027F => ScriptUnknown
+      | let c: U32 if c <= 0x1029C => ScriptLycian
+      | let c: U32 if c <= 0x1029F => ScriptUnknown
+      | let c: U32 if c <= 0x102D0 => ScriptCarian
+      | let c: U32 if c <= 0x102DF => ScriptUnknown
+      | let c: U32 if c <= 0x102E0 => ScriptInherited
+      | let c: U32 if c <= 0x102FB => ScriptCommon
+      | let c: U32 if c <= 0x102FF => ScriptUnknown
+      | let c: U32 if c <= 0x10323 => ScriptOldItalic
+      | let c: U32 if c <= 0x1032C => ScriptUnknown
+      | let c: U32 if c <= 0x1032F => ScriptOldItalic
+      | let c: U32 if c <= 0x1034A => ScriptGothic
+      | let c: U32 if c <= 0x1034F => ScriptUnknown
+      | let c: U32 if c <= 0x1037A => ScriptOldPermic
+      | let c: U32 if c <= 0x1037F => ScriptUnknown
+      | let c: U32 if c <= 0x1039D => ScriptUgaritic
+      | let c: U32 if c <= 0x1039E => ScriptUnknown
+      | let c: U32 if c <= 0x1039F => ScriptUgaritic
+      | let c: U32 if c <= 0x103C3 => ScriptOldPersian
+      | let c: U32 if c <= 0x103C7 => ScriptUnknown
+      | let c: U32 if c <= 0x103D5 => ScriptOldPersian
+      | let c: U32 if c <= 0x103FF => ScriptUnknown
+      | let c: U32 if c <= 0x1044F => ScriptDeseret
+      | let c: U32 if c <= 0x1047F => ScriptShavian
+      | let c: U32 if c <= 0x1049D => ScriptOsmanya
+      | let c: U32 if c <= 0x1049F => ScriptUnknown
+      | let c: U32 if c <= 0x104A9 => ScriptOsmanya
+      | let c: U32 if c <= 0x104AF => ScriptUnknown
+      | let c: U32 if c <= 0x104D3 => ScriptOsage
+      | let c: U32 if c <= 0x104D7 => ScriptUnknown
+      | let c: U32 if c <= 0x104FB => ScriptOsage
+      | let c: U32 if c <= 0x104FF => ScriptUnknown
+      | let c: U32 if c <= 0x10527 => ScriptElbasan
+      | let c: U32 if c <= 0x1052F => ScriptUnknown
+      | let c: U32 if c <= 0x10563 => ScriptCaucasianAlbanian
+      | let c: U32 if c <= 0x1056E => ScriptUnknown
+      | let c: U32 if c <= 0x1056F => ScriptCaucasianAlbanian
+      | let c: U32 if c <= 0x1057A => ScriptVithkuqi
+      | let c: U32 if c <= 0x1057B => ScriptUnknown
+      | let c: U32 if c <= 0x1058A => ScriptVithkuqi
+      | let c: U32 if c <= 0x1058B => ScriptUnknown
+      | let c: U32 if c <= 0x10592 => ScriptVithkuqi
+      | let c: U32 if c <= 0x10593 => ScriptUnknown
+      | let c: U32 if c <= 0x10595 => ScriptVithkuqi
+      | let c: U32 if c <= 0x10596 => ScriptUnknown
+      | let c: U32 if c <= 0x105A1 => ScriptVithkuqi
+      | let c: U32 if c <= 0x105A2 => ScriptUnknown
+      | let c: U32 if c <= 0x105B1 => ScriptVithkuqi
+      | let c: U32 if c <= 0x105B2 => ScriptUnknown
+      | let c: U32 if c <= 0x105B9 => ScriptVithkuqi
+      | let c: U32 if c <= 0x105BA => ScriptUnknown
+      | let c: U32 if c <= 0x105BC => ScriptVithkuqi
+      | let c: U32 if c <= 0x105BF => ScriptUnknown
+      | let c: U32 if c <= 0x105F3 => ScriptTodhri
+      | let c: U32 if c <= 0x105FF => ScriptUnknown
+      | let c: U32 if c <= 0x10736 => ScriptLinearA
+      | let c: U32 if c <= 0x1073F => ScriptUnknown
+      | let c: U32 if c <= 0x10755 => ScriptLinearA
+      | let c: U32 if c <= 0x1075F => ScriptUnknown
+      | let c: U32 if c <= 0x10767 => ScriptLinearA
+      | let c: U32 if c <= 0x1077F => ScriptUnknown
+      | let c: U32 if c <= 0x10785 => ScriptLatin
+      | let c: U32 if c <= 0x10786 => ScriptUnknown
+      | let c: U32 if c <= 0x107B0 => ScriptLatin
+      | let c: U32 if c <= 0x107B1 => ScriptUnknown
+      | let c: U32 if c <= 0x107BA => ScriptLatin
+      | let c: U32 if c <= 0x107FF => ScriptUnknown
+      | let c: U32 if c <= 0x10805 => ScriptCypriot
+      | let c: U32 if c <= 0x10807 => ScriptUnknown
+      | let c: U32 if c <= 0x10808 => ScriptCypriot
+      | let c: U32 if c <= 0x10809 => ScriptUnknown
+      | let c: U32 if c <= 0x10835 => ScriptCypriot
+      | let c: U32 if c <= 0x10836 => ScriptUnknown
+      | let c: U32 if c <= 0x10838 => ScriptCypriot
+      | let c: U32 if c <= 0x1083B => ScriptUnknown
+      | let c: U32 if c <= 0x1083C => ScriptCypriot
+      | let c: U32 if c <= 0x1083E => ScriptUnknown
+      | let c: U32 if c <= 0x1083F => ScriptCypriot
+      | let c: U32 if c <= 0x10855 => ScriptImperialAramaic
+      | let c: U32 if c <= 0x10856 => ScriptUnknown
+      | let c: U32 if c <= 0x1085F => ScriptImperialAramaic
+      | let c: U32 if c <= 0x1087F => ScriptPalmyrene
+      | let c: U32 if c <= 0x1089E => ScriptNabataean
+      | let c: U32 if c <= 0x108A6 => ScriptUnknown
+      | let c: U32 if c <= 0x108AF => ScriptNabataean
+      | let c: U32 if c <= 0x108DF => ScriptUnknown
+      | let c: U32 if c <= 0x108F2 => ScriptHatran
+      | let c: U32 if c <= 0x108F3 => ScriptUnknown
+      | let c: U32 if c <= 0x108F5 => ScriptHatran
+      | let c: U32 if c <= 0x108FA => ScriptUnknown
+      | let c: U32 if c <= 0x108FF => ScriptHatran
+      | let c: U32 if c <= 0x1091B => ScriptPhoenician
+      | let c: U32 if c <= 0x1091E => ScriptUnknown
+      | let c: U32 if c <= 0x1091F => ScriptPhoenician
+      | let c: U32 if c <= 0x10939 => ScriptLydian
+      | let c: U32 if c <= 0x1093E => ScriptUnknown
+      | let c: U32 if c <= 0x1093F => ScriptLydian
+      | let c: U32 if c <= 0x1097F => ScriptUnknown
+      | let c: U32 if c <= 0x1099F => ScriptMeroiticHieroglyphs
+      | let c: U32 if c <= 0x109B7 => ScriptMeroiticCursive
+      | let c: U32 if c <= 0x109BB => ScriptUnknown
+      | let c: U32 if c <= 0x109CF => ScriptMeroiticCursive
+      | let c: U32 if c <= 0x109D1 => ScriptUnknown
+      | let c: U32 if c <= 0x109FF => ScriptMeroiticCursive
+      | let c: U32 if c <= 0x10A03 => ScriptKharoshthi
+      | let c: U32 if c <= 0x10A04 => ScriptUnknown
+      | let c: U32 if c <= 0x10A06 => ScriptKharoshthi
+      | let c: U32 if c <= 0x10A0B => ScriptUnknown
+      | let c: U32 if c <= 0x10A13 => ScriptKharoshthi
+      | let c: U32 if c <= 0x10A14 => ScriptUnknown
+      | let c: U32 if c <= 0x10A17 => ScriptKharoshthi
+      | let c: U32 if c <= 0x10A18 => ScriptUnknown
+      | let c: U32 if c <= 0x10A35 => ScriptKharoshthi
+      | let c: U32 if c <= 0x10A37 => ScriptUnknown
+      | let c: U32 if c <= 0x10A3A => ScriptKharoshthi
+      | let c: U32 if c <= 0x10A3E => ScriptUnknown
+      | let c: U32 if c <= 0x10A48 => ScriptKharoshthi
+      | let c: U32 if c <= 0x10A4F => ScriptUnknown
+      | let c: U32 if c <= 0x10A58 => ScriptKharoshthi
+      | let c: U32 if c <= 0x10A5F => ScriptUnknown
+      | let c: U32 if c <= 0x10A7F => ScriptOldSouthArabian
+      | let c: U32 if c <= 0x10A9F => ScriptOldNorthArabian
+      | let c: U32 if c <= 0x10ABF => ScriptUnknown
+      | let c: U32 if c <= 0x10AE6 => ScriptManichaean
+      | let c: U32 if c <= 0x10AEA => ScriptUnknown
+      | let c: U32 if c <= 0x10AF6 => ScriptManichaean
+      | let c: U32 if c <= 0x10AFF => ScriptUnknown
+      | let c: U32 if c <= 0x10B35 => ScriptAvestan
+      | let c: U32 if c <= 0x10B38 => ScriptUnknown
+      | let c: U32 if c <= 0x10B3F => ScriptAvestan
+      | let c: U32 if c <= 0x10B55 => ScriptInscriptionalParthian
+      | let c: U32 if c <= 0x10B57 => ScriptUnknown
+      | let c: U32 if c <= 0x10B5F => ScriptInscriptionalParthian
+      | let c: U32 if c <= 0x10B72 => ScriptInscriptionalPahlavi
+      | let c: U32 if c <= 0x10B77 => ScriptUnknown
+      | let c: U32 if c <= 0x10B7F => ScriptInscriptionalPahlavi
+      | let c: U32 if c <= 0x10B91 => ScriptPsalterPahlavi
+      | let c: U32 if c <= 0x10B98 => ScriptUnknown
+      | let c: U32 if c <= 0x10B9C => ScriptPsalterPahlavi
+      | let c: U32 if c <= 0x10BA8 => ScriptUnknown
+      | let c: U32 if c <= 0x10BAF => ScriptPsalterPahlavi
+      | let c: U32 if c <= 0x10BFF => ScriptUnknown
+      | let c: U32 if c <= 0x10C48 => ScriptOldTurkic
+      | let c: U32 if c <= 0x10C7F => ScriptUnknown
+      | let c: U32 if c <= 0x10CB2 => ScriptOldHungarian
+      | let c: U32 if c <= 0x10CBF => ScriptUnknown
+      | let c: U32 if c <= 0x10CF2 => ScriptOldHungarian
+      | let c: U32 if c <= 0x10CF9 => ScriptUnknown
+      | let c: U32 if c <= 0x10CFF => ScriptOldHungarian
+      | let c: U32 if c <= 0x10D27 => ScriptHanifiRohingya
+      | let c: U32 if c <= 0x10D2F => ScriptUnknown
+      | let c: U32 if c <= 0x10D39 => ScriptHanifiRohingya
+      | let c: U32 if c <= 0x10D3F => ScriptUnknown
+      | let c: U32 if c <= 0x10D65 => ScriptGaray
+      | let c: U32 if c <= 0x10D68 => ScriptUnknown
+      | let c: U32 if c <= 0x10D85 => ScriptGaray
+      | let c: U32 if c <= 0x10D8D => ScriptUnknown
+      | let c: U32 if c <= 0x10D8F => ScriptGaray
+      | let c: U32 if c <= 0x10E5F => ScriptUnknown
+      | let c: U32 if c <= 0x10E7E => ScriptArabic
+      | let c: U32 if c <= 0x10E7F => ScriptUnknown
+      | let c: U32 if c <= 0x10EA9 => ScriptYezidi
+      | let c: U32 if c <= 0x10EAA => ScriptUnknown
+      | let c: U32 if c <= 0x10EAD => ScriptYezidi
+      | let c: U32 if c <= 0x10EAF => ScriptUnknown
+      | let c: U32 if c <= 0x10EB1 => ScriptYezidi
+      | let c: U32 if c <= 0x10EC1 => ScriptUnknown
+      | let c: U32 if c <= 0x10EC4 => ScriptArabic
+      | let c: U32 if c <= 0x10EFB => ScriptUnknown
+      | let c: U32 if c <= 0x10EFF => ScriptArabic
+      | let c: U32 if c <= 0x10F27 => ScriptOldSogdian
+      | let c: U32 if c <= 0x10F2F => ScriptUnknown
+      | let c: U32 if c <= 0x10F59 => ScriptSogdian
+      | let c: U32 if c <= 0x10F6F => ScriptUnknown
+      | let c: U32 if c <= 0x10F89 => ScriptOldUyghur
+      | let c: U32 if c <= 0x10FAF => ScriptUnknown
+      | let c: U32 if c <= 0x10FCB => ScriptChorasmian
+      | let c: U32 if c <= 0x10FDF => ScriptUnknown
+      | let c: U32 if c <= 0x10FF6 => ScriptElymaic
+      else ScriptUnknown
+      end
+    | 0x0011 =>
+      match cp
+      | let c: U32 if c <= 0x1104D => ScriptBrahmi
+      | let c: U32 if c <= 0x11051 => ScriptUnknown
+      | let c: U32 if c <= 0x11075 => ScriptBrahmi
+      | let c: U32 if c <= 0x1107E => ScriptUnknown
+      | let c: U32 if c <= 0x1107F => ScriptBrahmi
+      | let c: U32 if c <= 0x110C2 => ScriptKaithi
+      | let c: U32 if c <= 0x110CC => ScriptUnknown
+      | let c: U32 if c <= 0x110CD => ScriptKaithi
+      | let c: U32 if c <= 0x110CF => ScriptUnknown
+      | let c: U32 if c <= 0x110E8 => ScriptSoraSompeng
+      | let c: U32 if c <= 0x110EF => ScriptUnknown
+      | let c: U32 if c <= 0x110F9 => ScriptSoraSompeng
+      | let c: U32 if c <= 0x110FF => ScriptUnknown
+      | let c: U32 if c <= 0x11134 => ScriptChakma
+      | let c: U32 if c <= 0x11135 => ScriptUnknown
+      | let c: U32 if c <= 0x11147 => ScriptChakma
+      | let c: U32 if c <= 0x1114F => ScriptUnknown
+      | let c: U32 if c <= 0x11176 => ScriptMahajani
+      | let c: U32 if c <= 0x1117F => ScriptUnknown
+      | let c: U32 if c <= 0x111DF => ScriptSharada
+      | let c: U32 if c <= 0x111E0 => ScriptUnknown
+      | let c: U32 if c <= 0x111F4 => ScriptSinhala
+      | let c: U32 if c <= 0x111FF => ScriptUnknown
+      | let c: U32 if c <= 0x11211 => ScriptKhojki
+      | let c: U32 if c <= 0x11212 => ScriptUnknown
+      | let c: U32 if c <= 0x11241 => ScriptKhojki
+      | let c: U32 if c <= 0x1127F => ScriptUnknown
+      | let c: U32 if c <= 0x11286 => ScriptMultani
+      | let c: U32 if c <= 0x11287 => ScriptUnknown
+      | let c: U32 if c <= 0x11288 => ScriptMultani
+      | let c: U32 if c <= 0x11289 => ScriptUnknown
+      | let c: U32 if c <= 0x1128D => ScriptMultani
+      | let c: U32 if c <= 0x1128E => ScriptUnknown
+      | let c: U32 if c <= 0x1129D => ScriptMultani
+      | let c: U32 if c <= 0x1129E => ScriptUnknown
+      | let c: U32 if c <= 0x112A9 => ScriptMultani
+      | let c: U32 if c <= 0x112AF => ScriptUnknown
+      | let c: U32 if c <= 0x112EA => ScriptKhudawadi
+      | let c: U32 if c <= 0x112EF => ScriptUnknown
+      | let c: U32 if c <= 0x112F9 => ScriptKhudawadi
+      | let c: U32 if c <= 0x112FF => ScriptUnknown
+      | let c: U32 if c <= 0x11303 => ScriptGrantha
+      | let c: U32 if c <= 0x11304 => ScriptUnknown
+      | let c: U32 if c <= 0x1130C => ScriptGrantha
+      | let c: U32 if c <= 0x1130E => ScriptUnknown
+      | let c: U32 if c <= 0x11310 => ScriptGrantha
+      | let c: U32 if c <= 0x11312 => ScriptUnknown
+      | let c: U32 if c <= 0x11328 => ScriptGrantha
+      | let c: U32 if c <= 0x11329 => ScriptUnknown
+      | let c: U32 if c <= 0x11330 => ScriptGrantha
+      | let c: U32 if c <= 0x11331 => ScriptUnknown
+      | let c: U32 if c <= 0x11333 => ScriptGrantha
+      | let c: U32 if c <= 0x11334 => ScriptUnknown
+      | let c: U32 if c <= 0x11339 => ScriptGrantha
+      | let c: U32 if c <= 0x1133A => ScriptUnknown
+      | let c: U32 if c <= 0x1133B => ScriptInherited
+      | let c: U32 if c <= 0x11344 => ScriptGrantha
+      | let c: U32 if c <= 0x11346 => ScriptUnknown
+      | let c: U32 if c <= 0x11348 => ScriptGrantha
+      | let c: U32 if c <= 0x1134A => ScriptUnknown
+      | let c: U32 if c <= 0x1134D => ScriptGrantha
+      | let c: U32 if c <= 0x1134F => ScriptUnknown
+      | let c: U32 if c <= 0x11350 => ScriptGrantha
+      | let c: U32 if c <= 0x11356 => ScriptUnknown
+      | let c: U32 if c <= 0x11357 => ScriptGrantha
+      | let c: U32 if c <= 0x1135C => ScriptUnknown
+      | let c: U32 if c <= 0x11363 => ScriptGrantha
+      | let c: U32 if c <= 0x11365 => ScriptUnknown
+      | let c: U32 if c <= 0x1136C => ScriptGrantha
+      | let c: U32 if c <= 0x1136F => ScriptUnknown
+      | let c: U32 if c <= 0x11374 => ScriptGrantha
+      | let c: U32 if c <= 0x1137F => ScriptUnknown
+      | let c: U32 if c <= 0x11389 => ScriptTuluTigalari
+      | let c: U32 if c <= 0x1138A => ScriptUnknown
+      | let c: U32 if c <= 0x1138B => ScriptTuluTigalari
+      | let c: U32 if c <= 0x1138D => ScriptUnknown
+      | let c: U32 if c <= 0x1138E => ScriptTuluTigalari
+      | let c: U32 if c <= 0x1138F => ScriptUnknown
+      | let c: U32 if c <= 0x113B5 => ScriptTuluTigalari
+      | let c: U32 if c <= 0x113B6 => ScriptUnknown
+      | let c: U32 if c <= 0x113C0 => ScriptTuluTigalari
+      | let c: U32 if c <= 0x113C1 => ScriptUnknown
+      | let c: U32 if c <= 0x113C2 => ScriptTuluTigalari
+      | let c: U32 if c <= 0x113C4 => ScriptUnknown
+      | let c: U32 if c <= 0x113C5 => ScriptTuluTigalari
+      | let c: U32 if c <= 0x113C6 => ScriptUnknown
+      | let c: U32 if c <= 0x113CA => ScriptTuluTigalari
+      | let c: U32 if c <= 0x113CB => ScriptUnknown
+      | let c: U32 if c <= 0x113D5 => ScriptTuluTigalari
+      | let c: U32 if c <= 0x113D6 => ScriptUnknown
+      | let c: U32 if c <= 0x113D8 => ScriptTuluTigalari
+      | let c: U32 if c <= 0x113E0 => ScriptUnknown
+      | let c: U32 if c <= 0x113E2 => ScriptTuluTigalari
+      | let c: U32 if c <= 0x113FF => ScriptUnknown
+      | let c: U32 if c <= 0x1145B => ScriptNewa
+      | let c: U32 if c <= 0x1145C => ScriptUnknown
+      | let c: U32 if c <= 0x11461 => ScriptNewa
+      | let c: U32 if c <= 0x1147F => ScriptUnknown
+      | let c: U32 if c <= 0x114C7 => ScriptTirhuta
+      | let c: U32 if c <= 0x114CF => ScriptUnknown
+      | let c: U32 if c <= 0x114D9 => ScriptTirhuta
+      | let c: U32 if c <= 0x1157F => ScriptUnknown
+      | let c: U32 if c <= 0x115B5 => ScriptSiddham
+      | let c: U32 if c <= 0x115B7 => ScriptUnknown
+      | let c: U32 if c <= 0x115DD => ScriptSiddham
+      | let c: U32 if c <= 0x115FF => ScriptUnknown
+      | let c: U32 if c <= 0x11644 => ScriptModi
+      | let c: U32 if c <= 0x1164F => ScriptUnknown
+      | let c: U32 if c <= 0x11659 => ScriptModi
+      | let c: U32 if c <= 0x1165F => ScriptUnknown
+      | let c: U32 if c <= 0x1166C => ScriptMongolian
+      | let c: U32 if c <= 0x1167F => ScriptUnknown
+      | let c: U32 if c <= 0x116B9 => ScriptTakri
+      | let c: U32 if c <= 0x116BF => ScriptUnknown
+      | let c: U32 if c <= 0x116C9 => ScriptTakri
+      | let c: U32 if c <= 0x116CF => ScriptUnknown
+      | let c: U32 if c <= 0x116E3 => ScriptMyanmar
+      | let c: U32 if c <= 0x116FF => ScriptUnknown
+      | let c: U32 if c <= 0x1171A => ScriptAhom
+      | let c: U32 if c <= 0x1171C => ScriptUnknown
+      | let c: U32 if c <= 0x1172B => ScriptAhom
+      | let c: U32 if c <= 0x1172F => ScriptUnknown
+      | let c: U32 if c <= 0x11746 => ScriptAhom
+      | let c: U32 if c <= 0x117FF => ScriptUnknown
+      | let c: U32 if c <= 0x1183B => ScriptDogra
+      | let c: U32 if c <= 0x1189F => ScriptUnknown
+      | let c: U32 if c <= 0x118F2 => ScriptWarangCiti
+      | let c: U32 if c <= 0x118FE => ScriptUnknown
+      | let c: U32 if c <= 0x118FF => ScriptWarangCiti
+      | let c: U32 if c <= 0x11906 => ScriptDivesAkuru
+      | let c: U32 if c <= 0x11908 => ScriptUnknown
+      | let c: U32 if c <= 0x11909 => ScriptDivesAkuru
+      | let c: U32 if c <= 0x1190B => ScriptUnknown
+      | let c: U32 if c <= 0x11913 => ScriptDivesAkuru
+      | let c: U32 if c <= 0x11914 => ScriptUnknown
+      | let c: U32 if c <= 0x11916 => ScriptDivesAkuru
+      | let c: U32 if c <= 0x11917 => ScriptUnknown
+      | let c: U32 if c <= 0x11935 => ScriptDivesAkuru
+      | let c: U32 if c <= 0x11936 => ScriptUnknown
+      | let c: U32 if c <= 0x11938 => ScriptDivesAkuru
+      | let c: U32 if c <= 0x1193A => ScriptUnknown
+      | let c: U32 if c <= 0x11946 => ScriptDivesAkuru
+      | let c: U32 if c <= 0x1194F => ScriptUnknown
+      | let c: U32 if c <= 0x11959 => ScriptDivesAkuru
+      | let c: U32 if c <= 0x1199F => ScriptUnknown
+      | let c: U32 if c <= 0x119A7 => ScriptNandinagari
+      | let c: U32 if c <= 0x119A9 => ScriptUnknown
+      | let c: U32 if c <= 0x119D7 => ScriptNandinagari
+      | let c: U32 if c <= 0x119D9 => ScriptUnknown
+      | let c: U32 if c <= 0x119E4 => ScriptNandinagari
+      | let c: U32 if c <= 0x119FF => ScriptUnknown
+      | let c: U32 if c <= 0x11A47 => ScriptZanabazarSquare
+      | let c: U32 if c <= 0x11A4F => ScriptUnknown
+      | let c: U32 if c <= 0x11AA2 => ScriptSoyombo
+      | let c: U32 if c <= 0x11AAF => ScriptUnknown
+      | let c: U32 if c <= 0x11ABF => ScriptCanadianAboriginal
+      | let c: U32 if c <= 0x11AF8 => ScriptPauCinHau
+      | let c: U32 if c <= 0x11AFF => ScriptUnknown
+      | let c: U32 if c <= 0x11B09 => ScriptDevanagari
+      | let c: U32 if c <= 0x11BBF => ScriptUnknown
+      | let c: U32 if c <= 0x11BE1 => ScriptSunuwar
+      | let c: U32 if c <= 0x11BEF => ScriptUnknown
+      | let c: U32 if c <= 0x11BF9 => ScriptSunuwar
+      | let c: U32 if c <= 0x11BFF => ScriptUnknown
+      | let c: U32 if c <= 0x11C08 => ScriptBhaiksuki
+      | let c: U32 if c <= 0x11C09 => ScriptUnknown
+      | let c: U32 if c <= 0x11C36 => ScriptBhaiksuki
+      | let c: U32 if c <= 0x11C37 => ScriptUnknown
+      | let c: U32 if c <= 0x11C45 => ScriptBhaiksuki
+      | let c: U32 if c <= 0x11C4F => ScriptUnknown
+      | let c: U32 if c <= 0x11C6C => ScriptBhaiksuki
+      | let c: U32 if c <= 0x11C6F => ScriptUnknown
+      | let c: U32 if c <= 0x11C8F => ScriptMarchen
+      | let c: U32 if c <= 0x11C91 => ScriptUnknown
+      | let c: U32 if c <= 0x11CA7 => ScriptMarchen
+      | let c: U32 if c <= 0x11CA8 => ScriptUnknown
+      | let c: U32 if c <= 0x11CB6 => ScriptMarchen
+      | let c: U32 if c <= 0x11CFF => ScriptUnknown
+      | let c: U32 if c <= 0x11D06 => ScriptMasaramGondi
+      | let c: U32 if c <= 0x11D07 => ScriptUnknown
+      | let c: U32 if c <= 0x11D09 => ScriptMasaramGondi
+      | let c: U32 if c <= 0x11D0A => ScriptUnknown
+      | let c: U32 if c <= 0x11D36 => ScriptMasaramGondi
+      | let c: U32 if c <= 0x11D39 => ScriptUnknown
+      | let c: U32 if c <= 0x11D3A => ScriptMasaramGondi
+      | let c: U32 if c <= 0x11D3B => ScriptUnknown
+      | let c: U32 if c <= 0x11D3D => ScriptMasaramGondi
+      | let c: U32 if c <= 0x11D3E => ScriptUnknown
+      | let c: U32 if c <= 0x11D47 => ScriptMasaramGondi
+      | let c: U32 if c <= 0x11D4F => ScriptUnknown
+      | let c: U32 if c <= 0x11D59 => ScriptMasaramGondi
+      | let c: U32 if c <= 0x11D5F => ScriptUnknown
+      | let c: U32 if c <= 0x11D65 => ScriptGunjalaGondi
+      | let c: U32 if c <= 0x11D66 => ScriptUnknown
+      | let c: U32 if c <= 0x11D68 => ScriptGunjalaGondi
+      | let c: U32 if c <= 0x11D69 => ScriptUnknown
+      | let c: U32 if c <= 0x11D8E => ScriptGunjalaGondi
+      | let c: U32 if c <= 0x11D8F => ScriptUnknown
+      | let c: U32 if c <= 0x11D91 => ScriptGunjalaGondi
+      | let c: U32 if c <= 0x11D92 => ScriptUnknown
+      | let c: U32 if c <= 0x11D98 => ScriptGunjalaGondi
+      | let c: U32 if c <= 0x11D9F => ScriptUnknown
+      | let c: U32 if c <= 0x11DA9 => ScriptGunjalaGondi
+      | let c: U32 if c <= 0x11EDF => ScriptUnknown
+      | let c: U32 if c <= 0x11EF8 => ScriptMakasar
+      | let c: U32 if c <= 0x11EFF => ScriptUnknown
+      | let c: U32 if c <= 0x11F10 => ScriptKawi
+      | let c: U32 if c <= 0x11F11 => ScriptUnknown
+      | let c: U32 if c <= 0x11F3A => ScriptKawi
+      | let c: U32 if c <= 0x11F3D => ScriptUnknown
+      | let c: U32 if c <= 0x11F5A => ScriptKawi
+      | let c: U32 if c <= 0x11FAF => ScriptUnknown
+      | let c: U32 if c <= 0x11FB0 => ScriptLisu
+      | let c: U32 if c <= 0x11FBF => ScriptUnknown
+      | let c: U32 if c <= 0x11FF1 => ScriptTamil
+      | let c: U32 if c <= 0x11FFE => ScriptUnknown
+      | let c: U32 if c <= 0x11FFF => ScriptTamil
+      else ScriptUnknown
+      end
+    | 0x0012 =>
+      match cp
+      | let c: U32 if c <= 0x12399 => ScriptCuneiform
+      | let c: U32 if c <= 0x123FF => ScriptUnknown
+      | let c: U32 if c <= 0x1246E => ScriptCuneiform
+      | let c: U32 if c <= 0x1246F => ScriptUnknown
+      | let c: U32 if c <= 0x12474 => ScriptCuneiform
+      | let c: U32 if c <= 0x1247F => ScriptUnknown
+      | let c: U32 if c <= 0x12543 => ScriptCuneiform
+      | let c: U32 if c <= 0x12F8F => ScriptUnknown
+      | let c: U32 if c <= 0x12FF2 => ScriptCyproMinoan
+      else ScriptUnknown
+      end
+    | 0x0013 =>
+      match cp
+      | let c: U32 if c <= 0x13455 => ScriptEgyptianHieroglyphs
+      | let c: U32 if c <= 0x1345F => ScriptUnknown
+      | let c: U32 if c <= 0x13FFF => ScriptEgyptianHieroglyphs
+      else ScriptUnknown
+      end
+    | 0x0014 =>
+      match cp
+      | let c: U32 if c <= 0x143FA => ScriptEgyptianHieroglyphs
+      | let c: U32 if c <= 0x143FF => ScriptUnknown
+      | let c: U32 if c <= 0x14646 => ScriptAnatolianHieroglyphs
+      else ScriptUnknown
+      end
+    | 0x0016 =>
+      match cp
+      | let c: U32 if c <= 0x160FF => ScriptUnknown
+      | let c: U32 if c <= 0x16139 => ScriptGurungKhema
+      | let c: U32 if c <= 0x167FF => ScriptUnknown
+      | let c: U32 if c <= 0x16A38 => ScriptBamum
+      | let c: U32 if c <= 0x16A3F => ScriptUnknown
+      | let c: U32 if c <= 0x16A5E => ScriptMro
+      | let c: U32 if c <= 0x16A5F => ScriptUnknown
+      | let c: U32 if c <= 0x16A69 => ScriptMro
+      | let c: U32 if c <= 0x16A6D => ScriptUnknown
+      | let c: U32 if c <= 0x16A6F => ScriptMro
+      | let c: U32 if c <= 0x16ABE => ScriptTangsa
+      | let c: U32 if c <= 0x16ABF => ScriptUnknown
+      | let c: U32 if c <= 0x16AC9 => ScriptTangsa
+      | let c: U32 if c <= 0x16ACF => ScriptUnknown
+      | let c: U32 if c <= 0x16AED => ScriptBassaVah
+      | let c: U32 if c <= 0x16AEF => ScriptUnknown
+      | let c: U32 if c <= 0x16AF5 => ScriptBassaVah
+      | let c: U32 if c <= 0x16AFF => ScriptUnknown
+      | let c: U32 if c <= 0x16B45 => ScriptPahawhHmong
+      | let c: U32 if c <= 0x16B4F => ScriptUnknown
+      | let c: U32 if c <= 0x16B59 => ScriptPahawhHmong
+      | let c: U32 if c <= 0x16B5A => ScriptUnknown
+      | let c: U32 if c <= 0x16B61 => ScriptPahawhHmong
+      | let c: U32 if c <= 0x16B62 => ScriptUnknown
+      | let c: U32 if c <= 0x16B77 => ScriptPahawhHmong
+      | let c: U32 if c <= 0x16B7C => ScriptUnknown
+      | let c: U32 if c <= 0x16B8F => ScriptPahawhHmong
+      | let c: U32 if c <= 0x16D3F => ScriptUnknown
+      | let c: U32 if c <= 0x16D79 => ScriptKiratRai
+      | let c: U32 if c <= 0x16E3F => ScriptUnknown
+      | let c: U32 if c <= 0x16E9A => ScriptMedefaidrin
+      | let c: U32 if c <= 0x16EFF => ScriptUnknown
+      | let c: U32 if c <= 0x16F4A => ScriptMiao
+      | let c: U32 if c <= 0x16F4E => ScriptUnknown
+      | let c: U32 if c <= 0x16F87 => ScriptMiao
+      | let c: U32 if c <= 0x16F8E => ScriptUnknown
+      | let c: U32 if c <= 0x16F9F => ScriptMiao
+      | let c: U32 if c <= 0x16FDF => ScriptUnknown
+      | let c: U32 if c <= 0x16FE0 => ScriptTangut
+      | let c: U32 if c <= 0x16FE1 => ScriptNushu
+      | let c: U32 if c <= 0x16FE3 => ScriptHan
+      | let c: U32 if c <= 0x16FE4 => ScriptKhitanSmallScript
+      | let c: U32 if c <= 0x16FEF => ScriptUnknown
+      | let c: U32 if c <= 0x16FF1 => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0017 =>
+      match cp
+      | let c: U32 if c <= 0x17FFF => ScriptTangut
+      else ScriptUnknown
+      end
+    | 0x0018 =>
+      match cp
+      | let c: U32 if c <= 0x187F7 => ScriptTangut
+      | let c: U32 if c <= 0x187FF => ScriptUnknown
+      | let c: U32 if c <= 0x18AFF => ScriptTangut
+      | let c: U32 if c <= 0x18CD5 => ScriptKhitanSmallScript
+      | let c: U32 if c <= 0x18CFE => ScriptUnknown
+      | let c: U32 if c <= 0x18CFF => ScriptKhitanSmallScript
+      | let c: U32 if c <= 0x18D08 => ScriptTangut
+      else ScriptUnknown
+      end
+    | 0x001A =>
+      match cp
+      | let c: U32 if c <= 0x1AFEF => ScriptUnknown
+      | let c: U32 if c <= 0x1AFF3 => ScriptKatakana
+      | let c: U32 if c <= 0x1AFF4 => ScriptUnknown
+      | let c: U32 if c <= 0x1AFFB => ScriptKatakana
+      | let c: U32 if c <= 0x1AFFC => ScriptUnknown
+      | let c: U32 if c <= 0x1AFFE => ScriptKatakana
+      else ScriptUnknown
+      end
+    | 0x001B =>
+      match cp
+      | let c: U32 if c <= 0x1B000 => ScriptKatakana
+      | let c: U32 if c <= 0x1B11F => ScriptHiragana
+      | let c: U32 if c <= 0x1B122 => ScriptKatakana
+      | let c: U32 if c <= 0x1B131 => ScriptUnknown
+      | let c: U32 if c <= 0x1B132 => ScriptHiragana
+      | let c: U32 if c <= 0x1B14F => ScriptUnknown
+      | let c: U32 if c <= 0x1B152 => ScriptHiragana
+      | let c: U32 if c <= 0x1B154 => ScriptUnknown
+      | let c: U32 if c <= 0x1B155 => ScriptKatakana
+      | let c: U32 if c <= 0x1B163 => ScriptUnknown
+      | let c: U32 if c <= 0x1B167 => ScriptKatakana
+      | let c: U32 if c <= 0x1B16F => ScriptUnknown
+      | let c: U32 if c <= 0x1B2FB => ScriptNushu
+      | let c: U32 if c <= 0x1BBFF => ScriptUnknown
+      | let c: U32 if c <= 0x1BC6A => ScriptDuployan
+      | let c: U32 if c <= 0x1BC6F => ScriptUnknown
+      | let c: U32 if c <= 0x1BC7C => ScriptDuployan
+      | let c: U32 if c <= 0x1BC7F => ScriptUnknown
+      | let c: U32 if c <= 0x1BC88 => ScriptDuployan
+      | let c: U32 if c <= 0x1BC8F => ScriptUnknown
+      | let c: U32 if c <= 0x1BC99 => ScriptDuployan
+      | let c: U32 if c <= 0x1BC9B => ScriptUnknown
+      | let c: U32 if c <= 0x1BC9F => ScriptDuployan
+      | let c: U32 if c <= 0x1BCA3 => ScriptCommon
+      else ScriptUnknown
+      end
+    | 0x001C =>
+      match cp
+      | let c: U32 if c <= 0x1CBFF => ScriptUnknown
+      | let c: U32 if c <= 0x1CCF9 => ScriptCommon
+      | let c: U32 if c <= 0x1CCFF => ScriptUnknown
+      | let c: U32 if c <= 0x1CEB3 => ScriptCommon
+      | let c: U32 if c <= 0x1CEFF => ScriptUnknown
+      | let c: U32 if c <= 0x1CF2D => ScriptInherited
+      | let c: U32 if c <= 0x1CF2F => ScriptUnknown
+      | let c: U32 if c <= 0x1CF46 => ScriptInherited
+      | let c: U32 if c <= 0x1CF4F => ScriptUnknown
+      | let c: U32 if c <= 0x1CFC3 => ScriptCommon
+      else ScriptUnknown
+      end
+    | 0x001D =>
+      match cp
+      | let c: U32 if c <= 0x1D0F5 => ScriptCommon
+      | let c: U32 if c <= 0x1D0FF => ScriptUnknown
+      | let c: U32 if c <= 0x1D126 => ScriptCommon
+      | let c: U32 if c <= 0x1D128 => ScriptUnknown
+      | let c: U32 if c <= 0x1D166 => ScriptCommon
+      | let c: U32 if c <= 0x1D169 => ScriptInherited
+      | let c: U32 if c <= 0x1D17A => ScriptCommon
+      | let c: U32 if c <= 0x1D182 => ScriptInherited
+      | let c: U32 if c <= 0x1D184 => ScriptCommon
+      | let c: U32 if c <= 0x1D18B => ScriptInherited
+      | let c: U32 if c <= 0x1D1A9 => ScriptCommon
+      | let c: U32 if c <= 0x1D1AD => ScriptInherited
+      | let c: U32 if c <= 0x1D1EA => ScriptCommon
+      | let c: U32 if c <= 0x1D1FF => ScriptUnknown
+      | let c: U32 if c <= 0x1D245 => ScriptGreek
+      | let c: U32 if c <= 0x1D2BF => ScriptUnknown
+      | let c: U32 if c <= 0x1D2D3 => ScriptCommon
+      | let c: U32 if c <= 0x1D2DF => ScriptUnknown
+      | let c: U32 if c <= 0x1D2F3 => ScriptCommon
+      | let c: U32 if c <= 0x1D2FF => ScriptUnknown
+      | let c: U32 if c <= 0x1D356 => ScriptCommon
+      | let c: U32 if c <= 0x1D35F => ScriptUnknown
+      | let c: U32 if c <= 0x1D378 => ScriptCommon
+      | let c: U32 if c <= 0x1D3FF => ScriptUnknown
+      | let c: U32 if c <= 0x1D454 => ScriptCommon
+      | let c: U32 if c <= 0x1D455 => ScriptUnknown
+      | let c: U32 if c <= 0x1D49C => ScriptCommon
+      | let c: U32 if c <= 0x1D49D => ScriptUnknown
+      | let c: U32 if c <= 0x1D49F => ScriptCommon
+      | let c: U32 if c <= 0x1D4A1 => ScriptUnknown
+      | let c: U32 if c <= 0x1D4A2 => ScriptCommon
+      | let c: U32 if c <= 0x1D4A4 => ScriptUnknown
+      | let c: U32 if c <= 0x1D4A6 => ScriptCommon
+      | let c: U32 if c <= 0x1D4A8 => ScriptUnknown
+      | let c: U32 if c <= 0x1D4AC => ScriptCommon
+      | let c: U32 if c <= 0x1D4AD => ScriptUnknown
+      | let c: U32 if c <= 0x1D4B9 => ScriptCommon
+      | let c: U32 if c <= 0x1D4BA => ScriptUnknown
+      | let c: U32 if c <= 0x1D4BB => ScriptCommon
+      | let c: U32 if c <= 0x1D4BC => ScriptUnknown
+      | let c: U32 if c <= 0x1D4C3 => ScriptCommon
+      | let c: U32 if c <= 0x1D4C4 => ScriptUnknown
+      | let c: U32 if c <= 0x1D505 => ScriptCommon
+      | let c: U32 if c <= 0x1D506 => ScriptUnknown
+      | let c: U32 if c <= 0x1D50A => ScriptCommon
+      | let c: U32 if c <= 0x1D50C => ScriptUnknown
+      | let c: U32 if c <= 0x1D514 => ScriptCommon
+      | let c: U32 if c <= 0x1D515 => ScriptUnknown
+      | let c: U32 if c <= 0x1D51C => ScriptCommon
+      | let c: U32 if c <= 0x1D51D => ScriptUnknown
+      | let c: U32 if c <= 0x1D539 => ScriptCommon
+      | let c: U32 if c <= 0x1D53A => ScriptUnknown
+      | let c: U32 if c <= 0x1D53E => ScriptCommon
+      | let c: U32 if c <= 0x1D53F => ScriptUnknown
+      | let c: U32 if c <= 0x1D544 => ScriptCommon
+      | let c: U32 if c <= 0x1D545 => ScriptUnknown
+      | let c: U32 if c <= 0x1D546 => ScriptCommon
+      | let c: U32 if c <= 0x1D549 => ScriptUnknown
+      | let c: U32 if c <= 0x1D550 => ScriptCommon
+      | let c: U32 if c <= 0x1D551 => ScriptUnknown
+      | let c: U32 if c <= 0x1D6A5 => ScriptCommon
+      | let c: U32 if c <= 0x1D6A7 => ScriptUnknown
+      | let c: U32 if c <= 0x1D7CB => ScriptCommon
+      | let c: U32 if c <= 0x1D7CD => ScriptUnknown
+      | let c: U32 if c <= 0x1D7FF => ScriptCommon
+      | let c: U32 if c <= 0x1DA8B => ScriptSignWriting
+      | let c: U32 if c <= 0x1DA9A => ScriptUnknown
+      | let c: U32 if c <= 0x1DA9F => ScriptSignWriting
+      | let c: U32 if c <= 0x1DAA0 => ScriptUnknown
+      | let c: U32 if c <= 0x1DAAF => ScriptSignWriting
+      | let c: U32 if c <= 0x1DEFF => ScriptUnknown
+      | let c: U32 if c <= 0x1DF1E => ScriptLatin
+      | let c: U32 if c <= 0x1DF24 => ScriptUnknown
+      | let c: U32 if c <= 0x1DF2A => ScriptLatin
+      else ScriptUnknown
+      end
+    | 0x001E =>
+      match cp
+      | let c: U32 if c <= 0x1E006 => ScriptGlagolitic
+      | let c: U32 if c <= 0x1E007 => ScriptUnknown
+      | let c: U32 if c <= 0x1E018 => ScriptGlagolitic
+      | let c: U32 if c <= 0x1E01A => ScriptUnknown
+      | let c: U32 if c <= 0x1E021 => ScriptGlagolitic
+      | let c: U32 if c <= 0x1E022 => ScriptUnknown
+      | let c: U32 if c <= 0x1E024 => ScriptGlagolitic
+      | let c: U32 if c <= 0x1E025 => ScriptUnknown
+      | let c: U32 if c <= 0x1E02A => ScriptGlagolitic
+      | let c: U32 if c <= 0x1E02F => ScriptUnknown
+      | let c: U32 if c <= 0x1E06D => ScriptCyrillic
+      | let c: U32 if c <= 0x1E08E => ScriptUnknown
+      | let c: U32 if c <= 0x1E08F => ScriptCyrillic
+      | let c: U32 if c <= 0x1E0FF => ScriptUnknown
+      | let c: U32 if c <= 0x1E12C => ScriptNyiakengPuachueHmong
+      | let c: U32 if c <= 0x1E12F => ScriptUnknown
+      | let c: U32 if c <= 0x1E13D => ScriptNyiakengPuachueHmong
+      | let c: U32 if c <= 0x1E13F => ScriptUnknown
+      | let c: U32 if c <= 0x1E149 => ScriptNyiakengPuachueHmong
+      | let c: U32 if c <= 0x1E14D => ScriptUnknown
+      | let c: U32 if c <= 0x1E14F => ScriptNyiakengPuachueHmong
+      | let c: U32 if c <= 0x1E28F => ScriptUnknown
+      | let c: U32 if c <= 0x1E2AE => ScriptToto
+      | let c: U32 if c <= 0x1E2BF => ScriptUnknown
+      | let c: U32 if c <= 0x1E2F9 => ScriptWancho
+      | let c: U32 if c <= 0x1E2FE => ScriptUnknown
+      | let c: U32 if c <= 0x1E2FF => ScriptWancho
+      | let c: U32 if c <= 0x1E4CF => ScriptUnknown
+      | let c: U32 if c <= 0x1E4F9 => ScriptNagMundari
+      | let c: U32 if c <= 0x1E5CF => ScriptUnknown
+      | let c: U32 if c <= 0x1E5FA => ScriptOlOnal
+      | let c: U32 if c <= 0x1E5FE => ScriptUnknown
+      | let c: U32 if c <= 0x1E5FF => ScriptOlOnal
+      | let c: U32 if c <= 0x1E7DF => ScriptUnknown
+      | let c: U32 if c <= 0x1E7E6 => ScriptEthiopic
+      | let c: U32 if c <= 0x1E7E7 => ScriptUnknown
+      | let c: U32 if c <= 0x1E7EB => ScriptEthiopic
+      | let c: U32 if c <= 0x1E7EC => ScriptUnknown
+      | let c: U32 if c <= 0x1E7EE => ScriptEthiopic
+      | let c: U32 if c <= 0x1E7EF => ScriptUnknown
+      | let c: U32 if c <= 0x1E7FE => ScriptEthiopic
+      | let c: U32 if c <= 0x1E7FF => ScriptUnknown
+      | let c: U32 if c <= 0x1E8C4 => ScriptMendeKikakui
+      | let c: U32 if c <= 0x1E8C6 => ScriptUnknown
+      | let c: U32 if c <= 0x1E8D6 => ScriptMendeKikakui
+      | let c: U32 if c <= 0x1E8FF => ScriptUnknown
+      | let c: U32 if c <= 0x1E94B => ScriptAdlam
+      | let c: U32 if c <= 0x1E94F => ScriptUnknown
+      | let c: U32 if c <= 0x1E959 => ScriptAdlam
+      | let c: U32 if c <= 0x1E95D => ScriptUnknown
+      | let c: U32 if c <= 0x1E95F => ScriptAdlam
+      | let c: U32 if c <= 0x1EC70 => ScriptUnknown
+      | let c: U32 if c <= 0x1ECB4 => ScriptCommon
+      | let c: U32 if c <= 0x1ED00 => ScriptUnknown
+      | let c: U32 if c <= 0x1ED3D => ScriptCommon
+      | let c: U32 if c <= 0x1EDFF => ScriptUnknown
+      | let c: U32 if c <= 0x1EE03 => ScriptArabic
+      | let c: U32 if c <= 0x1EE04 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE1F => ScriptArabic
+      | let c: U32 if c <= 0x1EE20 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE22 => ScriptArabic
+      | let c: U32 if c <= 0x1EE23 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE24 => ScriptArabic
+      | let c: U32 if c <= 0x1EE26 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE27 => ScriptArabic
+      | let c: U32 if c <= 0x1EE28 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE32 => ScriptArabic
+      | let c: U32 if c <= 0x1EE33 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE37 => ScriptArabic
+      | let c: U32 if c <= 0x1EE38 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE39 => ScriptArabic
+      | let c: U32 if c <= 0x1EE3A => ScriptUnknown
+      | let c: U32 if c <= 0x1EE3B => ScriptArabic
+      | let c: U32 if c <= 0x1EE41 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE42 => ScriptArabic
+      | let c: U32 if c <= 0x1EE46 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE47 => ScriptArabic
+      | let c: U32 if c <= 0x1EE48 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE49 => ScriptArabic
+      | let c: U32 if c <= 0x1EE4A => ScriptUnknown
+      | let c: U32 if c <= 0x1EE4B => ScriptArabic
+      | let c: U32 if c <= 0x1EE4C => ScriptUnknown
+      | let c: U32 if c <= 0x1EE4F => ScriptArabic
+      | let c: U32 if c <= 0x1EE50 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE52 => ScriptArabic
+      | let c: U32 if c <= 0x1EE53 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE54 => ScriptArabic
+      | let c: U32 if c <= 0x1EE56 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE57 => ScriptArabic
+      | let c: U32 if c <= 0x1EE58 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE59 => ScriptArabic
+      | let c: U32 if c <= 0x1EE5A => ScriptUnknown
+      | let c: U32 if c <= 0x1EE5B => ScriptArabic
+      | let c: U32 if c <= 0x1EE5C => ScriptUnknown
+      | let c: U32 if c <= 0x1EE5D => ScriptArabic
+      | let c: U32 if c <= 0x1EE5E => ScriptUnknown
+      | let c: U32 if c <= 0x1EE5F => ScriptArabic
+      | let c: U32 if c <= 0x1EE60 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE62 => ScriptArabic
+      | let c: U32 if c <= 0x1EE63 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE64 => ScriptArabic
+      | let c: U32 if c <= 0x1EE66 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE6A => ScriptArabic
+      | let c: U32 if c <= 0x1EE6B => ScriptUnknown
+      | let c: U32 if c <= 0x1EE72 => ScriptArabic
+      | let c: U32 if c <= 0x1EE73 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE77 => ScriptArabic
+      | let c: U32 if c <= 0x1EE78 => ScriptUnknown
+      | let c: U32 if c <= 0x1EE7C => ScriptArabic
+      | let c: U32 if c <= 0x1EE7D => ScriptUnknown
+      | let c: U32 if c <= 0x1EE7E => ScriptArabic
+      | let c: U32 if c <= 0x1EE7F => ScriptUnknown
+      | let c: U32 if c <= 0x1EE89 => ScriptArabic
+      | let c: U32 if c <= 0x1EE8A => ScriptUnknown
+      | let c: U32 if c <= 0x1EE9B => ScriptArabic
+      | let c: U32 if c <= 0x1EEA0 => ScriptUnknown
+      | let c: U32 if c <= 0x1EEA3 => ScriptArabic
+      | let c: U32 if c <= 0x1EEA4 => ScriptUnknown
+      | let c: U32 if c <= 0x1EEA9 => ScriptArabic
+      | let c: U32 if c <= 0x1EEAA => ScriptUnknown
+      | let c: U32 if c <= 0x1EEBB => ScriptArabic
+      | let c: U32 if c <= 0x1EEEF => ScriptUnknown
+      | let c: U32 if c <= 0x1EEF1 => ScriptArabic
+      else ScriptUnknown
+      end
+    | 0x001F =>
+      match cp
+      | let c: U32 if c <= 0x1F02B => ScriptCommon
+      | let c: U32 if c <= 0x1F02F => ScriptUnknown
+      | let c: U32 if c <= 0x1F093 => ScriptCommon
+      | let c: U32 if c <= 0x1F09F => ScriptUnknown
+      | let c: U32 if c <= 0x1F0AE => ScriptCommon
+      | let c: U32 if c <= 0x1F0B0 => ScriptUnknown
+      | let c: U32 if c <= 0x1F0BF => ScriptCommon
+      | let c: U32 if c <= 0x1F0C0 => ScriptUnknown
+      | let c: U32 if c <= 0x1F0CF => ScriptCommon
+      | let c: U32 if c <= 0x1F0D0 => ScriptUnknown
+      | let c: U32 if c <= 0x1F0F5 => ScriptCommon
+      | let c: U32 if c <= 0x1F0FF => ScriptUnknown
+      | let c: U32 if c <= 0x1F1AD => ScriptCommon
+      | let c: U32 if c <= 0x1F1E5 => ScriptUnknown
+      | let c: U32 if c <= 0x1F1FF => ScriptCommon
+      | let c: U32 if c <= 0x1F200 => ScriptHiragana
+      | let c: U32 if c <= 0x1F202 => ScriptCommon
+      | let c: U32 if c <= 0x1F20F => ScriptUnknown
+      | let c: U32 if c <= 0x1F23B => ScriptCommon
+      | let c: U32 if c <= 0x1F23F => ScriptUnknown
+      | let c: U32 if c <= 0x1F248 => ScriptCommon
+      | let c: U32 if c <= 0x1F24F => ScriptUnknown
+      | let c: U32 if c <= 0x1F251 => ScriptCommon
+      | let c: U32 if c <= 0x1F25F => ScriptUnknown
+      | let c: U32 if c <= 0x1F265 => ScriptCommon
+      | let c: U32 if c <= 0x1F2FF => ScriptUnknown
+      | let c: U32 if c <= 0x1F6D7 => ScriptCommon
+      | let c: U32 if c <= 0x1F6DB => ScriptUnknown
+      | let c: U32 if c <= 0x1F6EC => ScriptCommon
+      | let c: U32 if c <= 0x1F6EF => ScriptUnknown
+      | let c: U32 if c <= 0x1F6FC => ScriptCommon
+      | let c: U32 if c <= 0x1F6FF => ScriptUnknown
+      | let c: U32 if c <= 0x1F776 => ScriptCommon
+      | let c: U32 if c <= 0x1F77A => ScriptUnknown
+      | let c: U32 if c <= 0x1F7D9 => ScriptCommon
+      | let c: U32 if c <= 0x1F7DF => ScriptUnknown
+      | let c: U32 if c <= 0x1F7EB => ScriptCommon
+      | let c: U32 if c <= 0x1F7EF => ScriptUnknown
+      | let c: U32 if c <= 0x1F7F0 => ScriptCommon
+      | let c: U32 if c <= 0x1F7FF => ScriptUnknown
+      | let c: U32 if c <= 0x1F80B => ScriptCommon
+      | let c: U32 if c <= 0x1F80F => ScriptUnknown
+      | let c: U32 if c <= 0x1F847 => ScriptCommon
+      | let c: U32 if c <= 0x1F84F => ScriptUnknown
+      | let c: U32 if c <= 0x1F859 => ScriptCommon
+      | let c: U32 if c <= 0x1F85F => ScriptUnknown
+      | let c: U32 if c <= 0x1F887 => ScriptCommon
+      | let c: U32 if c <= 0x1F88F => ScriptUnknown
+      | let c: U32 if c <= 0x1F8AD => ScriptCommon
+      | let c: U32 if c <= 0x1F8AF => ScriptUnknown
+      | let c: U32 if c <= 0x1F8BB => ScriptCommon
+      | let c: U32 if c <= 0x1F8BF => ScriptUnknown
+      | let c: U32 if c <= 0x1F8C1 => ScriptCommon
+      | let c: U32 if c <= 0x1F8FF => ScriptUnknown
+      | let c: U32 if c <= 0x1FA53 => ScriptCommon
+      | let c: U32 if c <= 0x1FA5F => ScriptUnknown
+      | let c: U32 if c <= 0x1FA6D => ScriptCommon
+      | let c: U32 if c <= 0x1FA6F => ScriptUnknown
+      | let c: U32 if c <= 0x1FA7C => ScriptCommon
+      | let c: U32 if c <= 0x1FA7F => ScriptUnknown
+      | let c: U32 if c <= 0x1FA89 => ScriptCommon
+      | let c: U32 if c <= 0x1FA8E => ScriptUnknown
+      | let c: U32 if c <= 0x1FAC6 => ScriptCommon
+      | let c: U32 if c <= 0x1FACD => ScriptUnknown
+      | let c: U32 if c <= 0x1FADC => ScriptCommon
+      | let c: U32 if c <= 0x1FADE => ScriptUnknown
+      | let c: U32 if c <= 0x1FAE9 => ScriptCommon
+      | let c: U32 if c <= 0x1FAEF => ScriptUnknown
+      | let c: U32 if c <= 0x1FAF8 => ScriptCommon
+      | let c: U32 if c <= 0x1FAFF => ScriptUnknown
+      | let c: U32 if c <= 0x1FB92 => ScriptCommon
+      | let c: U32 if c <= 0x1FB93 => ScriptUnknown
+      | let c: U32 if c <= 0x1FBF9 => ScriptCommon
+      else ScriptUnknown
+      end
+    | 0x0020 =>
+      match cp
+      | let c: U32 if c <= 0x20FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0021 =>
+      match cp
+      | let c: U32 if c <= 0x21FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0022 =>
+      match cp
+      | let c: U32 if c <= 0x22FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0023 =>
+      match cp
+      | let c: U32 if c <= 0x23FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0024 =>
+      match cp
+      | let c: U32 if c <= 0x24FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0025 =>
+      match cp
+      | let c: U32 if c <= 0x25FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0026 =>
+      match cp
+      | let c: U32 if c <= 0x26FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0027 =>
+      match cp
+      | let c: U32 if c <= 0x27FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0028 =>
+      match cp
+      | let c: U32 if c <= 0x28FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0029 =>
+      match cp
+      | let c: U32 if c <= 0x29FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x002A =>
+      match cp
+      | let c: U32 if c <= 0x2A6DF => ScriptHan
+      | let c: U32 if c <= 0x2A6FF => ScriptUnknown
+      | let c: U32 if c <= 0x2AFFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x002B =>
+      match cp
+      | let c: U32 if c <= 0x2B739 => ScriptHan
+      | let c: U32 if c <= 0x2B73F => ScriptUnknown
+      | let c: U32 if c <= 0x2B81D => ScriptHan
+      | let c: U32 if c <= 0x2B81F => ScriptUnknown
+      | let c: U32 if c <= 0x2BFFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x002C =>
+      match cp
+      | let c: U32 if c <= 0x2CEA1 => ScriptHan
+      | let c: U32 if c <= 0x2CEAF => ScriptUnknown
+      | let c: U32 if c <= 0x2CFFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x002D =>
+      match cp
+      | let c: U32 if c <= 0x2DFFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x002E =>
+      match cp
+      | let c: U32 if c <= 0x2EBE0 => ScriptHan
+      | let c: U32 if c <= 0x2EBEF => ScriptUnknown
+      | let c: U32 if c <= 0x2EE5D => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x002F =>
+      match cp
+      | let c: U32 if c <= 0x2F7FF => ScriptUnknown
+      | let c: U32 if c <= 0x2FA1D => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0030 =>
+      match cp
+      | let c: U32 if c <= 0x30FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0031 =>
+      match cp
+      | let c: U32 if c <= 0x3134A => ScriptHan
+      | let c: U32 if c <= 0x3134F => ScriptUnknown
+      | let c: U32 if c <= 0x31FFF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x0032 =>
+      match cp
+      | let c: U32 if c <= 0x323AF => ScriptHan
+      else ScriptUnknown
+      end
+    | 0x00E0 =>
+      match cp
+      | let c: U32 if c <= 0xE0000 => ScriptUnknown
+      | let c: U32 if c <= 0xE0001 => ScriptCommon
+      | let c: U32 if c <= 0xE001F => ScriptUnknown
+      | let c: U32 if c <= 0xE007F => ScriptCommon
+      | let c: U32 if c <= 0xE00FF => ScriptUnknown
+      | let c: U32 if c <= 0xE01EF => ScriptInherited
+      else ScriptUnknown
+      end
+    else
+      ScriptUnknown
     end
-    ScriptUnknown
-
-  fun _table(): String val =>
-    "000000004000000019410000005A0000004A5B0000006000000019610000007A0000004A7B000000A900000019AA000000AA0000004AAB000000B900000019BA000000BA0000004ABB000000BF00000019C0000000D60000004AD7000000D700000019D8000000F60000004AF7000000F700000019F8000000B80200004AB9020000DF02000019E0020000E40200004AE5020000E902000019EA020000EB0200000DEC020000FF02000019000300006F0300003A70030000730300002D74030000740300001975030000770300002D7A0300007D0300002D7E0300007E030000197F0300007F0300002D84030000840300002D85030000850300001986030000860300002D870300008703000019880300008A0300002D8C0300008C0300002D8E030000A10300002DA3030000E10300002DE2030000EF0300001AF0030000FF0300002D00040000840400001E85040000860400003A870400002F0500001E310500005605000005590500008A050000058D0500008F0500000591050000C705000037D0050000EA05000037EF050000F405000037000600000406000004050600000506000019060600000B060000040C0600000C060000190D0600001A060000041B0600001B060000191C0600001E060000041F0600001F06000019200600003F06000004400600004006000019410600004A060000044B060000550600003A560600006F0600000470060000700600003A71060000DC06000004DD060000DD06000019DE060000FF06000004000700000D070000900F0700004A070000904D0700004F07000090500700007F0700000480070000B10700009BC0070000FA07000069FD070000FF07000069000800002D08000083300800003E08000083400800005B080000555E0800005E08000055600800006A08000090700800008E0800000490080000910800000497080000E108000004E2080000E208000019E3080000FF0800000400090000500900002051090000540900003A550900006309000020640900006509000019660900007F0900002080090000830900000B850900008C0900000B8F090000900900000B93090000A80900000BAA090000B00900000BB2090000B20900000BB6090000B90900000BBC090000C40900000BC7090000C80900000BCB090000CE0900000BD7090000D70900000BDC090000DD0900000BDF090000E30900000BE6090000FE0900000B010A0000030A000030050A00000A0A0000300F0A0000100A000030130A0000280A0000302A0A0000300A000030320A0000330A000030350A0000360A000030380A0000390A0000303C0A00003C0A0000303E0A0000420A000030470A0000480A0000304B0A00004D0A000030510A0000510A000030590A00005C0A0000305E0A00005E0A000030660A0000760A000030810A0000830A00002E850A00008D0A00002E8F0A0000910A00002E930A0000A80A00002EAA0A0000B00A00002EB20A0000B30A00002EB50A0000B90A00002EBC0A0000C50A00002EC70A0000C90A00002ECB0A0000CD0A00002ED00A0000D00A00002EE00A0000E30A00002EE60A0000F10A00002EF90A0000FF0A00002E010B0000030B000078050B00000C0B0000780F0B0000100B000078130B0000280B0000782A0B0000300B000078320B0000330B000078350B0000390B0000783C0B0000440B000078470B0000480B0000784B0B00004D0B000078550B0000570B0000785C0B00005D0B0000785F0B0000630B000078660B0000770B000078820B0000830B000097850B00008A0B0000978E0B0000900B000097920B0000950B000097990B00009A0B0000979C0B00009C0B0000979E0B00009F0B000097A30B0000A40B000097A80B0000AA0B000097AE0B0000B90B000097BE0B0000C20B000097C60B0000C80B000097CA0B0000CD0B000097D00B0000D00B000097D70B0000D70B000097E60B0000FA0B000097000C00000C0C00009A0E0C0000100C00009A120C0000280C00009A2A0C0000390C00009A3C0C0000440C00009A460C0000480C00009A4A0C00004D0C00009A550C0000560C00009A580C00005A0C00009A5D0C00005D0C00009A600C0000630C00009A660C00006F0C00009A770C00007F0C00009A800C00008C0C00003F8E0C0000900C00003F920C0000A80C00003FAA0C0000B30C00003FB50C0000B90C00003FBC0C0000C40C00003FC60C0000C80C00003FCA0C0000CD0C00003FD50C0000D60C00003FDD0C0000DE0C00003FE00C0000E30C00003FE60C0000EF0C00003FF10C0000F30C00003F000D00000C0D0000540E0D0000100D000054120D0000440D000054460D0000480D0000544A0D00004F0D000054540D0000630D000054660D00007F0D000054810D0000830D000089850D0000960D0000899A0D0000B10D000089B30D0000BB0D000089BD0D0000BD0D000089C00D0000C60D000089CA0D0000CA0D000089CF0D0000D40D000089D60D0000D60D000089D80D0000DF0D000089E60D0000EF0D000089F20D0000F40D000089010E00003A0E00009C3F0E00003F0E000019400E00005B0E00009C810E0000820E000049840E0000840E000049860E00008A0E0000498C0E0000A30E000049A50E0000A50E000049A70E0000BD0E000049C00E0000C40E000049C60E0000C60E000049C80E0000CE0E000049D00E0000D90E000049DC0E0000DF0E000049000F0000470F00009D490F00006C0F00009D710F0000970F00009D990F0000BC0F00009DBE0F0000CC0F00009DCE0F0000D40F00009DD50F0000D80F000019D90F0000DA0F00009D001000009F10000063A0100000C510000029C7100000C710000029CD100000CD10000029D0100000FA10000029FB100000FB10000019FC100000FF1000002900110000FF110000330012000048120000274A1200004D120000275012000056120000275812000058120000275A1200005D120000276012000088120000278A1200008D1200002790120000B012000027B2120000B512000027B8120000BE12000027C0120000C012000027C2120000C512000027C8120000D612000027D81200001013000027121300001513000027181300005A130000275D1300007C13000027801300009913000027A0130000F513000017F8130000FD13000017001400007F16000012801600009C1600006CA0160000EA16000082EB160000ED16000019EE160000F8160000820017000015170000911F1700001F17000091201700003417000035351700003617000019401700005317000011601700006C170000926E170000701700009272170000731700009280170000DD17000045E0170000E917000045F0170000F91700004500180000011800006002180000031800001904180000041800006005180000051800001906180000191800006020180000781800006080180000AA18000060B0180000F518000012001900001E1900004C201900002B1900004C301900003B1900004C40190000401900004C441900004F1900004C501900006D1900009370190000741900009380190000AB19000067B0190000C919000067D0190000DA19000067DE190000DF19000067E0190000FF19000045001A00001B1A0000101E1A00001F1A000010201A00005E1A000094601A00007C1A0000947F1A0000891A000094901A0000991A000094A01A0000AD1A000094B01A0000CE1A00003A001B00004C1B0000074E1B00007F1B000007801B0000BF1B00008DC01B0000F31B00000AFC1B0000FF1B00000A001C0000371C00004B3B1C0000491C00004B4D1C00004F1C00004B501C00007F1C00006D801C00008A1C00001E901C0000BA1C000029BD1C0000BF1C000029C01C0000C71C00008DD01C0000D21C00003AD31C0000D31C000019D41C0000E01C00003AE11C0000E11C000019E21C0000E81C00003AE91C0000EC1C000019ED1C0000ED1C00003AEE1C0000F31C000019F41C0000F41C00003AF51C0000F71C000019F81C0000F91C00003AFA1C0000FA1C000019001D0000251D00004A261D00002A1D00002D2B1D00002B1D00001E2C1D00005C1D00004A5D1D0000611D00002D621D0000651D00004A661D00006A1D00002D6B1D0000771D00004A781D0000781D00001E791D0000BE1D00004ABF1D0000BF1D00002DC01D0000FF1D00003A001E0000FF1E00004A001F0000151F00002D181F00001D1F00002D201F0000451F00002D481F00004D1F00002D501F0000571F00002D591F0000591F00002D5B1F00005B1F00002D5D1F00005D1F00002D5F1F00007D1F00002D801F0000B41F00002DB61F0000C41F00002DC61F0000D31F00002DD61F0000DB1F00002DDD1F0000EF1F00002DF21F0000F41F00002DF61F0000FE1F00002D002000000B200000190C2000000D2000003A0E200000642000001966200000702000001971200000712000004A742000007E200000197F2000007F2000004A802000008E20000019902000009C2000004AA0200000C020000019D0200000F02000003A00210000252100001926210000262100002D2721000029210000192A2100002B2100004A2C210000312100001932210000322100004A332100004D210000194E2100004E2100004A4F2100005F2100001960210000882100004A892100008B21000019902100002924000019402400004A2400001960240000FF2700001900280000FF2800000F00290000732B000019762B0000952B000019972B0000FF2B000019002C00005F2C00002A602C00007F2C00004A802C0000F32C00001AF92C0000FF2C00001A002D0000252D000029272D0000272D0000292D2D00002D2D000029302D0000672D00009E6F2D0000702D00009E7F2D00007F2D00009E802D0000962D000027A02D0000A62D000027A82D0000AE2D000027B02D0000B62D000027B82D0000BE2D000027C02D0000C62D000027C82D0000CE2D000027D02D0000D62D000027D82D0000DE2D000027E02D0000FF2D00001E002E00005D2E000019802E0000992E0000329B2E0000F32E000032002F0000D52F000032F02F000004300000190530000005300000320630000006300000190730000007300000320830000020300000192130000029300000322A3000002D3000003A2E3000002F30000033303000003730000019383000003B300000323C3000003F30000019413000009630000038993000009A3000003A9B3000009C300000199D3000009F30000038A0300000A030000019A1300000FA30000040FB300000FC30000019FD300000FF30000040053100002F3100000D313100008E31000033903100009F31000019A0310000BF3100000DC0310000E531000019EF310000EF31000019F0310000FF31000040003200001E32000033203200005F32000019603200007E320000337F320000CF32000019D0320000FE32000040FF320000FF3200001900330000573300004058330000FF3300001900340000BF4D000032C04D0000FF4D000019004E0000FF9F00003200A000008CA40000A990A40000C6A40000A9D0A40000FFA400004F00A500002BA60000A440A600009FA600001EA0A60000F7A600000800A7000021A700001922A7000087A700004A88A700008AA70000198BA70000CDA700004AD0A70000D1A700004AD3A70000D3A700004AD5A70000DCA700004AF2A70000FFA700004A00A800002CA800008F30A8000039A800001940A8000077A800007E80A80000C5A8000084CEA80000D9A8000084E0A80000FFA800002000A900002DA90000422EA900002EA90000192FA900002FA900004230A9000053A90000815FA900005FA900008160A900007CA900003380A90000CDA900003DCFA90000CFA9000019D0A90000D9A900003DDEA90000DFA900003DE0A90000FEA900006300AA000036AA00001640AA00004DAA00001650AA000059AA0000165CAA00005FAA00001660AA00007FAA00006380AA0000C2AA000095DBAA0000DFAA000095E0AA0000F6AA00005A01AB000006AB00002709AB00000EAB00002711AB000016AB00002720AB000026AB00002728AB00002EAB00002730AB00005AAB00004A5BAB00005BAB0000195CAB000064AB00004A65AB000065AB00002D66AB000069AB00004A6AAB00006BAB00001970AB0000BFAB000017C0AB0000EDAB00005AF0AB0000F9AB00005A00AC0000A3D7000033B0D70000C6D7000033CBD70000FBD700003300F900006DFA00003270FA0000D9FA00003200FB000006FB00004A13FB000017FB0000051DFB000036FB00003738FB00003CFB0000373EFB00003EFB00003740FB000041FB00003743FB000044FB00003746FB00004FFB00003750FB0000C2FB000004D3FB00003DFD0000043EFD00003FFD00001940FD00008FFD00000492FD0000C7FD000004CFFD0000CFFD000004F0FD0000FFFD00000400FE00000FFE00003A10FE000019FE00001920FE00002DFE00003A2EFE00002FFE00001E30FE000052FE00001954FE000066FE00001968FE00006BFE00001970FE000074FE00000476FE0000FCFE000004FFFE0000FFFE00001901FF000020FF00001921FF00003AFF00004A3BFF000040FF00001941FF00005AFF00004A5BFF000065FF00001966FF00006FFF00004070FF000070FF00001971FF00009DFF0000409EFF00009FFF000019A0FF0000BEFF000033C2FF0000C7FF000033CAFF0000CFFF000033D2FF0000D7FF000033DAFF0000DCFF000033E0FF0000E6FF000019E8FF0000EEFF000019F9FF0000FDFF000019000001000B0001004E0D000100260001004E280001003A0001004E3C0001003D0001004E3F0001004D0001004E500001005D0001004E80000100FA0001004E000101000201010019070101003301010019370101003F01010019400101008E0101002D900101009C01010019A0010100A00101002DD0010100FC01010019FD010100FD0101003A800201009C02010050A0020100D002010013E0020100E00201003AE1020100FB020100190003010023030100702D0301002F03010070300301004A0301002B500301007A03010072800301009D030100A39F0301009F030100A3A0030100C303010073C8030100D503010073000401004F0401001F500401007F04010086800401009D0401007AA0040100A90401007AB0040100D304010079D8040100FB040100790005010027050100253005010063050100146F0501006F05010014700501007A050100A57C0501008A050100A58C05010092050100A59405010095050100A597050100A1050100A5A3050100B1050100A5B3050100B9050100A5BB050100BC050100A5C0050100F3050100A000060100360701004D40070100550701004D60070100670701004D80070100850701004A87070100B00701004AB2070100BA0701004A00080100050801001C08080100080801001C0A080100350801001C37080100380801001C3C0801003C0801001C3F0801003F0801001C400801005508010039570801005F08010039600801007F0801007C800801009E08010064A7080100AF08010064E0080100F208010036F4080100F508010036FB080100FF08010036000901001B0901007F1F0901001F0901007F2009010039090100513F0901003F09010051800901009F0901005DA0090100B70901005CBC090100CF0901005CD2090100FF0901005C000A0100030A010043050A0100060A0100430C0A0100130A010043150A0100170A010043190A0100350A010043380A01003A0A0100433F0A0100480A010043500A0100580A010043600A01007F0A010075800A01009F0A010071C00A0100E60A010056EB0A0100F60A010056000B0100350B010006390B01003F0B010006400B0100550B01003C580B01005F0B01003C600B0100720B01003B780B01007F0B01003B800B0100910B010080990B01009C0B010080A90B0100AF0B010080000C0100480C010076800C0100B20C01006FC00C0100F20C01006FFA0C0100FF0C01006F000D0100270D010034300D0100390D010034400D0100650D010028690D0100850D0100288E0D01008F0D010028600E01007E0E010004800E0100A90E0100A8AB0E0100AD0E0100A8B00E0100B10E0100A8C20E0100C40E010004FC0E0100FF0E010004000F0100270F010074300F0100590F01008A700F0100890F010077B00F0100CB0F010018E00F0100F60F010026001001004D1001000E52100100751001000E7F1001007F1001000E80100100C21001003ECD100100CD1001003ED0100100E81001008BF0100100F91001008B00110100341101001536110100471101001550110100761101005280110100DF11010085E1110100F4110100890012010011120100461312010041120100468012010086120100628812010088120100628A1201008D120100628F1201009D120100629F120100A912010062B0120100EA12010047F0120100F91201004700130100031301002C051301000C1301002C0F130100101301002C13130100281301002C2A130100301301002C32130100331301002C35130100391301002C3B1301003B1301003A3C130100441301002C47130100481301002C4B1301004D1301002C50130100501301002C57130100571301002C5D130100631301002C661301006C1301002C70130100741301002C8013010089130100A28B1301008B130100A28E1301008E130100A290130100B5130100A2B7130100C0130100A2C2130100C2130100A2C5130100C5130100A2C7130100CA130100A2CC130100D5130100A2D7130100D8130100A2E1130100E2130100A2001401005B140100685D140100611401006880140100C71401009FD0140100D91401009F80150100B515010087B8150100DD1501008700160100441601005F50160100591601005F601601006C1601006080160100B916010096C0160100C916010096D0160100E316010063001701001A170100021D1701002B17010002301701004617010002001801003B18010022A0180100F2180100A7FF180100FF180100A70019010006190100210919010009190100210C19010013190100211519010016190100211819010035190100213719010038190100213B1901004619010021501901005919010021A0190100A719010066AA190100D719010066DA190100E419010066001A0100471A0100AA501A0100A21A01008CB01A0100BF1A010012C01A0100F81A01007D001B0100091B010020C01B0100E11B01008EF01B0100F91B01008E001C0100081C01000C0A1C0100361C01000C381C0100451C01000C501C01006C1C01000C701C01008F1C010057921C0100A71C010057A91C0100B61C010057001D0100061D010058081D0100091D0100580B1D0100361D0100583A1D01003A1D0100583C1D01003D1D0100583F1D0100471D010058501D0100591D010058601D0100651D01002F671D0100681D01002F6A1D01008E1D01002F901D0100911D01002F931D0100981D01002FA01D0100A91D01002FE01E0100F81E010053001F0100101F010041121F01003A1F0100413E1F01005A1F010041B01F0100B01F01004FC01F0100F11F010097FF1F0100FF1F01009700200100992301001B002401006E2401001B70240100742401001B80240100432501001B902F0100F22F01001D00300100553401002460340100FA4301002400440100464601000300610100396101003100680100386A010008406A01005E6A010061606A0100696A0100616E6A01006F6A010061706A0100BE6A010098C06A0100C96A010098D06A0100ED6A010009F06A0100F56A010009006B0100456B01007B506B0100596B01007B5B6B0100616B01007B636B0100776B01007B7D6B01008F6B01007B406D0100796D010048406E01009A6E010059006F01004A6F01005E4F6F0100876F01005E8F6F01009F6F01005EE06F0100E06F010099E16F0100E16F01006AE26F0100E36F010032E46F0100E46F010044F06F0100F16F01003200700100F78701009900880100FF8A010099008B0100D58C010044FF8C0100FF8C010044008D0100088D010099F0AF0100F3AF010040F5AF0100FBAF010040FDAF0100FEAF01004000B0010000B001004001B001001FB101003820B1010022B101004032B1010032B101003850B1010052B101003855B1010055B101004064B1010067B101004070B10100FBB201006A00BC01006ABC01002370BC01007CBC01002380BC010088BC01002390BC010099BC0100239CBC01009FBC010023A0BC0100A3BC01001900CC0100F9CC01001900CD0100B3CE01001900CF01002DCF01003A30CF010046CF01003A50CF0100C3CF01001900D00100F5D001001900D1010026D101001929D1010066D101001967D1010069D101003A6AD101007AD10100197BD1010082D101003A83D1010084D101001985D101008BD101003A8CD10100A9D1010019AAD10100ADD101003AAED10100EAD101001900D2010045D201002DC0D20100D3D2010019E0D20100F3D201001900D3010056D301001960D3010078D301001900D4010054D401001956D401009CD40100199ED401009FD4010019A2D40100A2D4010019A5D40100A6D4010019A9D40100ACD4010019AED40100B9D4010019BBD40100BBD4010019BDD40100C3D4010019C5D4010005D501001907D501000AD50100190DD5010014D501001916D501001CD50100191ED5010039D50100193BD501003ED501001940D5010044D501001946D5010046D50100194AD5010050D501001952D50100A5D6010019A8D60100CBD7010019CED70100FFD701001900D801008BDA0100889BDA01009FDA010088A1DA0100AFDA01008800DF01001EDF01004A25DF01002ADF01004A00E0010006E001002A08E0010018E001002A1BE0010021E001002A23E0010024E001002A26E001002AE001002A30E001006DE001001E8FE001008FE001001E00E101002CE101006B30E101003DE101006B40E1010049E101006B4EE101004FE101006B90E20100AEE20100A1C0E20100F9E20100A6FFE20100FFE20100A6D0E40100F9E4010065D0E50100FAE501006EFFE50100FFE501006EE0E70100E6E7010027E8E70100EBE7010027EDE70100EEE7010027F0E70100FEE701002700E80100C4E801005BC7E80100D6E801005B00E901004BE901000150E9010059E90100015EE901005FE901000171EC0100B4EC01001901ED01003DED01001900EE010003EE01000405EE01001FEE01000421EE010022EE01000424EE010024EE01000427EE010027EE01000429EE010032EE01000434EE010037EE01000439EE010039EE0100043BEE01003BEE01000442EE010042EE01000447EE010047EE01000449EE010049EE0100044BEE01004BEE0100044DEE01004FEE01000451EE010052EE01000454EE010054EE01000457EE010057EE01000459EE010059EE0100045BEE01005BEE0100045DEE01005DEE0100045FEE01005FEE01000461EE010062EE01000464EE010064EE01000467EE01006AEE0100046CEE010072EE01000474EE010077EE01000479EE01007CEE0100047EEE01007EEE01000480EE010089EE0100048BEE01009BEE010004A1EE0100A3EE010004A5EE0100A9EE010004ABEE0100BBEE010004F0EE0100F1EE01000400F001002BF001001930F0010093F0010019A0F00100AEF0010019B1F00100BFF0010019C1F00100CFF0010019D1F00100F5F001001900F10100ADF1010019E6F10100FFF101001900F2010000F201003801F2010002F201001910F201003BF201001940F2010048F201001950F2010051F201001960F2010065F201001900F30100D7F6010019DCF60100ECF6010019F0F60100FCF601001900F7010076F70100197BF70100D9F7010019E0F70100EBF7010019F0F70100F0F701001900F801000BF801001910F8010047F801001950F8010059F801001960F8010087F801001990F80100ADF8010019B0F80100BBF8010019C0F80100C1F801001900F9010053FA01001960FA01006DFA01001970FA01007CFA01001980FA010089FA0100198FFA0100C6FA010019CEFA0100DCFA010019DFFA0100E9FA010019F0FA0100F8FA01001900FB010092FB01001994FB0100F9FB01001900000200DFA602003200A7020039B702003240B702001DB802003220B80200A1CE020032B0CE0200E0EB020032F0EB02005DEE02003200F802001DFA020032000003004A1303003250130300AF2303003201000E0001000E001920000E007F000E001900010E00EF010E003A"

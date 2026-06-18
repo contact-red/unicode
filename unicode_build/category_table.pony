@@ -48,45 +48,25 @@ primitive CategoryTableEmitter
 
       out.append("primitive _UcdCategory\n")
       out.append("  fun of(cp: U32): Category =>\n")
-      out.append("    let t = _table()\n")
-      out.append("    var lo: USize = 0\n")
-      out.append("    var hi: USize = t.size() / 18\n")
-      out.append("    while lo < hi do\n")
-      out.append("      let mid = lo + ((hi - lo) / 2)\n")
-      out.append("      let base = mid * 18\n")
-      out.append("      try\n")
-      out.append("        // Each U32 is 4 LE bytes = 8 hex chars.\n")
-      out.append("        let range_lo: U32 =\n")
-      out.append("          _UcdHex.byte(t, base)?\n")
-      out.append("            or (_UcdHex.byte(t, base + 2)? << 8)\n")
-      out.append("            or (_UcdHex.byte(t, base + 4)? << 16)\n")
-      out.append("            or (_UcdHex.byte(t, base + 6)? << 24)\n")
-      out.append("        let range_hi: U32 =\n")
-      out.append("          _UcdHex.byte(t, base + 8)?\n")
-      out.append("            or (_UcdHex.byte(t, base + 10)? << 8)\n")
-      out.append("            or (_UcdHex.byte(t, base + 12)? << 16)\n")
-      out.append("            or (_UcdHex.byte(t, base + 14)? << 24)\n")
-      out.append("        if cp < range_lo then\n")
-      out.append("          hi = mid\n")
-      out.append("        elseif cp > range_hi then\n")
-      out.append("          lo = mid + 1\n")
-      out.append("        else\n")
-      out.append("          return Categories._from_byte(U8.from[U32](_UcdHex.byte(t, base + 16)?))\n")
-      out.append("        end\n")
-      out.append("      else\n")
-      out.append("        return Cn\n")
-      out.append("      end\n")
-      out.append("    end\n")
-      out.append("    Cn\n\n")
-
-      out.append("  fun _table(): String val =>\n")
-      out.append("    \"")
-      for entry in ranges.values() do
-        _emit_le_u32(out, entry._1)
-        _emit_le_u32(out, entry._2)
-        _emit_byte(out, entry._3)
-      end
-      out.append("\"\n")
+      let to_variant: {(U8): String val} val =
+        {(b: U8): String val =>
+          match b
+          | U8(0)  => "Lu" | U8(1)  => "Ll" | U8(2)  => "Lt"
+          | U8(3)  => "Lm" | U8(4)  => "Lo"
+          | U8(5)  => "Mn" | U8(6)  => "Mc" | U8(7)  => "Me"
+          | U8(8)  => "Nd" | U8(9)  => "Nl" | U8(10) => "No"
+          | U8(11) => "Pc" | U8(12) => "Pd" | U8(13) => "Ps"
+          | U8(14) => "Pe" | U8(15) => "Pi" | U8(16) => "Pf"
+          | U8(17) => "Po"
+          | U8(18) => "Sm" | U8(19) => "Sc" | U8(20) => "Sk"
+          | U8(21) => "So"
+          | U8(22) => "Zs" | U8(23) => "Zl" | U8(24) => "Zp"
+          | U8(25) => "Cc" | U8(26) => "Cf" | U8(27) => "Cs"
+          | U8(28) => "Co" | U8(29) => "Cn"
+          else "Cn"
+          end
+        }
+      _RangeMatchEmitter.emit(out, ranges, to_variant, "Cn")
 
       out
     end

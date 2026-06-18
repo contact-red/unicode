@@ -38,118 +38,29 @@ primitive GraphemeBreakTableEmitter
 
       out.append("primitive _UcdGraphemeBreak\n")
       out.append("  fun of(cp: U32): GraphemeBreak =>\n")
-      // Two-level dispatch. Top-level: `match cp >> 12` picks a
-      // 4096-cp bucket (no guards — Pony / LLVM can emit a switch).
-      // Inner: a linear `c <= upper` chain over the (sub-)ranges
-      // inside that bucket. Ranges that span more than one bucket
-      // get split first so every emitted entry stays inside exactly
-      // one bucket.
-      let split = _split_at_buckets(merged)
-      out.append("    match cp >> 12\n")
-      var prev_bucket: U32 = 0xFFFFFFFF
-      var bucket_open: Bool = false
-      var prev_hi_plus_1: U32 = 0
-      for r in split.values() do
-        let bucket = r._1 >> 12
-        if bucket != prev_bucket then
-          if bucket_open then
-            out.append("      else GBOther\n")
-            out.append("      end\n")
+      let to_variant: {(U8): String val} val =
+        {(b: U8): String val =>
+          match b
+          | U8(1) => "GBCR"
+          | U8(2) => "GBLF"
+          | U8(3) => "GBControl"
+          | U8(4) => "GBExtend"
+          | U8(5) => "GBZWJ"
+          | U8(6) => "GBRegionalIndicator"
+          | U8(7) => "GBPrepend"
+          | U8(8) => "GBSpacingMark"
+          | U8(9) => "GBL"
+          | U8(10) => "GBV"
+          | U8(11) => "GBT"
+          | U8(12) => "GBLV"
+          | U8(13) => "GBLVT"
+          | U8(14) => "GBExtendedPictographic"
+          else "GBOther"
           end
-          out.append("    | 0x")
-          _emit_hex_u32(out, bucket)
-          out.append(" =>\n")
-          out.append("      match cp\n")
-          prev_hi_plus_1 = bucket << 12
-          bucket_open = true
-          prev_bucket = bucket
-        end
-        if r._1 > prev_hi_plus_1 then
-          out.append("      | let c: U32 if c <= 0x")
-          _emit_hex_u32(out, r._1 - 1)
-          out.append(" => GBOther\n")
-        end
-        out.append("      | let c: U32 if c <= 0x")
-        _emit_hex_u32(out, r._2)
-        out.append(" => ")
-        out.append(_byte_to_variant(r._3))
-        out.append("\n")
-        prev_hi_plus_1 = r._2 + 1
-      end
-      if bucket_open then
-        out.append("      else GBOther\n")
-        out.append("      end\n")
-      end
-      out.append("    else\n")
-      out.append("      GBOther\n")
-      out.append("    end\n")
+        }
+      _RangeMatchEmitter.emit(out, merged, to_variant, "GBOther")
 
       out
-    end
-
-  fun _split_at_buckets(
-    merged: Array[(U32, U32, U8)] val): Array[(U32, U32, U8)] val
-  =>
-    """
-    Split every input range so each output sub-range stays inside one
-    4096-cp bucket (top 20 - 12 = 20 bits all the same after
-    `>> 12`). The split preserves the input ordering so the result is
-    still sorted by `range_lo`.
-    """
-    recover val
-      let out = Array[(U32, U32, U8)]
-      for r in merged.values() do
-        var lo = r._1
-        while lo <= r._2 do
-          let bucket = lo >> 12
-          let bucket_end = ((bucket + 1) << 12) - 1
-          let hi = if r._2 < bucket_end then r._2 else bucket_end end
-          out.push((lo, hi, r._3))
-          lo = hi + 1
-        end
-      end
-      out
-    end
-
-  fun _byte_to_variant(b: U8): String val =>
-    """
-    Map the emitter-side property byte (see grapheme_break_codes.pony)
-    to the runtime `GraphemeBreak` variant name. Unknown bytes fall to
-    `GBOther` so a stale source file never produces malformed code.
-    """
-    match b
-    | U8(1) => "GBCR"
-    | U8(2) => "GBLF"
-    | U8(3) => "GBControl"
-    | U8(4) => "GBExtend"
-    | U8(5) => "GBZWJ"
-    | U8(6) => "GBRegionalIndicator"
-    | U8(7) => "GBPrepend"
-    | U8(8) => "GBSpacingMark"
-    | U8(9) => "GBL"
-    | U8(10) => "GBV"
-    | U8(11) => "GBT"
-    | U8(12) => "GBLV"
-    | U8(13) => "GBLVT"
-    | U8(14) => "GBExtendedPictographic"
-    else "GBOther"
-    end
-
-  fun _emit_hex_u32(out: String ref, value: U32) =>
-    let digits = "0123456789ABCDEF"
-    let nibbles = recover ref Array[U8](8) end
-    var n = value
-    if n == 0 then nibbles.push('0') end
-    while n > 0 do
-      try nibbles.push(digits(USize.from[U32](n and 0xF))?) end
-      n = n >> 4
-    end
-    // Pad to at least 4 hex chars for readability.
-    while nibbles.size() < 4 do nibbles.push('0') end
-    var i = nibbles.size()
-    while i > 0 do
-      try out.push(nibbles(i - 1)?) end
-      i = i - 1
     end
 
   fun _collect(
