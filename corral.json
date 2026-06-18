@@ -4,11 +4,11 @@
   ],
   "deps": [],
   "info": {
-    "description": "Unicode-correct text processing for Pony — graphemes, normalization, case folding, search, segmentation, and more.",
+    "description": "Unicode-correct text processing for Pony \u2014 graphemes, normalization, case folding, search, segmentation, and more.",
     "homepage": "",
     "license": "",
     "documentation_url": "",
-    "version": "0.0.0",
+    "version": "0.2.0",
     "name": "unicode"
   }
 }
