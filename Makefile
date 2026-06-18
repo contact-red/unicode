@@ -67,6 +67,7 @@ realclean:
 $(docs_dir): $(SOURCE_FILES) dependencies
 	rm -rf $(docs_dir)
 	$(BUILD_DOCS_WITH) $(SRC_DIR) --output build
+	cp -r docs-theme/assets/* $(docs_dir)/docs/assets/
 
 docs: $(docs_dir)
 

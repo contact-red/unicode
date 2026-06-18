@@ -5,6 +5,5 @@ lock.json
 
 # UCD source files — regenerable via `make ucd-download`. Generated
 # tables (unicode/_ucd_*.pony) are tracked; the raw UCD text files are not.
-ucd/
 ucd-x/
 UCD.zip

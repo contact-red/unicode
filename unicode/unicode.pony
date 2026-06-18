@@ -812,4 +812,4 @@ primitive Unicode
     The Unicode version against which this package's bundled UCD tables were
     generated. Format is dotted (e.g., "16.0.0").
     """
-    "0.0.0"  // M0 placeholder; populated by `unicode-build` in M1.
+    "16.0.0"  // M0 placeholder; populated by `unicode-build` in M1.

@@ -237,7 +237,7 @@ class \nodoc\ iso _TestVersionPlaceholder is UnitTest
   fun name(): String => "Unicode.version returns a string"
 
   fun apply(h: TestHelper) =>
-    h.assert_eq[String]("0.0.0", Unicode.version())
+    h.assert_eq[String]("16.0.0", Unicode.version())
 
 class \nodoc\ iso _TestCategoryAscii is UnitTest
   fun name(): String => "category: ASCII letters / digits / punctuation"
