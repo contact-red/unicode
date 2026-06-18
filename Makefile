@@ -77,7 +77,7 @@ $(BUILD_DIR):
 dependencies: corral.json
 	$(GET_DEPENDENCIES_WITH)
 
-.PHONY: all ci test unit-tests clean realclean dependencies docs ucd-build ucd-generate ucd-download conform conform-build conform-grapheme conform-grapheme-build conform-word conform-word-build conform-sentence conform-sentence-build conform-line conform-line-build
+.PHONY: all ci test unit-tests clean realclean dependencies docs ucd-build ucd-generate ucd-download conform conform-build conform-grapheme conform-grapheme-build conform-word conform-word-build conform-sentence conform-sentence-build conform-line conform-line-build bench bench-build bench-smoke bench-csv
 
 .DEFAULT_GOAL := all
 
@@ -187,3 +187,31 @@ $(conform_line_binary): $(SOURCE_FILES) $(shell find unicode_line_conform_main -
 
 conform-line: $(conform_line_binary)
 	$(conform_line_binary) $(UCD_DIR)/auxiliary/LineBreakTest.txt
+
+# ---------- Benchmarks ----------
+# `make bench` runs the full pony_bench-based suite under release
+# optimization; `bench-smoke` runs a single small bucket for quick
+# verification; `bench-csv` writes machine-readable output for cross-run
+# diffing. Benchmarks are NOT part of `ci` — runtimes are too long for
+# every PR.
+
+BENCH_BUILD_DIR := build/release
+bench_binary := $(BENCH_BUILD_DIR)/unicode_bench_main
+
+bench-build: $(bench_binary)
+
+$(bench_binary): $(SOURCE_FILES) $(shell find unicode_bench unicode_bench_main -name '*.pony' 2>/dev/null) | $(BENCH_BUILD_DIR) dependencies
+	$(COMPILE_WITH) -o $(BENCH_BUILD_DIR) unicode_bench_main -b unicode_bench_main
+
+$(BENCH_BUILD_DIR):
+	mkdir -p $(BENCH_BUILD_DIR)
+
+bench: $(bench_binary)
+	$(bench_binary) --ponynoyield
+
+bench-smoke: $(bench_binary)
+	$(bench_binary) --ponynoyield --smoke
+
+bench-csv: $(bench_binary) | $(BUILD_DIR)
+	$(bench_binary) --ponynoyield -csv > $(BUILD_DIR)/bench-$(shell git rev-parse --short HEAD).csv
+	@echo "wrote $(BUILD_DIR)/bench-$(shell git rev-parse --short HEAD).csv"
