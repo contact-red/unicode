@@ -42,6 +42,9 @@ actor \nodoc\ Main is TestList
     test(_TestCodepointsIsWhitespace)
     test(_TestCodepointsIsAssigned)
     test(_TestCodepointClassMethods)
+    test(_TestCodepointScriptAccessors)
+    test(_TestCodepointHasProperty)
+    test(_TestCodepointEastAsianWidth)
     test(_TestCodepointEquality)
     test(_TestCodepointString)
     test(_TestCodepointsStringCount)
@@ -667,6 +670,58 @@ class \nodoc\ iso _TestCodepointClassMethods is UnitTest
       end
     else
       h.fail("Codepoints.from_u32(0xE9) didn't yield Codepoint")
+    end
+
+class \nodoc\ iso _TestCodepointScriptAccessors is UnitTest
+  fun name(): String =>
+    "Codepoint: script() / script_extensions() instance methods"
+
+  fun apply(h: TestHelper) =>
+    try
+      let a = Codepoints.from_u32(U32('A')) as Codepoint val
+      h.assert_true(a.script() is ScriptLatin)
+      let exts_a = a.script_extensions()
+      h.assert_eq[USize](1, exts_a.size())
+      try h.assert_true(exts_a(0)? is ScriptLatin) end
+      // U+02C7 CARON: Script=Bopomofo, Script_Extensions={Bopo, Latn}.
+      // Verify the instance methods see both.
+      let caron = Codepoints.from_u32(0x02C7) as Codepoint val
+      let exts_caron = caron.script_extensions()
+      h.assert_eq[USize](2, exts_caron.size())
+    else
+      h.fail("Codepoint construction failed on a valid scalar")
+    end
+
+class \nodoc\ iso _TestCodepointHasProperty is UnitTest
+  fun name(): String =>
+    "Codepoint: has_property delegates to BinaryProperty table"
+
+  fun apply(h: TestHelper) =>
+    try
+      // ASCII '0' is an ID_Start? No. Is it Hex_Digit? Yes.
+      let zero = Codepoints.from_u32(U32('0')) as Codepoint val
+      h.assert_true(zero.has_property(PropHexDigit))
+      h.assert_false(zero.has_property(PropIDStart))
+      // ASCII 'A' is ID_Start and Alphabetic.
+      let a = Codepoints.from_u32(U32('A')) as Codepoint val
+      h.assert_true(a.has_property(PropIDStart))
+      h.assert_true(a.has_property(PropAlphabetic))
+    else
+      h.fail("Codepoint construction failed on a valid scalar")
+    end
+
+class \nodoc\ iso _TestCodepointEastAsianWidth is UnitTest
+  fun name(): String =>
+    "Codepoint.east_asian_width: returns expected EAW"
+
+  fun apply(h: TestHelper) =>
+    try
+      let a = Codepoints.from_u32(U32('A')) as Codepoint val
+      h.assert_true(a.east_asian_width() is EAWNa)
+      let ideo = Codepoints.from_u32(0x4E2D) as Codepoint val
+      h.assert_true(ideo.east_asian_width() is EAWW)
+    else
+      h.fail("Codepoint construction failed on a valid scalar")
     end
 
 class \nodoc\ iso _TestCodepointEquality is UnitTest
