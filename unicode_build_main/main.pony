@@ -228,6 +228,23 @@ actor Main
     _write_file(auth, out_dir + "/_ucd_script.pony", consume script_tbl)?
     env.out.print("  wrote " + out_dir + "/_ucd_script.pony")
 
+    // Emit Script_Extensions cp → Array[Script] table (UAX #24).
+    let scx_lines = _read_lines(auth,
+      ucd_dir + "/ScriptExtensions.txt")?
+    let pva_lines = _read_lines(auth,
+      ucd_dir + "/PropertyValueAliases.txt")?
+    env.out.print("  read " + scx_lines.size().string()
+      + " lines from ScriptExtensions.txt + "
+      + pva_lines.size().string() + " from PropertyValueAliases.txt")
+    let script_entries = PropertyFileParser.parse_all(scripts_lines)?
+    let script_names = ScriptTableEmitter.collect_names(
+      script_entries)
+    let scx_body = ScriptExtensionsTableEmitter.emit(
+      scx_lines, pva_lines, script_names)?
+    _write_file(auth, out_dir + "/_ucd_script_extensions.pony",
+      consume scx_body)?
+    env.out.print("  wrote " + out_dir + "/_ucd_script_extensions.pony")
+
     // Emit composition tables (Full_Composition_Exclusion + canonical compose).
     let dnp_lines = _read_lines(auth,
       ucd_dir + "/DerivedNormalizationProps.txt")?

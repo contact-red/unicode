@@ -97,7 +97,8 @@ UCD_URL := https://www.unicode.org/Public/$(UCD_VERSION)/ucd
 UCD_TOPLEVEL := UnicodeData.txt CaseFolding.txt SpecialCasing.txt PropList.txt \
                 Scripts.txt ScriptExtensions.txt DerivedCoreProperties.txt \
                 DerivedNormalizationProps.txt CompositionExclusions.txt \
-                NameAliases.txt LineBreak.txt EastAsianWidth.txt
+                NameAliases.txt LineBreak.txt EastAsianWidth.txt \
+                PropertyValueAliases.txt
 UCD_AUXILIARY := GraphemeBreakProperty.txt WordBreakProperty.txt \
                  SentenceBreakProperty.txt \
                  GraphemeBreakTest.txt WordBreakTest.txt \

@@ -27,13 +27,13 @@ primitive ScriptTableEmitter
     (script_runtime, ucd_script_table).
     """
     let entries = PropertyFileParser.parse_all(lines)?
-    let names = _collect_names(entries)
+    let names = collect_names(entries)
     let ranges = _coalesce_ranges(entries, names)
     let runtime = _emit_runtime(names)
     let table = _emit_table(ranges)
     (consume runtime, consume table)
 
-  fun _collect_names(
+  fun collect_names(
     entries: ReadSeq[PropertyEntry val] box)
     : Array[String val] val
   =>
