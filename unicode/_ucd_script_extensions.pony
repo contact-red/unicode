@@ -3,62 +3,370 @@
 //   make ucd-generate
 //
 // Source: ScriptExtensions.txt + PropertyValueAliases.txt.
-// Codepoints not listed here have Script_Extensions =
-// [script(cp)] — the API layer falls back to that.
+// Two-level `match cp >> 12` / `match cp` dispatch (see
+// `_RangeMatchEmitter` in unicode_build/ for the broader
+// pattern). Each non-empty range arm returns a fresh
+// `Array[Script] val` literal; codepoints not listed here
+// return `None` and the API layer falls back to
+// `[script(cp)]`.
 
 primitive _UcdScriptExtensions
   fun of(cp: U32): (Array[Script] val | None) =>
-    let t = _index()
-    var lo: USize = 0
-    var hi: USize = t.size() / 22
-    while lo < hi do
-      let mid = lo + ((hi - lo) / 2)
-      let base = mid * 22
-      try
-        let range_lo: U32 =
-          _UcdHex.byte(t, base)?
-            or (_UcdHex.byte(t, base + 2)? << 8)
-            or (_UcdHex.byte(t, base + 4)? << 16)
-            or (_UcdHex.byte(t, base + 6)? << 24)
-        let range_hi: U32 =
-          _UcdHex.byte(t, base + 8)?
-            or (_UcdHex.byte(t, base + 10)? << 8)
-            or (_UcdHex.byte(t, base + 12)? << 16)
-            or (_UcdHex.byte(t, base + 14)? << 24)
-        if cp < range_lo then hi = mid
-        elseif cp > range_hi then lo = mid + 1
-        else
-          let offset: U32 =
-            _UcdHex.byte(t, base + 16)?
-              or (_UcdHex.byte(t, base + 18)? << 8)
-          let length = _UcdHex.byte(t, base + 20)?
-          return _read(
-            USize.from[U32](offset),
-            USize.from[U32](length))
-        end
-      else return None
+    match cp >> 12
+    | 0x0000 =>
+      match cp
+      | let c: U32 if c <= 0x00B6 => None
+      | let c: U32 if c <= 0x00B7 => recover val [as Script: ScriptAvestan; ScriptCarian; ScriptCoptic; ScriptDuployan; ScriptElbasan; ScriptGeorgian; ScriptGlagolitic; ScriptGunjalaGondi; ScriptGothic; ScriptGreek; ScriptHan; ScriptLatin; ScriptLydian; ScriptMahajani; ScriptOldPermic; ScriptShavian] end
+      | let c: U32 if c <= 0x02BB => None
+      | let c: U32 if c <= 0x02BC => recover val [as Script: ScriptBengali; ScriptCyrillic; ScriptDevanagari; ScriptLatin; ScriptLisu; ScriptThai; ScriptToto] end
+      | let c: U32 if c <= 0x02C6 => None
+      | let c: U32 if c <= 0x02C7 => recover val [as Script: ScriptBopomofo; ScriptLatin] end
+      | let c: U32 if c <= 0x02C8 => None
+      | let c: U32 if c <= 0x02CB => recover val [as Script: ScriptBopomofo; ScriptLatin] end
+      | let c: U32 if c <= 0x02CC => None
+      | let c: U32 if c <= 0x02CD => recover val [as Script: ScriptLatin; ScriptLisu] end
+      | let c: U32 if c <= 0x02D6 => None
+      | let c: U32 if c <= 0x02D7 => recover val [as Script: ScriptLatin; ScriptThai] end
+      | let c: U32 if c <= 0x02D8 => None
+      | let c: U32 if c <= 0x02D9 => recover val [as Script: ScriptBopomofo; ScriptLatin] end
+      | let c: U32 if c <= 0x02FF => None
+      | let c: U32 if c <= 0x0300 => recover val [as Script: ScriptCherokee; ScriptCoptic; ScriptCyrillic; ScriptGreek; ScriptLatin; ScriptOldPermic; ScriptSunuwar; ScriptTaiLe] end
+      | let c: U32 if c <= 0x0301 => recover val [as Script: ScriptCherokee; ScriptCyrillic; ScriptGreek; ScriptLatin; ScriptOsage; ScriptSunuwar; ScriptTaiLe; ScriptTodhri] end
+      | let c: U32 if c <= 0x0302 => recover val [as Script: ScriptCherokee; ScriptCyrillic; ScriptLatin; ScriptTifinagh] end
+      | let c: U32 if c <= 0x0303 => recover val [as Script: ScriptGlagolitic; ScriptLatin; ScriptSunuwar; ScriptSyriac; ScriptThai] end
+      | let c: U32 if c <= 0x0304 => recover val [as Script: ScriptCaucasianAlbanian; ScriptCherokee; ScriptCoptic; ScriptCyrillic; ScriptGothic; ScriptGreek; ScriptLatin; ScriptOsage; ScriptSyriac; ScriptTifinagh; ScriptTodhri] end
+      | let c: U32 if c <= 0x0305 => recover val [as Script: ScriptCoptic; ScriptElbasan; ScriptGlagolitic; ScriptGothic; ScriptKatakana; ScriptLatin] end
+      | let c: U32 if c <= 0x0306 => recover val [as Script: ScriptCyrillic; ScriptGreek; ScriptLatin; ScriptOldPermic] end
+      | let c: U32 if c <= 0x0307 => recover val [as Script: ScriptCoptic; ScriptDuployan; ScriptHebrew; ScriptLatin; ScriptOldPermic; ScriptSyriac; ScriptTaiLe; ScriptTifinagh; ScriptTodhri] end
+      | let c: U32 if c <= 0x0308 => recover val [as Script: ScriptArmenian; ScriptCyrillic; ScriptDuployan; ScriptGothic; ScriptGreek; ScriptHebrew; ScriptLatin; ScriptOldPermic; ScriptSyriac; ScriptTaiLe] end
+      | let c: U32 if c <= 0x0309 => recover val [as Script: ScriptLatin; ScriptTifinagh] end
+      | let c: U32 if c <= 0x030A => recover val [as Script: ScriptDuployan; ScriptLatin; ScriptSyriac] end
+      | let c: U32 if c <= 0x030B => recover val [as Script: ScriptCherokee; ScriptCyrillic; ScriptLatin; ScriptOsage] end
+      | let c: U32 if c <= 0x030C => recover val [as Script: ScriptCherokee; ScriptLatin; ScriptTaiLe] end
+      | let c: U32 if c <= 0x030D => recover val [as Script: ScriptLatin; ScriptSunuwar] end
+      | let c: U32 if c <= 0x030E => recover val [as Script: ScriptEthiopic; ScriptLatin] end
+      | let c: U32 if c <= 0x030F => None
+      | let c: U32 if c <= 0x0310 => recover val [as Script: ScriptLatin; ScriptSunuwar] end
+      | let c: U32 if c <= 0x0311 => recover val [as Script: ScriptCyrillic; ScriptLatin; ScriptTodhri] end
+      | let c: U32 if c <= 0x0312 => None
+      | let c: U32 if c <= 0x0313 => recover val [as Script: ScriptGreek; ScriptLatin; ScriptOldPermic; ScriptTodhri] end
+      | let c: U32 if c <= 0x031F => None
+      | let c: U32 if c <= 0x0320 => recover val [as Script: ScriptLatin; ScriptSyriac] end
+      | let c: U32 if c <= 0x0322 => None
+      | let c: U32 if c <= 0x0323 => recover val [as Script: ScriptCherokee; ScriptDuployan; ScriptKatakana; ScriptLatin; ScriptSyriac] end
+      | let c: U32 if c <= 0x0324 => recover val [as Script: ScriptCherokee; ScriptDuployan; ScriptLatin; ScriptSyriac] end
+      | let c: U32 if c <= 0x0325 => recover val [as Script: ScriptLatin; ScriptSyriac] end
+      | let c: U32 if c <= 0x032C => None
+      | let c: U32 if c <= 0x032D => recover val [as Script: ScriptLatin; ScriptSunuwar; ScriptSyriac] end
+      | let c: U32 if c <= 0x032E => recover val [as Script: ScriptLatin; ScriptSyriac] end
+      | let c: U32 if c <= 0x032F => None
+      | let c: U32 if c <= 0x0330 => recover val [as Script: ScriptCherokee; ScriptLatin; ScriptSyriac] end
+      | let c: U32 if c <= 0x0331 => recover val [as Script: ScriptCaucasianAlbanian; ScriptCherokee; ScriptGothic; ScriptLatin; ScriptSunuwar; ScriptThai] end
+      | let c: U32 if c <= 0x0341 => None
+      | let c: U32 if c <= 0x0342 => recover val [as Script: ScriptGreek] end
+      | let c: U32 if c <= 0x0344 => None
+      | let c: U32 if c <= 0x0345 => recover val [as Script: ScriptGreek] end
+      | let c: U32 if c <= 0x0357 => None
+      | let c: U32 if c <= 0x0358 => recover val [as Script: ScriptLatin; ScriptOsage] end
+      | let c: U32 if c <= 0x035D => None
+      | let c: U32 if c <= 0x035E => recover val [as Script: ScriptCaucasianAlbanian; ScriptLatin; ScriptTodhri] end
+      | let c: U32 if c <= 0x0362 => None
+      | let c: U32 if c <= 0x036F => recover val [as Script: ScriptLatin] end
+      | let c: U32 if c <= 0x0373 => None
+      | let c: U32 if c <= 0x0374 => recover val [as Script: ScriptCoptic; ScriptGreek] end
+      | let c: U32 if c <= 0x0375 => recover val [as Script: ScriptCoptic; ScriptGreek] end
+      | let c: U32 if c <= 0x0482 => None
+      | let c: U32 if c <= 0x0483 => recover val [as Script: ScriptCyrillic; ScriptOldPermic] end
+      | let c: U32 if c <= 0x0484 => recover val [as Script: ScriptCyrillic; ScriptGlagolitic] end
+      | let c: U32 if c <= 0x0486 => recover val [as Script: ScriptCyrillic; ScriptLatin] end
+      | let c: U32 if c <= 0x0487 => recover val [as Script: ScriptCyrillic; ScriptGlagolitic] end
+      | let c: U32 if c <= 0x0588 => None
+      | let c: U32 if c <= 0x0589 => recover val [as Script: ScriptArmenian; ScriptGeorgian; ScriptGlagolitic] end
+      | let c: U32 if c <= 0x060B => None
+      | let c: U32 if c <= 0x060C => recover val [as Script: ScriptArabic; ScriptGaray; ScriptNko; ScriptHanifiRohingya; ScriptSyriac; ScriptThaana; ScriptYezidi] end
+      | let c: U32 if c <= 0x061A => None
+      | let c: U32 if c <= 0x061B => recover val [as Script: ScriptArabic; ScriptGaray; ScriptNko; ScriptHanifiRohingya; ScriptSyriac; ScriptThaana; ScriptYezidi] end
+      | let c: U32 if c <= 0x061C => recover val [as Script: ScriptArabic; ScriptSyriac; ScriptThaana] end
+      | let c: U32 if c <= 0x061E => None
+      | let c: U32 if c <= 0x061F => recover val [as Script: ScriptAdlam; ScriptArabic; ScriptGaray; ScriptNko; ScriptHanifiRohingya; ScriptSyriac; ScriptThaana; ScriptYezidi] end
+      | let c: U32 if c <= 0x063F => None
+      | let c: U32 if c <= 0x0640 => recover val [as Script: ScriptAdlam; ScriptArabic; ScriptMandaic; ScriptManichaean; ScriptOldUyghur; ScriptPsalterPahlavi; ScriptHanifiRohingya; ScriptSogdian; ScriptSyriac] end
+      | let c: U32 if c <= 0x064A => None
+      | let c: U32 if c <= 0x0655 => recover val [as Script: ScriptArabic; ScriptSyriac] end
+      | let c: U32 if c <= 0x065F => None
+      | let c: U32 if c <= 0x0669 => recover val [as Script: ScriptArabic; ScriptThaana; ScriptYezidi] end
+      | let c: U32 if c <= 0x066F => None
+      | let c: U32 if c <= 0x0670 => recover val [as Script: ScriptArabic; ScriptSyriac] end
+      | let c: U32 if c <= 0x06D3 => None
+      | let c: U32 if c <= 0x06D4 => recover val [as Script: ScriptArabic; ScriptHanifiRohingya] end
+      | let c: U32 if c <= 0x0950 => None
+      | let c: U32 if c <= 0x0951 => recover val [as Script: ScriptBengali; ScriptDevanagari; ScriptGrantha; ScriptGujarati; ScriptGurmukhi; ScriptKannada; ScriptLatin; ScriptMalayalam; ScriptOriya; ScriptSharada; ScriptTamil; ScriptTelugu; ScriptTirhuta] end
+      | let c: U32 if c <= 0x0952 => recover val [as Script: ScriptBengali; ScriptDevanagari; ScriptGrantha; ScriptGujarati; ScriptGurmukhi; ScriptKannada; ScriptLatin; ScriptMalayalam; ScriptOriya; ScriptTamil; ScriptTelugu; ScriptTirhuta] end
+      | let c: U32 if c <= 0x0963 => None
+      | let c: U32 if c <= 0x0964 => recover val [as Script: ScriptBengali; ScriptDevanagari; ScriptDogra; ScriptGunjalaGondi; ScriptMasaramGondi; ScriptGrantha; ScriptGujarati; ScriptGurmukhi; ScriptKannada; ScriptMahajani; ScriptMalayalam; ScriptNandinagari; ScriptOlOnal; ScriptOriya; ScriptKhudawadi; ScriptSinhala; ScriptSylotiNagri; ScriptTakri; ScriptTamil; ScriptTelugu; ScriptTirhuta] end
+      | let c: U32 if c <= 0x0965 => recover val [as Script: ScriptBengali; ScriptDevanagari; ScriptDogra; ScriptGunjalaGondi; ScriptMasaramGondi; ScriptGrantha; ScriptGujarati; ScriptGurungKhema; ScriptGurmukhi; ScriptKannada; ScriptLimbu; ScriptMahajani; ScriptMalayalam; ScriptNandinagari; ScriptOlOnal; ScriptOriya; ScriptKhudawadi; ScriptSinhala; ScriptSylotiNagri; ScriptTakri; ScriptTamil; ScriptTelugu; ScriptTirhuta] end
+      | let c: U32 if c <= 0x096F => recover val [as Script: ScriptDevanagari; ScriptDogra; ScriptKaithi; ScriptMahajani] end
+      | let c: U32 if c <= 0x09E5 => None
+      | let c: U32 if c <= 0x09EF => recover val [as Script: ScriptBengali; ScriptChakma; ScriptSylotiNagri] end
+      | let c: U32 if c <= 0x0A65 => None
+      | let c: U32 if c <= 0x0A6F => recover val [as Script: ScriptGurmukhi; ScriptMultani] end
+      | let c: U32 if c <= 0x0AE5 => None
+      | let c: U32 if c <= 0x0AEF => recover val [as Script: ScriptGujarati; ScriptKhojki] end
+      | let c: U32 if c <= 0x0BE5 => None
+      | let c: U32 if c <= 0x0BEF => recover val [as Script: ScriptGrantha; ScriptTamil] end
+      | let c: U32 if c <= 0x0BF2 => recover val [as Script: ScriptGrantha; ScriptTamil] end
+      | let c: U32 if c <= 0x0BF3 => recover val [as Script: ScriptGrantha; ScriptTamil] end
+      | let c: U32 if c <= 0x0CE5 => None
+      | let c: U32 if c <= 0x0CEF => recover val [as Script: ScriptKannada; ScriptNandinagari; ScriptTuluTigalari] end
+      else None
       end
-    end
-    None
-
-  fun _read(off: USize, length: USize)
-    : (Array[Script] val | None)
-  =>
-    let data = _data()
-    let buf = recover trn Array[Script](length) end
-    var i: USize = 0
-    while i < length do
-      try
-        let b = _UcdHex.byte(data, (off + i) * 2)?
-        buf.push(_ScriptCodec.from_byte(U8.from[U32](b)))
-      else return None
+    | 0x0001 =>
+      match cp
+      | let c: U32 if c <= 0x103F => None
+      | let c: U32 if c <= 0x1049 => recover val [as Script: ScriptChakma; ScriptMyanmar; ScriptTaiLe] end
+      | let c: U32 if c <= 0x10FA => None
+      | let c: U32 if c <= 0x10FB => recover val [as Script: ScriptGeorgian; ScriptGlagolitic; ScriptLatin] end
+      | let c: U32 if c <= 0x16EA => None
+      | let c: U32 if c <= 0x16ED => recover val [as Script: ScriptRunic] end
+      | let c: U32 if c <= 0x1734 => None
+      | let c: U32 if c <= 0x1736 => recover val [as Script: ScriptBuhid; ScriptHanunoo; ScriptTagbanwa; ScriptTagalog] end
+      | let c: U32 if c <= 0x1801 => None
+      | let c: U32 if c <= 0x1803 => recover val [as Script: ScriptMongolian; ScriptPhagsPa] end
+      | let c: U32 if c <= 0x1804 => None
+      | let c: U32 if c <= 0x1805 => recover val [as Script: ScriptMongolian; ScriptPhagsPa] end
+      | let c: U32 if c <= 0x1CCF => None
+      | let c: U32 if c <= 0x1CD0 => recover val [as Script: ScriptBengali; ScriptDevanagari; ScriptGrantha; ScriptKannada] end
+      | let c: U32 if c <= 0x1CD1 => recover val [as Script: ScriptDevanagari] end
+      | let c: U32 if c <= 0x1CD2 => recover val [as Script: ScriptBengali; ScriptDevanagari; ScriptGrantha; ScriptKannada] end
+      | let c: U32 if c <= 0x1CD3 => recover val [as Script: ScriptDevanagari; ScriptGrantha; ScriptKannada] end
+      | let c: U32 if c <= 0x1CD4 => recover val [as Script: ScriptDevanagari] end
+      | let c: U32 if c <= 0x1CD6 => recover val [as Script: ScriptBengali; ScriptDevanagari] end
+      | let c: U32 if c <= 0x1CD7 => recover val [as Script: ScriptDevanagari; ScriptSharada] end
+      | let c: U32 if c <= 0x1CD8 => recover val [as Script: ScriptBengali; ScriptDevanagari] end
+      | let c: U32 if c <= 0x1CD9 => recover val [as Script: ScriptDevanagari; ScriptSharada] end
+      | let c: U32 if c <= 0x1CDA => recover val [as Script: ScriptDevanagari; ScriptKannada; ScriptMalayalam; ScriptOriya; ScriptTamil; ScriptTelugu] end
+      | let c: U32 if c <= 0x1CDB => recover val [as Script: ScriptDevanagari] end
+      | let c: U32 if c <= 0x1CDD => recover val [as Script: ScriptDevanagari; ScriptSharada] end
+      | let c: U32 if c <= 0x1CDF => recover val [as Script: ScriptDevanagari] end
+      | let c: U32 if c <= 0x1CE0 => recover val [as Script: ScriptDevanagari; ScriptSharada] end
+      | let c: U32 if c <= 0x1CE1 => recover val [as Script: ScriptBengali; ScriptDevanagari] end
+      | let c: U32 if c <= 0x1CE8 => recover val [as Script: ScriptDevanagari] end
+      | let c: U32 if c <= 0x1CE9 => recover val [as Script: ScriptDevanagari; ScriptNandinagari] end
+      | let c: U32 if c <= 0x1CEA => recover val [as Script: ScriptBengali; ScriptDevanagari] end
+      | let c: U32 if c <= 0x1CEC => recover val [as Script: ScriptDevanagari] end
+      | let c: U32 if c <= 0x1CED => recover val [as Script: ScriptBengali; ScriptDevanagari] end
+      | let c: U32 if c <= 0x1CF1 => recover val [as Script: ScriptDevanagari] end
+      | let c: U32 if c <= 0x1CF2 => recover val [as Script: ScriptBengali; ScriptDevanagari; ScriptGrantha; ScriptKannada; ScriptMalayalam; ScriptNandinagari; ScriptOriya; ScriptSinhala; ScriptTelugu; ScriptTirhuta; ScriptTuluTigalari] end
+      | let c: U32 if c <= 0x1CF3 => recover val [as Script: ScriptDevanagari; ScriptGrantha] end
+      | let c: U32 if c <= 0x1CF4 => recover val [as Script: ScriptDevanagari; ScriptGrantha; ScriptKannada; ScriptTuluTigalari] end
+      | let c: U32 if c <= 0x1CF6 => recover val [as Script: ScriptBengali; ScriptDevanagari] end
+      | let c: U32 if c <= 0x1CF7 => recover val [as Script: ScriptBengali] end
+      | let c: U32 if c <= 0x1CF9 => recover val [as Script: ScriptDevanagari; ScriptGrantha] end
+      | let c: U32 if c <= 0x1CFA => recover val [as Script: ScriptNandinagari] end
+      | let c: U32 if c <= 0x1DBF => None
+      | let c: U32 if c <= 0x1DC1 => recover val [as Script: ScriptGreek] end
+      | let c: U32 if c <= 0x1DF7 => None
+      | let c: U32 if c <= 0x1DF8 => recover val [as Script: ScriptCyrillic; ScriptLatin; ScriptSyriac] end
+      | let c: U32 if c <= 0x1DF9 => None
+      | let c: U32 if c <= 0x1DFA => recover val [as Script: ScriptSyriac] end
+      else None
       end
-      i = i + 1
+    | 0x0002 =>
+      match cp
+      | let c: U32 if c <= 0x202E => None
+      | let c: U32 if c <= 0x202F => recover val [as Script: ScriptLatin; ScriptMongolian; ScriptPhagsPa] end
+      | let c: U32 if c <= 0x204E => None
+      | let c: U32 if c <= 0x204F => recover val [as Script: ScriptAdlam; ScriptArabic] end
+      | let c: U32 if c <= 0x2059 => None
+      | let c: U32 if c <= 0x205A => recover val [as Script: ScriptCarian; ScriptGeorgian; ScriptGlagolitic; ScriptOldHungarian; ScriptLycian; ScriptOldTurkic] end
+      | let c: U32 if c <= 0x205C => None
+      | let c: U32 if c <= 0x205D => recover val [as Script: ScriptCarian; ScriptGreek; ScriptOldHungarian; ScriptMeroiticHieroglyphs] end
+      | let c: U32 if c <= 0x20EF => None
+      | let c: U32 if c <= 0x20F0 => recover val [as Script: ScriptDevanagari; ScriptGrantha; ScriptLatin] end
+      | let c: U32 if c <= 0x2E16 => None
+      | let c: U32 if c <= 0x2E17 => recover val [as Script: ScriptCoptic; ScriptLatin] end
+      | let c: U32 if c <= 0x2E2F => None
+      | let c: U32 if c <= 0x2E30 => recover val [as Script: ScriptAvestan; ScriptOldTurkic] end
+      | let c: U32 if c <= 0x2E31 => recover val [as Script: ScriptAvestan; ScriptCarian; ScriptGeorgian; ScriptOldHungarian; ScriptKaithi; ScriptLydian; ScriptSamaritan] end
+      | let c: U32 if c <= 0x2E3B => None
+      | let c: U32 if c <= 0x2E3C => recover val [as Script: ScriptDuployan] end
+      | let c: U32 if c <= 0x2E40 => None
+      | let c: U32 if c <= 0x2E41 => recover val [as Script: ScriptAdlam; ScriptArabic; ScriptOldHungarian] end
+      | let c: U32 if c <= 0x2E42 => None
+      | let c: U32 if c <= 0x2E43 => recover val [as Script: ScriptCyrillic; ScriptGlagolitic] end
+      | let c: U32 if c <= 0x2FEF => None
+      | let c: U32 if c <= 0x2FFF => recover val [as Script: ScriptHan; ScriptTangut] end
+      else None
+      end
+    | 0x0003 =>
+      match cp
+      | let c: U32 if c <= 0x3000 => None
+      | let c: U32 if c <= 0x3001 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptMongolian; ScriptYi] end
+      | let c: U32 if c <= 0x3002 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptMongolian; ScriptPhagsPa; ScriptYi] end
+      | let c: U32 if c <= 0x3003 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0x3005 => None
+      | let c: U32 if c <= 0x3006 => recover val [as Script: ScriptHan] end
+      | let c: U32 if c <= 0x3007 => None
+      | let c: U32 if c <= 0x3008 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptMongolian; ScriptTibetan; ScriptYi] end
+      | let c: U32 if c <= 0x3009 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptMongolian; ScriptTibetan; ScriptYi] end
+      | let c: U32 if c <= 0x300A => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptLisu; ScriptMongolian; ScriptTibetan; ScriptYi] end
+      | let c: U32 if c <= 0x300B => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptLisu; ScriptMongolian; ScriptTibetan; ScriptYi] end
+      | let c: U32 if c <= 0x300C => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0x300D => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0x300E => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0x300F => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0x3010 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0x3011 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0x3012 => None
+      | let c: U32 if c <= 0x3013 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0x3014 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0x3015 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0x3016 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0x3017 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0x3018 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0x3019 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0x301A => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0x301B => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0x301C => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0x301D => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0x301F => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0x3029 => None
+      | let c: U32 if c <= 0x302D => recover val [as Script: ScriptBopomofo; ScriptHan] end
+      | let c: U32 if c <= 0x302F => None
+      | let c: U32 if c <= 0x3030 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0x3035 => recover val [as Script: ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0x3036 => None
+      | let c: U32 if c <= 0x3037 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0x303B => None
+      | let c: U32 if c <= 0x303C => recover val [as Script: ScriptHan; ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0x303D => recover val [as Script: ScriptHan; ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0x303F => recover val [as Script: ScriptHan] end
+      | let c: U32 if c <= 0x3098 => None
+      | let c: U32 if c <= 0x309A => recover val [as Script: ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0x309C => recover val [as Script: ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0x309F => None
+      | let c: U32 if c <= 0x30A0 => recover val [as Script: ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0x30FA => None
+      | let c: U32 if c <= 0x30FB => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0x30FC => recover val [as Script: ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0x318F => None
+      | let c: U32 if c <= 0x3191 => recover val [as Script: ScriptHan] end
+      | let c: U32 if c <= 0x3195 => recover val [as Script: ScriptHan] end
+      | let c: U32 if c <= 0x319F => recover val [as Script: ScriptHan] end
+      | let c: U32 if c <= 0x31BF => None
+      | let c: U32 if c <= 0x31E5 => recover val [as Script: ScriptHan] end
+      | let c: U32 if c <= 0x31EE => None
+      | let c: U32 if c <= 0x31EF => recover val [as Script: ScriptHan; ScriptTangut] end
+      | let c: U32 if c <= 0x321F => None
+      | let c: U32 if c <= 0x3229 => recover val [as Script: ScriptHan] end
+      | let c: U32 if c <= 0x3247 => recover val [as Script: ScriptHan] end
+      | let c: U32 if c <= 0x327F => None
+      | let c: U32 if c <= 0x3289 => recover val [as Script: ScriptHan] end
+      | let c: U32 if c <= 0x32B0 => recover val [as Script: ScriptHan] end
+      | let c: U32 if c <= 0x32BF => None
+      | let c: U32 if c <= 0x32CB => recover val [as Script: ScriptHan] end
+      | let c: U32 if c <= 0x32FE => None
+      | let c: U32 if c <= 0x32FF => recover val [as Script: ScriptHan] end
+      | let c: U32 if c <= 0x3357 => None
+      | let c: U32 if c <= 0x3370 => recover val [as Script: ScriptHan] end
+      | let c: U32 if c <= 0x337A => None
+      | let c: U32 if c <= 0x337F => recover val [as Script: ScriptHan] end
+      | let c: U32 if c <= 0x33DF => None
+      | let c: U32 if c <= 0x33FE => recover val [as Script: ScriptHan] end
+      else None
+      end
+    | 0x000A =>
+      match cp
+      | let c: U32 if c <= 0xA66E => None
+      | let c: U32 if c <= 0xA66F => recover val [as Script: ScriptCyrillic; ScriptGlagolitic] end
+      | let c: U32 if c <= 0xA6FF => None
+      | let c: U32 if c <= 0xA707 => recover val [as Script: ScriptHan; ScriptLatin] end
+      | let c: U32 if c <= 0xA82F => None
+      | let c: U32 if c <= 0xA832 => recover val [as Script: ScriptDevanagari; ScriptDogra; ScriptGujarati; ScriptGurmukhi; ScriptKhojki; ScriptKannada; ScriptKaithi; ScriptMahajani; ScriptMalayalam; ScriptModi; ScriptNandinagari; ScriptSharada; ScriptKhudawadi; ScriptTakri; ScriptTirhuta; ScriptTuluTigalari] end
+      | let c: U32 if c <= 0xA835 => recover val [as Script: ScriptDevanagari; ScriptDogra; ScriptGujarati; ScriptGurmukhi; ScriptKhojki; ScriptKannada; ScriptKaithi; ScriptMahajani; ScriptModi; ScriptNandinagari; ScriptSharada; ScriptKhudawadi; ScriptTakri; ScriptTirhuta; ScriptTuluTigalari] end
+      | let c: U32 if c <= 0xA837 => recover val [as Script: ScriptDevanagari; ScriptDogra; ScriptGujarati; ScriptGurmukhi; ScriptKhojki; ScriptKaithi; ScriptMahajani; ScriptModi; ScriptKhudawadi; ScriptTakri; ScriptTirhuta] end
+      | let c: U32 if c <= 0xA838 => recover val [as Script: ScriptDevanagari; ScriptDogra; ScriptGujarati; ScriptGurmukhi; ScriptKhojki; ScriptKaithi; ScriptMahajani; ScriptModi; ScriptSharada; ScriptKhudawadi; ScriptTakri; ScriptTirhuta] end
+      | let c: U32 if c <= 0xA839 => recover val [as Script: ScriptDevanagari; ScriptDogra; ScriptGujarati; ScriptGurmukhi; ScriptKhojki; ScriptKaithi; ScriptMahajani; ScriptModi; ScriptKhudawadi; ScriptTakri; ScriptTirhuta] end
+      | let c: U32 if c <= 0xA8F0 => None
+      | let c: U32 if c <= 0xA8F1 => recover val [as Script: ScriptBengali; ScriptDevanagari; ScriptTuluTigalari] end
+      | let c: U32 if c <= 0xA8F2 => None
+      | let c: U32 if c <= 0xA8F3 => recover val [as Script: ScriptDevanagari; ScriptTamil] end
+      | let c: U32 if c <= 0xA92D => None
+      | let c: U32 if c <= 0xA92E => recover val [as Script: ScriptKayahLi; ScriptLatin; ScriptMyanmar] end
+      | let c: U32 if c <= 0xA9CE => None
+      | let c: U32 if c <= 0xA9CF => recover val [as Script: ScriptBuginese; ScriptJavanese] end
+      else None
+      end
+    | 0x000F =>
+      match cp
+      | let c: U32 if c <= 0xFD3D => None
+      | let c: U32 if c <= 0xFD3E => recover val [as Script: ScriptArabic; ScriptNko] end
+      | let c: U32 if c <= 0xFD3F => recover val [as Script: ScriptArabic; ScriptNko] end
+      | let c: U32 if c <= 0xFDF1 => None
+      | let c: U32 if c <= 0xFDF2 => recover val [as Script: ScriptArabic; ScriptThaana] end
+      | let c: U32 if c <= 0xFDFC => None
+      | let c: U32 if c <= 0xFDFD => recover val [as Script: ScriptArabic; ScriptThaana] end
+      | let c: U32 if c <= 0xFE44 => None
+      | let c: U32 if c <= 0xFE46 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0xFF60 => None
+      | let c: U32 if c <= 0xFF61 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0xFF62 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0xFF63 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0xFF65 => recover val [as Script: ScriptBopomofo; ScriptHangul; ScriptHan; ScriptHiragana; ScriptKatakana; ScriptYi] end
+      | let c: U32 if c <= 0xFF6F => None
+      | let c: U32 if c <= 0xFF70 => recover val [as Script: ScriptHiragana; ScriptKatakana] end
+      | let c: U32 if c <= 0xFF9D => None
+      | let c: U32 if c <= 0xFF9F => recover val [as Script: ScriptHiragana; ScriptKatakana] end
+      else None
+      end
+    | 0x0010 =>
+      match cp
+      | let c: U32 if c <= 0x100FF => None
+      | let c: U32 if c <= 0x10101 => recover val [as Script: ScriptCyproMinoan; ScriptCypriot; ScriptLinearB] end
+      | let c: U32 if c <= 0x10102 => recover val [as Script: ScriptCypriot; ScriptLinearB] end
+      | let c: U32 if c <= 0x10106 => None
+      | let c: U32 if c <= 0x10133 => recover val [as Script: ScriptCypriot; ScriptLinearA; ScriptLinearB] end
+      | let c: U32 if c <= 0x10136 => None
+      | let c: U32 if c <= 0x1013F => recover val [as Script: ScriptCypriot; ScriptLinearB] end
+      | let c: U32 if c <= 0x102DF => None
+      | let c: U32 if c <= 0x102E0 => recover val [as Script: ScriptArabic; ScriptCoptic] end
+      | let c: U32 if c <= 0x102FB => recover val [as Script: ScriptArabic; ScriptCoptic] end
+      | let c: U32 if c <= 0x10AF1 => None
+      | let c: U32 if c <= 0x10AF2 => recover val [as Script: ScriptManichaean; ScriptOldUyghur] end
+      else None
+      end
+    | 0x0011 =>
+      match cp
+      | let c: U32 if c <= 0x11300 => None
+      | let c: U32 if c <= 0x11301 => recover val [as Script: ScriptGrantha; ScriptTamil] end
+      | let c: U32 if c <= 0x11302 => None
+      | let c: U32 if c <= 0x11303 => recover val [as Script: ScriptGrantha; ScriptTamil] end
+      | let c: U32 if c <= 0x1133A => None
+      | let c: U32 if c <= 0x1133C => recover val [as Script: ScriptGrantha; ScriptTamil] end
+      | let c: U32 if c <= 0x11FCF => None
+      | let c: U32 if c <= 0x11FD1 => recover val [as Script: ScriptGrantha; ScriptTamil] end
+      | let c: U32 if c <= 0x11FD2 => None
+      | let c: U32 if c <= 0x11FD3 => recover val [as Script: ScriptGrantha; ScriptTamil] end
+      else None
+      end
+    | 0x001B =>
+      match cp
+      | let c: U32 if c <= 0x1BC9F => None
+      | let c: U32 if c <= 0x1BCA3 => recover val [as Script: ScriptDuployan] end
+      else None
+      end
+    | 0x001D =>
+      match cp
+      | let c: U32 if c <= 0x1D35F => None
+      | let c: U32 if c <= 0x1D371 => recover val [as Script: ScriptHan] end
+      else None
+      end
+    | 0x001F =>
+      match cp
+      | let c: U32 if c <= 0x1F24F => None
+      | let c: U32 if c <= 0x1F251 => recover val [as Script: ScriptHan] end
+      else None
+      end
+    else
+      None
     end
-    consume buf
-
-  fun _index(): String val =>
-    "B7000000B7000000000010BC020000BC020000100007C7020000C7020000170002C9020000CB020000190002CD020000CD0200001B0002D7020000D70200001D0002D9020000D90200001F0002000300000003000021000801030000010300002900080203000002030000310004030300000303000035000504030000040300003A000B050300000503000045000606030000060300004B000407030000070300004F0009080300000803000058000A09030000090300006200020A0300000A0300006400030B0300000B0300006700040C0300000C0300006B00030D0300000D0300006E00020E0300000E03000070000210030000100300007200021103000011030000740003130300001303000077000420030000200300007B000223030000230300007D0005240300002403000082000425030000250300008600022D0300002D0300008800032E0300002E0300008B000230030000300300008D000331030000310300009000064203000042030000960001450300004503000097000158030000580300009800025E0300005E0300009A0003630300006F0300009D000174030000740300009E00027503000075030000A000028304000083040000A200028404000084040000A400028504000086040000A600028704000087040000A800028905000089050000AA00030C0600000C060000AD00071B0600001B060000B400071C0600001C060000BB00031F0600001F060000BE00084006000040060000C600094B06000055060000CF00026006000069060000D100037006000070060000D40002D4060000D4060000D600025109000051090000D8000D5209000052090000E5000C6409000064090000F100156509000065090000060117660900006F0900001D0104E6090000EF090000210103660A00006F0A0000240102E60A0000EF0A0000260102E60B0000EF0B0000280102F00B0000F20B00002A0102F30B0000F30B00002C0102E60C0000EF0C00002E01034010000049100000310103FB100000FB100000340103EB160000ED160000370101351700003617000038010402180000031800003C010205180000051800003E0102D01C0000D01C0000400104D11C0000D11C0000440101D21C0000D21C0000450104D31C0000D31C0000490103D41C0000D41C00004C0101D51C0000D61C00004D0102D71C0000D71C00004F0102D81C0000D81C0000510102D91C0000D91C0000530102DA1C0000DA1C0000550106DB1C0000DB1C00005B0101DC1C0000DD1C00005C0102DE1C0000DF1C00005E0101E01C0000E01C00005F0102E11C0000E11C0000610102E21C0000E81C0000630101E91C0000E91C0000640102EA1C0000EA1C0000660102EB1C0000EC1C0000680101ED1C0000ED1C0000690102EE1C0000F11C00006B0101F21C0000F21C00006C010BF31C0000F31C0000770102F41C0000F41C0000790104F51C0000F61C00007D0102F71C0000F71C00007F0101F81C0000F91C0000800102FA1C0000FA1C0000820101C01D0000C11D0000830101F81D0000F81D0000840103FA1D0000FA1D00008701012F2000002F2000008801034F2000004F2000008B01025A2000005A2000008D01065D2000005D200000930104F0200000F0200000970103172E0000172E00009A0102302E0000302E00009C0102312E0000312E00009E01073C2E00003C2E0000A50101412E0000412E0000A60103432E0000432E0000A90102F02F0000FF2F0000AB01020130000001300000AD01070230000002300000B401080330000003300000BC01050630000006300000C101010830000008300000C201080930000009300000CA01080A3000000A300000D201090B3000000B300000DB01090C3000000C300000E401060D3000000D300000EA01060E3000000E300000F001060F3000000F300000F601061030000010300000FC01061130000011300000020206133000001330000008020514300000143000000D02061530000015300000130206163000001630000019020617300000173000001F0206183000001830000025020619300000193000002B02061A3000001A3000003102061B3000001B3000003702061C3000001C3000003D02051D3000001D3000004202051E3000001F3000004702052A3000002D3000004C020230300000303000004E0205313000003530000053020237300000373000005502053C3000003C3000005A02033D3000003D3000005D02033E3000003F300000600201993000009A3000006102029B3000009C300000630202A0300000A0300000650202FB300000FB300000670206FC300000FC3000006D020290310000913100006F02019231000095310000700201963100009F310000710201C0310000E5310000720201EF310000EF31000073020220320000293200007502012A3200004732000076020180320000893200007702018A320000B0320000780201C0320000CB320000790201FF320000FF3200007A020158330000703300007B02017B3300007F3300007C0201E0330000FE3300007D02016FA600006FA600007E020200A7000007A7000080020230A8000032A8000082021033A8000035A8000092020F36A8000037A80000A1020B38A8000038A80000AC020C39A8000039A80000B8020BF1A80000F1A80000C30203F3A80000F3A80000C602022EA900002EA90000C80203CFA90000CFA90000CB02023EFD00003EFD0000CD02023FFD00003FFD0000CF0202F2FD0000F2FD0000D10202FDFD0000FDFD0000D3020245FE000046FE0000D5020561FF000061FF0000DA020662FF000062FF0000E0020663FF000063FF0000E6020664FF000065FF0000EC020670FF000070FF0000F202029EFF00009FFF0000F402020001010001010100F602030201010002010100F902020701010033010100FB0203370101003F010100FE0202E0020100E0020100000302E1020100FB020100020302F20A0100F20A0100040302011301000113010006030203130100031301000803023B1301003C1301000A0302D01F0100D11F01000C0302D31F0100D31F01000E0302A0BC0100A3BC010010030160D3010071D3010011030150F2010051F20100120301"
-
-  fun _data(): String val =>
-    "06131A2325292A2F2B2D324A515272860B1E204A4F9CA10D4A0D4A4A4F4A9C0D4A171A1E2D4A728E93171E2D4A798E93A0171E4A9E2A4A8E909C14171A1E2B2D4A79909EA01A252A2B404A1E2D4A721A23374A7290939EA0051E232B2D374A7290934A9E234A90171E4A79174A934A8E274A4A8E1E4AA02D4A72A04A901723404A9017234A904A904A8E904A90174A9014172B4A8E9C2D2D4A79144AA04A1A2D1A2D1E721E2A1E4A1E2A05292A04286934909BA804286934909BA804909B0104286934909BA8010455567780348A900490049BA8049004340B202C2E303F4A547885979A9F0B202C2E303F4A5478979A9F0B20222F582C2E303F5254666E7847898F96979A9F0B20222F582C2E31303F4C5254666E7847898F96979A9F20223E520B158F30622E462C972C972C973F66A2156393292A4A8211359291607E607E0B202C3F200B202C3F202C3F200B2020850B202085203F5478979A2020852020850B202020660B20200B20200B202C3F546678899A9FA2202C202C3FA20B200B202C662D1E4A90904A607E010413292A6F5076132D6F5D202C4A1A4A06760613296F3E51832301046F1E2A32990D3332384060A90D33323840607EA90D33323840320D33323840609DA90D33323840609DA90D333238404F609DA90D333238404F609DA90D33323840A90D33323840A90D33323840A90D33323840A90D33323840A90D33323840A90D333238400D33323840A90D33323840A90D33323840A90D33323840A90D33323840A90D33323840A90D33323840A90D33323840A90D333238400D333238400D333238400D320D3332384038400D33323840323840323840323840384038400D33323840A938403232323232993232323232323232321E2A324A20222E30463F3E52545F668547969FA220222E30463F3E525F668547969FA220222E30463E525F47969F20222E30463E525F8547969F20222E30463E525F47969F0B20A22097424A63103D04690469049B049B0D333238400D33323840A90D33323840A90D33323840A90D33323840A9384038401D1C4E1C4E1C4D4E1C4E041A041A56772C972C972C972C972C97233232"
