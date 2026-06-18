@@ -1,4 +1,3 @@
-"""
 # `unicode` — End-User Guide (0.2.0)
 
 This document is the user-facing reference for the `unicode` package as
@@ -800,16 +799,3 @@ constructor's only failure mode is "invalid UTF-8". Use
 - [`CHANGELOG.md`](../CHANGELOG.md) — release notes
 - [`design/candidate-v3.md`](../design/candidate-v3.md) — the design document this implementation derives from
 - The auto-generated docs (`make docs`) — every public docstring rendered by `pony-doc`
-"""
-
-primitive Unicode
-  """
-  Top-level package handle. Exposes the Unicode version this build is pinned
-  to.
-  """
-  fun version(): String val =>
-    """
-    The Unicode version against which this package's bundled UCD tables were
-    generated. Format is dotted (e.g., "16.0.0").
-    """
-    "0.0.0"  // M0 placeholder; populated by `unicode-build` in M1.
