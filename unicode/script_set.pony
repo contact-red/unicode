@@ -77,29 +77,27 @@ class val ScriptSet
 
 primitive _ScriptSetUtils
   fun sort_dedup(scripts: Array[Script] val): Array[U8] val =>
-    let raw = recover trn Array[U8](scripts.size()) end
+    """
+    Build a sorted, deduplicated `Array[U8] val` of script bytes from
+    a (possibly-unsorted, possibly-duplicate) input. The value domain
+    is bounded — there are only 163 scripts — so we use a fixed 256-
+    entry presence table instead of sorting the inputs.
+
+    Cost: O(N) in the input length plus a constant 256-entry walk to
+    emit the result. The old implementation was O(N²) in the input cp
+    count due to insertion-sort; this matters at `Scripts.of(s)`-shape
+    calls where the input has one Script per codepoint in a string.
+    """
+    let present = Array[Bool].init(false, 256)
     for s in scripts.values() do
-      raw.push(_ScriptCodec.to_byte(s))
+      try present(USize.from[U8](_ScriptCodec.to_byte(s)))? = true end
     end
-    let n = raw.size()
-    var i: USize = 1
-    while i < n do
+    let out = recover trn Array[U8] end
+    var i: USize = 0
+    while i < 256 do
       try
-        var j = i
-        let cur = raw(j)?
-        while (j > 0) and (raw(j - 1)? > cur) do
-          raw(j)? = raw(j - 1)?
-          j = j - 1
-        end
-        raw(j)? = cur
+        if present(i)? then out.push(U8.from[USize](i)) end
       end
       i = i + 1
-    end
-    let out = recover trn Array[U8](n) end
-    var prev: U8 = 0
-    var first: Bool = true
-    for b in raw.values() do
-      if first or (b != prev) then out.push(b); first = false end
-      prev = b
     end
     consume out
