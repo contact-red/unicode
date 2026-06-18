@@ -23,7 +23,12 @@ primitive BenchNormalize
     _nfc(bench, "Normalize.nfc/ascii/" + lbl, ascii, cfg)
     _nfc(bench, "Normalize.nfc/latin-pre/" + lbl, latin_pre, cfg)
     _nfc(bench, "Normalize.nfc/latin-dec/" + lbl, latin_dec, cfg)
-    _nfc(bench, "Normalize.nfc/combining/" + lbl, combining, cfg)
+    // `combining` is the worst-case input — every base letter carries
+    // 5 marks that must be canonically reordered, then composed if
+    // possible. At 160M a single call takes minutes; cap at heavy_op_cap.
+    if size <= BenchSizes.heavy_op_cap() then
+      _nfc(bench, "Normalize.nfc/combining/" + lbl, combining, cfg)
+    end
 
     _nfkd(bench, "Normalize.nfkd/latin-pre/" + lbl, latin_pre, cfg)
     _nfkc(bench, "Normalize.nfkc/latin-pre/" + lbl, latin_pre, cfg)

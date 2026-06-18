@@ -20,12 +20,17 @@ primitive BenchText
     _from_string(bench, "Text.from_string/mixed/" + lbl, mixed, cfg)
     _from_string(bench, "Text.from_string/emoji/" + lbl, emoji, cfg)
 
-    _from_string_indexed(bench,
-      "Text.from_string[indexed]/ascii/" + lbl, ascii, cfg)
-    _from_string_indexed(bench,
-      "Text.from_string[indexed]/cjk/" + lbl, cjk, cfg)
-    _from_string_indexed(bench,
-      "Text.from_string[indexed]/emoji/" + lbl, emoji, cfg)
+    // Indexed Text construction walks the grapheme cursor over the
+    // entire string to build the bitmap. At the 160M bucket a single
+    // iteration takes minutes — skip it to keep the suite tractable.
+    if size <= BenchSizes.heavy_op_cap() then
+      _from_string_indexed(bench,
+        "Text.from_string[indexed]/ascii/" + lbl, ascii, cfg)
+      _from_string_indexed(bench,
+        "Text.from_string[indexed]/cjk/" + lbl, cjk, cfg)
+      _from_string_indexed(bench,
+        "Text.from_string[indexed]/emoji/" + lbl, emoji, cfg)
+    end
 
   fun _from_string(
     bench: PonyBench,

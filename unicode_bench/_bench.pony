@@ -25,6 +25,19 @@ primitive BenchSizes
   fun samples(): USize => 20
   fun sample_ns(): U64 => 30_000_000
 
+  fun heavy_op_cap(): USize =>
+    """
+    Maximum input size for "heavy" operations — ones whose per-byte cost
+    is high enough that a single iteration at 160M takes minutes
+    (`Text.from_string[indexed]` builds an O(n) grapheme bitmap;
+    `Normalize.nfc` over `combining_marks` runs the canonical reorder
+    over a 6-cp combining run per base letter, then composes). Gate
+    such registrations with `if size <= BenchSizes.heavy_op_cap()`.
+    Tighten this if even 16M takes too long; loosen once the
+    implementations are fast enough that the top bucket is tractable.
+    """
+    16_000_000
+
   fun default_cfg(): BenchConfig =>
     BenchConfig(where samples' = samples(), max_sample_time' = sample_ns())
 

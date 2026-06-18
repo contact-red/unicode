@@ -213,5 +213,5 @@ bench-smoke: $(bench_binary)
 	$(bench_binary) --ponynoyield --smoke
 
 bench-csv: $(bench_binary) | $(BUILD_DIR)
-	$(bench_binary) --ponynoyield -csv > $(BUILD_DIR)/bench-$(shell git rev-parse --short HEAD).csv
+	$(bench_binary) --ponynoyield -csv | tee $(BUILD_DIR)/bench-$(shell git rev-parse --short HEAD).csv
 	@echo "wrote $(BUILD_DIR)/bench-$(shell git rev-parse --short HEAD).csv"
