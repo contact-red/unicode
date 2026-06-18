@@ -131,8 +131,10 @@ primitive ScriptTableEmitter
 
   fun _emit_runtime(names: Array[String val] val): String iso^ =>
     """
-    Emit `unicode/script.pony` — one primitive per script plus the
-    `Scripts` helper.
+    Emit `unicode/script.pony` — one primitive per script, the
+    `Script` closed union, and the private `_ScriptCodec` helper.
+    Hand-written `Scripts` (in unicode/scripts.pony) delegates
+    `from_iso` to `_ScriptCodec` and provides the ops API.
     """
     recover iso
       let out = String(32 * 1024)
@@ -162,7 +164,7 @@ primitive ScriptTableEmitter
       end
       out.append("\n  )\n\n")
 
-      out.append("primitive Scripts\n")
+      out.append("primitive _ScriptCodec\n")
       out.append("  fun from_iso(s: String box): (Script | None) =>\n")
       out.append("    match s\n")
       for n in names.values() do
@@ -171,7 +173,7 @@ primitive ScriptTableEmitter
       out.append("    else None\n")
       out.append("    end\n\n")
 
-      out.append("  fun _to_byte(sc: Script): U8 =>\n")
+      out.append("  fun to_byte(sc: Script): U8 =>\n")
       out.append("    match sc\n")
       var idx: USize = 0
       for n in names.values() do
@@ -180,7 +182,7 @@ primitive ScriptTableEmitter
       end
       out.append("    end\n\n")
 
-      out.append("  fun _from_byte(b: U8): Script =>\n")
+      out.append("  fun from_byte(b: U8): Script =>\n")
       out.append("    match b\n")
       idx = 0
       for n in names.values() do
@@ -242,7 +244,7 @@ primitive ScriptTableEmitter
       out.append("        if cp < range_lo then hi = mid\n")
       out.append("        elseif cp > range_hi then lo = mid + 1\n")
       out.append("        else\n")
-      out.append("          return Scripts._from_byte(\n")
+      out.append("          return _ScriptCodec.from_byte(\n")
       out.append("            U8.from[U32](_UcdHex.byte(t, base + 16)?))\n")
       out.append("        end\n")
       out.append("      else return ScriptUnknown\n")

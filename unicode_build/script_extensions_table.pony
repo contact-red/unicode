@@ -185,7 +185,7 @@ primitive ScriptExtensionsTableEmitter
       out.append("    while i < length do\n")
       out.append("      try\n")
       out.append("        let b = _UcdHex.byte(data, (off + i) * 2)?\n")
-      out.append("        buf.push(Scripts._from_byte(U8.from[U32](b)))\n")
+      out.append("        buf.push(_ScriptCodec.from_byte(U8.from[U32](b)))\n")
       out.append("      else return None\n")
       out.append("      end\n")
       out.append("      i = i + 1\n")

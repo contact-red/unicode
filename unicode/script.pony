@@ -865,7 +865,7 @@ type Script is
   | ScriptZanabazarSquare
   )
 
-primitive Scripts
+primitive _ScriptCodec
   fun from_iso(s: String box): (Script | None) =>
     match s
     | "Unknown" => ScriptUnknown
@@ -1042,7 +1042,7 @@ primitive Scripts
     else None
     end
 
-  fun _to_byte(sc: Script): U8 =>
+  fun to_byte(sc: Script): U8 =>
     match sc
     | ScriptUnknown => 0
     | ScriptAdlam => 1
@@ -1217,7 +1217,7 @@ primitive Scripts
     | ScriptZanabazarSquare => 170
     end
 
-  fun _from_byte(b: U8): Script =>
+  fun from_byte(b: U8): Script =>
     match b
     | 0 => ScriptUnknown
     | 1 => ScriptAdlam

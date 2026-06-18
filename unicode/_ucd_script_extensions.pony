@@ -50,7 +50,7 @@ primitive _UcdScriptExtensions
     while i < length do
       try
         let b = _UcdHex.byte(data, (off + i) * 2)?
-        buf.push(Scripts._from_byte(U8.from[U32](b)))
+        buf.push(_ScriptCodec.from_byte(U8.from[U32](b)))
       else return None
       end
       i = i + 1
