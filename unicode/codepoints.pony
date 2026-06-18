@@ -148,6 +148,13 @@ primitive Codepoints
     """
     _UcdScript.of(u)
 
+  fun east_asian_width(u: U32): EastAsianWidth =>
+    """
+    The East_Asian_Width property of `u` per UAX #11. Returns `EAWN`
+    (Neutral) for codepoints with no explicit assignment.
+    """
+    _UcdEastAsianWidth.of(u)
+
   fun has_binary_property(u: U32, p: BinaryProperty): Bool =>
     """
     True iff `u` has the binary property `p` per PropList.txt,

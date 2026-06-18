@@ -114,6 +114,11 @@ actor \nodoc\ Main is TestList
     test(_TestScriptUnassigned)
     test(_TestScriptCode)
     test(_TestScriptsFromIso)
+    test(_TestEastAsianWidthAscii)
+    test(_TestEastAsianWidthIdeograph)
+    test(_TestEastAsianWidthFullwidth)
+    test(_TestEastAsianWidthAmbiguous)
+    test(_TestEastAsianWidthsFromIso)
     // M1.F: Binary properties
     test(_TestBinaryPropIDStart)
     test(_TestBinaryPropIDContinue)
@@ -126,6 +131,12 @@ actor \nodoc\ Main is TestList
     test(_TestNameLatin)
     test(_TestNameControl)
     test(_TestFromName)
+    // 0.2.0: Lines (UAX #14)
+    test(_TestLinesBasic)
+    test(_TestLinesSpaceBreaks)
+    test(_TestLinesNumericGlued)
+    test(_TestLinesEmpty)
+    test(_TestLinesInvalid)
     // 0.2.0: Sentences (UAX #29)
     test(_TestSentencesBasic)
     test(_TestSentencesParaSep)
@@ -1248,6 +1259,69 @@ class \nodoc\ iso _TestCodepointByteIndex is UnitTest
       h.fail("setup raised")
     end
 
+// ---- 0.2.0: Lines (UAX #14) ----
+
+class \nodoc\ iso _TestLinesBasic is UnitTest
+  fun name(): String => "Lines: ASCII with mandatory and optional breaks"
+
+  fun apply(h: TestHelper) =>
+    match Lines.iter("Hello\nworld!")
+    | let it: Iterator[String val] =>
+      let parts = recover trn Array[String val] end
+      for ln in it do parts.push(ln) end
+      h.assert_eq[USize](2, parts.size())
+      try h.assert_eq[String]("Hello\n", parts(0)?) end
+      try h.assert_eq[String]("world!", parts(1)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestLinesSpaceBreaks is UnitTest
+  fun name(): String => "Lines: breaks at SPACEs (LB18)"
+
+  fun apply(h: TestHelper) =>
+    match Lines.iter("ab cd ef")
+    | let it: Iterator[String val] =>
+      let parts = recover trn Array[String val] end
+      for ln in it do parts.push(ln) end
+      h.assert_eq[USize](3, parts.size())
+      try h.assert_eq[String]("ab ", parts(0)?) end
+      try h.assert_eq[String]("cd ", parts(1)?) end
+      try h.assert_eq[String]("ef", parts(2)?) end
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestLinesNumericGlued is UnitTest
+  fun name(): String => "Lines: numeric chain stays together (LB25)"
+
+  fun apply(h: TestHelper) =>
+    // "$3.14" — currency + numeric + decimal + numeric. One unit.
+    match Lines.iter("$3.14")
+    | let it: Iterator[String val] =>
+      let parts = recover trn Array[String val] end
+      for ln in it do parts.push(ln) end
+      h.assert_eq[USize](1, parts.size())
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestLinesEmpty is UnitTest
+  fun name(): String => "Lines.count: empty"
+
+  fun apply(h: TestHelper) =>
+    match Lines.count("")
+    | let n: USize => h.assert_eq[USize](0, n)
+    | let _: InvalidUtf8 => h.fail("rejected")
+    end
+
+class \nodoc\ iso _TestLinesInvalid is UnitTest
+  fun name(): String => "Lines rejects ill-formed UTF-8"
+
+  fun apply(h: TestHelper) =>
+    let bad = String.from_array(recover val [as U8: 0x41; 0x80] end)
+    match Lines.count(bad)
+    | let _: USize => h.fail("expected InvalidUtf8")
+    | let e: InvalidUtf8 => h.assert_eq[USize](1, e.offset)
+    end
+
 // ---- 0.2.0: Sentences (UAX #29) ----
 
 class \nodoc\ iso _TestSentencesBasic is UnitTest
@@ -2166,6 +2240,53 @@ class \nodoc\ iso _TestScriptsFromIso is UnitTest
     match Scripts.from_iso("NotARealScript")
     | None => None
     | let _: Script => h.fail("expected None for fake script name")
+    end
+
+class \nodoc\ iso _TestEastAsianWidthAscii is UnitTest
+  fun name(): String => "east_asian_width: ASCII letters are EAWNa"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.east_asian_width(U32('A')) is EAWNa)
+    h.assert_true(Codepoints.east_asian_width(U32('0')) is EAWNa)
+
+class \nodoc\ iso _TestEastAsianWidthIdeograph is UnitTest
+  fun name(): String => "east_asian_width: CJK ideograph is EAWW"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.east_asian_width(0x4E2D) is EAWW)
+    // U+2329 LEFT-POINTING ANGLE BRACKET — explicitly Wide.
+    h.assert_true(Codepoints.east_asian_width(0x2329) is EAWW)
+
+class \nodoc\ iso _TestEastAsianWidthFullwidth is UnitTest
+  fun name(): String => "east_asian_width: fullwidth paren is EAWF"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.east_asian_width(0xFF08) is EAWF)
+    h.assert_true(Codepoints.east_asian_width(0xFF09) is EAWF)
+
+class \nodoc\ iso _TestEastAsianWidthAmbiguous is UnitTest
+  fun name(): String => "east_asian_width: section sign is EAWA"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.east_asian_width(0x00A7) is EAWA)
+
+class \nodoc\ iso _TestEastAsianWidthsFromIso is UnitTest
+  fun name(): String => "EastAsianWidths.from_iso round-trips name"
+
+  fun apply(h: TestHelper) =>
+    match EastAsianWidths.from_iso("W")
+    | let _: EAWW => None
+    | let _: EastAsianWidth => h.fail("expected EAWW")
+    | None => h.fail("from_iso(\"W\") returned None")
+    end
+    match EastAsianWidths.from_iso("Na")
+    | let _: EAWNa => None
+    | let _: EastAsianWidth => h.fail("expected EAWNa")
+    | None => h.fail("from_iso(\"Na\") returned None")
+    end
+    match EastAsianWidths.from_iso("XX")
+    | None => None
+    | let _: EastAsianWidth => h.fail("expected None for unknown name")
     end
 
 // ---- M1.D: Full + case folding mappings ----

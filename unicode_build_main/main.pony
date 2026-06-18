@@ -102,6 +102,28 @@ actor Main
       consume sb_body)?
     env.out.print("  wrote " + out_dir + "/_ucd_sentence_break.pony")
 
+    // Emit line break property table + LineBreak type (UAX #14).
+    let lb_lines = _read_lines(auth, ucd_dir + "/LineBreak.txt")?
+    env.out.print("  read " + lb_lines.size().string()
+      + " lines from LineBreak.txt")
+    (let lb_rt, let lb_tbl) = LineBreakTableEmitter.emit_both(lb_lines)?
+    _write_file(auth, out_dir + "/line_break.pony", consume lb_rt)?
+    env.out.print("  wrote " + out_dir + "/line_break.pony")
+    _write_file(auth, out_dir + "/_ucd_line_break.pony", consume lb_tbl)?
+    env.out.print("  wrote " + out_dir + "/_ucd_line_break.pony")
+
+    // Emit East_Asian_Width type + cp-range table (UAX #11).
+    let eaw_lines = _read_lines(auth, ucd_dir + "/EastAsianWidth.txt")?
+    env.out.print("  read " + eaw_lines.size().string()
+      + " lines from EastAsianWidth.txt")
+    (let eaw_rt, let eaw_tbl) = EastAsianWidthTableEmitter.emit_both(
+      eaw_lines)?
+    _write_file(auth, out_dir + "/east_asian_width.pony", consume eaw_rt)?
+    env.out.print("  wrote " + out_dir + "/east_asian_width.pony")
+    _write_file(auth, out_dir + "/_ucd_east_asian_width.pony",
+      consume eaw_tbl)?
+    env.out.print("  wrote " + out_dir + "/_ucd_east_asian_width.pony")
+
     // Emit full case mappings from SpecialCasing.txt (unconditional only)
     let sc_lines = _read_lines(auth, ucd_dir + "/SpecialCasing.txt")?
     env.out.print("  read " + sc_lines.size().string()
