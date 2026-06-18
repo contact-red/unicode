@@ -102,56 +102,55 @@ primitive DecompTableEmitter
 
       out.append("primitive _UcdCanonicalDecomp\n")
       out.append("  fun of(cp: U32): (Array[U32] val | None) =>\n")
-      out.append("    let t = _table()\n")
-      out.append("    var lo: USize = 0\n")
-      out.append("    var hi: USize = t.size() / 24\n")
-      out.append("    while lo < hi do\n")
-      out.append("      let mid = lo + ((hi - lo) / 2)\n")
-      out.append("      let base = mid * 24\n")
-      out.append("      try\n")
-      out.append("        let key: U32 =\n")
-      out.append("          _UcdHex.byte(t, base)?\n")
-      out.append("            or (_UcdHex.byte(t, base + 2)? << 8)\n")
-      out.append("            or (_UcdHex.byte(t, base + 4)? << 16)\n")
-      out.append("            or (_UcdHex.byte(t, base + 6)? << 24)\n")
-      out.append("        if cp < key then\n")
-      out.append("          hi = mid\n")
-      out.append("        elseif cp > key then\n")
-      out.append("          lo = mid + 1\n")
-      out.append("        else\n")
-      out.append("          let d0: U32 =\n")
-      out.append("            _UcdHex.byte(t, base + 8)?\n")
-      out.append("              or (_UcdHex.byte(t, base + 10)? << 8)\n")
-      out.append("              or (_UcdHex.byte(t, base + 12)? << 16)\n")
-      out.append("              or (_UcdHex.byte(t, base + 14)? << 24)\n")
-      out.append("          let d1: U32 =\n")
-      out.append("            _UcdHex.byte(t, base + 16)?\n")
-      out.append("              or (_UcdHex.byte(t, base + 18)? << 8)\n")
-      out.append("              or (_UcdHex.byte(t, base + 20)? << 16)\n")
-      out.append("              or (_UcdHex.byte(t, base + 22)? << 24)\n")
-      out.append("          let out_arr = recover trn Array[U32](2) end\n")
-      out.append("          out_arr.push(d0)\n")
-      out.append("          if d1 != 0 then out_arr.push(d1) end\n")
-      out.append("          return consume out_arr\n")
-      out.append("        end\n")
-      out.append("      else\n")
-      out.append("        return None\n")
-      out.append("      end\n")
-      out.append("    end\n")
-      out.append("    None\n\n")
-
-
-      out.append("  fun _table(): String val =>\n")
-      out.append("    \"")
-      for e in decomp_entries.values() do
-        _emit_le_u32(out, e._1)
-        _emit_le_u32(out, e._2)
-        _emit_le_u32(out, e._3)
-      end
-      out.append("\"\n")
-
+      _emit_decomp_match(out, decomp_entries)
       out
     end
+
+  fun _emit_decomp_match(
+    out: String ref,
+    entries: Array[(U32, U32, U32)] val)
+  =>
+    """
+    Two-level dispatch for canonical-decomposition tables. Top-level
+    `match cp >> 12` picks a 4096-cp bucket; inner `match cp` selects
+    the exact codepoint and emits its decomposition as an
+    `Array[U32] val` literal. `d1 == 0` means a single-codepoint
+    decomposition.
+    """
+    out.append("    match cp >> 12\n")
+    var prev_bucket: U32 = 0xFFFFFFFF
+    var bucket_open: Bool = false
+    for e in entries.values() do
+      let bucket = e._1 >> 12
+      if bucket != prev_bucket then
+        if bucket_open then
+          out.append("      else None\n")
+          out.append("      end\n")
+        end
+        out.append("    | 0x")
+        _RangeMatchEmitter.emit_hex_u32(out, bucket)
+        out.append(" =>\n")
+        out.append("      match cp\n")
+        bucket_open = true
+        prev_bucket = bucket
+      end
+      out.append("      | 0x")
+      _RangeMatchEmitter.emit_hex_u32(out, e._1)
+      out.append(" => recover val [as U32: 0x")
+      _RangeMatchEmitter.emit_hex_u32(out, e._2)
+      if e._3 != 0 then
+        out.append("; 0x")
+        _RangeMatchEmitter.emit_hex_u32(out, e._3)
+      end
+      out.append("] end\n")
+    end
+    if bucket_open then
+      out.append("      else None\n")
+      out.append("      end\n")
+    end
+    out.append("    else\n")
+    out.append("      None\n")
+    out.append("    end\n")
 
   fun _collect_ccc(
     entries: ReadSeq[UnicodeDataEntry val] box)
@@ -216,78 +215,55 @@ primitive DecompTableEmitter
 
       out.append("primitive _UcdCompatDecomp\n")
       out.append("  fun of(cp: U32): (Array[U32] val | None) =>\n")
-      out.append("    let idx = _index()\n")
-      out.append("    var lo: USize = 0\n")
-      out.append("    var hi: USize = idx.size() / 18\n")
-      out.append("    while lo < hi do\n")
-      out.append("      let mid = lo + ((hi - lo) / 2)\n")
-      out.append("      let base = mid * 18\n")
-      out.append("      try\n")
-      out.append("        let key: U32 =\n")
-      out.append("          _UcdHex.byte(idx, base)?\n")
-      out.append("            or (_UcdHex.byte(idx, base + 2)? << 8)\n")
-      out.append("            or (_UcdHex.byte(idx, base + 4)? << 16)\n")
-      out.append("            or (_UcdHex.byte(idx, base + 6)? << 24)\n")
-      out.append("        if cp < key then hi = mid\n")
-      out.append("        elseif cp > key then lo = mid + 1\n")
-      out.append("        else\n")
-      out.append("          let offset: U32 =\n")
-      out.append("            _UcdHex.byte(idx, base + 8)?\n")
-      out.append("              or (_UcdHex.byte(idx, base + 10)? << 8)\n")
-      out.append("              or (_UcdHex.byte(idx, base + 12)? << 16)\n")
-      out.append("              or (_UcdHex.byte(idx, base + 14)? << 24)\n")
-      out.append("          let length = _UcdHex.byte(idx, base + 16)?\n")
-      out.append("          return _read(\n")
-      out.append("            USize.from[U32](offset),\n")
-      out.append("            USize.from[U32](length))\n")
-      out.append("        end\n")
-      out.append("      else return None\n")
-      out.append("      end\n")
-      out.append("    end\n")
-      out.append("    None\n\n")
-
-      out.append("  fun _read(offset_cps: USize, length: USize)\n")
-      out.append("    : (Array[U32] val | None)\n")
-      out.append("  =>\n")
-      out.append("    let data = _data()\n")
-      out.append("    let buf = recover trn Array[U32](length) end\n")
-      out.append("    var i: USize = 0\n")
-      out.append("    while i < length do\n")
-      out.append("      let base = (offset_cps + i) * 8\n")
-      out.append("      try\n")
-      out.append("        let cp: U32 =\n")
-      out.append("          _UcdHex.byte(data, base)?\n")
-      out.append("            or (_UcdHex.byte(data, base + 2)? << 8)\n")
-      out.append("            or (_UcdHex.byte(data, base + 4)? << 16)\n")
-      out.append("            or (_UcdHex.byte(data, base + 6)? << 24)\n")
-      out.append("        buf.push(cp)\n")
-      out.append("      else return None\n")
-      out.append("      end\n")
-      out.append("      i = i + 1\n")
-      out.append("    end\n")
-      out.append("    consume buf\n\n")
-
-      out.append("  fun _index(): String val =>\n")
-      out.append("    \"")
-      var offset: U32 = 0
-      for e in compat_entries.values() do
-        _emit_le_u32(out, e._1)
-        _emit_le_u32(out, offset)
-        _emit_byte(out, U8.from[USize](e._2.size()))
-        offset = offset + U32.from[USize](e._2.size())
-      end
-      out.append("\"\n\n")
-
-      out.append("  fun _data(): String val =>\n")
-      out.append("    \"")
-      for e in compat_entries.values() do
-        for cp in e._2.values() do
-          _emit_le_u32(out, cp)
-        end
-      end
-      out.append("\"\n")
+      _emit_varlen_decomp_match(out, compat_entries)
       out
     end
+
+  fun _emit_varlen_decomp_match(
+    out: String ref,
+    entries: Array[(U32, Array[U32] val)] val)
+  =>
+    """
+    Variable-length variant of `_emit_decomp_match`. Each arm emits
+    an `Array[U32] val` literal containing the full compatibility
+    decomposition (which can run up to ~18 codepoints).
+    """
+    out.append("    match cp >> 12\n")
+    var prev_bucket: U32 = 0xFFFFFFFF
+    var bucket_open: Bool = false
+    for e in entries.values() do
+      let bucket = e._1 >> 12
+      if bucket != prev_bucket then
+        if bucket_open then
+          out.append("      else None\n")
+          out.append("      end\n")
+        end
+        out.append("    | 0x")
+        _RangeMatchEmitter.emit_hex_u32(out, bucket)
+        out.append(" =>\n")
+        out.append("      match cp\n")
+        bucket_open = true
+        prev_bucket = bucket
+      end
+      out.append("      | 0x")
+      _RangeMatchEmitter.emit_hex_u32(out, e._1)
+      out.append(" => recover val [as U32: ")
+      var first: Bool = true
+      for cp in e._2.values() do
+        if not first then out.append("; ") end
+        first = false
+        out.append("0x")
+        _RangeMatchEmitter.emit_hex_u32(out, cp)
+      end
+      out.append("] end\n")
+    end
+    if bucket_open then
+      out.append("      else None\n")
+      out.append("      end\n")
+    end
+    out.append("    else\n")
+    out.append("      None\n")
+    out.append("    end\n")
 
   fun _collect_compat_decomp(
     entries: ReadSeq[UnicodeDataEntry val] box)
