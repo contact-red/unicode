@@ -8,1461 +8,1949 @@
 
 primitive _UcdGraphemeBreak
   fun of(cp: U32): GraphemeBreak =>
-    match cp
-    | let c: U32 if (c >= 0x0000) and (c <= 0x0009) => GBControl
-    | let c: U32 if (c >= 0x000A) and (c <= 0x000A) => GBLF
-    | let c: U32 if (c >= 0x000B) and (c <= 0x000C) => GBControl
-    | let c: U32 if (c >= 0x000D) and (c <= 0x000D) => GBCR
-    | let c: U32 if (c >= 0x000E) and (c <= 0x001F) => GBControl
-    | let c: U32 if (c >= 0x007F) and (c <= 0x009F) => GBControl
-    | let c: U32 if (c >= 0x00A9) and (c <= 0x00A9) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x00AD) and (c <= 0x00AD) => GBControl
-    | let c: U32 if (c >= 0x00AE) and (c <= 0x00AE) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x0300) and (c <= 0x036F) => GBExtend
-    | let c: U32 if (c >= 0x0483) and (c <= 0x0489) => GBExtend
-    | let c: U32 if (c >= 0x0591) and (c <= 0x05BD) => GBExtend
-    | let c: U32 if (c >= 0x05BF) and (c <= 0x05BF) => GBExtend
-    | let c: U32 if (c >= 0x05C1) and (c <= 0x05C2) => GBExtend
-    | let c: U32 if (c >= 0x05C4) and (c <= 0x05C5) => GBExtend
-    | let c: U32 if (c >= 0x05C7) and (c <= 0x05C7) => GBExtend
-    | let c: U32 if (c >= 0x0600) and (c <= 0x0605) => GBPrepend
-    | let c: U32 if (c >= 0x0610) and (c <= 0x061A) => GBExtend
-    | let c: U32 if (c >= 0x061C) and (c <= 0x061C) => GBControl
-    | let c: U32 if (c >= 0x064B) and (c <= 0x065F) => GBExtend
-    | let c: U32 if (c >= 0x0670) and (c <= 0x0670) => GBExtend
-    | let c: U32 if (c >= 0x06D6) and (c <= 0x06DC) => GBExtend
-    | let c: U32 if (c >= 0x06DD) and (c <= 0x06DD) => GBPrepend
-    | let c: U32 if (c >= 0x06DF) and (c <= 0x06E4) => GBExtend
-    | let c: U32 if (c >= 0x06E7) and (c <= 0x06E8) => GBExtend
-    | let c: U32 if (c >= 0x06EA) and (c <= 0x06ED) => GBExtend
-    | let c: U32 if (c >= 0x070F) and (c <= 0x070F) => GBPrepend
-    | let c: U32 if (c >= 0x0711) and (c <= 0x0711) => GBExtend
-    | let c: U32 if (c >= 0x0730) and (c <= 0x074A) => GBExtend
-    | let c: U32 if (c >= 0x07A6) and (c <= 0x07B0) => GBExtend
-    | let c: U32 if (c >= 0x07EB) and (c <= 0x07F3) => GBExtend
-    | let c: U32 if (c >= 0x07FD) and (c <= 0x07FD) => GBExtend
-    | let c: U32 if (c >= 0x0816) and (c <= 0x0819) => GBExtend
-    | let c: U32 if (c >= 0x081B) and (c <= 0x0823) => GBExtend
-    | let c: U32 if (c >= 0x0825) and (c <= 0x0827) => GBExtend
-    | let c: U32 if (c >= 0x0829) and (c <= 0x082D) => GBExtend
-    | let c: U32 if (c >= 0x0859) and (c <= 0x085B) => GBExtend
-    | let c: U32 if (c >= 0x0890) and (c <= 0x0891) => GBPrepend
-    | let c: U32 if (c >= 0x0897) and (c <= 0x089F) => GBExtend
-    | let c: U32 if (c >= 0x08CA) and (c <= 0x08E1) => GBExtend
-    | let c: U32 if (c >= 0x08E2) and (c <= 0x08E2) => GBPrepend
-    | let c: U32 if (c >= 0x08E3) and (c <= 0x0902) => GBExtend
-    | let c: U32 if (c >= 0x0903) and (c <= 0x0903) => GBSpacingMark
-    | let c: U32 if (c >= 0x093A) and (c <= 0x093A) => GBExtend
-    | let c: U32 if (c >= 0x093B) and (c <= 0x093B) => GBSpacingMark
-    | let c: U32 if (c >= 0x093C) and (c <= 0x093C) => GBExtend
-    | let c: U32 if (c >= 0x093E) and (c <= 0x0940) => GBSpacingMark
-    | let c: U32 if (c >= 0x0941) and (c <= 0x0948) => GBExtend
-    | let c: U32 if (c >= 0x0949) and (c <= 0x094C) => GBSpacingMark
-    | let c: U32 if (c >= 0x094D) and (c <= 0x094D) => GBExtend
-    | let c: U32 if (c >= 0x094E) and (c <= 0x094F) => GBSpacingMark
-    | let c: U32 if (c >= 0x0951) and (c <= 0x0957) => GBExtend
-    | let c: U32 if (c >= 0x0962) and (c <= 0x0963) => GBExtend
-    | let c: U32 if (c >= 0x0981) and (c <= 0x0981) => GBExtend
-    | let c: U32 if (c >= 0x0982) and (c <= 0x0983) => GBSpacingMark
-    | let c: U32 if (c >= 0x09BC) and (c <= 0x09BC) => GBExtend
-    | let c: U32 if (c >= 0x09BE) and (c <= 0x09BE) => GBExtend
-    | let c: U32 if (c >= 0x09BF) and (c <= 0x09C0) => GBSpacingMark
-    | let c: U32 if (c >= 0x09C1) and (c <= 0x09C4) => GBExtend
-    | let c: U32 if (c >= 0x09C7) and (c <= 0x09C8) => GBSpacingMark
-    | let c: U32 if (c >= 0x09CB) and (c <= 0x09CC) => GBSpacingMark
-    | let c: U32 if (c >= 0x09CD) and (c <= 0x09CD) => GBExtend
-    | let c: U32 if (c >= 0x09D7) and (c <= 0x09D7) => GBExtend
-    | let c: U32 if (c >= 0x09E2) and (c <= 0x09E3) => GBExtend
-    | let c: U32 if (c >= 0x09FE) and (c <= 0x09FE) => GBExtend
-    | let c: U32 if (c >= 0x0A01) and (c <= 0x0A02) => GBExtend
-    | let c: U32 if (c >= 0x0A03) and (c <= 0x0A03) => GBSpacingMark
-    | let c: U32 if (c >= 0x0A3C) and (c <= 0x0A3C) => GBExtend
-    | let c: U32 if (c >= 0x0A3E) and (c <= 0x0A40) => GBSpacingMark
-    | let c: U32 if (c >= 0x0A41) and (c <= 0x0A42) => GBExtend
-    | let c: U32 if (c >= 0x0A47) and (c <= 0x0A48) => GBExtend
-    | let c: U32 if (c >= 0x0A4B) and (c <= 0x0A4D) => GBExtend
-    | let c: U32 if (c >= 0x0A51) and (c <= 0x0A51) => GBExtend
-    | let c: U32 if (c >= 0x0A70) and (c <= 0x0A71) => GBExtend
-    | let c: U32 if (c >= 0x0A75) and (c <= 0x0A75) => GBExtend
-    | let c: U32 if (c >= 0x0A81) and (c <= 0x0A82) => GBExtend
-    | let c: U32 if (c >= 0x0A83) and (c <= 0x0A83) => GBSpacingMark
-    | let c: U32 if (c >= 0x0ABC) and (c <= 0x0ABC) => GBExtend
-    | let c: U32 if (c >= 0x0ABE) and (c <= 0x0AC0) => GBSpacingMark
-    | let c: U32 if (c >= 0x0AC1) and (c <= 0x0AC5) => GBExtend
-    | let c: U32 if (c >= 0x0AC7) and (c <= 0x0AC8) => GBExtend
-    | let c: U32 if (c >= 0x0AC9) and (c <= 0x0AC9) => GBSpacingMark
-    | let c: U32 if (c >= 0x0ACB) and (c <= 0x0ACC) => GBSpacingMark
-    | let c: U32 if (c >= 0x0ACD) and (c <= 0x0ACD) => GBExtend
-    | let c: U32 if (c >= 0x0AE2) and (c <= 0x0AE3) => GBExtend
-    | let c: U32 if (c >= 0x0AFA) and (c <= 0x0AFF) => GBExtend
-    | let c: U32 if (c >= 0x0B01) and (c <= 0x0B01) => GBExtend
-    | let c: U32 if (c >= 0x0B02) and (c <= 0x0B03) => GBSpacingMark
-    | let c: U32 if (c >= 0x0B3C) and (c <= 0x0B3C) => GBExtend
-    | let c: U32 if (c >= 0x0B3E) and (c <= 0x0B3F) => GBExtend
-    | let c: U32 if (c >= 0x0B40) and (c <= 0x0B40) => GBSpacingMark
-    | let c: U32 if (c >= 0x0B41) and (c <= 0x0B44) => GBExtend
-    | let c: U32 if (c >= 0x0B47) and (c <= 0x0B48) => GBSpacingMark
-    | let c: U32 if (c >= 0x0B4B) and (c <= 0x0B4C) => GBSpacingMark
-    | let c: U32 if (c >= 0x0B4D) and (c <= 0x0B4D) => GBExtend
-    | let c: U32 if (c >= 0x0B55) and (c <= 0x0B57) => GBExtend
-    | let c: U32 if (c >= 0x0B62) and (c <= 0x0B63) => GBExtend
-    | let c: U32 if (c >= 0x0B82) and (c <= 0x0B82) => GBExtend
-    | let c: U32 if (c >= 0x0BBE) and (c <= 0x0BBE) => GBExtend
-    | let c: U32 if (c >= 0x0BBF) and (c <= 0x0BBF) => GBSpacingMark
-    | let c: U32 if (c >= 0x0BC0) and (c <= 0x0BC0) => GBExtend
-    | let c: U32 if (c >= 0x0BC1) and (c <= 0x0BC2) => GBSpacingMark
-    | let c: U32 if (c >= 0x0BC6) and (c <= 0x0BC8) => GBSpacingMark
-    | let c: U32 if (c >= 0x0BCA) and (c <= 0x0BCC) => GBSpacingMark
-    | let c: U32 if (c >= 0x0BCD) and (c <= 0x0BCD) => GBExtend
-    | let c: U32 if (c >= 0x0BD7) and (c <= 0x0BD7) => GBExtend
-    | let c: U32 if (c >= 0x0C00) and (c <= 0x0C00) => GBExtend
-    | let c: U32 if (c >= 0x0C01) and (c <= 0x0C03) => GBSpacingMark
-    | let c: U32 if (c >= 0x0C04) and (c <= 0x0C04) => GBExtend
-    | let c: U32 if (c >= 0x0C3C) and (c <= 0x0C3C) => GBExtend
-    | let c: U32 if (c >= 0x0C3E) and (c <= 0x0C40) => GBExtend
-    | let c: U32 if (c >= 0x0C41) and (c <= 0x0C44) => GBSpacingMark
-    | let c: U32 if (c >= 0x0C46) and (c <= 0x0C48) => GBExtend
-    | let c: U32 if (c >= 0x0C4A) and (c <= 0x0C4D) => GBExtend
-    | let c: U32 if (c >= 0x0C55) and (c <= 0x0C56) => GBExtend
-    | let c: U32 if (c >= 0x0C62) and (c <= 0x0C63) => GBExtend
-    | let c: U32 if (c >= 0x0C81) and (c <= 0x0C81) => GBExtend
-    | let c: U32 if (c >= 0x0C82) and (c <= 0x0C83) => GBSpacingMark
-    | let c: U32 if (c >= 0x0CBC) and (c <= 0x0CBC) => GBExtend
-    | let c: U32 if (c >= 0x0CBE) and (c <= 0x0CBE) => GBSpacingMark
-    | let c: U32 if (c >= 0x0CBF) and (c <= 0x0CC0) => GBExtend
-    | let c: U32 if (c >= 0x0CC1) and (c <= 0x0CC1) => GBSpacingMark
-    | let c: U32 if (c >= 0x0CC2) and (c <= 0x0CC2) => GBExtend
-    | let c: U32 if (c >= 0x0CC3) and (c <= 0x0CC4) => GBSpacingMark
-    | let c: U32 if (c >= 0x0CC6) and (c <= 0x0CC8) => GBExtend
-    | let c: U32 if (c >= 0x0CCA) and (c <= 0x0CCD) => GBExtend
-    | let c: U32 if (c >= 0x0CD5) and (c <= 0x0CD6) => GBExtend
-    | let c: U32 if (c >= 0x0CE2) and (c <= 0x0CE3) => GBExtend
-    | let c: U32 if (c >= 0x0CF3) and (c <= 0x0CF3) => GBSpacingMark
-    | let c: U32 if (c >= 0x0D00) and (c <= 0x0D01) => GBExtend
-    | let c: U32 if (c >= 0x0D02) and (c <= 0x0D03) => GBSpacingMark
-    | let c: U32 if (c >= 0x0D3B) and (c <= 0x0D3C) => GBExtend
-    | let c: U32 if (c >= 0x0D3E) and (c <= 0x0D3E) => GBExtend
-    | let c: U32 if (c >= 0x0D3F) and (c <= 0x0D40) => GBSpacingMark
-    | let c: U32 if (c >= 0x0D41) and (c <= 0x0D44) => GBExtend
-    | let c: U32 if (c >= 0x0D46) and (c <= 0x0D48) => GBSpacingMark
-    | let c: U32 if (c >= 0x0D4A) and (c <= 0x0D4C) => GBSpacingMark
-    | let c: U32 if (c >= 0x0D4D) and (c <= 0x0D4D) => GBExtend
-    | let c: U32 if (c >= 0x0D4E) and (c <= 0x0D4E) => GBPrepend
-    | let c: U32 if (c >= 0x0D57) and (c <= 0x0D57) => GBExtend
-    | let c: U32 if (c >= 0x0D62) and (c <= 0x0D63) => GBExtend
-    | let c: U32 if (c >= 0x0D81) and (c <= 0x0D81) => GBExtend
-    | let c: U32 if (c >= 0x0D82) and (c <= 0x0D83) => GBSpacingMark
-    | let c: U32 if (c >= 0x0DCA) and (c <= 0x0DCA) => GBExtend
-    | let c: U32 if (c >= 0x0DCF) and (c <= 0x0DCF) => GBExtend
-    | let c: U32 if (c >= 0x0DD0) and (c <= 0x0DD1) => GBSpacingMark
-    | let c: U32 if (c >= 0x0DD2) and (c <= 0x0DD4) => GBExtend
-    | let c: U32 if (c >= 0x0DD6) and (c <= 0x0DD6) => GBExtend
-    | let c: U32 if (c >= 0x0DD8) and (c <= 0x0DDE) => GBSpacingMark
-    | let c: U32 if (c >= 0x0DDF) and (c <= 0x0DDF) => GBExtend
-    | let c: U32 if (c >= 0x0DF2) and (c <= 0x0DF3) => GBSpacingMark
-    | let c: U32 if (c >= 0x0E31) and (c <= 0x0E31) => GBExtend
-    | let c: U32 if (c >= 0x0E33) and (c <= 0x0E33) => GBSpacingMark
-    | let c: U32 if (c >= 0x0E34) and (c <= 0x0E3A) => GBExtend
-    | let c: U32 if (c >= 0x0E47) and (c <= 0x0E4E) => GBExtend
-    | let c: U32 if (c >= 0x0EB1) and (c <= 0x0EB1) => GBExtend
-    | let c: U32 if (c >= 0x0EB3) and (c <= 0x0EB3) => GBSpacingMark
-    | let c: U32 if (c >= 0x0EB4) and (c <= 0x0EBC) => GBExtend
-    | let c: U32 if (c >= 0x0EC8) and (c <= 0x0ECE) => GBExtend
-    | let c: U32 if (c >= 0x0F18) and (c <= 0x0F19) => GBExtend
-    | let c: U32 if (c >= 0x0F35) and (c <= 0x0F35) => GBExtend
-    | let c: U32 if (c >= 0x0F37) and (c <= 0x0F37) => GBExtend
-    | let c: U32 if (c >= 0x0F39) and (c <= 0x0F39) => GBExtend
-    | let c: U32 if (c >= 0x0F3E) and (c <= 0x0F3F) => GBSpacingMark
-    | let c: U32 if (c >= 0x0F71) and (c <= 0x0F7E) => GBExtend
-    | let c: U32 if (c >= 0x0F7F) and (c <= 0x0F7F) => GBSpacingMark
-    | let c: U32 if (c >= 0x0F80) and (c <= 0x0F84) => GBExtend
-    | let c: U32 if (c >= 0x0F86) and (c <= 0x0F87) => GBExtend
-    | let c: U32 if (c >= 0x0F8D) and (c <= 0x0F97) => GBExtend
-    | let c: U32 if (c >= 0x0F99) and (c <= 0x0FBC) => GBExtend
-    | let c: U32 if (c >= 0x0FC6) and (c <= 0x0FC6) => GBExtend
-    | let c: U32 if (c >= 0x102D) and (c <= 0x1030) => GBExtend
-    | let c: U32 if (c >= 0x1031) and (c <= 0x1031) => GBSpacingMark
-    | let c: U32 if (c >= 0x1032) and (c <= 0x1037) => GBExtend
-    | let c: U32 if (c >= 0x1039) and (c <= 0x103A) => GBExtend
-    | let c: U32 if (c >= 0x103B) and (c <= 0x103C) => GBSpacingMark
-    | let c: U32 if (c >= 0x103D) and (c <= 0x103E) => GBExtend
-    | let c: U32 if (c >= 0x1056) and (c <= 0x1057) => GBSpacingMark
-    | let c: U32 if (c >= 0x1058) and (c <= 0x1059) => GBExtend
-    | let c: U32 if (c >= 0x105E) and (c <= 0x1060) => GBExtend
-    | let c: U32 if (c >= 0x1071) and (c <= 0x1074) => GBExtend
-    | let c: U32 if (c >= 0x1082) and (c <= 0x1082) => GBExtend
-    | let c: U32 if (c >= 0x1084) and (c <= 0x1084) => GBSpacingMark
-    | let c: U32 if (c >= 0x1085) and (c <= 0x1086) => GBExtend
-    | let c: U32 if (c >= 0x108D) and (c <= 0x108D) => GBExtend
-    | let c: U32 if (c >= 0x109D) and (c <= 0x109D) => GBExtend
-    | let c: U32 if (c >= 0x1100) and (c <= 0x115F) => GBL
-    | let c: U32 if (c >= 0x1160) and (c <= 0x11A7) => GBV
-    | let c: U32 if (c >= 0x11A8) and (c <= 0x11FF) => GBT
-    | let c: U32 if (c >= 0x135D) and (c <= 0x135F) => GBExtend
-    | let c: U32 if (c >= 0x1712) and (c <= 0x1715) => GBExtend
-    | let c: U32 if (c >= 0x1732) and (c <= 0x1734) => GBExtend
-    | let c: U32 if (c >= 0x1752) and (c <= 0x1753) => GBExtend
-    | let c: U32 if (c >= 0x1772) and (c <= 0x1773) => GBExtend
-    | let c: U32 if (c >= 0x17B4) and (c <= 0x17B5) => GBExtend
-    | let c: U32 if (c >= 0x17B6) and (c <= 0x17B6) => GBSpacingMark
-    | let c: U32 if (c >= 0x17B7) and (c <= 0x17BD) => GBExtend
-    | let c: U32 if (c >= 0x17BE) and (c <= 0x17C5) => GBSpacingMark
-    | let c: U32 if (c >= 0x17C6) and (c <= 0x17C6) => GBExtend
-    | let c: U32 if (c >= 0x17C7) and (c <= 0x17C8) => GBSpacingMark
-    | let c: U32 if (c >= 0x17C9) and (c <= 0x17D3) => GBExtend
-    | let c: U32 if (c >= 0x17DD) and (c <= 0x17DD) => GBExtend
-    | let c: U32 if (c >= 0x180B) and (c <= 0x180D) => GBExtend
-    | let c: U32 if (c >= 0x180E) and (c <= 0x180E) => GBControl
-    | let c: U32 if (c >= 0x180F) and (c <= 0x180F) => GBExtend
-    | let c: U32 if (c >= 0x1885) and (c <= 0x1886) => GBExtend
-    | let c: U32 if (c >= 0x18A9) and (c <= 0x18A9) => GBExtend
-    | let c: U32 if (c >= 0x1920) and (c <= 0x1922) => GBExtend
-    | let c: U32 if (c >= 0x1923) and (c <= 0x1926) => GBSpacingMark
-    | let c: U32 if (c >= 0x1927) and (c <= 0x1928) => GBExtend
-    | let c: U32 if (c >= 0x1929) and (c <= 0x192B) => GBSpacingMark
-    | let c: U32 if (c >= 0x1930) and (c <= 0x1931) => GBSpacingMark
-    | let c: U32 if (c >= 0x1932) and (c <= 0x1932) => GBExtend
-    | let c: U32 if (c >= 0x1933) and (c <= 0x1938) => GBSpacingMark
-    | let c: U32 if (c >= 0x1939) and (c <= 0x193B) => GBExtend
-    | let c: U32 if (c >= 0x1A17) and (c <= 0x1A18) => GBExtend
-    | let c: U32 if (c >= 0x1A19) and (c <= 0x1A1A) => GBSpacingMark
-    | let c: U32 if (c >= 0x1A1B) and (c <= 0x1A1B) => GBExtend
-    | let c: U32 if (c >= 0x1A55) and (c <= 0x1A55) => GBSpacingMark
-    | let c: U32 if (c >= 0x1A56) and (c <= 0x1A56) => GBExtend
-    | let c: U32 if (c >= 0x1A57) and (c <= 0x1A57) => GBSpacingMark
-    | let c: U32 if (c >= 0x1A58) and (c <= 0x1A5E) => GBExtend
-    | let c: U32 if (c >= 0x1A60) and (c <= 0x1A60) => GBExtend
-    | let c: U32 if (c >= 0x1A62) and (c <= 0x1A62) => GBExtend
-    | let c: U32 if (c >= 0x1A65) and (c <= 0x1A6C) => GBExtend
-    | let c: U32 if (c >= 0x1A6D) and (c <= 0x1A72) => GBSpacingMark
-    | let c: U32 if (c >= 0x1A73) and (c <= 0x1A7C) => GBExtend
-    | let c: U32 if (c >= 0x1A7F) and (c <= 0x1A7F) => GBExtend
-    | let c: U32 if (c >= 0x1AB0) and (c <= 0x1ACE) => GBExtend
-    | let c: U32 if (c >= 0x1B00) and (c <= 0x1B03) => GBExtend
-    | let c: U32 if (c >= 0x1B04) and (c <= 0x1B04) => GBSpacingMark
-    | let c: U32 if (c >= 0x1B34) and (c <= 0x1B3D) => GBExtend
-    | let c: U32 if (c >= 0x1B3E) and (c <= 0x1B41) => GBSpacingMark
-    | let c: U32 if (c >= 0x1B42) and (c <= 0x1B44) => GBExtend
-    | let c: U32 if (c >= 0x1B6B) and (c <= 0x1B73) => GBExtend
-    | let c: U32 if (c >= 0x1B80) and (c <= 0x1B81) => GBExtend
-    | let c: U32 if (c >= 0x1B82) and (c <= 0x1B82) => GBSpacingMark
-    | let c: U32 if (c >= 0x1BA1) and (c <= 0x1BA1) => GBSpacingMark
-    | let c: U32 if (c >= 0x1BA2) and (c <= 0x1BA5) => GBExtend
-    | let c: U32 if (c >= 0x1BA6) and (c <= 0x1BA7) => GBSpacingMark
-    | let c: U32 if (c >= 0x1BA8) and (c <= 0x1BAD) => GBExtend
-    | let c: U32 if (c >= 0x1BE6) and (c <= 0x1BE6) => GBExtend
-    | let c: U32 if (c >= 0x1BE7) and (c <= 0x1BE7) => GBSpacingMark
-    | let c: U32 if (c >= 0x1BE8) and (c <= 0x1BE9) => GBExtend
-    | let c: U32 if (c >= 0x1BEA) and (c <= 0x1BEC) => GBSpacingMark
-    | let c: U32 if (c >= 0x1BED) and (c <= 0x1BED) => GBExtend
-    | let c: U32 if (c >= 0x1BEE) and (c <= 0x1BEE) => GBSpacingMark
-    | let c: U32 if (c >= 0x1BEF) and (c <= 0x1BF3) => GBExtend
-    | let c: U32 if (c >= 0x1C24) and (c <= 0x1C2B) => GBSpacingMark
-    | let c: U32 if (c >= 0x1C2C) and (c <= 0x1C33) => GBExtend
-    | let c: U32 if (c >= 0x1C34) and (c <= 0x1C35) => GBSpacingMark
-    | let c: U32 if (c >= 0x1C36) and (c <= 0x1C37) => GBExtend
-    | let c: U32 if (c >= 0x1CD0) and (c <= 0x1CD2) => GBExtend
-    | let c: U32 if (c >= 0x1CD4) and (c <= 0x1CE0) => GBExtend
-    | let c: U32 if (c >= 0x1CE1) and (c <= 0x1CE1) => GBSpacingMark
-    | let c: U32 if (c >= 0x1CE2) and (c <= 0x1CE8) => GBExtend
-    | let c: U32 if (c >= 0x1CED) and (c <= 0x1CED) => GBExtend
-    | let c: U32 if (c >= 0x1CF4) and (c <= 0x1CF4) => GBExtend
-    | let c: U32 if (c >= 0x1CF7) and (c <= 0x1CF7) => GBSpacingMark
-    | let c: U32 if (c >= 0x1CF8) and (c <= 0x1CF9) => GBExtend
-    | let c: U32 if (c >= 0x1DC0) and (c <= 0x1DFF) => GBExtend
-    | let c: U32 if (c >= 0x200B) and (c <= 0x200B) => GBControl
-    | let c: U32 if (c >= 0x200C) and (c <= 0x200C) => GBExtend
-    | let c: U32 if (c >= 0x200D) and (c <= 0x200D) => GBZWJ
-    | let c: U32 if (c >= 0x200E) and (c <= 0x200F) => GBControl
-    | let c: U32 if (c >= 0x2028) and (c <= 0x202E) => GBControl
-    | let c: U32 if (c >= 0x203C) and (c <= 0x203C) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2049) and (c <= 0x2049) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2060) and (c <= 0x206F) => GBControl
-    | let c: U32 if (c >= 0x20D0) and (c <= 0x20F0) => GBExtend
-    | let c: U32 if (c >= 0x2122) and (c <= 0x2122) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2139) and (c <= 0x2139) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2194) and (c <= 0x2199) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x21A9) and (c <= 0x21AA) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x231A) and (c <= 0x231B) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2328) and (c <= 0x2328) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2388) and (c <= 0x2388) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x23CF) and (c <= 0x23CF) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x23E9) and (c <= 0x23F3) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x23F8) and (c <= 0x23FA) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x24C2) and (c <= 0x24C2) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x25AA) and (c <= 0x25AB) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x25B6) and (c <= 0x25B6) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x25C0) and (c <= 0x25C0) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x25FB) and (c <= 0x25FE) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2600) and (c <= 0x2605) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2607) and (c <= 0x2612) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2614) and (c <= 0x2685) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2690) and (c <= 0x2705) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2708) and (c <= 0x2712) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2714) and (c <= 0x2714) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2716) and (c <= 0x2716) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x271D) and (c <= 0x271D) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2721) and (c <= 0x2721) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2728) and (c <= 0x2728) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2733) and (c <= 0x2734) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2744) and (c <= 0x2744) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2747) and (c <= 0x2747) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x274C) and (c <= 0x274C) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x274E) and (c <= 0x274E) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2753) and (c <= 0x2755) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2757) and (c <= 0x2757) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2763) and (c <= 0x2767) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2795) and (c <= 0x2797) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x27A1) and (c <= 0x27A1) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x27B0) and (c <= 0x27B0) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x27BF) and (c <= 0x27BF) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2934) and (c <= 0x2935) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2B05) and (c <= 0x2B07) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2B1B) and (c <= 0x2B1C) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2B50) and (c <= 0x2B50) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2B55) and (c <= 0x2B55) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x2CEF) and (c <= 0x2CF1) => GBExtend
-    | let c: U32 if (c >= 0x2D7F) and (c <= 0x2D7F) => GBExtend
-    | let c: U32 if (c >= 0x2DE0) and (c <= 0x2DFF) => GBExtend
-    | let c: U32 if (c >= 0x302A) and (c <= 0x302F) => GBExtend
-    | let c: U32 if (c >= 0x3030) and (c <= 0x3030) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x303D) and (c <= 0x303D) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x3099) and (c <= 0x309A) => GBExtend
-    | let c: U32 if (c >= 0x3297) and (c <= 0x3297) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x3299) and (c <= 0x3299) => GBExtendedPictographic
-    | let c: U32 if (c >= 0xA66F) and (c <= 0xA672) => GBExtend
-    | let c: U32 if (c >= 0xA674) and (c <= 0xA67D) => GBExtend
-    | let c: U32 if (c >= 0xA69E) and (c <= 0xA69F) => GBExtend
-    | let c: U32 if (c >= 0xA6F0) and (c <= 0xA6F1) => GBExtend
-    | let c: U32 if (c >= 0xA802) and (c <= 0xA802) => GBExtend
-    | let c: U32 if (c >= 0xA806) and (c <= 0xA806) => GBExtend
-    | let c: U32 if (c >= 0xA80B) and (c <= 0xA80B) => GBExtend
-    | let c: U32 if (c >= 0xA823) and (c <= 0xA824) => GBSpacingMark
-    | let c: U32 if (c >= 0xA825) and (c <= 0xA826) => GBExtend
-    | let c: U32 if (c >= 0xA827) and (c <= 0xA827) => GBSpacingMark
-    | let c: U32 if (c >= 0xA82C) and (c <= 0xA82C) => GBExtend
-    | let c: U32 if (c >= 0xA880) and (c <= 0xA881) => GBSpacingMark
-    | let c: U32 if (c >= 0xA8B4) and (c <= 0xA8C3) => GBSpacingMark
-    | let c: U32 if (c >= 0xA8C4) and (c <= 0xA8C5) => GBExtend
-    | let c: U32 if (c >= 0xA8E0) and (c <= 0xA8F1) => GBExtend
-    | let c: U32 if (c >= 0xA8FF) and (c <= 0xA8FF) => GBExtend
-    | let c: U32 if (c >= 0xA926) and (c <= 0xA92D) => GBExtend
-    | let c: U32 if (c >= 0xA947) and (c <= 0xA951) => GBExtend
-    | let c: U32 if (c >= 0xA952) and (c <= 0xA952) => GBSpacingMark
-    | let c: U32 if (c >= 0xA953) and (c <= 0xA953) => GBExtend
-    | let c: U32 if (c >= 0xA960) and (c <= 0xA97C) => GBL
-    | let c: U32 if (c >= 0xA980) and (c <= 0xA982) => GBExtend
-    | let c: U32 if (c >= 0xA983) and (c <= 0xA983) => GBSpacingMark
-    | let c: U32 if (c >= 0xA9B3) and (c <= 0xA9B3) => GBExtend
-    | let c: U32 if (c >= 0xA9B4) and (c <= 0xA9B5) => GBSpacingMark
-    | let c: U32 if (c >= 0xA9B6) and (c <= 0xA9B9) => GBExtend
-    | let c: U32 if (c >= 0xA9BA) and (c <= 0xA9BB) => GBSpacingMark
-    | let c: U32 if (c >= 0xA9BC) and (c <= 0xA9BD) => GBExtend
-    | let c: U32 if (c >= 0xA9BE) and (c <= 0xA9BF) => GBSpacingMark
-    | let c: U32 if (c >= 0xA9C0) and (c <= 0xA9C0) => GBExtend
-    | let c: U32 if (c >= 0xA9E5) and (c <= 0xA9E5) => GBExtend
-    | let c: U32 if (c >= 0xAA29) and (c <= 0xAA2E) => GBExtend
-    | let c: U32 if (c >= 0xAA2F) and (c <= 0xAA30) => GBSpacingMark
-    | let c: U32 if (c >= 0xAA31) and (c <= 0xAA32) => GBExtend
-    | let c: U32 if (c >= 0xAA33) and (c <= 0xAA34) => GBSpacingMark
-    | let c: U32 if (c >= 0xAA35) and (c <= 0xAA36) => GBExtend
-    | let c: U32 if (c >= 0xAA43) and (c <= 0xAA43) => GBExtend
-    | let c: U32 if (c >= 0xAA4C) and (c <= 0xAA4C) => GBExtend
-    | let c: U32 if (c >= 0xAA4D) and (c <= 0xAA4D) => GBSpacingMark
-    | let c: U32 if (c >= 0xAA7C) and (c <= 0xAA7C) => GBExtend
-    | let c: U32 if (c >= 0xAAB0) and (c <= 0xAAB0) => GBExtend
-    | let c: U32 if (c >= 0xAAB2) and (c <= 0xAAB4) => GBExtend
-    | let c: U32 if (c >= 0xAAB7) and (c <= 0xAAB8) => GBExtend
-    | let c: U32 if (c >= 0xAABE) and (c <= 0xAABF) => GBExtend
-    | let c: U32 if (c >= 0xAAC1) and (c <= 0xAAC1) => GBExtend
-    | let c: U32 if (c >= 0xAAEB) and (c <= 0xAAEB) => GBSpacingMark
-    | let c: U32 if (c >= 0xAAEC) and (c <= 0xAAED) => GBExtend
-    | let c: U32 if (c >= 0xAAEE) and (c <= 0xAAEF) => GBSpacingMark
-    | let c: U32 if (c >= 0xAAF5) and (c <= 0xAAF5) => GBSpacingMark
-    | let c: U32 if (c >= 0xAAF6) and (c <= 0xAAF6) => GBExtend
-    | let c: U32 if (c >= 0xABE3) and (c <= 0xABE4) => GBSpacingMark
-    | let c: U32 if (c >= 0xABE5) and (c <= 0xABE5) => GBExtend
-    | let c: U32 if (c >= 0xABE6) and (c <= 0xABE7) => GBSpacingMark
-    | let c: U32 if (c >= 0xABE8) and (c <= 0xABE8) => GBExtend
-    | let c: U32 if (c >= 0xABE9) and (c <= 0xABEA) => GBSpacingMark
-    | let c: U32 if (c >= 0xABEC) and (c <= 0xABEC) => GBSpacingMark
-    | let c: U32 if (c >= 0xABED) and (c <= 0xABED) => GBExtend
-    | let c: U32 if (c >= 0xAC00) and (c <= 0xAC00) => GBLV
-    | let c: U32 if (c >= 0xAC01) and (c <= 0xAC1B) => GBLVT
-    | let c: U32 if (c >= 0xAC1C) and (c <= 0xAC1C) => GBLV
-    | let c: U32 if (c >= 0xAC1D) and (c <= 0xAC37) => GBLVT
-    | let c: U32 if (c >= 0xAC38) and (c <= 0xAC38) => GBLV
-    | let c: U32 if (c >= 0xAC39) and (c <= 0xAC53) => GBLVT
-    | let c: U32 if (c >= 0xAC54) and (c <= 0xAC54) => GBLV
-    | let c: U32 if (c >= 0xAC55) and (c <= 0xAC6F) => GBLVT
-    | let c: U32 if (c >= 0xAC70) and (c <= 0xAC70) => GBLV
-    | let c: U32 if (c >= 0xAC71) and (c <= 0xAC8B) => GBLVT
-    | let c: U32 if (c >= 0xAC8C) and (c <= 0xAC8C) => GBLV
-    | let c: U32 if (c >= 0xAC8D) and (c <= 0xACA7) => GBLVT
-    | let c: U32 if (c >= 0xACA8) and (c <= 0xACA8) => GBLV
-    | let c: U32 if (c >= 0xACA9) and (c <= 0xACC3) => GBLVT
-    | let c: U32 if (c >= 0xACC4) and (c <= 0xACC4) => GBLV
-    | let c: U32 if (c >= 0xACC5) and (c <= 0xACDF) => GBLVT
-    | let c: U32 if (c >= 0xACE0) and (c <= 0xACE0) => GBLV
-    | let c: U32 if (c >= 0xACE1) and (c <= 0xACFB) => GBLVT
-    | let c: U32 if (c >= 0xACFC) and (c <= 0xACFC) => GBLV
-    | let c: U32 if (c >= 0xACFD) and (c <= 0xAD17) => GBLVT
-    | let c: U32 if (c >= 0xAD18) and (c <= 0xAD18) => GBLV
-    | let c: U32 if (c >= 0xAD19) and (c <= 0xAD33) => GBLVT
-    | let c: U32 if (c >= 0xAD34) and (c <= 0xAD34) => GBLV
-    | let c: U32 if (c >= 0xAD35) and (c <= 0xAD4F) => GBLVT
-    | let c: U32 if (c >= 0xAD50) and (c <= 0xAD50) => GBLV
-    | let c: U32 if (c >= 0xAD51) and (c <= 0xAD6B) => GBLVT
-    | let c: U32 if (c >= 0xAD6C) and (c <= 0xAD6C) => GBLV
-    | let c: U32 if (c >= 0xAD6D) and (c <= 0xAD87) => GBLVT
-    | let c: U32 if (c >= 0xAD88) and (c <= 0xAD88) => GBLV
-    | let c: U32 if (c >= 0xAD89) and (c <= 0xADA3) => GBLVT
-    | let c: U32 if (c >= 0xADA4) and (c <= 0xADA4) => GBLV
-    | let c: U32 if (c >= 0xADA5) and (c <= 0xADBF) => GBLVT
-    | let c: U32 if (c >= 0xADC0) and (c <= 0xADC0) => GBLV
-    | let c: U32 if (c >= 0xADC1) and (c <= 0xADDB) => GBLVT
-    | let c: U32 if (c >= 0xADDC) and (c <= 0xADDC) => GBLV
-    | let c: U32 if (c >= 0xADDD) and (c <= 0xADF7) => GBLVT
-    | let c: U32 if (c >= 0xADF8) and (c <= 0xADF8) => GBLV
-    | let c: U32 if (c >= 0xADF9) and (c <= 0xAE13) => GBLVT
-    | let c: U32 if (c >= 0xAE14) and (c <= 0xAE14) => GBLV
-    | let c: U32 if (c >= 0xAE15) and (c <= 0xAE2F) => GBLVT
-    | let c: U32 if (c >= 0xAE30) and (c <= 0xAE30) => GBLV
-    | let c: U32 if (c >= 0xAE31) and (c <= 0xAE4B) => GBLVT
-    | let c: U32 if (c >= 0xAE4C) and (c <= 0xAE4C) => GBLV
-    | let c: U32 if (c >= 0xAE4D) and (c <= 0xAE67) => GBLVT
-    | let c: U32 if (c >= 0xAE68) and (c <= 0xAE68) => GBLV
-    | let c: U32 if (c >= 0xAE69) and (c <= 0xAE83) => GBLVT
-    | let c: U32 if (c >= 0xAE84) and (c <= 0xAE84) => GBLV
-    | let c: U32 if (c >= 0xAE85) and (c <= 0xAE9F) => GBLVT
-    | let c: U32 if (c >= 0xAEA0) and (c <= 0xAEA0) => GBLV
-    | let c: U32 if (c >= 0xAEA1) and (c <= 0xAEBB) => GBLVT
-    | let c: U32 if (c >= 0xAEBC) and (c <= 0xAEBC) => GBLV
-    | let c: U32 if (c >= 0xAEBD) and (c <= 0xAED7) => GBLVT
-    | let c: U32 if (c >= 0xAED8) and (c <= 0xAED8) => GBLV
-    | let c: U32 if (c >= 0xAED9) and (c <= 0xAEF3) => GBLVT
-    | let c: U32 if (c >= 0xAEF4) and (c <= 0xAEF4) => GBLV
-    | let c: U32 if (c >= 0xAEF5) and (c <= 0xAF0F) => GBLVT
-    | let c: U32 if (c >= 0xAF10) and (c <= 0xAF10) => GBLV
-    | let c: U32 if (c >= 0xAF11) and (c <= 0xAF2B) => GBLVT
-    | let c: U32 if (c >= 0xAF2C) and (c <= 0xAF2C) => GBLV
-    | let c: U32 if (c >= 0xAF2D) and (c <= 0xAF47) => GBLVT
-    | let c: U32 if (c >= 0xAF48) and (c <= 0xAF48) => GBLV
-    | let c: U32 if (c >= 0xAF49) and (c <= 0xAF63) => GBLVT
-    | let c: U32 if (c >= 0xAF64) and (c <= 0xAF64) => GBLV
-    | let c: U32 if (c >= 0xAF65) and (c <= 0xAF7F) => GBLVT
-    | let c: U32 if (c >= 0xAF80) and (c <= 0xAF80) => GBLV
-    | let c: U32 if (c >= 0xAF81) and (c <= 0xAF9B) => GBLVT
-    | let c: U32 if (c >= 0xAF9C) and (c <= 0xAF9C) => GBLV
-    | let c: U32 if (c >= 0xAF9D) and (c <= 0xAFB7) => GBLVT
-    | let c: U32 if (c >= 0xAFB8) and (c <= 0xAFB8) => GBLV
-    | let c: U32 if (c >= 0xAFB9) and (c <= 0xAFD3) => GBLVT
-    | let c: U32 if (c >= 0xAFD4) and (c <= 0xAFD4) => GBLV
-    | let c: U32 if (c >= 0xAFD5) and (c <= 0xAFEF) => GBLVT
-    | let c: U32 if (c >= 0xAFF0) and (c <= 0xAFF0) => GBLV
-    | let c: U32 if (c >= 0xAFF1) and (c <= 0xB00B) => GBLVT
-    | let c: U32 if (c >= 0xB00C) and (c <= 0xB00C) => GBLV
-    | let c: U32 if (c >= 0xB00D) and (c <= 0xB027) => GBLVT
-    | let c: U32 if (c >= 0xB028) and (c <= 0xB028) => GBLV
-    | let c: U32 if (c >= 0xB029) and (c <= 0xB043) => GBLVT
-    | let c: U32 if (c >= 0xB044) and (c <= 0xB044) => GBLV
-    | let c: U32 if (c >= 0xB045) and (c <= 0xB05F) => GBLVT
-    | let c: U32 if (c >= 0xB060) and (c <= 0xB060) => GBLV
-    | let c: U32 if (c >= 0xB061) and (c <= 0xB07B) => GBLVT
-    | let c: U32 if (c >= 0xB07C) and (c <= 0xB07C) => GBLV
-    | let c: U32 if (c >= 0xB07D) and (c <= 0xB097) => GBLVT
-    | let c: U32 if (c >= 0xB098) and (c <= 0xB098) => GBLV
-    | let c: U32 if (c >= 0xB099) and (c <= 0xB0B3) => GBLVT
-    | let c: U32 if (c >= 0xB0B4) and (c <= 0xB0B4) => GBLV
-    | let c: U32 if (c >= 0xB0B5) and (c <= 0xB0CF) => GBLVT
-    | let c: U32 if (c >= 0xB0D0) and (c <= 0xB0D0) => GBLV
-    | let c: U32 if (c >= 0xB0D1) and (c <= 0xB0EB) => GBLVT
-    | let c: U32 if (c >= 0xB0EC) and (c <= 0xB0EC) => GBLV
-    | let c: U32 if (c >= 0xB0ED) and (c <= 0xB107) => GBLVT
-    | let c: U32 if (c >= 0xB108) and (c <= 0xB108) => GBLV
-    | let c: U32 if (c >= 0xB109) and (c <= 0xB123) => GBLVT
-    | let c: U32 if (c >= 0xB124) and (c <= 0xB124) => GBLV
-    | let c: U32 if (c >= 0xB125) and (c <= 0xB13F) => GBLVT
-    | let c: U32 if (c >= 0xB140) and (c <= 0xB140) => GBLV
-    | let c: U32 if (c >= 0xB141) and (c <= 0xB15B) => GBLVT
-    | let c: U32 if (c >= 0xB15C) and (c <= 0xB15C) => GBLV
-    | let c: U32 if (c >= 0xB15D) and (c <= 0xB177) => GBLVT
-    | let c: U32 if (c >= 0xB178) and (c <= 0xB178) => GBLV
-    | let c: U32 if (c >= 0xB179) and (c <= 0xB193) => GBLVT
-    | let c: U32 if (c >= 0xB194) and (c <= 0xB194) => GBLV
-    | let c: U32 if (c >= 0xB195) and (c <= 0xB1AF) => GBLVT
-    | let c: U32 if (c >= 0xB1B0) and (c <= 0xB1B0) => GBLV
-    | let c: U32 if (c >= 0xB1B1) and (c <= 0xB1CB) => GBLVT
-    | let c: U32 if (c >= 0xB1CC) and (c <= 0xB1CC) => GBLV
-    | let c: U32 if (c >= 0xB1CD) and (c <= 0xB1E7) => GBLVT
-    | let c: U32 if (c >= 0xB1E8) and (c <= 0xB1E8) => GBLV
-    | let c: U32 if (c >= 0xB1E9) and (c <= 0xB203) => GBLVT
-    | let c: U32 if (c >= 0xB204) and (c <= 0xB204) => GBLV
-    | let c: U32 if (c >= 0xB205) and (c <= 0xB21F) => GBLVT
-    | let c: U32 if (c >= 0xB220) and (c <= 0xB220) => GBLV
-    | let c: U32 if (c >= 0xB221) and (c <= 0xB23B) => GBLVT
-    | let c: U32 if (c >= 0xB23C) and (c <= 0xB23C) => GBLV
-    | let c: U32 if (c >= 0xB23D) and (c <= 0xB257) => GBLVT
-    | let c: U32 if (c >= 0xB258) and (c <= 0xB258) => GBLV
-    | let c: U32 if (c >= 0xB259) and (c <= 0xB273) => GBLVT
-    | let c: U32 if (c >= 0xB274) and (c <= 0xB274) => GBLV
-    | let c: U32 if (c >= 0xB275) and (c <= 0xB28F) => GBLVT
-    | let c: U32 if (c >= 0xB290) and (c <= 0xB290) => GBLV
-    | let c: U32 if (c >= 0xB291) and (c <= 0xB2AB) => GBLVT
-    | let c: U32 if (c >= 0xB2AC) and (c <= 0xB2AC) => GBLV
-    | let c: U32 if (c >= 0xB2AD) and (c <= 0xB2C7) => GBLVT
-    | let c: U32 if (c >= 0xB2C8) and (c <= 0xB2C8) => GBLV
-    | let c: U32 if (c >= 0xB2C9) and (c <= 0xB2E3) => GBLVT
-    | let c: U32 if (c >= 0xB2E4) and (c <= 0xB2E4) => GBLV
-    | let c: U32 if (c >= 0xB2E5) and (c <= 0xB2FF) => GBLVT
-    | let c: U32 if (c >= 0xB300) and (c <= 0xB300) => GBLV
-    | let c: U32 if (c >= 0xB301) and (c <= 0xB31B) => GBLVT
-    | let c: U32 if (c >= 0xB31C) and (c <= 0xB31C) => GBLV
-    | let c: U32 if (c >= 0xB31D) and (c <= 0xB337) => GBLVT
-    | let c: U32 if (c >= 0xB338) and (c <= 0xB338) => GBLV
-    | let c: U32 if (c >= 0xB339) and (c <= 0xB353) => GBLVT
-    | let c: U32 if (c >= 0xB354) and (c <= 0xB354) => GBLV
-    | let c: U32 if (c >= 0xB355) and (c <= 0xB36F) => GBLVT
-    | let c: U32 if (c >= 0xB370) and (c <= 0xB370) => GBLV
-    | let c: U32 if (c >= 0xB371) and (c <= 0xB38B) => GBLVT
-    | let c: U32 if (c >= 0xB38C) and (c <= 0xB38C) => GBLV
-    | let c: U32 if (c >= 0xB38D) and (c <= 0xB3A7) => GBLVT
-    | let c: U32 if (c >= 0xB3A8) and (c <= 0xB3A8) => GBLV
-    | let c: U32 if (c >= 0xB3A9) and (c <= 0xB3C3) => GBLVT
-    | let c: U32 if (c >= 0xB3C4) and (c <= 0xB3C4) => GBLV
-    | let c: U32 if (c >= 0xB3C5) and (c <= 0xB3DF) => GBLVT
-    | let c: U32 if (c >= 0xB3E0) and (c <= 0xB3E0) => GBLV
-    | let c: U32 if (c >= 0xB3E1) and (c <= 0xB3FB) => GBLVT
-    | let c: U32 if (c >= 0xB3FC) and (c <= 0xB3FC) => GBLV
-    | let c: U32 if (c >= 0xB3FD) and (c <= 0xB417) => GBLVT
-    | let c: U32 if (c >= 0xB418) and (c <= 0xB418) => GBLV
-    | let c: U32 if (c >= 0xB419) and (c <= 0xB433) => GBLVT
-    | let c: U32 if (c >= 0xB434) and (c <= 0xB434) => GBLV
-    | let c: U32 if (c >= 0xB435) and (c <= 0xB44F) => GBLVT
-    | let c: U32 if (c >= 0xB450) and (c <= 0xB450) => GBLV
-    | let c: U32 if (c >= 0xB451) and (c <= 0xB46B) => GBLVT
-    | let c: U32 if (c >= 0xB46C) and (c <= 0xB46C) => GBLV
-    | let c: U32 if (c >= 0xB46D) and (c <= 0xB487) => GBLVT
-    | let c: U32 if (c >= 0xB488) and (c <= 0xB488) => GBLV
-    | let c: U32 if (c >= 0xB489) and (c <= 0xB4A3) => GBLVT
-    | let c: U32 if (c >= 0xB4A4) and (c <= 0xB4A4) => GBLV
-    | let c: U32 if (c >= 0xB4A5) and (c <= 0xB4BF) => GBLVT
-    | let c: U32 if (c >= 0xB4C0) and (c <= 0xB4C0) => GBLV
-    | let c: U32 if (c >= 0xB4C1) and (c <= 0xB4DB) => GBLVT
-    | let c: U32 if (c >= 0xB4DC) and (c <= 0xB4DC) => GBLV
-    | let c: U32 if (c >= 0xB4DD) and (c <= 0xB4F7) => GBLVT
-    | let c: U32 if (c >= 0xB4F8) and (c <= 0xB4F8) => GBLV
-    | let c: U32 if (c >= 0xB4F9) and (c <= 0xB513) => GBLVT
-    | let c: U32 if (c >= 0xB514) and (c <= 0xB514) => GBLV
-    | let c: U32 if (c >= 0xB515) and (c <= 0xB52F) => GBLVT
-    | let c: U32 if (c >= 0xB530) and (c <= 0xB530) => GBLV
-    | let c: U32 if (c >= 0xB531) and (c <= 0xB54B) => GBLVT
-    | let c: U32 if (c >= 0xB54C) and (c <= 0xB54C) => GBLV
-    | let c: U32 if (c >= 0xB54D) and (c <= 0xB567) => GBLVT
-    | let c: U32 if (c >= 0xB568) and (c <= 0xB568) => GBLV
-    | let c: U32 if (c >= 0xB569) and (c <= 0xB583) => GBLVT
-    | let c: U32 if (c >= 0xB584) and (c <= 0xB584) => GBLV
-    | let c: U32 if (c >= 0xB585) and (c <= 0xB59F) => GBLVT
-    | let c: U32 if (c >= 0xB5A0) and (c <= 0xB5A0) => GBLV
-    | let c: U32 if (c >= 0xB5A1) and (c <= 0xB5BB) => GBLVT
-    | let c: U32 if (c >= 0xB5BC) and (c <= 0xB5BC) => GBLV
-    | let c: U32 if (c >= 0xB5BD) and (c <= 0xB5D7) => GBLVT
-    | let c: U32 if (c >= 0xB5D8) and (c <= 0xB5D8) => GBLV
-    | let c: U32 if (c >= 0xB5D9) and (c <= 0xB5F3) => GBLVT
-    | let c: U32 if (c >= 0xB5F4) and (c <= 0xB5F4) => GBLV
-    | let c: U32 if (c >= 0xB5F5) and (c <= 0xB60F) => GBLVT
-    | let c: U32 if (c >= 0xB610) and (c <= 0xB610) => GBLV
-    | let c: U32 if (c >= 0xB611) and (c <= 0xB62B) => GBLVT
-    | let c: U32 if (c >= 0xB62C) and (c <= 0xB62C) => GBLV
-    | let c: U32 if (c >= 0xB62D) and (c <= 0xB647) => GBLVT
-    | let c: U32 if (c >= 0xB648) and (c <= 0xB648) => GBLV
-    | let c: U32 if (c >= 0xB649) and (c <= 0xB663) => GBLVT
-    | let c: U32 if (c >= 0xB664) and (c <= 0xB664) => GBLV
-    | let c: U32 if (c >= 0xB665) and (c <= 0xB67F) => GBLVT
-    | let c: U32 if (c >= 0xB680) and (c <= 0xB680) => GBLV
-    | let c: U32 if (c >= 0xB681) and (c <= 0xB69B) => GBLVT
-    | let c: U32 if (c >= 0xB69C) and (c <= 0xB69C) => GBLV
-    | let c: U32 if (c >= 0xB69D) and (c <= 0xB6B7) => GBLVT
-    | let c: U32 if (c >= 0xB6B8) and (c <= 0xB6B8) => GBLV
-    | let c: U32 if (c >= 0xB6B9) and (c <= 0xB6D3) => GBLVT
-    | let c: U32 if (c >= 0xB6D4) and (c <= 0xB6D4) => GBLV
-    | let c: U32 if (c >= 0xB6D5) and (c <= 0xB6EF) => GBLVT
-    | let c: U32 if (c >= 0xB6F0) and (c <= 0xB6F0) => GBLV
-    | let c: U32 if (c >= 0xB6F1) and (c <= 0xB70B) => GBLVT
-    | let c: U32 if (c >= 0xB70C) and (c <= 0xB70C) => GBLV
-    | let c: U32 if (c >= 0xB70D) and (c <= 0xB727) => GBLVT
-    | let c: U32 if (c >= 0xB728) and (c <= 0xB728) => GBLV
-    | let c: U32 if (c >= 0xB729) and (c <= 0xB743) => GBLVT
-    | let c: U32 if (c >= 0xB744) and (c <= 0xB744) => GBLV
-    | let c: U32 if (c >= 0xB745) and (c <= 0xB75F) => GBLVT
-    | let c: U32 if (c >= 0xB760) and (c <= 0xB760) => GBLV
-    | let c: U32 if (c >= 0xB761) and (c <= 0xB77B) => GBLVT
-    | let c: U32 if (c >= 0xB77C) and (c <= 0xB77C) => GBLV
-    | let c: U32 if (c >= 0xB77D) and (c <= 0xB797) => GBLVT
-    | let c: U32 if (c >= 0xB798) and (c <= 0xB798) => GBLV
-    | let c: U32 if (c >= 0xB799) and (c <= 0xB7B3) => GBLVT
-    | let c: U32 if (c >= 0xB7B4) and (c <= 0xB7B4) => GBLV
-    | let c: U32 if (c >= 0xB7B5) and (c <= 0xB7CF) => GBLVT
-    | let c: U32 if (c >= 0xB7D0) and (c <= 0xB7D0) => GBLV
-    | let c: U32 if (c >= 0xB7D1) and (c <= 0xB7EB) => GBLVT
-    | let c: U32 if (c >= 0xB7EC) and (c <= 0xB7EC) => GBLV
-    | let c: U32 if (c >= 0xB7ED) and (c <= 0xB807) => GBLVT
-    | let c: U32 if (c >= 0xB808) and (c <= 0xB808) => GBLV
-    | let c: U32 if (c >= 0xB809) and (c <= 0xB823) => GBLVT
-    | let c: U32 if (c >= 0xB824) and (c <= 0xB824) => GBLV
-    | let c: U32 if (c >= 0xB825) and (c <= 0xB83F) => GBLVT
-    | let c: U32 if (c >= 0xB840) and (c <= 0xB840) => GBLV
-    | let c: U32 if (c >= 0xB841) and (c <= 0xB85B) => GBLVT
-    | let c: U32 if (c >= 0xB85C) and (c <= 0xB85C) => GBLV
-    | let c: U32 if (c >= 0xB85D) and (c <= 0xB877) => GBLVT
-    | let c: U32 if (c >= 0xB878) and (c <= 0xB878) => GBLV
-    | let c: U32 if (c >= 0xB879) and (c <= 0xB893) => GBLVT
-    | let c: U32 if (c >= 0xB894) and (c <= 0xB894) => GBLV
-    | let c: U32 if (c >= 0xB895) and (c <= 0xB8AF) => GBLVT
-    | let c: U32 if (c >= 0xB8B0) and (c <= 0xB8B0) => GBLV
-    | let c: U32 if (c >= 0xB8B1) and (c <= 0xB8CB) => GBLVT
-    | let c: U32 if (c >= 0xB8CC) and (c <= 0xB8CC) => GBLV
-    | let c: U32 if (c >= 0xB8CD) and (c <= 0xB8E7) => GBLVT
-    | let c: U32 if (c >= 0xB8E8) and (c <= 0xB8E8) => GBLV
-    | let c: U32 if (c >= 0xB8E9) and (c <= 0xB903) => GBLVT
-    | let c: U32 if (c >= 0xB904) and (c <= 0xB904) => GBLV
-    | let c: U32 if (c >= 0xB905) and (c <= 0xB91F) => GBLVT
-    | let c: U32 if (c >= 0xB920) and (c <= 0xB920) => GBLV
-    | let c: U32 if (c >= 0xB921) and (c <= 0xB93B) => GBLVT
-    | let c: U32 if (c >= 0xB93C) and (c <= 0xB93C) => GBLV
-    | let c: U32 if (c >= 0xB93D) and (c <= 0xB957) => GBLVT
-    | let c: U32 if (c >= 0xB958) and (c <= 0xB958) => GBLV
-    | let c: U32 if (c >= 0xB959) and (c <= 0xB973) => GBLVT
-    | let c: U32 if (c >= 0xB974) and (c <= 0xB974) => GBLV
-    | let c: U32 if (c >= 0xB975) and (c <= 0xB98F) => GBLVT
-    | let c: U32 if (c >= 0xB990) and (c <= 0xB990) => GBLV
-    | let c: U32 if (c >= 0xB991) and (c <= 0xB9AB) => GBLVT
-    | let c: U32 if (c >= 0xB9AC) and (c <= 0xB9AC) => GBLV
-    | let c: U32 if (c >= 0xB9AD) and (c <= 0xB9C7) => GBLVT
-    | let c: U32 if (c >= 0xB9C8) and (c <= 0xB9C8) => GBLV
-    | let c: U32 if (c >= 0xB9C9) and (c <= 0xB9E3) => GBLVT
-    | let c: U32 if (c >= 0xB9E4) and (c <= 0xB9E4) => GBLV
-    | let c: U32 if (c >= 0xB9E5) and (c <= 0xB9FF) => GBLVT
-    | let c: U32 if (c >= 0xBA00) and (c <= 0xBA00) => GBLV
-    | let c: U32 if (c >= 0xBA01) and (c <= 0xBA1B) => GBLVT
-    | let c: U32 if (c >= 0xBA1C) and (c <= 0xBA1C) => GBLV
-    | let c: U32 if (c >= 0xBA1D) and (c <= 0xBA37) => GBLVT
-    | let c: U32 if (c >= 0xBA38) and (c <= 0xBA38) => GBLV
-    | let c: U32 if (c >= 0xBA39) and (c <= 0xBA53) => GBLVT
-    | let c: U32 if (c >= 0xBA54) and (c <= 0xBA54) => GBLV
-    | let c: U32 if (c >= 0xBA55) and (c <= 0xBA6F) => GBLVT
-    | let c: U32 if (c >= 0xBA70) and (c <= 0xBA70) => GBLV
-    | let c: U32 if (c >= 0xBA71) and (c <= 0xBA8B) => GBLVT
-    | let c: U32 if (c >= 0xBA8C) and (c <= 0xBA8C) => GBLV
-    | let c: U32 if (c >= 0xBA8D) and (c <= 0xBAA7) => GBLVT
-    | let c: U32 if (c >= 0xBAA8) and (c <= 0xBAA8) => GBLV
-    | let c: U32 if (c >= 0xBAA9) and (c <= 0xBAC3) => GBLVT
-    | let c: U32 if (c >= 0xBAC4) and (c <= 0xBAC4) => GBLV
-    | let c: U32 if (c >= 0xBAC5) and (c <= 0xBADF) => GBLVT
-    | let c: U32 if (c >= 0xBAE0) and (c <= 0xBAE0) => GBLV
-    | let c: U32 if (c >= 0xBAE1) and (c <= 0xBAFB) => GBLVT
-    | let c: U32 if (c >= 0xBAFC) and (c <= 0xBAFC) => GBLV
-    | let c: U32 if (c >= 0xBAFD) and (c <= 0xBB17) => GBLVT
-    | let c: U32 if (c >= 0xBB18) and (c <= 0xBB18) => GBLV
-    | let c: U32 if (c >= 0xBB19) and (c <= 0xBB33) => GBLVT
-    | let c: U32 if (c >= 0xBB34) and (c <= 0xBB34) => GBLV
-    | let c: U32 if (c >= 0xBB35) and (c <= 0xBB4F) => GBLVT
-    | let c: U32 if (c >= 0xBB50) and (c <= 0xBB50) => GBLV
-    | let c: U32 if (c >= 0xBB51) and (c <= 0xBB6B) => GBLVT
-    | let c: U32 if (c >= 0xBB6C) and (c <= 0xBB6C) => GBLV
-    | let c: U32 if (c >= 0xBB6D) and (c <= 0xBB87) => GBLVT
-    | let c: U32 if (c >= 0xBB88) and (c <= 0xBB88) => GBLV
-    | let c: U32 if (c >= 0xBB89) and (c <= 0xBBA3) => GBLVT
-    | let c: U32 if (c >= 0xBBA4) and (c <= 0xBBA4) => GBLV
-    | let c: U32 if (c >= 0xBBA5) and (c <= 0xBBBF) => GBLVT
-    | let c: U32 if (c >= 0xBBC0) and (c <= 0xBBC0) => GBLV
-    | let c: U32 if (c >= 0xBBC1) and (c <= 0xBBDB) => GBLVT
-    | let c: U32 if (c >= 0xBBDC) and (c <= 0xBBDC) => GBLV
-    | let c: U32 if (c >= 0xBBDD) and (c <= 0xBBF7) => GBLVT
-    | let c: U32 if (c >= 0xBBF8) and (c <= 0xBBF8) => GBLV
-    | let c: U32 if (c >= 0xBBF9) and (c <= 0xBC13) => GBLVT
-    | let c: U32 if (c >= 0xBC14) and (c <= 0xBC14) => GBLV
-    | let c: U32 if (c >= 0xBC15) and (c <= 0xBC2F) => GBLVT
-    | let c: U32 if (c >= 0xBC30) and (c <= 0xBC30) => GBLV
-    | let c: U32 if (c >= 0xBC31) and (c <= 0xBC4B) => GBLVT
-    | let c: U32 if (c >= 0xBC4C) and (c <= 0xBC4C) => GBLV
-    | let c: U32 if (c >= 0xBC4D) and (c <= 0xBC67) => GBLVT
-    | let c: U32 if (c >= 0xBC68) and (c <= 0xBC68) => GBLV
-    | let c: U32 if (c >= 0xBC69) and (c <= 0xBC83) => GBLVT
-    | let c: U32 if (c >= 0xBC84) and (c <= 0xBC84) => GBLV
-    | let c: U32 if (c >= 0xBC85) and (c <= 0xBC9F) => GBLVT
-    | let c: U32 if (c >= 0xBCA0) and (c <= 0xBCA0) => GBLV
-    | let c: U32 if (c >= 0xBCA1) and (c <= 0xBCBB) => GBLVT
-    | let c: U32 if (c >= 0xBCBC) and (c <= 0xBCBC) => GBLV
-    | let c: U32 if (c >= 0xBCBD) and (c <= 0xBCD7) => GBLVT
-    | let c: U32 if (c >= 0xBCD8) and (c <= 0xBCD8) => GBLV
-    | let c: U32 if (c >= 0xBCD9) and (c <= 0xBCF3) => GBLVT
-    | let c: U32 if (c >= 0xBCF4) and (c <= 0xBCF4) => GBLV
-    | let c: U32 if (c >= 0xBCF5) and (c <= 0xBD0F) => GBLVT
-    | let c: U32 if (c >= 0xBD10) and (c <= 0xBD10) => GBLV
-    | let c: U32 if (c >= 0xBD11) and (c <= 0xBD2B) => GBLVT
-    | let c: U32 if (c >= 0xBD2C) and (c <= 0xBD2C) => GBLV
-    | let c: U32 if (c >= 0xBD2D) and (c <= 0xBD47) => GBLVT
-    | let c: U32 if (c >= 0xBD48) and (c <= 0xBD48) => GBLV
-    | let c: U32 if (c >= 0xBD49) and (c <= 0xBD63) => GBLVT
-    | let c: U32 if (c >= 0xBD64) and (c <= 0xBD64) => GBLV
-    | let c: U32 if (c >= 0xBD65) and (c <= 0xBD7F) => GBLVT
-    | let c: U32 if (c >= 0xBD80) and (c <= 0xBD80) => GBLV
-    | let c: U32 if (c >= 0xBD81) and (c <= 0xBD9B) => GBLVT
-    | let c: U32 if (c >= 0xBD9C) and (c <= 0xBD9C) => GBLV
-    | let c: U32 if (c >= 0xBD9D) and (c <= 0xBDB7) => GBLVT
-    | let c: U32 if (c >= 0xBDB8) and (c <= 0xBDB8) => GBLV
-    | let c: U32 if (c >= 0xBDB9) and (c <= 0xBDD3) => GBLVT
-    | let c: U32 if (c >= 0xBDD4) and (c <= 0xBDD4) => GBLV
-    | let c: U32 if (c >= 0xBDD5) and (c <= 0xBDEF) => GBLVT
-    | let c: U32 if (c >= 0xBDF0) and (c <= 0xBDF0) => GBLV
-    | let c: U32 if (c >= 0xBDF1) and (c <= 0xBE0B) => GBLVT
-    | let c: U32 if (c >= 0xBE0C) and (c <= 0xBE0C) => GBLV
-    | let c: U32 if (c >= 0xBE0D) and (c <= 0xBE27) => GBLVT
-    | let c: U32 if (c >= 0xBE28) and (c <= 0xBE28) => GBLV
-    | let c: U32 if (c >= 0xBE29) and (c <= 0xBE43) => GBLVT
-    | let c: U32 if (c >= 0xBE44) and (c <= 0xBE44) => GBLV
-    | let c: U32 if (c >= 0xBE45) and (c <= 0xBE5F) => GBLVT
-    | let c: U32 if (c >= 0xBE60) and (c <= 0xBE60) => GBLV
-    | let c: U32 if (c >= 0xBE61) and (c <= 0xBE7B) => GBLVT
-    | let c: U32 if (c >= 0xBE7C) and (c <= 0xBE7C) => GBLV
-    | let c: U32 if (c >= 0xBE7D) and (c <= 0xBE97) => GBLVT
-    | let c: U32 if (c >= 0xBE98) and (c <= 0xBE98) => GBLV
-    | let c: U32 if (c >= 0xBE99) and (c <= 0xBEB3) => GBLVT
-    | let c: U32 if (c >= 0xBEB4) and (c <= 0xBEB4) => GBLV
-    | let c: U32 if (c >= 0xBEB5) and (c <= 0xBECF) => GBLVT
-    | let c: U32 if (c >= 0xBED0) and (c <= 0xBED0) => GBLV
-    | let c: U32 if (c >= 0xBED1) and (c <= 0xBEEB) => GBLVT
-    | let c: U32 if (c >= 0xBEEC) and (c <= 0xBEEC) => GBLV
-    | let c: U32 if (c >= 0xBEED) and (c <= 0xBF07) => GBLVT
-    | let c: U32 if (c >= 0xBF08) and (c <= 0xBF08) => GBLV
-    | let c: U32 if (c >= 0xBF09) and (c <= 0xBF23) => GBLVT
-    | let c: U32 if (c >= 0xBF24) and (c <= 0xBF24) => GBLV
-    | let c: U32 if (c >= 0xBF25) and (c <= 0xBF3F) => GBLVT
-    | let c: U32 if (c >= 0xBF40) and (c <= 0xBF40) => GBLV
-    | let c: U32 if (c >= 0xBF41) and (c <= 0xBF5B) => GBLVT
-    | let c: U32 if (c >= 0xBF5C) and (c <= 0xBF5C) => GBLV
-    | let c: U32 if (c >= 0xBF5D) and (c <= 0xBF77) => GBLVT
-    | let c: U32 if (c >= 0xBF78) and (c <= 0xBF78) => GBLV
-    | let c: U32 if (c >= 0xBF79) and (c <= 0xBF93) => GBLVT
-    | let c: U32 if (c >= 0xBF94) and (c <= 0xBF94) => GBLV
-    | let c: U32 if (c >= 0xBF95) and (c <= 0xBFAF) => GBLVT
-    | let c: U32 if (c >= 0xBFB0) and (c <= 0xBFB0) => GBLV
-    | let c: U32 if (c >= 0xBFB1) and (c <= 0xBFCB) => GBLVT
-    | let c: U32 if (c >= 0xBFCC) and (c <= 0xBFCC) => GBLV
-    | let c: U32 if (c >= 0xBFCD) and (c <= 0xBFE7) => GBLVT
-    | let c: U32 if (c >= 0xBFE8) and (c <= 0xBFE8) => GBLV
-    | let c: U32 if (c >= 0xBFE9) and (c <= 0xC003) => GBLVT
-    | let c: U32 if (c >= 0xC004) and (c <= 0xC004) => GBLV
-    | let c: U32 if (c >= 0xC005) and (c <= 0xC01F) => GBLVT
-    | let c: U32 if (c >= 0xC020) and (c <= 0xC020) => GBLV
-    | let c: U32 if (c >= 0xC021) and (c <= 0xC03B) => GBLVT
-    | let c: U32 if (c >= 0xC03C) and (c <= 0xC03C) => GBLV
-    | let c: U32 if (c >= 0xC03D) and (c <= 0xC057) => GBLVT
-    | let c: U32 if (c >= 0xC058) and (c <= 0xC058) => GBLV
-    | let c: U32 if (c >= 0xC059) and (c <= 0xC073) => GBLVT
-    | let c: U32 if (c >= 0xC074) and (c <= 0xC074) => GBLV
-    | let c: U32 if (c >= 0xC075) and (c <= 0xC08F) => GBLVT
-    | let c: U32 if (c >= 0xC090) and (c <= 0xC090) => GBLV
-    | let c: U32 if (c >= 0xC091) and (c <= 0xC0AB) => GBLVT
-    | let c: U32 if (c >= 0xC0AC) and (c <= 0xC0AC) => GBLV
-    | let c: U32 if (c >= 0xC0AD) and (c <= 0xC0C7) => GBLVT
-    | let c: U32 if (c >= 0xC0C8) and (c <= 0xC0C8) => GBLV
-    | let c: U32 if (c >= 0xC0C9) and (c <= 0xC0E3) => GBLVT
-    | let c: U32 if (c >= 0xC0E4) and (c <= 0xC0E4) => GBLV
-    | let c: U32 if (c >= 0xC0E5) and (c <= 0xC0FF) => GBLVT
-    | let c: U32 if (c >= 0xC100) and (c <= 0xC100) => GBLV
-    | let c: U32 if (c >= 0xC101) and (c <= 0xC11B) => GBLVT
-    | let c: U32 if (c >= 0xC11C) and (c <= 0xC11C) => GBLV
-    | let c: U32 if (c >= 0xC11D) and (c <= 0xC137) => GBLVT
-    | let c: U32 if (c >= 0xC138) and (c <= 0xC138) => GBLV
-    | let c: U32 if (c >= 0xC139) and (c <= 0xC153) => GBLVT
-    | let c: U32 if (c >= 0xC154) and (c <= 0xC154) => GBLV
-    | let c: U32 if (c >= 0xC155) and (c <= 0xC16F) => GBLVT
-    | let c: U32 if (c >= 0xC170) and (c <= 0xC170) => GBLV
-    | let c: U32 if (c >= 0xC171) and (c <= 0xC18B) => GBLVT
-    | let c: U32 if (c >= 0xC18C) and (c <= 0xC18C) => GBLV
-    | let c: U32 if (c >= 0xC18D) and (c <= 0xC1A7) => GBLVT
-    | let c: U32 if (c >= 0xC1A8) and (c <= 0xC1A8) => GBLV
-    | let c: U32 if (c >= 0xC1A9) and (c <= 0xC1C3) => GBLVT
-    | let c: U32 if (c >= 0xC1C4) and (c <= 0xC1C4) => GBLV
-    | let c: U32 if (c >= 0xC1C5) and (c <= 0xC1DF) => GBLVT
-    | let c: U32 if (c >= 0xC1E0) and (c <= 0xC1E0) => GBLV
-    | let c: U32 if (c >= 0xC1E1) and (c <= 0xC1FB) => GBLVT
-    | let c: U32 if (c >= 0xC1FC) and (c <= 0xC1FC) => GBLV
-    | let c: U32 if (c >= 0xC1FD) and (c <= 0xC217) => GBLVT
-    | let c: U32 if (c >= 0xC218) and (c <= 0xC218) => GBLV
-    | let c: U32 if (c >= 0xC219) and (c <= 0xC233) => GBLVT
-    | let c: U32 if (c >= 0xC234) and (c <= 0xC234) => GBLV
-    | let c: U32 if (c >= 0xC235) and (c <= 0xC24F) => GBLVT
-    | let c: U32 if (c >= 0xC250) and (c <= 0xC250) => GBLV
-    | let c: U32 if (c >= 0xC251) and (c <= 0xC26B) => GBLVT
-    | let c: U32 if (c >= 0xC26C) and (c <= 0xC26C) => GBLV
-    | let c: U32 if (c >= 0xC26D) and (c <= 0xC287) => GBLVT
-    | let c: U32 if (c >= 0xC288) and (c <= 0xC288) => GBLV
-    | let c: U32 if (c >= 0xC289) and (c <= 0xC2A3) => GBLVT
-    | let c: U32 if (c >= 0xC2A4) and (c <= 0xC2A4) => GBLV
-    | let c: U32 if (c >= 0xC2A5) and (c <= 0xC2BF) => GBLVT
-    | let c: U32 if (c >= 0xC2C0) and (c <= 0xC2C0) => GBLV
-    | let c: U32 if (c >= 0xC2C1) and (c <= 0xC2DB) => GBLVT
-    | let c: U32 if (c >= 0xC2DC) and (c <= 0xC2DC) => GBLV
-    | let c: U32 if (c >= 0xC2DD) and (c <= 0xC2F7) => GBLVT
-    | let c: U32 if (c >= 0xC2F8) and (c <= 0xC2F8) => GBLV
-    | let c: U32 if (c >= 0xC2F9) and (c <= 0xC313) => GBLVT
-    | let c: U32 if (c >= 0xC314) and (c <= 0xC314) => GBLV
-    | let c: U32 if (c >= 0xC315) and (c <= 0xC32F) => GBLVT
-    | let c: U32 if (c >= 0xC330) and (c <= 0xC330) => GBLV
-    | let c: U32 if (c >= 0xC331) and (c <= 0xC34B) => GBLVT
-    | let c: U32 if (c >= 0xC34C) and (c <= 0xC34C) => GBLV
-    | let c: U32 if (c >= 0xC34D) and (c <= 0xC367) => GBLVT
-    | let c: U32 if (c >= 0xC368) and (c <= 0xC368) => GBLV
-    | let c: U32 if (c >= 0xC369) and (c <= 0xC383) => GBLVT
-    | let c: U32 if (c >= 0xC384) and (c <= 0xC384) => GBLV
-    | let c: U32 if (c >= 0xC385) and (c <= 0xC39F) => GBLVT
-    | let c: U32 if (c >= 0xC3A0) and (c <= 0xC3A0) => GBLV
-    | let c: U32 if (c >= 0xC3A1) and (c <= 0xC3BB) => GBLVT
-    | let c: U32 if (c >= 0xC3BC) and (c <= 0xC3BC) => GBLV
-    | let c: U32 if (c >= 0xC3BD) and (c <= 0xC3D7) => GBLVT
-    | let c: U32 if (c >= 0xC3D8) and (c <= 0xC3D8) => GBLV
-    | let c: U32 if (c >= 0xC3D9) and (c <= 0xC3F3) => GBLVT
-    | let c: U32 if (c >= 0xC3F4) and (c <= 0xC3F4) => GBLV
-    | let c: U32 if (c >= 0xC3F5) and (c <= 0xC40F) => GBLVT
-    | let c: U32 if (c >= 0xC410) and (c <= 0xC410) => GBLV
-    | let c: U32 if (c >= 0xC411) and (c <= 0xC42B) => GBLVT
-    | let c: U32 if (c >= 0xC42C) and (c <= 0xC42C) => GBLV
-    | let c: U32 if (c >= 0xC42D) and (c <= 0xC447) => GBLVT
-    | let c: U32 if (c >= 0xC448) and (c <= 0xC448) => GBLV
-    | let c: U32 if (c >= 0xC449) and (c <= 0xC463) => GBLVT
-    | let c: U32 if (c >= 0xC464) and (c <= 0xC464) => GBLV
-    | let c: U32 if (c >= 0xC465) and (c <= 0xC47F) => GBLVT
-    | let c: U32 if (c >= 0xC480) and (c <= 0xC480) => GBLV
-    | let c: U32 if (c >= 0xC481) and (c <= 0xC49B) => GBLVT
-    | let c: U32 if (c >= 0xC49C) and (c <= 0xC49C) => GBLV
-    | let c: U32 if (c >= 0xC49D) and (c <= 0xC4B7) => GBLVT
-    | let c: U32 if (c >= 0xC4B8) and (c <= 0xC4B8) => GBLV
-    | let c: U32 if (c >= 0xC4B9) and (c <= 0xC4D3) => GBLVT
-    | let c: U32 if (c >= 0xC4D4) and (c <= 0xC4D4) => GBLV
-    | let c: U32 if (c >= 0xC4D5) and (c <= 0xC4EF) => GBLVT
-    | let c: U32 if (c >= 0xC4F0) and (c <= 0xC4F0) => GBLV
-    | let c: U32 if (c >= 0xC4F1) and (c <= 0xC50B) => GBLVT
-    | let c: U32 if (c >= 0xC50C) and (c <= 0xC50C) => GBLV
-    | let c: U32 if (c >= 0xC50D) and (c <= 0xC527) => GBLVT
-    | let c: U32 if (c >= 0xC528) and (c <= 0xC528) => GBLV
-    | let c: U32 if (c >= 0xC529) and (c <= 0xC543) => GBLVT
-    | let c: U32 if (c >= 0xC544) and (c <= 0xC544) => GBLV
-    | let c: U32 if (c >= 0xC545) and (c <= 0xC55F) => GBLVT
-    | let c: U32 if (c >= 0xC560) and (c <= 0xC560) => GBLV
-    | let c: U32 if (c >= 0xC561) and (c <= 0xC57B) => GBLVT
-    | let c: U32 if (c >= 0xC57C) and (c <= 0xC57C) => GBLV
-    | let c: U32 if (c >= 0xC57D) and (c <= 0xC597) => GBLVT
-    | let c: U32 if (c >= 0xC598) and (c <= 0xC598) => GBLV
-    | let c: U32 if (c >= 0xC599) and (c <= 0xC5B3) => GBLVT
-    | let c: U32 if (c >= 0xC5B4) and (c <= 0xC5B4) => GBLV
-    | let c: U32 if (c >= 0xC5B5) and (c <= 0xC5CF) => GBLVT
-    | let c: U32 if (c >= 0xC5D0) and (c <= 0xC5D0) => GBLV
-    | let c: U32 if (c >= 0xC5D1) and (c <= 0xC5EB) => GBLVT
-    | let c: U32 if (c >= 0xC5EC) and (c <= 0xC5EC) => GBLV
-    | let c: U32 if (c >= 0xC5ED) and (c <= 0xC607) => GBLVT
-    | let c: U32 if (c >= 0xC608) and (c <= 0xC608) => GBLV
-    | let c: U32 if (c >= 0xC609) and (c <= 0xC623) => GBLVT
-    | let c: U32 if (c >= 0xC624) and (c <= 0xC624) => GBLV
-    | let c: U32 if (c >= 0xC625) and (c <= 0xC63F) => GBLVT
-    | let c: U32 if (c >= 0xC640) and (c <= 0xC640) => GBLV
-    | let c: U32 if (c >= 0xC641) and (c <= 0xC65B) => GBLVT
-    | let c: U32 if (c >= 0xC65C) and (c <= 0xC65C) => GBLV
-    | let c: U32 if (c >= 0xC65D) and (c <= 0xC677) => GBLVT
-    | let c: U32 if (c >= 0xC678) and (c <= 0xC678) => GBLV
-    | let c: U32 if (c >= 0xC679) and (c <= 0xC693) => GBLVT
-    | let c: U32 if (c >= 0xC694) and (c <= 0xC694) => GBLV
-    | let c: U32 if (c >= 0xC695) and (c <= 0xC6AF) => GBLVT
-    | let c: U32 if (c >= 0xC6B0) and (c <= 0xC6B0) => GBLV
-    | let c: U32 if (c >= 0xC6B1) and (c <= 0xC6CB) => GBLVT
-    | let c: U32 if (c >= 0xC6CC) and (c <= 0xC6CC) => GBLV
-    | let c: U32 if (c >= 0xC6CD) and (c <= 0xC6E7) => GBLVT
-    | let c: U32 if (c >= 0xC6E8) and (c <= 0xC6E8) => GBLV
-    | let c: U32 if (c >= 0xC6E9) and (c <= 0xC703) => GBLVT
-    | let c: U32 if (c >= 0xC704) and (c <= 0xC704) => GBLV
-    | let c: U32 if (c >= 0xC705) and (c <= 0xC71F) => GBLVT
-    | let c: U32 if (c >= 0xC720) and (c <= 0xC720) => GBLV
-    | let c: U32 if (c >= 0xC721) and (c <= 0xC73B) => GBLVT
-    | let c: U32 if (c >= 0xC73C) and (c <= 0xC73C) => GBLV
-    | let c: U32 if (c >= 0xC73D) and (c <= 0xC757) => GBLVT
-    | let c: U32 if (c >= 0xC758) and (c <= 0xC758) => GBLV
-    | let c: U32 if (c >= 0xC759) and (c <= 0xC773) => GBLVT
-    | let c: U32 if (c >= 0xC774) and (c <= 0xC774) => GBLV
-    | let c: U32 if (c >= 0xC775) and (c <= 0xC78F) => GBLVT
-    | let c: U32 if (c >= 0xC790) and (c <= 0xC790) => GBLV
-    | let c: U32 if (c >= 0xC791) and (c <= 0xC7AB) => GBLVT
-    | let c: U32 if (c >= 0xC7AC) and (c <= 0xC7AC) => GBLV
-    | let c: U32 if (c >= 0xC7AD) and (c <= 0xC7C7) => GBLVT
-    | let c: U32 if (c >= 0xC7C8) and (c <= 0xC7C8) => GBLV
-    | let c: U32 if (c >= 0xC7C9) and (c <= 0xC7E3) => GBLVT
-    | let c: U32 if (c >= 0xC7E4) and (c <= 0xC7E4) => GBLV
-    | let c: U32 if (c >= 0xC7E5) and (c <= 0xC7FF) => GBLVT
-    | let c: U32 if (c >= 0xC800) and (c <= 0xC800) => GBLV
-    | let c: U32 if (c >= 0xC801) and (c <= 0xC81B) => GBLVT
-    | let c: U32 if (c >= 0xC81C) and (c <= 0xC81C) => GBLV
-    | let c: U32 if (c >= 0xC81D) and (c <= 0xC837) => GBLVT
-    | let c: U32 if (c >= 0xC838) and (c <= 0xC838) => GBLV
-    | let c: U32 if (c >= 0xC839) and (c <= 0xC853) => GBLVT
-    | let c: U32 if (c >= 0xC854) and (c <= 0xC854) => GBLV
-    | let c: U32 if (c >= 0xC855) and (c <= 0xC86F) => GBLVT
-    | let c: U32 if (c >= 0xC870) and (c <= 0xC870) => GBLV
-    | let c: U32 if (c >= 0xC871) and (c <= 0xC88B) => GBLVT
-    | let c: U32 if (c >= 0xC88C) and (c <= 0xC88C) => GBLV
-    | let c: U32 if (c >= 0xC88D) and (c <= 0xC8A7) => GBLVT
-    | let c: U32 if (c >= 0xC8A8) and (c <= 0xC8A8) => GBLV
-    | let c: U32 if (c >= 0xC8A9) and (c <= 0xC8C3) => GBLVT
-    | let c: U32 if (c >= 0xC8C4) and (c <= 0xC8C4) => GBLV
-    | let c: U32 if (c >= 0xC8C5) and (c <= 0xC8DF) => GBLVT
-    | let c: U32 if (c >= 0xC8E0) and (c <= 0xC8E0) => GBLV
-    | let c: U32 if (c >= 0xC8E1) and (c <= 0xC8FB) => GBLVT
-    | let c: U32 if (c >= 0xC8FC) and (c <= 0xC8FC) => GBLV
-    | let c: U32 if (c >= 0xC8FD) and (c <= 0xC917) => GBLVT
-    | let c: U32 if (c >= 0xC918) and (c <= 0xC918) => GBLV
-    | let c: U32 if (c >= 0xC919) and (c <= 0xC933) => GBLVT
-    | let c: U32 if (c >= 0xC934) and (c <= 0xC934) => GBLV
-    | let c: U32 if (c >= 0xC935) and (c <= 0xC94F) => GBLVT
-    | let c: U32 if (c >= 0xC950) and (c <= 0xC950) => GBLV
-    | let c: U32 if (c >= 0xC951) and (c <= 0xC96B) => GBLVT
-    | let c: U32 if (c >= 0xC96C) and (c <= 0xC96C) => GBLV
-    | let c: U32 if (c >= 0xC96D) and (c <= 0xC987) => GBLVT
-    | let c: U32 if (c >= 0xC988) and (c <= 0xC988) => GBLV
-    | let c: U32 if (c >= 0xC989) and (c <= 0xC9A3) => GBLVT
-    | let c: U32 if (c >= 0xC9A4) and (c <= 0xC9A4) => GBLV
-    | let c: U32 if (c >= 0xC9A5) and (c <= 0xC9BF) => GBLVT
-    | let c: U32 if (c >= 0xC9C0) and (c <= 0xC9C0) => GBLV
-    | let c: U32 if (c >= 0xC9C1) and (c <= 0xC9DB) => GBLVT
-    | let c: U32 if (c >= 0xC9DC) and (c <= 0xC9DC) => GBLV
-    | let c: U32 if (c >= 0xC9DD) and (c <= 0xC9F7) => GBLVT
-    | let c: U32 if (c >= 0xC9F8) and (c <= 0xC9F8) => GBLV
-    | let c: U32 if (c >= 0xC9F9) and (c <= 0xCA13) => GBLVT
-    | let c: U32 if (c >= 0xCA14) and (c <= 0xCA14) => GBLV
-    | let c: U32 if (c >= 0xCA15) and (c <= 0xCA2F) => GBLVT
-    | let c: U32 if (c >= 0xCA30) and (c <= 0xCA30) => GBLV
-    | let c: U32 if (c >= 0xCA31) and (c <= 0xCA4B) => GBLVT
-    | let c: U32 if (c >= 0xCA4C) and (c <= 0xCA4C) => GBLV
-    | let c: U32 if (c >= 0xCA4D) and (c <= 0xCA67) => GBLVT
-    | let c: U32 if (c >= 0xCA68) and (c <= 0xCA68) => GBLV
-    | let c: U32 if (c >= 0xCA69) and (c <= 0xCA83) => GBLVT
-    | let c: U32 if (c >= 0xCA84) and (c <= 0xCA84) => GBLV
-    | let c: U32 if (c >= 0xCA85) and (c <= 0xCA9F) => GBLVT
-    | let c: U32 if (c >= 0xCAA0) and (c <= 0xCAA0) => GBLV
-    | let c: U32 if (c >= 0xCAA1) and (c <= 0xCABB) => GBLVT
-    | let c: U32 if (c >= 0xCABC) and (c <= 0xCABC) => GBLV
-    | let c: U32 if (c >= 0xCABD) and (c <= 0xCAD7) => GBLVT
-    | let c: U32 if (c >= 0xCAD8) and (c <= 0xCAD8) => GBLV
-    | let c: U32 if (c >= 0xCAD9) and (c <= 0xCAF3) => GBLVT
-    | let c: U32 if (c >= 0xCAF4) and (c <= 0xCAF4) => GBLV
-    | let c: U32 if (c >= 0xCAF5) and (c <= 0xCB0F) => GBLVT
-    | let c: U32 if (c >= 0xCB10) and (c <= 0xCB10) => GBLV
-    | let c: U32 if (c >= 0xCB11) and (c <= 0xCB2B) => GBLVT
-    | let c: U32 if (c >= 0xCB2C) and (c <= 0xCB2C) => GBLV
-    | let c: U32 if (c >= 0xCB2D) and (c <= 0xCB47) => GBLVT
-    | let c: U32 if (c >= 0xCB48) and (c <= 0xCB48) => GBLV
-    | let c: U32 if (c >= 0xCB49) and (c <= 0xCB63) => GBLVT
-    | let c: U32 if (c >= 0xCB64) and (c <= 0xCB64) => GBLV
-    | let c: U32 if (c >= 0xCB65) and (c <= 0xCB7F) => GBLVT
-    | let c: U32 if (c >= 0xCB80) and (c <= 0xCB80) => GBLV
-    | let c: U32 if (c >= 0xCB81) and (c <= 0xCB9B) => GBLVT
-    | let c: U32 if (c >= 0xCB9C) and (c <= 0xCB9C) => GBLV
-    | let c: U32 if (c >= 0xCB9D) and (c <= 0xCBB7) => GBLVT
-    | let c: U32 if (c >= 0xCBB8) and (c <= 0xCBB8) => GBLV
-    | let c: U32 if (c >= 0xCBB9) and (c <= 0xCBD3) => GBLVT
-    | let c: U32 if (c >= 0xCBD4) and (c <= 0xCBD4) => GBLV
-    | let c: U32 if (c >= 0xCBD5) and (c <= 0xCBEF) => GBLVT
-    | let c: U32 if (c >= 0xCBF0) and (c <= 0xCBF0) => GBLV
-    | let c: U32 if (c >= 0xCBF1) and (c <= 0xCC0B) => GBLVT
-    | let c: U32 if (c >= 0xCC0C) and (c <= 0xCC0C) => GBLV
-    | let c: U32 if (c >= 0xCC0D) and (c <= 0xCC27) => GBLVT
-    | let c: U32 if (c >= 0xCC28) and (c <= 0xCC28) => GBLV
-    | let c: U32 if (c >= 0xCC29) and (c <= 0xCC43) => GBLVT
-    | let c: U32 if (c >= 0xCC44) and (c <= 0xCC44) => GBLV
-    | let c: U32 if (c >= 0xCC45) and (c <= 0xCC5F) => GBLVT
-    | let c: U32 if (c >= 0xCC60) and (c <= 0xCC60) => GBLV
-    | let c: U32 if (c >= 0xCC61) and (c <= 0xCC7B) => GBLVT
-    | let c: U32 if (c >= 0xCC7C) and (c <= 0xCC7C) => GBLV
-    | let c: U32 if (c >= 0xCC7D) and (c <= 0xCC97) => GBLVT
-    | let c: U32 if (c >= 0xCC98) and (c <= 0xCC98) => GBLV
-    | let c: U32 if (c >= 0xCC99) and (c <= 0xCCB3) => GBLVT
-    | let c: U32 if (c >= 0xCCB4) and (c <= 0xCCB4) => GBLV
-    | let c: U32 if (c >= 0xCCB5) and (c <= 0xCCCF) => GBLVT
-    | let c: U32 if (c >= 0xCCD0) and (c <= 0xCCD0) => GBLV
-    | let c: U32 if (c >= 0xCCD1) and (c <= 0xCCEB) => GBLVT
-    | let c: U32 if (c >= 0xCCEC) and (c <= 0xCCEC) => GBLV
-    | let c: U32 if (c >= 0xCCED) and (c <= 0xCD07) => GBLVT
-    | let c: U32 if (c >= 0xCD08) and (c <= 0xCD08) => GBLV
-    | let c: U32 if (c >= 0xCD09) and (c <= 0xCD23) => GBLVT
-    | let c: U32 if (c >= 0xCD24) and (c <= 0xCD24) => GBLV
-    | let c: U32 if (c >= 0xCD25) and (c <= 0xCD3F) => GBLVT
-    | let c: U32 if (c >= 0xCD40) and (c <= 0xCD40) => GBLV
-    | let c: U32 if (c >= 0xCD41) and (c <= 0xCD5B) => GBLVT
-    | let c: U32 if (c >= 0xCD5C) and (c <= 0xCD5C) => GBLV
-    | let c: U32 if (c >= 0xCD5D) and (c <= 0xCD77) => GBLVT
-    | let c: U32 if (c >= 0xCD78) and (c <= 0xCD78) => GBLV
-    | let c: U32 if (c >= 0xCD79) and (c <= 0xCD93) => GBLVT
-    | let c: U32 if (c >= 0xCD94) and (c <= 0xCD94) => GBLV
-    | let c: U32 if (c >= 0xCD95) and (c <= 0xCDAF) => GBLVT
-    | let c: U32 if (c >= 0xCDB0) and (c <= 0xCDB0) => GBLV
-    | let c: U32 if (c >= 0xCDB1) and (c <= 0xCDCB) => GBLVT
-    | let c: U32 if (c >= 0xCDCC) and (c <= 0xCDCC) => GBLV
-    | let c: U32 if (c >= 0xCDCD) and (c <= 0xCDE7) => GBLVT
-    | let c: U32 if (c >= 0xCDE8) and (c <= 0xCDE8) => GBLV
-    | let c: U32 if (c >= 0xCDE9) and (c <= 0xCE03) => GBLVT
-    | let c: U32 if (c >= 0xCE04) and (c <= 0xCE04) => GBLV
-    | let c: U32 if (c >= 0xCE05) and (c <= 0xCE1F) => GBLVT
-    | let c: U32 if (c >= 0xCE20) and (c <= 0xCE20) => GBLV
-    | let c: U32 if (c >= 0xCE21) and (c <= 0xCE3B) => GBLVT
-    | let c: U32 if (c >= 0xCE3C) and (c <= 0xCE3C) => GBLV
-    | let c: U32 if (c >= 0xCE3D) and (c <= 0xCE57) => GBLVT
-    | let c: U32 if (c >= 0xCE58) and (c <= 0xCE58) => GBLV
-    | let c: U32 if (c >= 0xCE59) and (c <= 0xCE73) => GBLVT
-    | let c: U32 if (c >= 0xCE74) and (c <= 0xCE74) => GBLV
-    | let c: U32 if (c >= 0xCE75) and (c <= 0xCE8F) => GBLVT
-    | let c: U32 if (c >= 0xCE90) and (c <= 0xCE90) => GBLV
-    | let c: U32 if (c >= 0xCE91) and (c <= 0xCEAB) => GBLVT
-    | let c: U32 if (c >= 0xCEAC) and (c <= 0xCEAC) => GBLV
-    | let c: U32 if (c >= 0xCEAD) and (c <= 0xCEC7) => GBLVT
-    | let c: U32 if (c >= 0xCEC8) and (c <= 0xCEC8) => GBLV
-    | let c: U32 if (c >= 0xCEC9) and (c <= 0xCEE3) => GBLVT
-    | let c: U32 if (c >= 0xCEE4) and (c <= 0xCEE4) => GBLV
-    | let c: U32 if (c >= 0xCEE5) and (c <= 0xCEFF) => GBLVT
-    | let c: U32 if (c >= 0xCF00) and (c <= 0xCF00) => GBLV
-    | let c: U32 if (c >= 0xCF01) and (c <= 0xCF1B) => GBLVT
-    | let c: U32 if (c >= 0xCF1C) and (c <= 0xCF1C) => GBLV
-    | let c: U32 if (c >= 0xCF1D) and (c <= 0xCF37) => GBLVT
-    | let c: U32 if (c >= 0xCF38) and (c <= 0xCF38) => GBLV
-    | let c: U32 if (c >= 0xCF39) and (c <= 0xCF53) => GBLVT
-    | let c: U32 if (c >= 0xCF54) and (c <= 0xCF54) => GBLV
-    | let c: U32 if (c >= 0xCF55) and (c <= 0xCF6F) => GBLVT
-    | let c: U32 if (c >= 0xCF70) and (c <= 0xCF70) => GBLV
-    | let c: U32 if (c >= 0xCF71) and (c <= 0xCF8B) => GBLVT
-    | let c: U32 if (c >= 0xCF8C) and (c <= 0xCF8C) => GBLV
-    | let c: U32 if (c >= 0xCF8D) and (c <= 0xCFA7) => GBLVT
-    | let c: U32 if (c >= 0xCFA8) and (c <= 0xCFA8) => GBLV
-    | let c: U32 if (c >= 0xCFA9) and (c <= 0xCFC3) => GBLVT
-    | let c: U32 if (c >= 0xCFC4) and (c <= 0xCFC4) => GBLV
-    | let c: U32 if (c >= 0xCFC5) and (c <= 0xCFDF) => GBLVT
-    | let c: U32 if (c >= 0xCFE0) and (c <= 0xCFE0) => GBLV
-    | let c: U32 if (c >= 0xCFE1) and (c <= 0xCFFB) => GBLVT
-    | let c: U32 if (c >= 0xCFFC) and (c <= 0xCFFC) => GBLV
-    | let c: U32 if (c >= 0xCFFD) and (c <= 0xD017) => GBLVT
-    | let c: U32 if (c >= 0xD018) and (c <= 0xD018) => GBLV
-    | let c: U32 if (c >= 0xD019) and (c <= 0xD033) => GBLVT
-    | let c: U32 if (c >= 0xD034) and (c <= 0xD034) => GBLV
-    | let c: U32 if (c >= 0xD035) and (c <= 0xD04F) => GBLVT
-    | let c: U32 if (c >= 0xD050) and (c <= 0xD050) => GBLV
-    | let c: U32 if (c >= 0xD051) and (c <= 0xD06B) => GBLVT
-    | let c: U32 if (c >= 0xD06C) and (c <= 0xD06C) => GBLV
-    | let c: U32 if (c >= 0xD06D) and (c <= 0xD087) => GBLVT
-    | let c: U32 if (c >= 0xD088) and (c <= 0xD088) => GBLV
-    | let c: U32 if (c >= 0xD089) and (c <= 0xD0A3) => GBLVT
-    | let c: U32 if (c >= 0xD0A4) and (c <= 0xD0A4) => GBLV
-    | let c: U32 if (c >= 0xD0A5) and (c <= 0xD0BF) => GBLVT
-    | let c: U32 if (c >= 0xD0C0) and (c <= 0xD0C0) => GBLV
-    | let c: U32 if (c >= 0xD0C1) and (c <= 0xD0DB) => GBLVT
-    | let c: U32 if (c >= 0xD0DC) and (c <= 0xD0DC) => GBLV
-    | let c: U32 if (c >= 0xD0DD) and (c <= 0xD0F7) => GBLVT
-    | let c: U32 if (c >= 0xD0F8) and (c <= 0xD0F8) => GBLV
-    | let c: U32 if (c >= 0xD0F9) and (c <= 0xD113) => GBLVT
-    | let c: U32 if (c >= 0xD114) and (c <= 0xD114) => GBLV
-    | let c: U32 if (c >= 0xD115) and (c <= 0xD12F) => GBLVT
-    | let c: U32 if (c >= 0xD130) and (c <= 0xD130) => GBLV
-    | let c: U32 if (c >= 0xD131) and (c <= 0xD14B) => GBLVT
-    | let c: U32 if (c >= 0xD14C) and (c <= 0xD14C) => GBLV
-    | let c: U32 if (c >= 0xD14D) and (c <= 0xD167) => GBLVT
-    | let c: U32 if (c >= 0xD168) and (c <= 0xD168) => GBLV
-    | let c: U32 if (c >= 0xD169) and (c <= 0xD183) => GBLVT
-    | let c: U32 if (c >= 0xD184) and (c <= 0xD184) => GBLV
-    | let c: U32 if (c >= 0xD185) and (c <= 0xD19F) => GBLVT
-    | let c: U32 if (c >= 0xD1A0) and (c <= 0xD1A0) => GBLV
-    | let c: U32 if (c >= 0xD1A1) and (c <= 0xD1BB) => GBLVT
-    | let c: U32 if (c >= 0xD1BC) and (c <= 0xD1BC) => GBLV
-    | let c: U32 if (c >= 0xD1BD) and (c <= 0xD1D7) => GBLVT
-    | let c: U32 if (c >= 0xD1D8) and (c <= 0xD1D8) => GBLV
-    | let c: U32 if (c >= 0xD1D9) and (c <= 0xD1F3) => GBLVT
-    | let c: U32 if (c >= 0xD1F4) and (c <= 0xD1F4) => GBLV
-    | let c: U32 if (c >= 0xD1F5) and (c <= 0xD20F) => GBLVT
-    | let c: U32 if (c >= 0xD210) and (c <= 0xD210) => GBLV
-    | let c: U32 if (c >= 0xD211) and (c <= 0xD22B) => GBLVT
-    | let c: U32 if (c >= 0xD22C) and (c <= 0xD22C) => GBLV
-    | let c: U32 if (c >= 0xD22D) and (c <= 0xD247) => GBLVT
-    | let c: U32 if (c >= 0xD248) and (c <= 0xD248) => GBLV
-    | let c: U32 if (c >= 0xD249) and (c <= 0xD263) => GBLVT
-    | let c: U32 if (c >= 0xD264) and (c <= 0xD264) => GBLV
-    | let c: U32 if (c >= 0xD265) and (c <= 0xD27F) => GBLVT
-    | let c: U32 if (c >= 0xD280) and (c <= 0xD280) => GBLV
-    | let c: U32 if (c >= 0xD281) and (c <= 0xD29B) => GBLVT
-    | let c: U32 if (c >= 0xD29C) and (c <= 0xD29C) => GBLV
-    | let c: U32 if (c >= 0xD29D) and (c <= 0xD2B7) => GBLVT
-    | let c: U32 if (c >= 0xD2B8) and (c <= 0xD2B8) => GBLV
-    | let c: U32 if (c >= 0xD2B9) and (c <= 0xD2D3) => GBLVT
-    | let c: U32 if (c >= 0xD2D4) and (c <= 0xD2D4) => GBLV
-    | let c: U32 if (c >= 0xD2D5) and (c <= 0xD2EF) => GBLVT
-    | let c: U32 if (c >= 0xD2F0) and (c <= 0xD2F0) => GBLV
-    | let c: U32 if (c >= 0xD2F1) and (c <= 0xD30B) => GBLVT
-    | let c: U32 if (c >= 0xD30C) and (c <= 0xD30C) => GBLV
-    | let c: U32 if (c >= 0xD30D) and (c <= 0xD327) => GBLVT
-    | let c: U32 if (c >= 0xD328) and (c <= 0xD328) => GBLV
-    | let c: U32 if (c >= 0xD329) and (c <= 0xD343) => GBLVT
-    | let c: U32 if (c >= 0xD344) and (c <= 0xD344) => GBLV
-    | let c: U32 if (c >= 0xD345) and (c <= 0xD35F) => GBLVT
-    | let c: U32 if (c >= 0xD360) and (c <= 0xD360) => GBLV
-    | let c: U32 if (c >= 0xD361) and (c <= 0xD37B) => GBLVT
-    | let c: U32 if (c >= 0xD37C) and (c <= 0xD37C) => GBLV
-    | let c: U32 if (c >= 0xD37D) and (c <= 0xD397) => GBLVT
-    | let c: U32 if (c >= 0xD398) and (c <= 0xD398) => GBLV
-    | let c: U32 if (c >= 0xD399) and (c <= 0xD3B3) => GBLVT
-    | let c: U32 if (c >= 0xD3B4) and (c <= 0xD3B4) => GBLV
-    | let c: U32 if (c >= 0xD3B5) and (c <= 0xD3CF) => GBLVT
-    | let c: U32 if (c >= 0xD3D0) and (c <= 0xD3D0) => GBLV
-    | let c: U32 if (c >= 0xD3D1) and (c <= 0xD3EB) => GBLVT
-    | let c: U32 if (c >= 0xD3EC) and (c <= 0xD3EC) => GBLV
-    | let c: U32 if (c >= 0xD3ED) and (c <= 0xD407) => GBLVT
-    | let c: U32 if (c >= 0xD408) and (c <= 0xD408) => GBLV
-    | let c: U32 if (c >= 0xD409) and (c <= 0xD423) => GBLVT
-    | let c: U32 if (c >= 0xD424) and (c <= 0xD424) => GBLV
-    | let c: U32 if (c >= 0xD425) and (c <= 0xD43F) => GBLVT
-    | let c: U32 if (c >= 0xD440) and (c <= 0xD440) => GBLV
-    | let c: U32 if (c >= 0xD441) and (c <= 0xD45B) => GBLVT
-    | let c: U32 if (c >= 0xD45C) and (c <= 0xD45C) => GBLV
-    | let c: U32 if (c >= 0xD45D) and (c <= 0xD477) => GBLVT
-    | let c: U32 if (c >= 0xD478) and (c <= 0xD478) => GBLV
-    | let c: U32 if (c >= 0xD479) and (c <= 0xD493) => GBLVT
-    | let c: U32 if (c >= 0xD494) and (c <= 0xD494) => GBLV
-    | let c: U32 if (c >= 0xD495) and (c <= 0xD4AF) => GBLVT
-    | let c: U32 if (c >= 0xD4B0) and (c <= 0xD4B0) => GBLV
-    | let c: U32 if (c >= 0xD4B1) and (c <= 0xD4CB) => GBLVT
-    | let c: U32 if (c >= 0xD4CC) and (c <= 0xD4CC) => GBLV
-    | let c: U32 if (c >= 0xD4CD) and (c <= 0xD4E7) => GBLVT
-    | let c: U32 if (c >= 0xD4E8) and (c <= 0xD4E8) => GBLV
-    | let c: U32 if (c >= 0xD4E9) and (c <= 0xD503) => GBLVT
-    | let c: U32 if (c >= 0xD504) and (c <= 0xD504) => GBLV
-    | let c: U32 if (c >= 0xD505) and (c <= 0xD51F) => GBLVT
-    | let c: U32 if (c >= 0xD520) and (c <= 0xD520) => GBLV
-    | let c: U32 if (c >= 0xD521) and (c <= 0xD53B) => GBLVT
-    | let c: U32 if (c >= 0xD53C) and (c <= 0xD53C) => GBLV
-    | let c: U32 if (c >= 0xD53D) and (c <= 0xD557) => GBLVT
-    | let c: U32 if (c >= 0xD558) and (c <= 0xD558) => GBLV
-    | let c: U32 if (c >= 0xD559) and (c <= 0xD573) => GBLVT
-    | let c: U32 if (c >= 0xD574) and (c <= 0xD574) => GBLV
-    | let c: U32 if (c >= 0xD575) and (c <= 0xD58F) => GBLVT
-    | let c: U32 if (c >= 0xD590) and (c <= 0xD590) => GBLV
-    | let c: U32 if (c >= 0xD591) and (c <= 0xD5AB) => GBLVT
-    | let c: U32 if (c >= 0xD5AC) and (c <= 0xD5AC) => GBLV
-    | let c: U32 if (c >= 0xD5AD) and (c <= 0xD5C7) => GBLVT
-    | let c: U32 if (c >= 0xD5C8) and (c <= 0xD5C8) => GBLV
-    | let c: U32 if (c >= 0xD5C9) and (c <= 0xD5E3) => GBLVT
-    | let c: U32 if (c >= 0xD5E4) and (c <= 0xD5E4) => GBLV
-    | let c: U32 if (c >= 0xD5E5) and (c <= 0xD5FF) => GBLVT
-    | let c: U32 if (c >= 0xD600) and (c <= 0xD600) => GBLV
-    | let c: U32 if (c >= 0xD601) and (c <= 0xD61B) => GBLVT
-    | let c: U32 if (c >= 0xD61C) and (c <= 0xD61C) => GBLV
-    | let c: U32 if (c >= 0xD61D) and (c <= 0xD637) => GBLVT
-    | let c: U32 if (c >= 0xD638) and (c <= 0xD638) => GBLV
-    | let c: U32 if (c >= 0xD639) and (c <= 0xD653) => GBLVT
-    | let c: U32 if (c >= 0xD654) and (c <= 0xD654) => GBLV
-    | let c: U32 if (c >= 0xD655) and (c <= 0xD66F) => GBLVT
-    | let c: U32 if (c >= 0xD670) and (c <= 0xD670) => GBLV
-    | let c: U32 if (c >= 0xD671) and (c <= 0xD68B) => GBLVT
-    | let c: U32 if (c >= 0xD68C) and (c <= 0xD68C) => GBLV
-    | let c: U32 if (c >= 0xD68D) and (c <= 0xD6A7) => GBLVT
-    | let c: U32 if (c >= 0xD6A8) and (c <= 0xD6A8) => GBLV
-    | let c: U32 if (c >= 0xD6A9) and (c <= 0xD6C3) => GBLVT
-    | let c: U32 if (c >= 0xD6C4) and (c <= 0xD6C4) => GBLV
-    | let c: U32 if (c >= 0xD6C5) and (c <= 0xD6DF) => GBLVT
-    | let c: U32 if (c >= 0xD6E0) and (c <= 0xD6E0) => GBLV
-    | let c: U32 if (c >= 0xD6E1) and (c <= 0xD6FB) => GBLVT
-    | let c: U32 if (c >= 0xD6FC) and (c <= 0xD6FC) => GBLV
-    | let c: U32 if (c >= 0xD6FD) and (c <= 0xD717) => GBLVT
-    | let c: U32 if (c >= 0xD718) and (c <= 0xD718) => GBLV
-    | let c: U32 if (c >= 0xD719) and (c <= 0xD733) => GBLVT
-    | let c: U32 if (c >= 0xD734) and (c <= 0xD734) => GBLV
-    | let c: U32 if (c >= 0xD735) and (c <= 0xD74F) => GBLVT
-    | let c: U32 if (c >= 0xD750) and (c <= 0xD750) => GBLV
-    | let c: U32 if (c >= 0xD751) and (c <= 0xD76B) => GBLVT
-    | let c: U32 if (c >= 0xD76C) and (c <= 0xD76C) => GBLV
-    | let c: U32 if (c >= 0xD76D) and (c <= 0xD787) => GBLVT
-    | let c: U32 if (c >= 0xD788) and (c <= 0xD788) => GBLV
-    | let c: U32 if (c >= 0xD789) and (c <= 0xD7A3) => GBLVT
-    | let c: U32 if (c >= 0xD7B0) and (c <= 0xD7C6) => GBV
-    | let c: U32 if (c >= 0xD7CB) and (c <= 0xD7FB) => GBT
-    | let c: U32 if (c >= 0xFB1E) and (c <= 0xFB1E) => GBExtend
-    | let c: U32 if (c >= 0xFE00) and (c <= 0xFE0F) => GBExtend
-    | let c: U32 if (c >= 0xFE20) and (c <= 0xFE2F) => GBExtend
-    | let c: U32 if (c >= 0xFEFF) and (c <= 0xFEFF) => GBControl
-    | let c: U32 if (c >= 0xFF9E) and (c <= 0xFF9F) => GBExtend
-    | let c: U32 if (c >= 0xFFF0) and (c <= 0xFFFB) => GBControl
-    | let c: U32 if (c >= 0x101FD) and (c <= 0x101FD) => GBExtend
-    | let c: U32 if (c >= 0x102E0) and (c <= 0x102E0) => GBExtend
-    | let c: U32 if (c >= 0x10376) and (c <= 0x1037A) => GBExtend
-    | let c: U32 if (c >= 0x10A01) and (c <= 0x10A03) => GBExtend
-    | let c: U32 if (c >= 0x10A05) and (c <= 0x10A06) => GBExtend
-    | let c: U32 if (c >= 0x10A0C) and (c <= 0x10A0F) => GBExtend
-    | let c: U32 if (c >= 0x10A38) and (c <= 0x10A3A) => GBExtend
-    | let c: U32 if (c >= 0x10A3F) and (c <= 0x10A3F) => GBExtend
-    | let c: U32 if (c >= 0x10AE5) and (c <= 0x10AE6) => GBExtend
-    | let c: U32 if (c >= 0x10D24) and (c <= 0x10D27) => GBExtend
-    | let c: U32 if (c >= 0x10D69) and (c <= 0x10D6D) => GBExtend
-    | let c: U32 if (c >= 0x10EAB) and (c <= 0x10EAC) => GBExtend
-    | let c: U32 if (c >= 0x10EFC) and (c <= 0x10EFF) => GBExtend
-    | let c: U32 if (c >= 0x10F46) and (c <= 0x10F50) => GBExtend
-    | let c: U32 if (c >= 0x10F82) and (c <= 0x10F85) => GBExtend
-    | let c: U32 if (c >= 0x11000) and (c <= 0x11000) => GBSpacingMark
-    | let c: U32 if (c >= 0x11001) and (c <= 0x11001) => GBExtend
-    | let c: U32 if (c >= 0x11002) and (c <= 0x11002) => GBSpacingMark
-    | let c: U32 if (c >= 0x11038) and (c <= 0x11046) => GBExtend
-    | let c: U32 if (c >= 0x11070) and (c <= 0x11070) => GBExtend
-    | let c: U32 if (c >= 0x11073) and (c <= 0x11074) => GBExtend
-    | let c: U32 if (c >= 0x1107F) and (c <= 0x11081) => GBExtend
-    | let c: U32 if (c >= 0x11082) and (c <= 0x11082) => GBSpacingMark
-    | let c: U32 if (c >= 0x110B0) and (c <= 0x110B2) => GBSpacingMark
-    | let c: U32 if (c >= 0x110B3) and (c <= 0x110B6) => GBExtend
-    | let c: U32 if (c >= 0x110B7) and (c <= 0x110B8) => GBSpacingMark
-    | let c: U32 if (c >= 0x110B9) and (c <= 0x110BA) => GBExtend
-    | let c: U32 if (c >= 0x110BD) and (c <= 0x110BD) => GBPrepend
-    | let c: U32 if (c >= 0x110C2) and (c <= 0x110C2) => GBExtend
-    | let c: U32 if (c >= 0x110CD) and (c <= 0x110CD) => GBPrepend
-    | let c: U32 if (c >= 0x11100) and (c <= 0x11102) => GBExtend
-    | let c: U32 if (c >= 0x11127) and (c <= 0x1112B) => GBExtend
-    | let c: U32 if (c >= 0x1112C) and (c <= 0x1112C) => GBSpacingMark
-    | let c: U32 if (c >= 0x1112D) and (c <= 0x11134) => GBExtend
-    | let c: U32 if (c >= 0x11145) and (c <= 0x11146) => GBSpacingMark
-    | let c: U32 if (c >= 0x11173) and (c <= 0x11173) => GBExtend
-    | let c: U32 if (c >= 0x11180) and (c <= 0x11181) => GBExtend
-    | let c: U32 if (c >= 0x11182) and (c <= 0x11182) => GBSpacingMark
-    | let c: U32 if (c >= 0x111B3) and (c <= 0x111B5) => GBSpacingMark
-    | let c: U32 if (c >= 0x111B6) and (c <= 0x111BE) => GBExtend
-    | let c: U32 if (c >= 0x111BF) and (c <= 0x111BF) => GBSpacingMark
-    | let c: U32 if (c >= 0x111C0) and (c <= 0x111C0) => GBExtend
-    | let c: U32 if (c >= 0x111C2) and (c <= 0x111C3) => GBPrepend
-    | let c: U32 if (c >= 0x111C9) and (c <= 0x111CC) => GBExtend
-    | let c: U32 if (c >= 0x111CE) and (c <= 0x111CE) => GBSpacingMark
-    | let c: U32 if (c >= 0x111CF) and (c <= 0x111CF) => GBExtend
-    | let c: U32 if (c >= 0x1122C) and (c <= 0x1122E) => GBSpacingMark
-    | let c: U32 if (c >= 0x1122F) and (c <= 0x11231) => GBExtend
-    | let c: U32 if (c >= 0x11232) and (c <= 0x11233) => GBSpacingMark
-    | let c: U32 if (c >= 0x11234) and (c <= 0x11237) => GBExtend
-    | let c: U32 if (c >= 0x1123E) and (c <= 0x1123E) => GBExtend
-    | let c: U32 if (c >= 0x11241) and (c <= 0x11241) => GBExtend
-    | let c: U32 if (c >= 0x112DF) and (c <= 0x112DF) => GBExtend
-    | let c: U32 if (c >= 0x112E0) and (c <= 0x112E2) => GBSpacingMark
-    | let c: U32 if (c >= 0x112E3) and (c <= 0x112EA) => GBExtend
-    | let c: U32 if (c >= 0x11300) and (c <= 0x11301) => GBExtend
-    | let c: U32 if (c >= 0x11302) and (c <= 0x11303) => GBSpacingMark
-    | let c: U32 if (c >= 0x1133B) and (c <= 0x1133C) => GBExtend
-    | let c: U32 if (c >= 0x1133E) and (c <= 0x1133E) => GBExtend
-    | let c: U32 if (c >= 0x1133F) and (c <= 0x1133F) => GBSpacingMark
-    | let c: U32 if (c >= 0x11340) and (c <= 0x11340) => GBExtend
-    | let c: U32 if (c >= 0x11341) and (c <= 0x11344) => GBSpacingMark
-    | let c: U32 if (c >= 0x11347) and (c <= 0x11348) => GBSpacingMark
-    | let c: U32 if (c >= 0x1134B) and (c <= 0x1134C) => GBSpacingMark
-    | let c: U32 if (c >= 0x1134D) and (c <= 0x1134D) => GBExtend
-    | let c: U32 if (c >= 0x11357) and (c <= 0x11357) => GBExtend
-    | let c: U32 if (c >= 0x11362) and (c <= 0x11363) => GBSpacingMark
-    | let c: U32 if (c >= 0x11366) and (c <= 0x1136C) => GBExtend
-    | let c: U32 if (c >= 0x11370) and (c <= 0x11374) => GBExtend
-    | let c: U32 if (c >= 0x113B8) and (c <= 0x113B8) => GBExtend
-    | let c: U32 if (c >= 0x113B9) and (c <= 0x113BA) => GBSpacingMark
-    | let c: U32 if (c >= 0x113BB) and (c <= 0x113C0) => GBExtend
-    | let c: U32 if (c >= 0x113C2) and (c <= 0x113C2) => GBExtend
-    | let c: U32 if (c >= 0x113C5) and (c <= 0x113C5) => GBExtend
-    | let c: U32 if (c >= 0x113C7) and (c <= 0x113C9) => GBExtend
-    | let c: U32 if (c >= 0x113CA) and (c <= 0x113CA) => GBSpacingMark
-    | let c: U32 if (c >= 0x113CC) and (c <= 0x113CD) => GBSpacingMark
-    | let c: U32 if (c >= 0x113CE) and (c <= 0x113D0) => GBExtend
-    | let c: U32 if (c >= 0x113D1) and (c <= 0x113D1) => GBPrepend
-    | let c: U32 if (c >= 0x113D2) and (c <= 0x113D2) => GBExtend
-    | let c: U32 if (c >= 0x113E1) and (c <= 0x113E2) => GBExtend
-    | let c: U32 if (c >= 0x11435) and (c <= 0x11437) => GBSpacingMark
-    | let c: U32 if (c >= 0x11438) and (c <= 0x1143F) => GBExtend
-    | let c: U32 if (c >= 0x11440) and (c <= 0x11441) => GBSpacingMark
-    | let c: U32 if (c >= 0x11442) and (c <= 0x11444) => GBExtend
-    | let c: U32 if (c >= 0x11445) and (c <= 0x11445) => GBSpacingMark
-    | let c: U32 if (c >= 0x11446) and (c <= 0x11446) => GBExtend
-    | let c: U32 if (c >= 0x1145E) and (c <= 0x1145E) => GBExtend
-    | let c: U32 if (c >= 0x114B0) and (c <= 0x114B0) => GBExtend
-    | let c: U32 if (c >= 0x114B1) and (c <= 0x114B2) => GBSpacingMark
-    | let c: U32 if (c >= 0x114B3) and (c <= 0x114B8) => GBExtend
-    | let c: U32 if (c >= 0x114B9) and (c <= 0x114B9) => GBSpacingMark
-    | let c: U32 if (c >= 0x114BA) and (c <= 0x114BA) => GBExtend
-    | let c: U32 if (c >= 0x114BB) and (c <= 0x114BC) => GBSpacingMark
-    | let c: U32 if (c >= 0x114BD) and (c <= 0x114BD) => GBExtend
-    | let c: U32 if (c >= 0x114BE) and (c <= 0x114BE) => GBSpacingMark
-    | let c: U32 if (c >= 0x114BF) and (c <= 0x114C0) => GBExtend
-    | let c: U32 if (c >= 0x114C1) and (c <= 0x114C1) => GBSpacingMark
-    | let c: U32 if (c >= 0x114C2) and (c <= 0x114C3) => GBExtend
-    | let c: U32 if (c >= 0x115AF) and (c <= 0x115AF) => GBExtend
-    | let c: U32 if (c >= 0x115B0) and (c <= 0x115B1) => GBSpacingMark
-    | let c: U32 if (c >= 0x115B2) and (c <= 0x115B5) => GBExtend
-    | let c: U32 if (c >= 0x115B8) and (c <= 0x115BB) => GBSpacingMark
-    | let c: U32 if (c >= 0x115BC) and (c <= 0x115BD) => GBExtend
-    | let c: U32 if (c >= 0x115BE) and (c <= 0x115BE) => GBSpacingMark
-    | let c: U32 if (c >= 0x115BF) and (c <= 0x115C0) => GBExtend
-    | let c: U32 if (c >= 0x115DC) and (c <= 0x115DD) => GBExtend
-    | let c: U32 if (c >= 0x11630) and (c <= 0x11632) => GBSpacingMark
-    | let c: U32 if (c >= 0x11633) and (c <= 0x1163A) => GBExtend
-    | let c: U32 if (c >= 0x1163B) and (c <= 0x1163C) => GBSpacingMark
-    | let c: U32 if (c >= 0x1163D) and (c <= 0x1163D) => GBExtend
-    | let c: U32 if (c >= 0x1163E) and (c <= 0x1163E) => GBSpacingMark
-    | let c: U32 if (c >= 0x1163F) and (c <= 0x11640) => GBExtend
-    | let c: U32 if (c >= 0x116AB) and (c <= 0x116AB) => GBExtend
-    | let c: U32 if (c >= 0x116AC) and (c <= 0x116AC) => GBSpacingMark
-    | let c: U32 if (c >= 0x116AD) and (c <= 0x116AD) => GBExtend
-    | let c: U32 if (c >= 0x116AE) and (c <= 0x116AF) => GBSpacingMark
-    | let c: U32 if (c >= 0x116B0) and (c <= 0x116B7) => GBExtend
-    | let c: U32 if (c >= 0x1171D) and (c <= 0x1171D) => GBExtend
-    | let c: U32 if (c >= 0x1171E) and (c <= 0x1171E) => GBSpacingMark
-    | let c: U32 if (c >= 0x1171F) and (c <= 0x1171F) => GBExtend
-    | let c: U32 if (c >= 0x11722) and (c <= 0x11725) => GBExtend
-    | let c: U32 if (c >= 0x11726) and (c <= 0x11726) => GBSpacingMark
-    | let c: U32 if (c >= 0x11727) and (c <= 0x1172B) => GBExtend
-    | let c: U32 if (c >= 0x1182C) and (c <= 0x1182E) => GBSpacingMark
-    | let c: U32 if (c >= 0x1182F) and (c <= 0x11837) => GBExtend
-    | let c: U32 if (c >= 0x11838) and (c <= 0x11838) => GBSpacingMark
-    | let c: U32 if (c >= 0x11839) and (c <= 0x1183A) => GBExtend
-    | let c: U32 if (c >= 0x11930) and (c <= 0x11930) => GBExtend
-    | let c: U32 if (c >= 0x11931) and (c <= 0x11935) => GBSpacingMark
-    | let c: U32 if (c >= 0x11937) and (c <= 0x11938) => GBSpacingMark
-    | let c: U32 if (c >= 0x1193B) and (c <= 0x1193E) => GBExtend
-    | let c: U32 if (c >= 0x1193F) and (c <= 0x1193F) => GBPrepend
-    | let c: U32 if (c >= 0x11940) and (c <= 0x11940) => GBSpacingMark
-    | let c: U32 if (c >= 0x11941) and (c <= 0x11941) => GBPrepend
-    | let c: U32 if (c >= 0x11942) and (c <= 0x11942) => GBSpacingMark
-    | let c: U32 if (c >= 0x11943) and (c <= 0x11943) => GBExtend
-    | let c: U32 if (c >= 0x119D1) and (c <= 0x119D3) => GBSpacingMark
-    | let c: U32 if (c >= 0x119D4) and (c <= 0x119D7) => GBExtend
-    | let c: U32 if (c >= 0x119DA) and (c <= 0x119DB) => GBExtend
-    | let c: U32 if (c >= 0x119DC) and (c <= 0x119DF) => GBSpacingMark
-    | let c: U32 if (c >= 0x119E0) and (c <= 0x119E0) => GBExtend
-    | let c: U32 if (c >= 0x119E4) and (c <= 0x119E4) => GBSpacingMark
-    | let c: U32 if (c >= 0x11A01) and (c <= 0x11A0A) => GBExtend
-    | let c: U32 if (c >= 0x11A33) and (c <= 0x11A38) => GBExtend
-    | let c: U32 if (c >= 0x11A39) and (c <= 0x11A39) => GBSpacingMark
-    | let c: U32 if (c >= 0x11A3A) and (c <= 0x11A3A) => GBPrepend
-    | let c: U32 if (c >= 0x11A3B) and (c <= 0x11A3E) => GBExtend
-    | let c: U32 if (c >= 0x11A47) and (c <= 0x11A47) => GBExtend
-    | let c: U32 if (c >= 0x11A51) and (c <= 0x11A56) => GBExtend
-    | let c: U32 if (c >= 0x11A57) and (c <= 0x11A58) => GBSpacingMark
-    | let c: U32 if (c >= 0x11A59) and (c <= 0x11A5B) => GBExtend
-    | let c: U32 if (c >= 0x11A84) and (c <= 0x11A89) => GBPrepend
-    | let c: U32 if (c >= 0x11A8A) and (c <= 0x11A96) => GBExtend
-    | let c: U32 if (c >= 0x11A97) and (c <= 0x11A97) => GBSpacingMark
-    | let c: U32 if (c >= 0x11A98) and (c <= 0x11A99) => GBExtend
-    | let c: U32 if (c >= 0x11C2F) and (c <= 0x11C2F) => GBSpacingMark
-    | let c: U32 if (c >= 0x11C30) and (c <= 0x11C36) => GBExtend
-    | let c: U32 if (c >= 0x11C38) and (c <= 0x11C3D) => GBExtend
-    | let c: U32 if (c >= 0x11C3E) and (c <= 0x11C3E) => GBSpacingMark
-    | let c: U32 if (c >= 0x11C3F) and (c <= 0x11C3F) => GBExtend
-    | let c: U32 if (c >= 0x11C92) and (c <= 0x11CA7) => GBExtend
-    | let c: U32 if (c >= 0x11CA9) and (c <= 0x11CA9) => GBSpacingMark
-    | let c: U32 if (c >= 0x11CAA) and (c <= 0x11CB0) => GBExtend
-    | let c: U32 if (c >= 0x11CB1) and (c <= 0x11CB1) => GBSpacingMark
-    | let c: U32 if (c >= 0x11CB2) and (c <= 0x11CB3) => GBExtend
-    | let c: U32 if (c >= 0x11CB4) and (c <= 0x11CB4) => GBSpacingMark
-    | let c: U32 if (c >= 0x11CB5) and (c <= 0x11CB6) => GBExtend
-    | let c: U32 if (c >= 0x11D31) and (c <= 0x11D36) => GBExtend
-    | let c: U32 if (c >= 0x11D3A) and (c <= 0x11D3A) => GBExtend
-    | let c: U32 if (c >= 0x11D3C) and (c <= 0x11D3D) => GBExtend
-    | let c: U32 if (c >= 0x11D3F) and (c <= 0x11D45) => GBExtend
-    | let c: U32 if (c >= 0x11D46) and (c <= 0x11D46) => GBPrepend
-    | let c: U32 if (c >= 0x11D47) and (c <= 0x11D47) => GBExtend
-    | let c: U32 if (c >= 0x11D8A) and (c <= 0x11D8E) => GBSpacingMark
-    | let c: U32 if (c >= 0x11D90) and (c <= 0x11D91) => GBExtend
-    | let c: U32 if (c >= 0x11D93) and (c <= 0x11D94) => GBSpacingMark
-    | let c: U32 if (c >= 0x11D95) and (c <= 0x11D95) => GBExtend
-    | let c: U32 if (c >= 0x11D96) and (c <= 0x11D96) => GBSpacingMark
-    | let c: U32 if (c >= 0x11D97) and (c <= 0x11D97) => GBExtend
-    | let c: U32 if (c >= 0x11EF3) and (c <= 0x11EF4) => GBExtend
-    | let c: U32 if (c >= 0x11EF5) and (c <= 0x11EF6) => GBSpacingMark
-    | let c: U32 if (c >= 0x11F00) and (c <= 0x11F01) => GBExtend
-    | let c: U32 if (c >= 0x11F02) and (c <= 0x11F02) => GBPrepend
-    | let c: U32 if (c >= 0x11F03) and (c <= 0x11F03) => GBSpacingMark
-    | let c: U32 if (c >= 0x11F34) and (c <= 0x11F35) => GBSpacingMark
-    | let c: U32 if (c >= 0x11F36) and (c <= 0x11F3A) => GBExtend
-    | let c: U32 if (c >= 0x11F3E) and (c <= 0x11F3F) => GBSpacingMark
-    | let c: U32 if (c >= 0x11F40) and (c <= 0x11F42) => GBExtend
-    | let c: U32 if (c >= 0x11F5A) and (c <= 0x11F5A) => GBExtend
-    | let c: U32 if (c >= 0x13430) and (c <= 0x1343F) => GBControl
-    | let c: U32 if (c >= 0x13440) and (c <= 0x13440) => GBExtend
-    | let c: U32 if (c >= 0x13447) and (c <= 0x13455) => GBExtend
-    | let c: U32 if (c >= 0x1611E) and (c <= 0x16129) => GBExtend
-    | let c: U32 if (c >= 0x1612A) and (c <= 0x1612C) => GBSpacingMark
-    | let c: U32 if (c >= 0x1612D) and (c <= 0x1612F) => GBExtend
-    | let c: U32 if (c >= 0x16AF0) and (c <= 0x16AF4) => GBExtend
-    | let c: U32 if (c >= 0x16B30) and (c <= 0x16B36) => GBExtend
-    | let c: U32 if (c >= 0x16D63) and (c <= 0x16D63) => GBV
-    | let c: U32 if (c >= 0x16D67) and (c <= 0x16D6A) => GBV
-    | let c: U32 if (c >= 0x16F4F) and (c <= 0x16F4F) => GBExtend
-    | let c: U32 if (c >= 0x16F51) and (c <= 0x16F87) => GBSpacingMark
-    | let c: U32 if (c >= 0x16F8F) and (c <= 0x16F92) => GBExtend
-    | let c: U32 if (c >= 0x16FE4) and (c <= 0x16FE4) => GBExtend
-    | let c: U32 if (c >= 0x16FF0) and (c <= 0x16FF1) => GBExtend
-    | let c: U32 if (c >= 0x1BC9D) and (c <= 0x1BC9E) => GBExtend
-    | let c: U32 if (c >= 0x1BCA0) and (c <= 0x1BCA3) => GBControl
-    | let c: U32 if (c >= 0x1CF00) and (c <= 0x1CF2D) => GBExtend
-    | let c: U32 if (c >= 0x1CF30) and (c <= 0x1CF46) => GBExtend
-    | let c: U32 if (c >= 0x1D165) and (c <= 0x1D169) => GBExtend
-    | let c: U32 if (c >= 0x1D16D) and (c <= 0x1D172) => GBExtend
-    | let c: U32 if (c >= 0x1D173) and (c <= 0x1D17A) => GBControl
-    | let c: U32 if (c >= 0x1D17B) and (c <= 0x1D182) => GBExtend
-    | let c: U32 if (c >= 0x1D185) and (c <= 0x1D18B) => GBExtend
-    | let c: U32 if (c >= 0x1D1AA) and (c <= 0x1D1AD) => GBExtend
-    | let c: U32 if (c >= 0x1D242) and (c <= 0x1D244) => GBExtend
-    | let c: U32 if (c >= 0x1DA00) and (c <= 0x1DA36) => GBExtend
-    | let c: U32 if (c >= 0x1DA3B) and (c <= 0x1DA6C) => GBExtend
-    | let c: U32 if (c >= 0x1DA75) and (c <= 0x1DA75) => GBExtend
-    | let c: U32 if (c >= 0x1DA84) and (c <= 0x1DA84) => GBExtend
-    | let c: U32 if (c >= 0x1DA9B) and (c <= 0x1DA9F) => GBExtend
-    | let c: U32 if (c >= 0x1DAA1) and (c <= 0x1DAAF) => GBExtend
-    | let c: U32 if (c >= 0x1E000) and (c <= 0x1E006) => GBExtend
-    | let c: U32 if (c >= 0x1E008) and (c <= 0x1E018) => GBExtend
-    | let c: U32 if (c >= 0x1E01B) and (c <= 0x1E021) => GBExtend
-    | let c: U32 if (c >= 0x1E023) and (c <= 0x1E024) => GBExtend
-    | let c: U32 if (c >= 0x1E026) and (c <= 0x1E02A) => GBExtend
-    | let c: U32 if (c >= 0x1E08F) and (c <= 0x1E08F) => GBExtend
-    | let c: U32 if (c >= 0x1E130) and (c <= 0x1E136) => GBExtend
-    | let c: U32 if (c >= 0x1E2AE) and (c <= 0x1E2AE) => GBExtend
-    | let c: U32 if (c >= 0x1E2EC) and (c <= 0x1E2EF) => GBExtend
-    | let c: U32 if (c >= 0x1E4EC) and (c <= 0x1E4EF) => GBExtend
-    | let c: U32 if (c >= 0x1E5EE) and (c <= 0x1E5EF) => GBExtend
-    | let c: U32 if (c >= 0x1E8D0) and (c <= 0x1E8D6) => GBExtend
-    | let c: U32 if (c >= 0x1E944) and (c <= 0x1E94A) => GBExtend
-    | let c: U32 if (c >= 0x1F000) and (c <= 0x1F0FF) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F10D) and (c <= 0x1F10F) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F12F) and (c <= 0x1F12F) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F16C) and (c <= 0x1F171) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F17E) and (c <= 0x1F17F) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F18E) and (c <= 0x1F18E) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F191) and (c <= 0x1F19A) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F1AD) and (c <= 0x1F1E5) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F1E6) and (c <= 0x1F1FF) => GBRegionalIndicator
-    | let c: U32 if (c >= 0x1F201) and (c <= 0x1F20F) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F21A) and (c <= 0x1F21A) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F22F) and (c <= 0x1F22F) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F232) and (c <= 0x1F23A) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F23C) and (c <= 0x1F23F) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F249) and (c <= 0x1F3FA) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F3FB) and (c <= 0x1F3FF) => GBExtend
-    | let c: U32 if (c >= 0x1F400) and (c <= 0x1F53D) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F546) and (c <= 0x1F64F) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F680) and (c <= 0x1F6FF) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F774) and (c <= 0x1F77F) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F7D5) and (c <= 0x1F7FF) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F80C) and (c <= 0x1F80F) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F848) and (c <= 0x1F84F) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F85A) and (c <= 0x1F85F) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F888) and (c <= 0x1F88F) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F8AE) and (c <= 0x1F8FF) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F90C) and (c <= 0x1F93A) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F93C) and (c <= 0x1F945) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1F947) and (c <= 0x1FAFF) => GBExtendedPictographic
-    | let c: U32 if (c >= 0x1FC00) and (c <= 0x1FFFD) => GBExtendedPictographic
-    | let c: U32 if (c >= 0xE0000) and (c <= 0xE001F) => GBControl
-    | let c: U32 if (c >= 0xE0020) and (c <= 0xE007F) => GBExtend
-    | let c: U32 if (c >= 0xE0080) and (c <= 0xE00FF) => GBControl
-    | let c: U32 if (c >= 0xE0100) and (c <= 0xE01EF) => GBExtend
-    | let c: U32 if (c >= 0xE01F0) and (c <= 0xE0FFF) => GBControl
+    match cp >> 12
+    | 0x0000 =>
+      match cp
+      | let c: U32 if c <= 0x0009 => GBControl
+      | let c: U32 if c <= 0x000A => GBLF
+      | let c: U32 if c <= 0x000C => GBControl
+      | let c: U32 if c <= 0x000D => GBCR
+      | let c: U32 if c <= 0x001F => GBControl
+      | let c: U32 if c <= 0x007E => GBOther
+      | let c: U32 if c <= 0x009F => GBControl
+      | let c: U32 if c <= 0x00A8 => GBOther
+      | let c: U32 if c <= 0x00A9 => GBExtendedPictographic
+      | let c: U32 if c <= 0x00AC => GBOther
+      | let c: U32 if c <= 0x00AD => GBControl
+      | let c: U32 if c <= 0x00AE => GBExtendedPictographic
+      | let c: U32 if c <= 0x02FF => GBOther
+      | let c: U32 if c <= 0x036F => GBExtend
+      | let c: U32 if c <= 0x0482 => GBOther
+      | let c: U32 if c <= 0x0489 => GBExtend
+      | let c: U32 if c <= 0x0590 => GBOther
+      | let c: U32 if c <= 0x05BD => GBExtend
+      | let c: U32 if c <= 0x05BE => GBOther
+      | let c: U32 if c <= 0x05BF => GBExtend
+      | let c: U32 if c <= 0x05C0 => GBOther
+      | let c: U32 if c <= 0x05C2 => GBExtend
+      | let c: U32 if c <= 0x05C3 => GBOther
+      | let c: U32 if c <= 0x05C5 => GBExtend
+      | let c: U32 if c <= 0x05C6 => GBOther
+      | let c: U32 if c <= 0x05C7 => GBExtend
+      | let c: U32 if c <= 0x05FF => GBOther
+      | let c: U32 if c <= 0x0605 => GBPrepend
+      | let c: U32 if c <= 0x060F => GBOther
+      | let c: U32 if c <= 0x061A => GBExtend
+      | let c: U32 if c <= 0x061B => GBOther
+      | let c: U32 if c <= 0x061C => GBControl
+      | let c: U32 if c <= 0x064A => GBOther
+      | let c: U32 if c <= 0x065F => GBExtend
+      | let c: U32 if c <= 0x066F => GBOther
+      | let c: U32 if c <= 0x0670 => GBExtend
+      | let c: U32 if c <= 0x06D5 => GBOther
+      | let c: U32 if c <= 0x06DC => GBExtend
+      | let c: U32 if c <= 0x06DD => GBPrepend
+      | let c: U32 if c <= 0x06DE => GBOther
+      | let c: U32 if c <= 0x06E4 => GBExtend
+      | let c: U32 if c <= 0x06E6 => GBOther
+      | let c: U32 if c <= 0x06E8 => GBExtend
+      | let c: U32 if c <= 0x06E9 => GBOther
+      | let c: U32 if c <= 0x06ED => GBExtend
+      | let c: U32 if c <= 0x070E => GBOther
+      | let c: U32 if c <= 0x070F => GBPrepend
+      | let c: U32 if c <= 0x0710 => GBOther
+      | let c: U32 if c <= 0x0711 => GBExtend
+      | let c: U32 if c <= 0x072F => GBOther
+      | let c: U32 if c <= 0x074A => GBExtend
+      | let c: U32 if c <= 0x07A5 => GBOther
+      | let c: U32 if c <= 0x07B0 => GBExtend
+      | let c: U32 if c <= 0x07EA => GBOther
+      | let c: U32 if c <= 0x07F3 => GBExtend
+      | let c: U32 if c <= 0x07FC => GBOther
+      | let c: U32 if c <= 0x07FD => GBExtend
+      | let c: U32 if c <= 0x0815 => GBOther
+      | let c: U32 if c <= 0x0819 => GBExtend
+      | let c: U32 if c <= 0x081A => GBOther
+      | let c: U32 if c <= 0x0823 => GBExtend
+      | let c: U32 if c <= 0x0824 => GBOther
+      | let c: U32 if c <= 0x0827 => GBExtend
+      | let c: U32 if c <= 0x0828 => GBOther
+      | let c: U32 if c <= 0x082D => GBExtend
+      | let c: U32 if c <= 0x0858 => GBOther
+      | let c: U32 if c <= 0x085B => GBExtend
+      | let c: U32 if c <= 0x088F => GBOther
+      | let c: U32 if c <= 0x0891 => GBPrepend
+      | let c: U32 if c <= 0x0896 => GBOther
+      | let c: U32 if c <= 0x089F => GBExtend
+      | let c: U32 if c <= 0x08C9 => GBOther
+      | let c: U32 if c <= 0x08E1 => GBExtend
+      | let c: U32 if c <= 0x08E2 => GBPrepend
+      | let c: U32 if c <= 0x0902 => GBExtend
+      | let c: U32 if c <= 0x0903 => GBSpacingMark
+      | let c: U32 if c <= 0x0939 => GBOther
+      | let c: U32 if c <= 0x093A => GBExtend
+      | let c: U32 if c <= 0x093B => GBSpacingMark
+      | let c: U32 if c <= 0x093C => GBExtend
+      | let c: U32 if c <= 0x093D => GBOther
+      | let c: U32 if c <= 0x0940 => GBSpacingMark
+      | let c: U32 if c <= 0x0948 => GBExtend
+      | let c: U32 if c <= 0x094C => GBSpacingMark
+      | let c: U32 if c <= 0x094D => GBExtend
+      | let c: U32 if c <= 0x094F => GBSpacingMark
+      | let c: U32 if c <= 0x0950 => GBOther
+      | let c: U32 if c <= 0x0957 => GBExtend
+      | let c: U32 if c <= 0x0961 => GBOther
+      | let c: U32 if c <= 0x0963 => GBExtend
+      | let c: U32 if c <= 0x0980 => GBOther
+      | let c: U32 if c <= 0x0981 => GBExtend
+      | let c: U32 if c <= 0x0983 => GBSpacingMark
+      | let c: U32 if c <= 0x09BB => GBOther
+      | let c: U32 if c <= 0x09BC => GBExtend
+      | let c: U32 if c <= 0x09BD => GBOther
+      | let c: U32 if c <= 0x09BE => GBExtend
+      | let c: U32 if c <= 0x09C0 => GBSpacingMark
+      | let c: U32 if c <= 0x09C4 => GBExtend
+      | let c: U32 if c <= 0x09C6 => GBOther
+      | let c: U32 if c <= 0x09C8 => GBSpacingMark
+      | let c: U32 if c <= 0x09CA => GBOther
+      | let c: U32 if c <= 0x09CC => GBSpacingMark
+      | let c: U32 if c <= 0x09CD => GBExtend
+      | let c: U32 if c <= 0x09D6 => GBOther
+      | let c: U32 if c <= 0x09D7 => GBExtend
+      | let c: U32 if c <= 0x09E1 => GBOther
+      | let c: U32 if c <= 0x09E3 => GBExtend
+      | let c: U32 if c <= 0x09FD => GBOther
+      | let c: U32 if c <= 0x09FE => GBExtend
+      | let c: U32 if c <= 0x0A00 => GBOther
+      | let c: U32 if c <= 0x0A02 => GBExtend
+      | let c: U32 if c <= 0x0A03 => GBSpacingMark
+      | let c: U32 if c <= 0x0A3B => GBOther
+      | let c: U32 if c <= 0x0A3C => GBExtend
+      | let c: U32 if c <= 0x0A3D => GBOther
+      | let c: U32 if c <= 0x0A40 => GBSpacingMark
+      | let c: U32 if c <= 0x0A42 => GBExtend
+      | let c: U32 if c <= 0x0A46 => GBOther
+      | let c: U32 if c <= 0x0A48 => GBExtend
+      | let c: U32 if c <= 0x0A4A => GBOther
+      | let c: U32 if c <= 0x0A4D => GBExtend
+      | let c: U32 if c <= 0x0A50 => GBOther
+      | let c: U32 if c <= 0x0A51 => GBExtend
+      | let c: U32 if c <= 0x0A6F => GBOther
+      | let c: U32 if c <= 0x0A71 => GBExtend
+      | let c: U32 if c <= 0x0A74 => GBOther
+      | let c: U32 if c <= 0x0A75 => GBExtend
+      | let c: U32 if c <= 0x0A80 => GBOther
+      | let c: U32 if c <= 0x0A82 => GBExtend
+      | let c: U32 if c <= 0x0A83 => GBSpacingMark
+      | let c: U32 if c <= 0x0ABB => GBOther
+      | let c: U32 if c <= 0x0ABC => GBExtend
+      | let c: U32 if c <= 0x0ABD => GBOther
+      | let c: U32 if c <= 0x0AC0 => GBSpacingMark
+      | let c: U32 if c <= 0x0AC5 => GBExtend
+      | let c: U32 if c <= 0x0AC6 => GBOther
+      | let c: U32 if c <= 0x0AC8 => GBExtend
+      | let c: U32 if c <= 0x0AC9 => GBSpacingMark
+      | let c: U32 if c <= 0x0ACA => GBOther
+      | let c: U32 if c <= 0x0ACC => GBSpacingMark
+      | let c: U32 if c <= 0x0ACD => GBExtend
+      | let c: U32 if c <= 0x0AE1 => GBOther
+      | let c: U32 if c <= 0x0AE3 => GBExtend
+      | let c: U32 if c <= 0x0AF9 => GBOther
+      | let c: U32 if c <= 0x0AFF => GBExtend
+      | let c: U32 if c <= 0x0B00 => GBOther
+      | let c: U32 if c <= 0x0B01 => GBExtend
+      | let c: U32 if c <= 0x0B03 => GBSpacingMark
+      | let c: U32 if c <= 0x0B3B => GBOther
+      | let c: U32 if c <= 0x0B3C => GBExtend
+      | let c: U32 if c <= 0x0B3D => GBOther
+      | let c: U32 if c <= 0x0B3F => GBExtend
+      | let c: U32 if c <= 0x0B40 => GBSpacingMark
+      | let c: U32 if c <= 0x0B44 => GBExtend
+      | let c: U32 if c <= 0x0B46 => GBOther
+      | let c: U32 if c <= 0x0B48 => GBSpacingMark
+      | let c: U32 if c <= 0x0B4A => GBOther
+      | let c: U32 if c <= 0x0B4C => GBSpacingMark
+      | let c: U32 if c <= 0x0B4D => GBExtend
+      | let c: U32 if c <= 0x0B54 => GBOther
+      | let c: U32 if c <= 0x0B57 => GBExtend
+      | let c: U32 if c <= 0x0B61 => GBOther
+      | let c: U32 if c <= 0x0B63 => GBExtend
+      | let c: U32 if c <= 0x0B81 => GBOther
+      | let c: U32 if c <= 0x0B82 => GBExtend
+      | let c: U32 if c <= 0x0BBD => GBOther
+      | let c: U32 if c <= 0x0BBE => GBExtend
+      | let c: U32 if c <= 0x0BBF => GBSpacingMark
+      | let c: U32 if c <= 0x0BC0 => GBExtend
+      | let c: U32 if c <= 0x0BC2 => GBSpacingMark
+      | let c: U32 if c <= 0x0BC5 => GBOther
+      | let c: U32 if c <= 0x0BC8 => GBSpacingMark
+      | let c: U32 if c <= 0x0BC9 => GBOther
+      | let c: U32 if c <= 0x0BCC => GBSpacingMark
+      | let c: U32 if c <= 0x0BCD => GBExtend
+      | let c: U32 if c <= 0x0BD6 => GBOther
+      | let c: U32 if c <= 0x0BD7 => GBExtend
+      | let c: U32 if c <= 0x0BFF => GBOther
+      | let c: U32 if c <= 0x0C00 => GBExtend
+      | let c: U32 if c <= 0x0C03 => GBSpacingMark
+      | let c: U32 if c <= 0x0C04 => GBExtend
+      | let c: U32 if c <= 0x0C3B => GBOther
+      | let c: U32 if c <= 0x0C3C => GBExtend
+      | let c: U32 if c <= 0x0C3D => GBOther
+      | let c: U32 if c <= 0x0C40 => GBExtend
+      | let c: U32 if c <= 0x0C44 => GBSpacingMark
+      | let c: U32 if c <= 0x0C45 => GBOther
+      | let c: U32 if c <= 0x0C48 => GBExtend
+      | let c: U32 if c <= 0x0C49 => GBOther
+      | let c: U32 if c <= 0x0C4D => GBExtend
+      | let c: U32 if c <= 0x0C54 => GBOther
+      | let c: U32 if c <= 0x0C56 => GBExtend
+      | let c: U32 if c <= 0x0C61 => GBOther
+      | let c: U32 if c <= 0x0C63 => GBExtend
+      | let c: U32 if c <= 0x0C80 => GBOther
+      | let c: U32 if c <= 0x0C81 => GBExtend
+      | let c: U32 if c <= 0x0C83 => GBSpacingMark
+      | let c: U32 if c <= 0x0CBB => GBOther
+      | let c: U32 if c <= 0x0CBC => GBExtend
+      | let c: U32 if c <= 0x0CBD => GBOther
+      | let c: U32 if c <= 0x0CBE => GBSpacingMark
+      | let c: U32 if c <= 0x0CC0 => GBExtend
+      | let c: U32 if c <= 0x0CC1 => GBSpacingMark
+      | let c: U32 if c <= 0x0CC2 => GBExtend
+      | let c: U32 if c <= 0x0CC4 => GBSpacingMark
+      | let c: U32 if c <= 0x0CC5 => GBOther
+      | let c: U32 if c <= 0x0CC8 => GBExtend
+      | let c: U32 if c <= 0x0CC9 => GBOther
+      | let c: U32 if c <= 0x0CCD => GBExtend
+      | let c: U32 if c <= 0x0CD4 => GBOther
+      | let c: U32 if c <= 0x0CD6 => GBExtend
+      | let c: U32 if c <= 0x0CE1 => GBOther
+      | let c: U32 if c <= 0x0CE3 => GBExtend
+      | let c: U32 if c <= 0x0CF2 => GBOther
+      | let c: U32 if c <= 0x0CF3 => GBSpacingMark
+      | let c: U32 if c <= 0x0CFF => GBOther
+      | let c: U32 if c <= 0x0D01 => GBExtend
+      | let c: U32 if c <= 0x0D03 => GBSpacingMark
+      | let c: U32 if c <= 0x0D3A => GBOther
+      | let c: U32 if c <= 0x0D3C => GBExtend
+      | let c: U32 if c <= 0x0D3D => GBOther
+      | let c: U32 if c <= 0x0D3E => GBExtend
+      | let c: U32 if c <= 0x0D40 => GBSpacingMark
+      | let c: U32 if c <= 0x0D44 => GBExtend
+      | let c: U32 if c <= 0x0D45 => GBOther
+      | let c: U32 if c <= 0x0D48 => GBSpacingMark
+      | let c: U32 if c <= 0x0D49 => GBOther
+      | let c: U32 if c <= 0x0D4C => GBSpacingMark
+      | let c: U32 if c <= 0x0D4D => GBExtend
+      | let c: U32 if c <= 0x0D4E => GBPrepend
+      | let c: U32 if c <= 0x0D56 => GBOther
+      | let c: U32 if c <= 0x0D57 => GBExtend
+      | let c: U32 if c <= 0x0D61 => GBOther
+      | let c: U32 if c <= 0x0D63 => GBExtend
+      | let c: U32 if c <= 0x0D80 => GBOther
+      | let c: U32 if c <= 0x0D81 => GBExtend
+      | let c: U32 if c <= 0x0D83 => GBSpacingMark
+      | let c: U32 if c <= 0x0DC9 => GBOther
+      | let c: U32 if c <= 0x0DCA => GBExtend
+      | let c: U32 if c <= 0x0DCE => GBOther
+      | let c: U32 if c <= 0x0DCF => GBExtend
+      | let c: U32 if c <= 0x0DD1 => GBSpacingMark
+      | let c: U32 if c <= 0x0DD4 => GBExtend
+      | let c: U32 if c <= 0x0DD5 => GBOther
+      | let c: U32 if c <= 0x0DD6 => GBExtend
+      | let c: U32 if c <= 0x0DD7 => GBOther
+      | let c: U32 if c <= 0x0DDE => GBSpacingMark
+      | let c: U32 if c <= 0x0DDF => GBExtend
+      | let c: U32 if c <= 0x0DF1 => GBOther
+      | let c: U32 if c <= 0x0DF3 => GBSpacingMark
+      | let c: U32 if c <= 0x0E30 => GBOther
+      | let c: U32 if c <= 0x0E31 => GBExtend
+      | let c: U32 if c <= 0x0E32 => GBOther
+      | let c: U32 if c <= 0x0E33 => GBSpacingMark
+      | let c: U32 if c <= 0x0E3A => GBExtend
+      | let c: U32 if c <= 0x0E46 => GBOther
+      | let c: U32 if c <= 0x0E4E => GBExtend
+      | let c: U32 if c <= 0x0EB0 => GBOther
+      | let c: U32 if c <= 0x0EB1 => GBExtend
+      | let c: U32 if c <= 0x0EB2 => GBOther
+      | let c: U32 if c <= 0x0EB3 => GBSpacingMark
+      | let c: U32 if c <= 0x0EBC => GBExtend
+      | let c: U32 if c <= 0x0EC7 => GBOther
+      | let c: U32 if c <= 0x0ECE => GBExtend
+      | let c: U32 if c <= 0x0F17 => GBOther
+      | let c: U32 if c <= 0x0F19 => GBExtend
+      | let c: U32 if c <= 0x0F34 => GBOther
+      | let c: U32 if c <= 0x0F35 => GBExtend
+      | let c: U32 if c <= 0x0F36 => GBOther
+      | let c: U32 if c <= 0x0F37 => GBExtend
+      | let c: U32 if c <= 0x0F38 => GBOther
+      | let c: U32 if c <= 0x0F39 => GBExtend
+      | let c: U32 if c <= 0x0F3D => GBOther
+      | let c: U32 if c <= 0x0F3F => GBSpacingMark
+      | let c: U32 if c <= 0x0F70 => GBOther
+      | let c: U32 if c <= 0x0F7E => GBExtend
+      | let c: U32 if c <= 0x0F7F => GBSpacingMark
+      | let c: U32 if c <= 0x0F84 => GBExtend
+      | let c: U32 if c <= 0x0F85 => GBOther
+      | let c: U32 if c <= 0x0F87 => GBExtend
+      | let c: U32 if c <= 0x0F8C => GBOther
+      | let c: U32 if c <= 0x0F97 => GBExtend
+      | let c: U32 if c <= 0x0F98 => GBOther
+      | let c: U32 if c <= 0x0FBC => GBExtend
+      | let c: U32 if c <= 0x0FC5 => GBOther
+      | let c: U32 if c <= 0x0FC6 => GBExtend
+      else GBOther
+      end
+    | 0x0001 =>
+      match cp
+      | let c: U32 if c <= 0x102C => GBOther
+      | let c: U32 if c <= 0x1030 => GBExtend
+      | let c: U32 if c <= 0x1031 => GBSpacingMark
+      | let c: U32 if c <= 0x1037 => GBExtend
+      | let c: U32 if c <= 0x1038 => GBOther
+      | let c: U32 if c <= 0x103A => GBExtend
+      | let c: U32 if c <= 0x103C => GBSpacingMark
+      | let c: U32 if c <= 0x103E => GBExtend
+      | let c: U32 if c <= 0x1055 => GBOther
+      | let c: U32 if c <= 0x1057 => GBSpacingMark
+      | let c: U32 if c <= 0x1059 => GBExtend
+      | let c: U32 if c <= 0x105D => GBOther
+      | let c: U32 if c <= 0x1060 => GBExtend
+      | let c: U32 if c <= 0x1070 => GBOther
+      | let c: U32 if c <= 0x1074 => GBExtend
+      | let c: U32 if c <= 0x1081 => GBOther
+      | let c: U32 if c <= 0x1082 => GBExtend
+      | let c: U32 if c <= 0x1083 => GBOther
+      | let c: U32 if c <= 0x1084 => GBSpacingMark
+      | let c: U32 if c <= 0x1086 => GBExtend
+      | let c: U32 if c <= 0x108C => GBOther
+      | let c: U32 if c <= 0x108D => GBExtend
+      | let c: U32 if c <= 0x109C => GBOther
+      | let c: U32 if c <= 0x109D => GBExtend
+      | let c: U32 if c <= 0x10FF => GBOther
+      | let c: U32 if c <= 0x115F => GBL
+      | let c: U32 if c <= 0x11A7 => GBV
+      | let c: U32 if c <= 0x11FF => GBT
+      | let c: U32 if c <= 0x135C => GBOther
+      | let c: U32 if c <= 0x135F => GBExtend
+      | let c: U32 if c <= 0x1711 => GBOther
+      | let c: U32 if c <= 0x1715 => GBExtend
+      | let c: U32 if c <= 0x1731 => GBOther
+      | let c: U32 if c <= 0x1734 => GBExtend
+      | let c: U32 if c <= 0x1751 => GBOther
+      | let c: U32 if c <= 0x1753 => GBExtend
+      | let c: U32 if c <= 0x1771 => GBOther
+      | let c: U32 if c <= 0x1773 => GBExtend
+      | let c: U32 if c <= 0x17B3 => GBOther
+      | let c: U32 if c <= 0x17B5 => GBExtend
+      | let c: U32 if c <= 0x17B6 => GBSpacingMark
+      | let c: U32 if c <= 0x17BD => GBExtend
+      | let c: U32 if c <= 0x17C5 => GBSpacingMark
+      | let c: U32 if c <= 0x17C6 => GBExtend
+      | let c: U32 if c <= 0x17C8 => GBSpacingMark
+      | let c: U32 if c <= 0x17D3 => GBExtend
+      | let c: U32 if c <= 0x17DC => GBOther
+      | let c: U32 if c <= 0x17DD => GBExtend
+      | let c: U32 if c <= 0x180A => GBOther
+      | let c: U32 if c <= 0x180D => GBExtend
+      | let c: U32 if c <= 0x180E => GBControl
+      | let c: U32 if c <= 0x180F => GBExtend
+      | let c: U32 if c <= 0x1884 => GBOther
+      | let c: U32 if c <= 0x1886 => GBExtend
+      | let c: U32 if c <= 0x18A8 => GBOther
+      | let c: U32 if c <= 0x18A9 => GBExtend
+      | let c: U32 if c <= 0x191F => GBOther
+      | let c: U32 if c <= 0x1922 => GBExtend
+      | let c: U32 if c <= 0x1926 => GBSpacingMark
+      | let c: U32 if c <= 0x1928 => GBExtend
+      | let c: U32 if c <= 0x192B => GBSpacingMark
+      | let c: U32 if c <= 0x192F => GBOther
+      | let c: U32 if c <= 0x1931 => GBSpacingMark
+      | let c: U32 if c <= 0x1932 => GBExtend
+      | let c: U32 if c <= 0x1938 => GBSpacingMark
+      | let c: U32 if c <= 0x193B => GBExtend
+      | let c: U32 if c <= 0x1A16 => GBOther
+      | let c: U32 if c <= 0x1A18 => GBExtend
+      | let c: U32 if c <= 0x1A1A => GBSpacingMark
+      | let c: U32 if c <= 0x1A1B => GBExtend
+      | let c: U32 if c <= 0x1A54 => GBOther
+      | let c: U32 if c <= 0x1A55 => GBSpacingMark
+      | let c: U32 if c <= 0x1A56 => GBExtend
+      | let c: U32 if c <= 0x1A57 => GBSpacingMark
+      | let c: U32 if c <= 0x1A5E => GBExtend
+      | let c: U32 if c <= 0x1A5F => GBOther
+      | let c: U32 if c <= 0x1A60 => GBExtend
+      | let c: U32 if c <= 0x1A61 => GBOther
+      | let c: U32 if c <= 0x1A62 => GBExtend
+      | let c: U32 if c <= 0x1A64 => GBOther
+      | let c: U32 if c <= 0x1A6C => GBExtend
+      | let c: U32 if c <= 0x1A72 => GBSpacingMark
+      | let c: U32 if c <= 0x1A7C => GBExtend
+      | let c: U32 if c <= 0x1A7E => GBOther
+      | let c: U32 if c <= 0x1A7F => GBExtend
+      | let c: U32 if c <= 0x1AAF => GBOther
+      | let c: U32 if c <= 0x1ACE => GBExtend
+      | let c: U32 if c <= 0x1AFF => GBOther
+      | let c: U32 if c <= 0x1B03 => GBExtend
+      | let c: U32 if c <= 0x1B04 => GBSpacingMark
+      | let c: U32 if c <= 0x1B33 => GBOther
+      | let c: U32 if c <= 0x1B3D => GBExtend
+      | let c: U32 if c <= 0x1B41 => GBSpacingMark
+      | let c: U32 if c <= 0x1B44 => GBExtend
+      | let c: U32 if c <= 0x1B6A => GBOther
+      | let c: U32 if c <= 0x1B73 => GBExtend
+      | let c: U32 if c <= 0x1B7F => GBOther
+      | let c: U32 if c <= 0x1B81 => GBExtend
+      | let c: U32 if c <= 0x1B82 => GBSpacingMark
+      | let c: U32 if c <= 0x1BA0 => GBOther
+      | let c: U32 if c <= 0x1BA1 => GBSpacingMark
+      | let c: U32 if c <= 0x1BA5 => GBExtend
+      | let c: U32 if c <= 0x1BA7 => GBSpacingMark
+      | let c: U32 if c <= 0x1BAD => GBExtend
+      | let c: U32 if c <= 0x1BE5 => GBOther
+      | let c: U32 if c <= 0x1BE6 => GBExtend
+      | let c: U32 if c <= 0x1BE7 => GBSpacingMark
+      | let c: U32 if c <= 0x1BE9 => GBExtend
+      | let c: U32 if c <= 0x1BEC => GBSpacingMark
+      | let c: U32 if c <= 0x1BED => GBExtend
+      | let c: U32 if c <= 0x1BEE => GBSpacingMark
+      | let c: U32 if c <= 0x1BF3 => GBExtend
+      | let c: U32 if c <= 0x1C23 => GBOther
+      | let c: U32 if c <= 0x1C2B => GBSpacingMark
+      | let c: U32 if c <= 0x1C33 => GBExtend
+      | let c: U32 if c <= 0x1C35 => GBSpacingMark
+      | let c: U32 if c <= 0x1C37 => GBExtend
+      | let c: U32 if c <= 0x1CCF => GBOther
+      | let c: U32 if c <= 0x1CD2 => GBExtend
+      | let c: U32 if c <= 0x1CD3 => GBOther
+      | let c: U32 if c <= 0x1CE0 => GBExtend
+      | let c: U32 if c <= 0x1CE1 => GBSpacingMark
+      | let c: U32 if c <= 0x1CE8 => GBExtend
+      | let c: U32 if c <= 0x1CEC => GBOther
+      | let c: U32 if c <= 0x1CED => GBExtend
+      | let c: U32 if c <= 0x1CF3 => GBOther
+      | let c: U32 if c <= 0x1CF4 => GBExtend
+      | let c: U32 if c <= 0x1CF6 => GBOther
+      | let c: U32 if c <= 0x1CF7 => GBSpacingMark
+      | let c: U32 if c <= 0x1CF9 => GBExtend
+      | let c: U32 if c <= 0x1DBF => GBOther
+      | let c: U32 if c <= 0x1DFF => GBExtend
+      else GBOther
+      end
+    | 0x0002 =>
+      match cp
+      | let c: U32 if c <= 0x200A => GBOther
+      | let c: U32 if c <= 0x200B => GBControl
+      | let c: U32 if c <= 0x200C => GBExtend
+      | let c: U32 if c <= 0x200D => GBZWJ
+      | let c: U32 if c <= 0x200F => GBControl
+      | let c: U32 if c <= 0x2027 => GBOther
+      | let c: U32 if c <= 0x202E => GBControl
+      | let c: U32 if c <= 0x203B => GBOther
+      | let c: U32 if c <= 0x203C => GBExtendedPictographic
+      | let c: U32 if c <= 0x2048 => GBOther
+      | let c: U32 if c <= 0x2049 => GBExtendedPictographic
+      | let c: U32 if c <= 0x205F => GBOther
+      | let c: U32 if c <= 0x206F => GBControl
+      | let c: U32 if c <= 0x20CF => GBOther
+      | let c: U32 if c <= 0x20F0 => GBExtend
+      | let c: U32 if c <= 0x2121 => GBOther
+      | let c: U32 if c <= 0x2122 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2138 => GBOther
+      | let c: U32 if c <= 0x2139 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2193 => GBOther
+      | let c: U32 if c <= 0x2199 => GBExtendedPictographic
+      | let c: U32 if c <= 0x21A8 => GBOther
+      | let c: U32 if c <= 0x21AA => GBExtendedPictographic
+      | let c: U32 if c <= 0x2319 => GBOther
+      | let c: U32 if c <= 0x231B => GBExtendedPictographic
+      | let c: U32 if c <= 0x2327 => GBOther
+      | let c: U32 if c <= 0x2328 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2387 => GBOther
+      | let c: U32 if c <= 0x2388 => GBExtendedPictographic
+      | let c: U32 if c <= 0x23CE => GBOther
+      | let c: U32 if c <= 0x23CF => GBExtendedPictographic
+      | let c: U32 if c <= 0x23E8 => GBOther
+      | let c: U32 if c <= 0x23F3 => GBExtendedPictographic
+      | let c: U32 if c <= 0x23F7 => GBOther
+      | let c: U32 if c <= 0x23FA => GBExtendedPictographic
+      | let c: U32 if c <= 0x24C1 => GBOther
+      | let c: U32 if c <= 0x24C2 => GBExtendedPictographic
+      | let c: U32 if c <= 0x25A9 => GBOther
+      | let c: U32 if c <= 0x25AB => GBExtendedPictographic
+      | let c: U32 if c <= 0x25B5 => GBOther
+      | let c: U32 if c <= 0x25B6 => GBExtendedPictographic
+      | let c: U32 if c <= 0x25BF => GBOther
+      | let c: U32 if c <= 0x25C0 => GBExtendedPictographic
+      | let c: U32 if c <= 0x25FA => GBOther
+      | let c: U32 if c <= 0x25FE => GBExtendedPictographic
+      | let c: U32 if c <= 0x25FF => GBOther
+      | let c: U32 if c <= 0x2605 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2606 => GBOther
+      | let c: U32 if c <= 0x2612 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2613 => GBOther
+      | let c: U32 if c <= 0x2685 => GBExtendedPictographic
+      | let c: U32 if c <= 0x268F => GBOther
+      | let c: U32 if c <= 0x2705 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2707 => GBOther
+      | let c: U32 if c <= 0x2712 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2713 => GBOther
+      | let c: U32 if c <= 0x2714 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2715 => GBOther
+      | let c: U32 if c <= 0x2716 => GBExtendedPictographic
+      | let c: U32 if c <= 0x271C => GBOther
+      | let c: U32 if c <= 0x271D => GBExtendedPictographic
+      | let c: U32 if c <= 0x2720 => GBOther
+      | let c: U32 if c <= 0x2721 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2727 => GBOther
+      | let c: U32 if c <= 0x2728 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2732 => GBOther
+      | let c: U32 if c <= 0x2734 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2743 => GBOther
+      | let c: U32 if c <= 0x2744 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2746 => GBOther
+      | let c: U32 if c <= 0x2747 => GBExtendedPictographic
+      | let c: U32 if c <= 0x274B => GBOther
+      | let c: U32 if c <= 0x274C => GBExtendedPictographic
+      | let c: U32 if c <= 0x274D => GBOther
+      | let c: U32 if c <= 0x274E => GBExtendedPictographic
+      | let c: U32 if c <= 0x2752 => GBOther
+      | let c: U32 if c <= 0x2755 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2756 => GBOther
+      | let c: U32 if c <= 0x2757 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2762 => GBOther
+      | let c: U32 if c <= 0x2767 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2794 => GBOther
+      | let c: U32 if c <= 0x2797 => GBExtendedPictographic
+      | let c: U32 if c <= 0x27A0 => GBOther
+      | let c: U32 if c <= 0x27A1 => GBExtendedPictographic
+      | let c: U32 if c <= 0x27AF => GBOther
+      | let c: U32 if c <= 0x27B0 => GBExtendedPictographic
+      | let c: U32 if c <= 0x27BE => GBOther
+      | let c: U32 if c <= 0x27BF => GBExtendedPictographic
+      | let c: U32 if c <= 0x2933 => GBOther
+      | let c: U32 if c <= 0x2935 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2B04 => GBOther
+      | let c: U32 if c <= 0x2B07 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2B1A => GBOther
+      | let c: U32 if c <= 0x2B1C => GBExtendedPictographic
+      | let c: U32 if c <= 0x2B4F => GBOther
+      | let c: U32 if c <= 0x2B50 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2B54 => GBOther
+      | let c: U32 if c <= 0x2B55 => GBExtendedPictographic
+      | let c: U32 if c <= 0x2CEE => GBOther
+      | let c: U32 if c <= 0x2CF1 => GBExtend
+      | let c: U32 if c <= 0x2D7E => GBOther
+      | let c: U32 if c <= 0x2D7F => GBExtend
+      | let c: U32 if c <= 0x2DDF => GBOther
+      | let c: U32 if c <= 0x2DFF => GBExtend
+      else GBOther
+      end
+    | 0x0003 =>
+      match cp
+      | let c: U32 if c <= 0x3029 => GBOther
+      | let c: U32 if c <= 0x302F => GBExtend
+      | let c: U32 if c <= 0x3030 => GBExtendedPictographic
+      | let c: U32 if c <= 0x303C => GBOther
+      | let c: U32 if c <= 0x303D => GBExtendedPictographic
+      | let c: U32 if c <= 0x3098 => GBOther
+      | let c: U32 if c <= 0x309A => GBExtend
+      | let c: U32 if c <= 0x3296 => GBOther
+      | let c: U32 if c <= 0x3297 => GBExtendedPictographic
+      | let c: U32 if c <= 0x3298 => GBOther
+      | let c: U32 if c <= 0x3299 => GBExtendedPictographic
+      else GBOther
+      end
+    | 0x000A =>
+      match cp
+      | let c: U32 if c <= 0xA66E => GBOther
+      | let c: U32 if c <= 0xA672 => GBExtend
+      | let c: U32 if c <= 0xA673 => GBOther
+      | let c: U32 if c <= 0xA67D => GBExtend
+      | let c: U32 if c <= 0xA69D => GBOther
+      | let c: U32 if c <= 0xA69F => GBExtend
+      | let c: U32 if c <= 0xA6EF => GBOther
+      | let c: U32 if c <= 0xA6F1 => GBExtend
+      | let c: U32 if c <= 0xA801 => GBOther
+      | let c: U32 if c <= 0xA802 => GBExtend
+      | let c: U32 if c <= 0xA805 => GBOther
+      | let c: U32 if c <= 0xA806 => GBExtend
+      | let c: U32 if c <= 0xA80A => GBOther
+      | let c: U32 if c <= 0xA80B => GBExtend
+      | let c: U32 if c <= 0xA822 => GBOther
+      | let c: U32 if c <= 0xA824 => GBSpacingMark
+      | let c: U32 if c <= 0xA826 => GBExtend
+      | let c: U32 if c <= 0xA827 => GBSpacingMark
+      | let c: U32 if c <= 0xA82B => GBOther
+      | let c: U32 if c <= 0xA82C => GBExtend
+      | let c: U32 if c <= 0xA87F => GBOther
+      | let c: U32 if c <= 0xA881 => GBSpacingMark
+      | let c: U32 if c <= 0xA8B3 => GBOther
+      | let c: U32 if c <= 0xA8C3 => GBSpacingMark
+      | let c: U32 if c <= 0xA8C5 => GBExtend
+      | let c: U32 if c <= 0xA8DF => GBOther
+      | let c: U32 if c <= 0xA8F1 => GBExtend
+      | let c: U32 if c <= 0xA8FE => GBOther
+      | let c: U32 if c <= 0xA8FF => GBExtend
+      | let c: U32 if c <= 0xA925 => GBOther
+      | let c: U32 if c <= 0xA92D => GBExtend
+      | let c: U32 if c <= 0xA946 => GBOther
+      | let c: U32 if c <= 0xA951 => GBExtend
+      | let c: U32 if c <= 0xA952 => GBSpacingMark
+      | let c: U32 if c <= 0xA953 => GBExtend
+      | let c: U32 if c <= 0xA95F => GBOther
+      | let c: U32 if c <= 0xA97C => GBL
+      | let c: U32 if c <= 0xA97F => GBOther
+      | let c: U32 if c <= 0xA982 => GBExtend
+      | let c: U32 if c <= 0xA983 => GBSpacingMark
+      | let c: U32 if c <= 0xA9B2 => GBOther
+      | let c: U32 if c <= 0xA9B3 => GBExtend
+      | let c: U32 if c <= 0xA9B5 => GBSpacingMark
+      | let c: U32 if c <= 0xA9B9 => GBExtend
+      | let c: U32 if c <= 0xA9BB => GBSpacingMark
+      | let c: U32 if c <= 0xA9BD => GBExtend
+      | let c: U32 if c <= 0xA9BF => GBSpacingMark
+      | let c: U32 if c <= 0xA9C0 => GBExtend
+      | let c: U32 if c <= 0xA9E4 => GBOther
+      | let c: U32 if c <= 0xA9E5 => GBExtend
+      | let c: U32 if c <= 0xAA28 => GBOther
+      | let c: U32 if c <= 0xAA2E => GBExtend
+      | let c: U32 if c <= 0xAA30 => GBSpacingMark
+      | let c: U32 if c <= 0xAA32 => GBExtend
+      | let c: U32 if c <= 0xAA34 => GBSpacingMark
+      | let c: U32 if c <= 0xAA36 => GBExtend
+      | let c: U32 if c <= 0xAA42 => GBOther
+      | let c: U32 if c <= 0xAA43 => GBExtend
+      | let c: U32 if c <= 0xAA4B => GBOther
+      | let c: U32 if c <= 0xAA4C => GBExtend
+      | let c: U32 if c <= 0xAA4D => GBSpacingMark
+      | let c: U32 if c <= 0xAA7B => GBOther
+      | let c: U32 if c <= 0xAA7C => GBExtend
+      | let c: U32 if c <= 0xAAAF => GBOther
+      | let c: U32 if c <= 0xAAB0 => GBExtend
+      | let c: U32 if c <= 0xAAB1 => GBOther
+      | let c: U32 if c <= 0xAAB4 => GBExtend
+      | let c: U32 if c <= 0xAAB6 => GBOther
+      | let c: U32 if c <= 0xAAB8 => GBExtend
+      | let c: U32 if c <= 0xAABD => GBOther
+      | let c: U32 if c <= 0xAABF => GBExtend
+      | let c: U32 if c <= 0xAAC0 => GBOther
+      | let c: U32 if c <= 0xAAC1 => GBExtend
+      | let c: U32 if c <= 0xAAEA => GBOther
+      | let c: U32 if c <= 0xAAEB => GBSpacingMark
+      | let c: U32 if c <= 0xAAED => GBExtend
+      | let c: U32 if c <= 0xAAEF => GBSpacingMark
+      | let c: U32 if c <= 0xAAF4 => GBOther
+      | let c: U32 if c <= 0xAAF5 => GBSpacingMark
+      | let c: U32 if c <= 0xAAF6 => GBExtend
+      | let c: U32 if c <= 0xABE2 => GBOther
+      | let c: U32 if c <= 0xABE4 => GBSpacingMark
+      | let c: U32 if c <= 0xABE5 => GBExtend
+      | let c: U32 if c <= 0xABE7 => GBSpacingMark
+      | let c: U32 if c <= 0xABE8 => GBExtend
+      | let c: U32 if c <= 0xABEA => GBSpacingMark
+      | let c: U32 if c <= 0xABEB => GBOther
+      | let c: U32 if c <= 0xABEC => GBSpacingMark
+      | let c: U32 if c <= 0xABED => GBExtend
+      | let c: U32 if c <= 0xABFF => GBOther
+      | let c: U32 if c <= 0xAC00 => GBLV
+      | let c: U32 if c <= 0xAC1B => GBLVT
+      | let c: U32 if c <= 0xAC1C => GBLV
+      | let c: U32 if c <= 0xAC37 => GBLVT
+      | let c: U32 if c <= 0xAC38 => GBLV
+      | let c: U32 if c <= 0xAC53 => GBLVT
+      | let c: U32 if c <= 0xAC54 => GBLV
+      | let c: U32 if c <= 0xAC6F => GBLVT
+      | let c: U32 if c <= 0xAC70 => GBLV
+      | let c: U32 if c <= 0xAC8B => GBLVT
+      | let c: U32 if c <= 0xAC8C => GBLV
+      | let c: U32 if c <= 0xACA7 => GBLVT
+      | let c: U32 if c <= 0xACA8 => GBLV
+      | let c: U32 if c <= 0xACC3 => GBLVT
+      | let c: U32 if c <= 0xACC4 => GBLV
+      | let c: U32 if c <= 0xACDF => GBLVT
+      | let c: U32 if c <= 0xACE0 => GBLV
+      | let c: U32 if c <= 0xACFB => GBLVT
+      | let c: U32 if c <= 0xACFC => GBLV
+      | let c: U32 if c <= 0xAD17 => GBLVT
+      | let c: U32 if c <= 0xAD18 => GBLV
+      | let c: U32 if c <= 0xAD33 => GBLVT
+      | let c: U32 if c <= 0xAD34 => GBLV
+      | let c: U32 if c <= 0xAD4F => GBLVT
+      | let c: U32 if c <= 0xAD50 => GBLV
+      | let c: U32 if c <= 0xAD6B => GBLVT
+      | let c: U32 if c <= 0xAD6C => GBLV
+      | let c: U32 if c <= 0xAD87 => GBLVT
+      | let c: U32 if c <= 0xAD88 => GBLV
+      | let c: U32 if c <= 0xADA3 => GBLVT
+      | let c: U32 if c <= 0xADA4 => GBLV
+      | let c: U32 if c <= 0xADBF => GBLVT
+      | let c: U32 if c <= 0xADC0 => GBLV
+      | let c: U32 if c <= 0xADDB => GBLVT
+      | let c: U32 if c <= 0xADDC => GBLV
+      | let c: U32 if c <= 0xADF7 => GBLVT
+      | let c: U32 if c <= 0xADF8 => GBLV
+      | let c: U32 if c <= 0xAE13 => GBLVT
+      | let c: U32 if c <= 0xAE14 => GBLV
+      | let c: U32 if c <= 0xAE2F => GBLVT
+      | let c: U32 if c <= 0xAE30 => GBLV
+      | let c: U32 if c <= 0xAE4B => GBLVT
+      | let c: U32 if c <= 0xAE4C => GBLV
+      | let c: U32 if c <= 0xAE67 => GBLVT
+      | let c: U32 if c <= 0xAE68 => GBLV
+      | let c: U32 if c <= 0xAE83 => GBLVT
+      | let c: U32 if c <= 0xAE84 => GBLV
+      | let c: U32 if c <= 0xAE9F => GBLVT
+      | let c: U32 if c <= 0xAEA0 => GBLV
+      | let c: U32 if c <= 0xAEBB => GBLVT
+      | let c: U32 if c <= 0xAEBC => GBLV
+      | let c: U32 if c <= 0xAED7 => GBLVT
+      | let c: U32 if c <= 0xAED8 => GBLV
+      | let c: U32 if c <= 0xAEF3 => GBLVT
+      | let c: U32 if c <= 0xAEF4 => GBLV
+      | let c: U32 if c <= 0xAF0F => GBLVT
+      | let c: U32 if c <= 0xAF10 => GBLV
+      | let c: U32 if c <= 0xAF2B => GBLVT
+      | let c: U32 if c <= 0xAF2C => GBLV
+      | let c: U32 if c <= 0xAF47 => GBLVT
+      | let c: U32 if c <= 0xAF48 => GBLV
+      | let c: U32 if c <= 0xAF63 => GBLVT
+      | let c: U32 if c <= 0xAF64 => GBLV
+      | let c: U32 if c <= 0xAF7F => GBLVT
+      | let c: U32 if c <= 0xAF80 => GBLV
+      | let c: U32 if c <= 0xAF9B => GBLVT
+      | let c: U32 if c <= 0xAF9C => GBLV
+      | let c: U32 if c <= 0xAFB7 => GBLVT
+      | let c: U32 if c <= 0xAFB8 => GBLV
+      | let c: U32 if c <= 0xAFD3 => GBLVT
+      | let c: U32 if c <= 0xAFD4 => GBLV
+      | let c: U32 if c <= 0xAFEF => GBLVT
+      | let c: U32 if c <= 0xAFF0 => GBLV
+      | let c: U32 if c <= 0xAFFF => GBLVT
+      else GBOther
+      end
+    | 0x000B =>
+      match cp
+      | let c: U32 if c <= 0xB00B => GBLVT
+      | let c: U32 if c <= 0xB00C => GBLV
+      | let c: U32 if c <= 0xB027 => GBLVT
+      | let c: U32 if c <= 0xB028 => GBLV
+      | let c: U32 if c <= 0xB043 => GBLVT
+      | let c: U32 if c <= 0xB044 => GBLV
+      | let c: U32 if c <= 0xB05F => GBLVT
+      | let c: U32 if c <= 0xB060 => GBLV
+      | let c: U32 if c <= 0xB07B => GBLVT
+      | let c: U32 if c <= 0xB07C => GBLV
+      | let c: U32 if c <= 0xB097 => GBLVT
+      | let c: U32 if c <= 0xB098 => GBLV
+      | let c: U32 if c <= 0xB0B3 => GBLVT
+      | let c: U32 if c <= 0xB0B4 => GBLV
+      | let c: U32 if c <= 0xB0CF => GBLVT
+      | let c: U32 if c <= 0xB0D0 => GBLV
+      | let c: U32 if c <= 0xB0EB => GBLVT
+      | let c: U32 if c <= 0xB0EC => GBLV
+      | let c: U32 if c <= 0xB107 => GBLVT
+      | let c: U32 if c <= 0xB108 => GBLV
+      | let c: U32 if c <= 0xB123 => GBLVT
+      | let c: U32 if c <= 0xB124 => GBLV
+      | let c: U32 if c <= 0xB13F => GBLVT
+      | let c: U32 if c <= 0xB140 => GBLV
+      | let c: U32 if c <= 0xB15B => GBLVT
+      | let c: U32 if c <= 0xB15C => GBLV
+      | let c: U32 if c <= 0xB177 => GBLVT
+      | let c: U32 if c <= 0xB178 => GBLV
+      | let c: U32 if c <= 0xB193 => GBLVT
+      | let c: U32 if c <= 0xB194 => GBLV
+      | let c: U32 if c <= 0xB1AF => GBLVT
+      | let c: U32 if c <= 0xB1B0 => GBLV
+      | let c: U32 if c <= 0xB1CB => GBLVT
+      | let c: U32 if c <= 0xB1CC => GBLV
+      | let c: U32 if c <= 0xB1E7 => GBLVT
+      | let c: U32 if c <= 0xB1E8 => GBLV
+      | let c: U32 if c <= 0xB203 => GBLVT
+      | let c: U32 if c <= 0xB204 => GBLV
+      | let c: U32 if c <= 0xB21F => GBLVT
+      | let c: U32 if c <= 0xB220 => GBLV
+      | let c: U32 if c <= 0xB23B => GBLVT
+      | let c: U32 if c <= 0xB23C => GBLV
+      | let c: U32 if c <= 0xB257 => GBLVT
+      | let c: U32 if c <= 0xB258 => GBLV
+      | let c: U32 if c <= 0xB273 => GBLVT
+      | let c: U32 if c <= 0xB274 => GBLV
+      | let c: U32 if c <= 0xB28F => GBLVT
+      | let c: U32 if c <= 0xB290 => GBLV
+      | let c: U32 if c <= 0xB2AB => GBLVT
+      | let c: U32 if c <= 0xB2AC => GBLV
+      | let c: U32 if c <= 0xB2C7 => GBLVT
+      | let c: U32 if c <= 0xB2C8 => GBLV
+      | let c: U32 if c <= 0xB2E3 => GBLVT
+      | let c: U32 if c <= 0xB2E4 => GBLV
+      | let c: U32 if c <= 0xB2FF => GBLVT
+      | let c: U32 if c <= 0xB300 => GBLV
+      | let c: U32 if c <= 0xB31B => GBLVT
+      | let c: U32 if c <= 0xB31C => GBLV
+      | let c: U32 if c <= 0xB337 => GBLVT
+      | let c: U32 if c <= 0xB338 => GBLV
+      | let c: U32 if c <= 0xB353 => GBLVT
+      | let c: U32 if c <= 0xB354 => GBLV
+      | let c: U32 if c <= 0xB36F => GBLVT
+      | let c: U32 if c <= 0xB370 => GBLV
+      | let c: U32 if c <= 0xB38B => GBLVT
+      | let c: U32 if c <= 0xB38C => GBLV
+      | let c: U32 if c <= 0xB3A7 => GBLVT
+      | let c: U32 if c <= 0xB3A8 => GBLV
+      | let c: U32 if c <= 0xB3C3 => GBLVT
+      | let c: U32 if c <= 0xB3C4 => GBLV
+      | let c: U32 if c <= 0xB3DF => GBLVT
+      | let c: U32 if c <= 0xB3E0 => GBLV
+      | let c: U32 if c <= 0xB3FB => GBLVT
+      | let c: U32 if c <= 0xB3FC => GBLV
+      | let c: U32 if c <= 0xB417 => GBLVT
+      | let c: U32 if c <= 0xB418 => GBLV
+      | let c: U32 if c <= 0xB433 => GBLVT
+      | let c: U32 if c <= 0xB434 => GBLV
+      | let c: U32 if c <= 0xB44F => GBLVT
+      | let c: U32 if c <= 0xB450 => GBLV
+      | let c: U32 if c <= 0xB46B => GBLVT
+      | let c: U32 if c <= 0xB46C => GBLV
+      | let c: U32 if c <= 0xB487 => GBLVT
+      | let c: U32 if c <= 0xB488 => GBLV
+      | let c: U32 if c <= 0xB4A3 => GBLVT
+      | let c: U32 if c <= 0xB4A4 => GBLV
+      | let c: U32 if c <= 0xB4BF => GBLVT
+      | let c: U32 if c <= 0xB4C0 => GBLV
+      | let c: U32 if c <= 0xB4DB => GBLVT
+      | let c: U32 if c <= 0xB4DC => GBLV
+      | let c: U32 if c <= 0xB4F7 => GBLVT
+      | let c: U32 if c <= 0xB4F8 => GBLV
+      | let c: U32 if c <= 0xB513 => GBLVT
+      | let c: U32 if c <= 0xB514 => GBLV
+      | let c: U32 if c <= 0xB52F => GBLVT
+      | let c: U32 if c <= 0xB530 => GBLV
+      | let c: U32 if c <= 0xB54B => GBLVT
+      | let c: U32 if c <= 0xB54C => GBLV
+      | let c: U32 if c <= 0xB567 => GBLVT
+      | let c: U32 if c <= 0xB568 => GBLV
+      | let c: U32 if c <= 0xB583 => GBLVT
+      | let c: U32 if c <= 0xB584 => GBLV
+      | let c: U32 if c <= 0xB59F => GBLVT
+      | let c: U32 if c <= 0xB5A0 => GBLV
+      | let c: U32 if c <= 0xB5BB => GBLVT
+      | let c: U32 if c <= 0xB5BC => GBLV
+      | let c: U32 if c <= 0xB5D7 => GBLVT
+      | let c: U32 if c <= 0xB5D8 => GBLV
+      | let c: U32 if c <= 0xB5F3 => GBLVT
+      | let c: U32 if c <= 0xB5F4 => GBLV
+      | let c: U32 if c <= 0xB60F => GBLVT
+      | let c: U32 if c <= 0xB610 => GBLV
+      | let c: U32 if c <= 0xB62B => GBLVT
+      | let c: U32 if c <= 0xB62C => GBLV
+      | let c: U32 if c <= 0xB647 => GBLVT
+      | let c: U32 if c <= 0xB648 => GBLV
+      | let c: U32 if c <= 0xB663 => GBLVT
+      | let c: U32 if c <= 0xB664 => GBLV
+      | let c: U32 if c <= 0xB67F => GBLVT
+      | let c: U32 if c <= 0xB680 => GBLV
+      | let c: U32 if c <= 0xB69B => GBLVT
+      | let c: U32 if c <= 0xB69C => GBLV
+      | let c: U32 if c <= 0xB6B7 => GBLVT
+      | let c: U32 if c <= 0xB6B8 => GBLV
+      | let c: U32 if c <= 0xB6D3 => GBLVT
+      | let c: U32 if c <= 0xB6D4 => GBLV
+      | let c: U32 if c <= 0xB6EF => GBLVT
+      | let c: U32 if c <= 0xB6F0 => GBLV
+      | let c: U32 if c <= 0xB70B => GBLVT
+      | let c: U32 if c <= 0xB70C => GBLV
+      | let c: U32 if c <= 0xB727 => GBLVT
+      | let c: U32 if c <= 0xB728 => GBLV
+      | let c: U32 if c <= 0xB743 => GBLVT
+      | let c: U32 if c <= 0xB744 => GBLV
+      | let c: U32 if c <= 0xB75F => GBLVT
+      | let c: U32 if c <= 0xB760 => GBLV
+      | let c: U32 if c <= 0xB77B => GBLVT
+      | let c: U32 if c <= 0xB77C => GBLV
+      | let c: U32 if c <= 0xB797 => GBLVT
+      | let c: U32 if c <= 0xB798 => GBLV
+      | let c: U32 if c <= 0xB7B3 => GBLVT
+      | let c: U32 if c <= 0xB7B4 => GBLV
+      | let c: U32 if c <= 0xB7CF => GBLVT
+      | let c: U32 if c <= 0xB7D0 => GBLV
+      | let c: U32 if c <= 0xB7EB => GBLVT
+      | let c: U32 if c <= 0xB7EC => GBLV
+      | let c: U32 if c <= 0xB807 => GBLVT
+      | let c: U32 if c <= 0xB808 => GBLV
+      | let c: U32 if c <= 0xB823 => GBLVT
+      | let c: U32 if c <= 0xB824 => GBLV
+      | let c: U32 if c <= 0xB83F => GBLVT
+      | let c: U32 if c <= 0xB840 => GBLV
+      | let c: U32 if c <= 0xB85B => GBLVT
+      | let c: U32 if c <= 0xB85C => GBLV
+      | let c: U32 if c <= 0xB877 => GBLVT
+      | let c: U32 if c <= 0xB878 => GBLV
+      | let c: U32 if c <= 0xB893 => GBLVT
+      | let c: U32 if c <= 0xB894 => GBLV
+      | let c: U32 if c <= 0xB8AF => GBLVT
+      | let c: U32 if c <= 0xB8B0 => GBLV
+      | let c: U32 if c <= 0xB8CB => GBLVT
+      | let c: U32 if c <= 0xB8CC => GBLV
+      | let c: U32 if c <= 0xB8E7 => GBLVT
+      | let c: U32 if c <= 0xB8E8 => GBLV
+      | let c: U32 if c <= 0xB903 => GBLVT
+      | let c: U32 if c <= 0xB904 => GBLV
+      | let c: U32 if c <= 0xB91F => GBLVT
+      | let c: U32 if c <= 0xB920 => GBLV
+      | let c: U32 if c <= 0xB93B => GBLVT
+      | let c: U32 if c <= 0xB93C => GBLV
+      | let c: U32 if c <= 0xB957 => GBLVT
+      | let c: U32 if c <= 0xB958 => GBLV
+      | let c: U32 if c <= 0xB973 => GBLVT
+      | let c: U32 if c <= 0xB974 => GBLV
+      | let c: U32 if c <= 0xB98F => GBLVT
+      | let c: U32 if c <= 0xB990 => GBLV
+      | let c: U32 if c <= 0xB9AB => GBLVT
+      | let c: U32 if c <= 0xB9AC => GBLV
+      | let c: U32 if c <= 0xB9C7 => GBLVT
+      | let c: U32 if c <= 0xB9C8 => GBLV
+      | let c: U32 if c <= 0xB9E3 => GBLVT
+      | let c: U32 if c <= 0xB9E4 => GBLV
+      | let c: U32 if c <= 0xB9FF => GBLVT
+      | let c: U32 if c <= 0xBA00 => GBLV
+      | let c: U32 if c <= 0xBA1B => GBLVT
+      | let c: U32 if c <= 0xBA1C => GBLV
+      | let c: U32 if c <= 0xBA37 => GBLVT
+      | let c: U32 if c <= 0xBA38 => GBLV
+      | let c: U32 if c <= 0xBA53 => GBLVT
+      | let c: U32 if c <= 0xBA54 => GBLV
+      | let c: U32 if c <= 0xBA6F => GBLVT
+      | let c: U32 if c <= 0xBA70 => GBLV
+      | let c: U32 if c <= 0xBA8B => GBLVT
+      | let c: U32 if c <= 0xBA8C => GBLV
+      | let c: U32 if c <= 0xBAA7 => GBLVT
+      | let c: U32 if c <= 0xBAA8 => GBLV
+      | let c: U32 if c <= 0xBAC3 => GBLVT
+      | let c: U32 if c <= 0xBAC4 => GBLV
+      | let c: U32 if c <= 0xBADF => GBLVT
+      | let c: U32 if c <= 0xBAE0 => GBLV
+      | let c: U32 if c <= 0xBAFB => GBLVT
+      | let c: U32 if c <= 0xBAFC => GBLV
+      | let c: U32 if c <= 0xBB17 => GBLVT
+      | let c: U32 if c <= 0xBB18 => GBLV
+      | let c: U32 if c <= 0xBB33 => GBLVT
+      | let c: U32 if c <= 0xBB34 => GBLV
+      | let c: U32 if c <= 0xBB4F => GBLVT
+      | let c: U32 if c <= 0xBB50 => GBLV
+      | let c: U32 if c <= 0xBB6B => GBLVT
+      | let c: U32 if c <= 0xBB6C => GBLV
+      | let c: U32 if c <= 0xBB87 => GBLVT
+      | let c: U32 if c <= 0xBB88 => GBLV
+      | let c: U32 if c <= 0xBBA3 => GBLVT
+      | let c: U32 if c <= 0xBBA4 => GBLV
+      | let c: U32 if c <= 0xBBBF => GBLVT
+      | let c: U32 if c <= 0xBBC0 => GBLV
+      | let c: U32 if c <= 0xBBDB => GBLVT
+      | let c: U32 if c <= 0xBBDC => GBLV
+      | let c: U32 if c <= 0xBBF7 => GBLVT
+      | let c: U32 if c <= 0xBBF8 => GBLV
+      | let c: U32 if c <= 0xBC13 => GBLVT
+      | let c: U32 if c <= 0xBC14 => GBLV
+      | let c: U32 if c <= 0xBC2F => GBLVT
+      | let c: U32 if c <= 0xBC30 => GBLV
+      | let c: U32 if c <= 0xBC4B => GBLVT
+      | let c: U32 if c <= 0xBC4C => GBLV
+      | let c: U32 if c <= 0xBC67 => GBLVT
+      | let c: U32 if c <= 0xBC68 => GBLV
+      | let c: U32 if c <= 0xBC83 => GBLVT
+      | let c: U32 if c <= 0xBC84 => GBLV
+      | let c: U32 if c <= 0xBC9F => GBLVT
+      | let c: U32 if c <= 0xBCA0 => GBLV
+      | let c: U32 if c <= 0xBCBB => GBLVT
+      | let c: U32 if c <= 0xBCBC => GBLV
+      | let c: U32 if c <= 0xBCD7 => GBLVT
+      | let c: U32 if c <= 0xBCD8 => GBLV
+      | let c: U32 if c <= 0xBCF3 => GBLVT
+      | let c: U32 if c <= 0xBCF4 => GBLV
+      | let c: U32 if c <= 0xBD0F => GBLVT
+      | let c: U32 if c <= 0xBD10 => GBLV
+      | let c: U32 if c <= 0xBD2B => GBLVT
+      | let c: U32 if c <= 0xBD2C => GBLV
+      | let c: U32 if c <= 0xBD47 => GBLVT
+      | let c: U32 if c <= 0xBD48 => GBLV
+      | let c: U32 if c <= 0xBD63 => GBLVT
+      | let c: U32 if c <= 0xBD64 => GBLV
+      | let c: U32 if c <= 0xBD7F => GBLVT
+      | let c: U32 if c <= 0xBD80 => GBLV
+      | let c: U32 if c <= 0xBD9B => GBLVT
+      | let c: U32 if c <= 0xBD9C => GBLV
+      | let c: U32 if c <= 0xBDB7 => GBLVT
+      | let c: U32 if c <= 0xBDB8 => GBLV
+      | let c: U32 if c <= 0xBDD3 => GBLVT
+      | let c: U32 if c <= 0xBDD4 => GBLV
+      | let c: U32 if c <= 0xBDEF => GBLVT
+      | let c: U32 if c <= 0xBDF0 => GBLV
+      | let c: U32 if c <= 0xBE0B => GBLVT
+      | let c: U32 if c <= 0xBE0C => GBLV
+      | let c: U32 if c <= 0xBE27 => GBLVT
+      | let c: U32 if c <= 0xBE28 => GBLV
+      | let c: U32 if c <= 0xBE43 => GBLVT
+      | let c: U32 if c <= 0xBE44 => GBLV
+      | let c: U32 if c <= 0xBE5F => GBLVT
+      | let c: U32 if c <= 0xBE60 => GBLV
+      | let c: U32 if c <= 0xBE7B => GBLVT
+      | let c: U32 if c <= 0xBE7C => GBLV
+      | let c: U32 if c <= 0xBE97 => GBLVT
+      | let c: U32 if c <= 0xBE98 => GBLV
+      | let c: U32 if c <= 0xBEB3 => GBLVT
+      | let c: U32 if c <= 0xBEB4 => GBLV
+      | let c: U32 if c <= 0xBECF => GBLVT
+      | let c: U32 if c <= 0xBED0 => GBLV
+      | let c: U32 if c <= 0xBEEB => GBLVT
+      | let c: U32 if c <= 0xBEEC => GBLV
+      | let c: U32 if c <= 0xBF07 => GBLVT
+      | let c: U32 if c <= 0xBF08 => GBLV
+      | let c: U32 if c <= 0xBF23 => GBLVT
+      | let c: U32 if c <= 0xBF24 => GBLV
+      | let c: U32 if c <= 0xBF3F => GBLVT
+      | let c: U32 if c <= 0xBF40 => GBLV
+      | let c: U32 if c <= 0xBF5B => GBLVT
+      | let c: U32 if c <= 0xBF5C => GBLV
+      | let c: U32 if c <= 0xBF77 => GBLVT
+      | let c: U32 if c <= 0xBF78 => GBLV
+      | let c: U32 if c <= 0xBF93 => GBLVT
+      | let c: U32 if c <= 0xBF94 => GBLV
+      | let c: U32 if c <= 0xBFAF => GBLVT
+      | let c: U32 if c <= 0xBFB0 => GBLV
+      | let c: U32 if c <= 0xBFCB => GBLVT
+      | let c: U32 if c <= 0xBFCC => GBLV
+      | let c: U32 if c <= 0xBFE7 => GBLVT
+      | let c: U32 if c <= 0xBFE8 => GBLV
+      | let c: U32 if c <= 0xBFFF => GBLVT
+      else GBOther
+      end
+    | 0x000C =>
+      match cp
+      | let c: U32 if c <= 0xC003 => GBLVT
+      | let c: U32 if c <= 0xC004 => GBLV
+      | let c: U32 if c <= 0xC01F => GBLVT
+      | let c: U32 if c <= 0xC020 => GBLV
+      | let c: U32 if c <= 0xC03B => GBLVT
+      | let c: U32 if c <= 0xC03C => GBLV
+      | let c: U32 if c <= 0xC057 => GBLVT
+      | let c: U32 if c <= 0xC058 => GBLV
+      | let c: U32 if c <= 0xC073 => GBLVT
+      | let c: U32 if c <= 0xC074 => GBLV
+      | let c: U32 if c <= 0xC08F => GBLVT
+      | let c: U32 if c <= 0xC090 => GBLV
+      | let c: U32 if c <= 0xC0AB => GBLVT
+      | let c: U32 if c <= 0xC0AC => GBLV
+      | let c: U32 if c <= 0xC0C7 => GBLVT
+      | let c: U32 if c <= 0xC0C8 => GBLV
+      | let c: U32 if c <= 0xC0E3 => GBLVT
+      | let c: U32 if c <= 0xC0E4 => GBLV
+      | let c: U32 if c <= 0xC0FF => GBLVT
+      | let c: U32 if c <= 0xC100 => GBLV
+      | let c: U32 if c <= 0xC11B => GBLVT
+      | let c: U32 if c <= 0xC11C => GBLV
+      | let c: U32 if c <= 0xC137 => GBLVT
+      | let c: U32 if c <= 0xC138 => GBLV
+      | let c: U32 if c <= 0xC153 => GBLVT
+      | let c: U32 if c <= 0xC154 => GBLV
+      | let c: U32 if c <= 0xC16F => GBLVT
+      | let c: U32 if c <= 0xC170 => GBLV
+      | let c: U32 if c <= 0xC18B => GBLVT
+      | let c: U32 if c <= 0xC18C => GBLV
+      | let c: U32 if c <= 0xC1A7 => GBLVT
+      | let c: U32 if c <= 0xC1A8 => GBLV
+      | let c: U32 if c <= 0xC1C3 => GBLVT
+      | let c: U32 if c <= 0xC1C4 => GBLV
+      | let c: U32 if c <= 0xC1DF => GBLVT
+      | let c: U32 if c <= 0xC1E0 => GBLV
+      | let c: U32 if c <= 0xC1FB => GBLVT
+      | let c: U32 if c <= 0xC1FC => GBLV
+      | let c: U32 if c <= 0xC217 => GBLVT
+      | let c: U32 if c <= 0xC218 => GBLV
+      | let c: U32 if c <= 0xC233 => GBLVT
+      | let c: U32 if c <= 0xC234 => GBLV
+      | let c: U32 if c <= 0xC24F => GBLVT
+      | let c: U32 if c <= 0xC250 => GBLV
+      | let c: U32 if c <= 0xC26B => GBLVT
+      | let c: U32 if c <= 0xC26C => GBLV
+      | let c: U32 if c <= 0xC287 => GBLVT
+      | let c: U32 if c <= 0xC288 => GBLV
+      | let c: U32 if c <= 0xC2A3 => GBLVT
+      | let c: U32 if c <= 0xC2A4 => GBLV
+      | let c: U32 if c <= 0xC2BF => GBLVT
+      | let c: U32 if c <= 0xC2C0 => GBLV
+      | let c: U32 if c <= 0xC2DB => GBLVT
+      | let c: U32 if c <= 0xC2DC => GBLV
+      | let c: U32 if c <= 0xC2F7 => GBLVT
+      | let c: U32 if c <= 0xC2F8 => GBLV
+      | let c: U32 if c <= 0xC313 => GBLVT
+      | let c: U32 if c <= 0xC314 => GBLV
+      | let c: U32 if c <= 0xC32F => GBLVT
+      | let c: U32 if c <= 0xC330 => GBLV
+      | let c: U32 if c <= 0xC34B => GBLVT
+      | let c: U32 if c <= 0xC34C => GBLV
+      | let c: U32 if c <= 0xC367 => GBLVT
+      | let c: U32 if c <= 0xC368 => GBLV
+      | let c: U32 if c <= 0xC383 => GBLVT
+      | let c: U32 if c <= 0xC384 => GBLV
+      | let c: U32 if c <= 0xC39F => GBLVT
+      | let c: U32 if c <= 0xC3A0 => GBLV
+      | let c: U32 if c <= 0xC3BB => GBLVT
+      | let c: U32 if c <= 0xC3BC => GBLV
+      | let c: U32 if c <= 0xC3D7 => GBLVT
+      | let c: U32 if c <= 0xC3D8 => GBLV
+      | let c: U32 if c <= 0xC3F3 => GBLVT
+      | let c: U32 if c <= 0xC3F4 => GBLV
+      | let c: U32 if c <= 0xC40F => GBLVT
+      | let c: U32 if c <= 0xC410 => GBLV
+      | let c: U32 if c <= 0xC42B => GBLVT
+      | let c: U32 if c <= 0xC42C => GBLV
+      | let c: U32 if c <= 0xC447 => GBLVT
+      | let c: U32 if c <= 0xC448 => GBLV
+      | let c: U32 if c <= 0xC463 => GBLVT
+      | let c: U32 if c <= 0xC464 => GBLV
+      | let c: U32 if c <= 0xC47F => GBLVT
+      | let c: U32 if c <= 0xC480 => GBLV
+      | let c: U32 if c <= 0xC49B => GBLVT
+      | let c: U32 if c <= 0xC49C => GBLV
+      | let c: U32 if c <= 0xC4B7 => GBLVT
+      | let c: U32 if c <= 0xC4B8 => GBLV
+      | let c: U32 if c <= 0xC4D3 => GBLVT
+      | let c: U32 if c <= 0xC4D4 => GBLV
+      | let c: U32 if c <= 0xC4EF => GBLVT
+      | let c: U32 if c <= 0xC4F0 => GBLV
+      | let c: U32 if c <= 0xC50B => GBLVT
+      | let c: U32 if c <= 0xC50C => GBLV
+      | let c: U32 if c <= 0xC527 => GBLVT
+      | let c: U32 if c <= 0xC528 => GBLV
+      | let c: U32 if c <= 0xC543 => GBLVT
+      | let c: U32 if c <= 0xC544 => GBLV
+      | let c: U32 if c <= 0xC55F => GBLVT
+      | let c: U32 if c <= 0xC560 => GBLV
+      | let c: U32 if c <= 0xC57B => GBLVT
+      | let c: U32 if c <= 0xC57C => GBLV
+      | let c: U32 if c <= 0xC597 => GBLVT
+      | let c: U32 if c <= 0xC598 => GBLV
+      | let c: U32 if c <= 0xC5B3 => GBLVT
+      | let c: U32 if c <= 0xC5B4 => GBLV
+      | let c: U32 if c <= 0xC5CF => GBLVT
+      | let c: U32 if c <= 0xC5D0 => GBLV
+      | let c: U32 if c <= 0xC5EB => GBLVT
+      | let c: U32 if c <= 0xC5EC => GBLV
+      | let c: U32 if c <= 0xC607 => GBLVT
+      | let c: U32 if c <= 0xC608 => GBLV
+      | let c: U32 if c <= 0xC623 => GBLVT
+      | let c: U32 if c <= 0xC624 => GBLV
+      | let c: U32 if c <= 0xC63F => GBLVT
+      | let c: U32 if c <= 0xC640 => GBLV
+      | let c: U32 if c <= 0xC65B => GBLVT
+      | let c: U32 if c <= 0xC65C => GBLV
+      | let c: U32 if c <= 0xC677 => GBLVT
+      | let c: U32 if c <= 0xC678 => GBLV
+      | let c: U32 if c <= 0xC693 => GBLVT
+      | let c: U32 if c <= 0xC694 => GBLV
+      | let c: U32 if c <= 0xC6AF => GBLVT
+      | let c: U32 if c <= 0xC6B0 => GBLV
+      | let c: U32 if c <= 0xC6CB => GBLVT
+      | let c: U32 if c <= 0xC6CC => GBLV
+      | let c: U32 if c <= 0xC6E7 => GBLVT
+      | let c: U32 if c <= 0xC6E8 => GBLV
+      | let c: U32 if c <= 0xC703 => GBLVT
+      | let c: U32 if c <= 0xC704 => GBLV
+      | let c: U32 if c <= 0xC71F => GBLVT
+      | let c: U32 if c <= 0xC720 => GBLV
+      | let c: U32 if c <= 0xC73B => GBLVT
+      | let c: U32 if c <= 0xC73C => GBLV
+      | let c: U32 if c <= 0xC757 => GBLVT
+      | let c: U32 if c <= 0xC758 => GBLV
+      | let c: U32 if c <= 0xC773 => GBLVT
+      | let c: U32 if c <= 0xC774 => GBLV
+      | let c: U32 if c <= 0xC78F => GBLVT
+      | let c: U32 if c <= 0xC790 => GBLV
+      | let c: U32 if c <= 0xC7AB => GBLVT
+      | let c: U32 if c <= 0xC7AC => GBLV
+      | let c: U32 if c <= 0xC7C7 => GBLVT
+      | let c: U32 if c <= 0xC7C8 => GBLV
+      | let c: U32 if c <= 0xC7E3 => GBLVT
+      | let c: U32 if c <= 0xC7E4 => GBLV
+      | let c: U32 if c <= 0xC7FF => GBLVT
+      | let c: U32 if c <= 0xC800 => GBLV
+      | let c: U32 if c <= 0xC81B => GBLVT
+      | let c: U32 if c <= 0xC81C => GBLV
+      | let c: U32 if c <= 0xC837 => GBLVT
+      | let c: U32 if c <= 0xC838 => GBLV
+      | let c: U32 if c <= 0xC853 => GBLVT
+      | let c: U32 if c <= 0xC854 => GBLV
+      | let c: U32 if c <= 0xC86F => GBLVT
+      | let c: U32 if c <= 0xC870 => GBLV
+      | let c: U32 if c <= 0xC88B => GBLVT
+      | let c: U32 if c <= 0xC88C => GBLV
+      | let c: U32 if c <= 0xC8A7 => GBLVT
+      | let c: U32 if c <= 0xC8A8 => GBLV
+      | let c: U32 if c <= 0xC8C3 => GBLVT
+      | let c: U32 if c <= 0xC8C4 => GBLV
+      | let c: U32 if c <= 0xC8DF => GBLVT
+      | let c: U32 if c <= 0xC8E0 => GBLV
+      | let c: U32 if c <= 0xC8FB => GBLVT
+      | let c: U32 if c <= 0xC8FC => GBLV
+      | let c: U32 if c <= 0xC917 => GBLVT
+      | let c: U32 if c <= 0xC918 => GBLV
+      | let c: U32 if c <= 0xC933 => GBLVT
+      | let c: U32 if c <= 0xC934 => GBLV
+      | let c: U32 if c <= 0xC94F => GBLVT
+      | let c: U32 if c <= 0xC950 => GBLV
+      | let c: U32 if c <= 0xC96B => GBLVT
+      | let c: U32 if c <= 0xC96C => GBLV
+      | let c: U32 if c <= 0xC987 => GBLVT
+      | let c: U32 if c <= 0xC988 => GBLV
+      | let c: U32 if c <= 0xC9A3 => GBLVT
+      | let c: U32 if c <= 0xC9A4 => GBLV
+      | let c: U32 if c <= 0xC9BF => GBLVT
+      | let c: U32 if c <= 0xC9C0 => GBLV
+      | let c: U32 if c <= 0xC9DB => GBLVT
+      | let c: U32 if c <= 0xC9DC => GBLV
+      | let c: U32 if c <= 0xC9F7 => GBLVT
+      | let c: U32 if c <= 0xC9F8 => GBLV
+      | let c: U32 if c <= 0xCA13 => GBLVT
+      | let c: U32 if c <= 0xCA14 => GBLV
+      | let c: U32 if c <= 0xCA2F => GBLVT
+      | let c: U32 if c <= 0xCA30 => GBLV
+      | let c: U32 if c <= 0xCA4B => GBLVT
+      | let c: U32 if c <= 0xCA4C => GBLV
+      | let c: U32 if c <= 0xCA67 => GBLVT
+      | let c: U32 if c <= 0xCA68 => GBLV
+      | let c: U32 if c <= 0xCA83 => GBLVT
+      | let c: U32 if c <= 0xCA84 => GBLV
+      | let c: U32 if c <= 0xCA9F => GBLVT
+      | let c: U32 if c <= 0xCAA0 => GBLV
+      | let c: U32 if c <= 0xCABB => GBLVT
+      | let c: U32 if c <= 0xCABC => GBLV
+      | let c: U32 if c <= 0xCAD7 => GBLVT
+      | let c: U32 if c <= 0xCAD8 => GBLV
+      | let c: U32 if c <= 0xCAF3 => GBLVT
+      | let c: U32 if c <= 0xCAF4 => GBLV
+      | let c: U32 if c <= 0xCB0F => GBLVT
+      | let c: U32 if c <= 0xCB10 => GBLV
+      | let c: U32 if c <= 0xCB2B => GBLVT
+      | let c: U32 if c <= 0xCB2C => GBLV
+      | let c: U32 if c <= 0xCB47 => GBLVT
+      | let c: U32 if c <= 0xCB48 => GBLV
+      | let c: U32 if c <= 0xCB63 => GBLVT
+      | let c: U32 if c <= 0xCB64 => GBLV
+      | let c: U32 if c <= 0xCB7F => GBLVT
+      | let c: U32 if c <= 0xCB80 => GBLV
+      | let c: U32 if c <= 0xCB9B => GBLVT
+      | let c: U32 if c <= 0xCB9C => GBLV
+      | let c: U32 if c <= 0xCBB7 => GBLVT
+      | let c: U32 if c <= 0xCBB8 => GBLV
+      | let c: U32 if c <= 0xCBD3 => GBLVT
+      | let c: U32 if c <= 0xCBD4 => GBLV
+      | let c: U32 if c <= 0xCBEF => GBLVT
+      | let c: U32 if c <= 0xCBF0 => GBLV
+      | let c: U32 if c <= 0xCC0B => GBLVT
+      | let c: U32 if c <= 0xCC0C => GBLV
+      | let c: U32 if c <= 0xCC27 => GBLVT
+      | let c: U32 if c <= 0xCC28 => GBLV
+      | let c: U32 if c <= 0xCC43 => GBLVT
+      | let c: U32 if c <= 0xCC44 => GBLV
+      | let c: U32 if c <= 0xCC5F => GBLVT
+      | let c: U32 if c <= 0xCC60 => GBLV
+      | let c: U32 if c <= 0xCC7B => GBLVT
+      | let c: U32 if c <= 0xCC7C => GBLV
+      | let c: U32 if c <= 0xCC97 => GBLVT
+      | let c: U32 if c <= 0xCC98 => GBLV
+      | let c: U32 if c <= 0xCCB3 => GBLVT
+      | let c: U32 if c <= 0xCCB4 => GBLV
+      | let c: U32 if c <= 0xCCCF => GBLVT
+      | let c: U32 if c <= 0xCCD0 => GBLV
+      | let c: U32 if c <= 0xCCEB => GBLVT
+      | let c: U32 if c <= 0xCCEC => GBLV
+      | let c: U32 if c <= 0xCD07 => GBLVT
+      | let c: U32 if c <= 0xCD08 => GBLV
+      | let c: U32 if c <= 0xCD23 => GBLVT
+      | let c: U32 if c <= 0xCD24 => GBLV
+      | let c: U32 if c <= 0xCD3F => GBLVT
+      | let c: U32 if c <= 0xCD40 => GBLV
+      | let c: U32 if c <= 0xCD5B => GBLVT
+      | let c: U32 if c <= 0xCD5C => GBLV
+      | let c: U32 if c <= 0xCD77 => GBLVT
+      | let c: U32 if c <= 0xCD78 => GBLV
+      | let c: U32 if c <= 0xCD93 => GBLVT
+      | let c: U32 if c <= 0xCD94 => GBLV
+      | let c: U32 if c <= 0xCDAF => GBLVT
+      | let c: U32 if c <= 0xCDB0 => GBLV
+      | let c: U32 if c <= 0xCDCB => GBLVT
+      | let c: U32 if c <= 0xCDCC => GBLV
+      | let c: U32 if c <= 0xCDE7 => GBLVT
+      | let c: U32 if c <= 0xCDE8 => GBLV
+      | let c: U32 if c <= 0xCE03 => GBLVT
+      | let c: U32 if c <= 0xCE04 => GBLV
+      | let c: U32 if c <= 0xCE1F => GBLVT
+      | let c: U32 if c <= 0xCE20 => GBLV
+      | let c: U32 if c <= 0xCE3B => GBLVT
+      | let c: U32 if c <= 0xCE3C => GBLV
+      | let c: U32 if c <= 0xCE57 => GBLVT
+      | let c: U32 if c <= 0xCE58 => GBLV
+      | let c: U32 if c <= 0xCE73 => GBLVT
+      | let c: U32 if c <= 0xCE74 => GBLV
+      | let c: U32 if c <= 0xCE8F => GBLVT
+      | let c: U32 if c <= 0xCE90 => GBLV
+      | let c: U32 if c <= 0xCEAB => GBLVT
+      | let c: U32 if c <= 0xCEAC => GBLV
+      | let c: U32 if c <= 0xCEC7 => GBLVT
+      | let c: U32 if c <= 0xCEC8 => GBLV
+      | let c: U32 if c <= 0xCEE3 => GBLVT
+      | let c: U32 if c <= 0xCEE4 => GBLV
+      | let c: U32 if c <= 0xCEFF => GBLVT
+      | let c: U32 if c <= 0xCF00 => GBLV
+      | let c: U32 if c <= 0xCF1B => GBLVT
+      | let c: U32 if c <= 0xCF1C => GBLV
+      | let c: U32 if c <= 0xCF37 => GBLVT
+      | let c: U32 if c <= 0xCF38 => GBLV
+      | let c: U32 if c <= 0xCF53 => GBLVT
+      | let c: U32 if c <= 0xCF54 => GBLV
+      | let c: U32 if c <= 0xCF6F => GBLVT
+      | let c: U32 if c <= 0xCF70 => GBLV
+      | let c: U32 if c <= 0xCF8B => GBLVT
+      | let c: U32 if c <= 0xCF8C => GBLV
+      | let c: U32 if c <= 0xCFA7 => GBLVT
+      | let c: U32 if c <= 0xCFA8 => GBLV
+      | let c: U32 if c <= 0xCFC3 => GBLVT
+      | let c: U32 if c <= 0xCFC4 => GBLV
+      | let c: U32 if c <= 0xCFDF => GBLVT
+      | let c: U32 if c <= 0xCFE0 => GBLV
+      | let c: U32 if c <= 0xCFFB => GBLVT
+      | let c: U32 if c <= 0xCFFC => GBLV
+      | let c: U32 if c <= 0xCFFF => GBLVT
+      else GBOther
+      end
+    | 0x000D =>
+      match cp
+      | let c: U32 if c <= 0xD017 => GBLVT
+      | let c: U32 if c <= 0xD018 => GBLV
+      | let c: U32 if c <= 0xD033 => GBLVT
+      | let c: U32 if c <= 0xD034 => GBLV
+      | let c: U32 if c <= 0xD04F => GBLVT
+      | let c: U32 if c <= 0xD050 => GBLV
+      | let c: U32 if c <= 0xD06B => GBLVT
+      | let c: U32 if c <= 0xD06C => GBLV
+      | let c: U32 if c <= 0xD087 => GBLVT
+      | let c: U32 if c <= 0xD088 => GBLV
+      | let c: U32 if c <= 0xD0A3 => GBLVT
+      | let c: U32 if c <= 0xD0A4 => GBLV
+      | let c: U32 if c <= 0xD0BF => GBLVT
+      | let c: U32 if c <= 0xD0C0 => GBLV
+      | let c: U32 if c <= 0xD0DB => GBLVT
+      | let c: U32 if c <= 0xD0DC => GBLV
+      | let c: U32 if c <= 0xD0F7 => GBLVT
+      | let c: U32 if c <= 0xD0F8 => GBLV
+      | let c: U32 if c <= 0xD113 => GBLVT
+      | let c: U32 if c <= 0xD114 => GBLV
+      | let c: U32 if c <= 0xD12F => GBLVT
+      | let c: U32 if c <= 0xD130 => GBLV
+      | let c: U32 if c <= 0xD14B => GBLVT
+      | let c: U32 if c <= 0xD14C => GBLV
+      | let c: U32 if c <= 0xD167 => GBLVT
+      | let c: U32 if c <= 0xD168 => GBLV
+      | let c: U32 if c <= 0xD183 => GBLVT
+      | let c: U32 if c <= 0xD184 => GBLV
+      | let c: U32 if c <= 0xD19F => GBLVT
+      | let c: U32 if c <= 0xD1A0 => GBLV
+      | let c: U32 if c <= 0xD1BB => GBLVT
+      | let c: U32 if c <= 0xD1BC => GBLV
+      | let c: U32 if c <= 0xD1D7 => GBLVT
+      | let c: U32 if c <= 0xD1D8 => GBLV
+      | let c: U32 if c <= 0xD1F3 => GBLVT
+      | let c: U32 if c <= 0xD1F4 => GBLV
+      | let c: U32 if c <= 0xD20F => GBLVT
+      | let c: U32 if c <= 0xD210 => GBLV
+      | let c: U32 if c <= 0xD22B => GBLVT
+      | let c: U32 if c <= 0xD22C => GBLV
+      | let c: U32 if c <= 0xD247 => GBLVT
+      | let c: U32 if c <= 0xD248 => GBLV
+      | let c: U32 if c <= 0xD263 => GBLVT
+      | let c: U32 if c <= 0xD264 => GBLV
+      | let c: U32 if c <= 0xD27F => GBLVT
+      | let c: U32 if c <= 0xD280 => GBLV
+      | let c: U32 if c <= 0xD29B => GBLVT
+      | let c: U32 if c <= 0xD29C => GBLV
+      | let c: U32 if c <= 0xD2B7 => GBLVT
+      | let c: U32 if c <= 0xD2B8 => GBLV
+      | let c: U32 if c <= 0xD2D3 => GBLVT
+      | let c: U32 if c <= 0xD2D4 => GBLV
+      | let c: U32 if c <= 0xD2EF => GBLVT
+      | let c: U32 if c <= 0xD2F0 => GBLV
+      | let c: U32 if c <= 0xD30B => GBLVT
+      | let c: U32 if c <= 0xD30C => GBLV
+      | let c: U32 if c <= 0xD327 => GBLVT
+      | let c: U32 if c <= 0xD328 => GBLV
+      | let c: U32 if c <= 0xD343 => GBLVT
+      | let c: U32 if c <= 0xD344 => GBLV
+      | let c: U32 if c <= 0xD35F => GBLVT
+      | let c: U32 if c <= 0xD360 => GBLV
+      | let c: U32 if c <= 0xD37B => GBLVT
+      | let c: U32 if c <= 0xD37C => GBLV
+      | let c: U32 if c <= 0xD397 => GBLVT
+      | let c: U32 if c <= 0xD398 => GBLV
+      | let c: U32 if c <= 0xD3B3 => GBLVT
+      | let c: U32 if c <= 0xD3B4 => GBLV
+      | let c: U32 if c <= 0xD3CF => GBLVT
+      | let c: U32 if c <= 0xD3D0 => GBLV
+      | let c: U32 if c <= 0xD3EB => GBLVT
+      | let c: U32 if c <= 0xD3EC => GBLV
+      | let c: U32 if c <= 0xD407 => GBLVT
+      | let c: U32 if c <= 0xD408 => GBLV
+      | let c: U32 if c <= 0xD423 => GBLVT
+      | let c: U32 if c <= 0xD424 => GBLV
+      | let c: U32 if c <= 0xD43F => GBLVT
+      | let c: U32 if c <= 0xD440 => GBLV
+      | let c: U32 if c <= 0xD45B => GBLVT
+      | let c: U32 if c <= 0xD45C => GBLV
+      | let c: U32 if c <= 0xD477 => GBLVT
+      | let c: U32 if c <= 0xD478 => GBLV
+      | let c: U32 if c <= 0xD493 => GBLVT
+      | let c: U32 if c <= 0xD494 => GBLV
+      | let c: U32 if c <= 0xD4AF => GBLVT
+      | let c: U32 if c <= 0xD4B0 => GBLV
+      | let c: U32 if c <= 0xD4CB => GBLVT
+      | let c: U32 if c <= 0xD4CC => GBLV
+      | let c: U32 if c <= 0xD4E7 => GBLVT
+      | let c: U32 if c <= 0xD4E8 => GBLV
+      | let c: U32 if c <= 0xD503 => GBLVT
+      | let c: U32 if c <= 0xD504 => GBLV
+      | let c: U32 if c <= 0xD51F => GBLVT
+      | let c: U32 if c <= 0xD520 => GBLV
+      | let c: U32 if c <= 0xD53B => GBLVT
+      | let c: U32 if c <= 0xD53C => GBLV
+      | let c: U32 if c <= 0xD557 => GBLVT
+      | let c: U32 if c <= 0xD558 => GBLV
+      | let c: U32 if c <= 0xD573 => GBLVT
+      | let c: U32 if c <= 0xD574 => GBLV
+      | let c: U32 if c <= 0xD58F => GBLVT
+      | let c: U32 if c <= 0xD590 => GBLV
+      | let c: U32 if c <= 0xD5AB => GBLVT
+      | let c: U32 if c <= 0xD5AC => GBLV
+      | let c: U32 if c <= 0xD5C7 => GBLVT
+      | let c: U32 if c <= 0xD5C8 => GBLV
+      | let c: U32 if c <= 0xD5E3 => GBLVT
+      | let c: U32 if c <= 0xD5E4 => GBLV
+      | let c: U32 if c <= 0xD5FF => GBLVT
+      | let c: U32 if c <= 0xD600 => GBLV
+      | let c: U32 if c <= 0xD61B => GBLVT
+      | let c: U32 if c <= 0xD61C => GBLV
+      | let c: U32 if c <= 0xD637 => GBLVT
+      | let c: U32 if c <= 0xD638 => GBLV
+      | let c: U32 if c <= 0xD653 => GBLVT
+      | let c: U32 if c <= 0xD654 => GBLV
+      | let c: U32 if c <= 0xD66F => GBLVT
+      | let c: U32 if c <= 0xD670 => GBLV
+      | let c: U32 if c <= 0xD68B => GBLVT
+      | let c: U32 if c <= 0xD68C => GBLV
+      | let c: U32 if c <= 0xD6A7 => GBLVT
+      | let c: U32 if c <= 0xD6A8 => GBLV
+      | let c: U32 if c <= 0xD6C3 => GBLVT
+      | let c: U32 if c <= 0xD6C4 => GBLV
+      | let c: U32 if c <= 0xD6DF => GBLVT
+      | let c: U32 if c <= 0xD6E0 => GBLV
+      | let c: U32 if c <= 0xD6FB => GBLVT
+      | let c: U32 if c <= 0xD6FC => GBLV
+      | let c: U32 if c <= 0xD717 => GBLVT
+      | let c: U32 if c <= 0xD718 => GBLV
+      | let c: U32 if c <= 0xD733 => GBLVT
+      | let c: U32 if c <= 0xD734 => GBLV
+      | let c: U32 if c <= 0xD74F => GBLVT
+      | let c: U32 if c <= 0xD750 => GBLV
+      | let c: U32 if c <= 0xD76B => GBLVT
+      | let c: U32 if c <= 0xD76C => GBLV
+      | let c: U32 if c <= 0xD787 => GBLVT
+      | let c: U32 if c <= 0xD788 => GBLV
+      | let c: U32 if c <= 0xD7A3 => GBLVT
+      | let c: U32 if c <= 0xD7AF => GBOther
+      | let c: U32 if c <= 0xD7C6 => GBV
+      | let c: U32 if c <= 0xD7CA => GBOther
+      | let c: U32 if c <= 0xD7FB => GBT
+      else GBOther
+      end
+    | 0x000F =>
+      match cp
+      | let c: U32 if c <= 0xFB1D => GBOther
+      | let c: U32 if c <= 0xFB1E => GBExtend
+      | let c: U32 if c <= 0xFDFF => GBOther
+      | let c: U32 if c <= 0xFE0F => GBExtend
+      | let c: U32 if c <= 0xFE1F => GBOther
+      | let c: U32 if c <= 0xFE2F => GBExtend
+      | let c: U32 if c <= 0xFEFE => GBOther
+      | let c: U32 if c <= 0xFEFF => GBControl
+      | let c: U32 if c <= 0xFF9D => GBOther
+      | let c: U32 if c <= 0xFF9F => GBExtend
+      | let c: U32 if c <= 0xFFEF => GBOther
+      | let c: U32 if c <= 0xFFFB => GBControl
+      else GBOther
+      end
+    | 0x0010 =>
+      match cp
+      | let c: U32 if c <= 0x101FC => GBOther
+      | let c: U32 if c <= 0x101FD => GBExtend
+      | let c: U32 if c <= 0x102DF => GBOther
+      | let c: U32 if c <= 0x102E0 => GBExtend
+      | let c: U32 if c <= 0x10375 => GBOther
+      | let c: U32 if c <= 0x1037A => GBExtend
+      | let c: U32 if c <= 0x10A00 => GBOther
+      | let c: U32 if c <= 0x10A03 => GBExtend
+      | let c: U32 if c <= 0x10A04 => GBOther
+      | let c: U32 if c <= 0x10A06 => GBExtend
+      | let c: U32 if c <= 0x10A0B => GBOther
+      | let c: U32 if c <= 0x10A0F => GBExtend
+      | let c: U32 if c <= 0x10A37 => GBOther
+      | let c: U32 if c <= 0x10A3A => GBExtend
+      | let c: U32 if c <= 0x10A3E => GBOther
+      | let c: U32 if c <= 0x10A3F => GBExtend
+      | let c: U32 if c <= 0x10AE4 => GBOther
+      | let c: U32 if c <= 0x10AE6 => GBExtend
+      | let c: U32 if c <= 0x10D23 => GBOther
+      | let c: U32 if c <= 0x10D27 => GBExtend
+      | let c: U32 if c <= 0x10D68 => GBOther
+      | let c: U32 if c <= 0x10D6D => GBExtend
+      | let c: U32 if c <= 0x10EAA => GBOther
+      | let c: U32 if c <= 0x10EAC => GBExtend
+      | let c: U32 if c <= 0x10EFB => GBOther
+      | let c: U32 if c <= 0x10EFF => GBExtend
+      | let c: U32 if c <= 0x10F45 => GBOther
+      | let c: U32 if c <= 0x10F50 => GBExtend
+      | let c: U32 if c <= 0x10F81 => GBOther
+      | let c: U32 if c <= 0x10F85 => GBExtend
+      else GBOther
+      end
+    | 0x0011 =>
+      match cp
+      | let c: U32 if c <= 0x11000 => GBSpacingMark
+      | let c: U32 if c <= 0x11001 => GBExtend
+      | let c: U32 if c <= 0x11002 => GBSpacingMark
+      | let c: U32 if c <= 0x11037 => GBOther
+      | let c: U32 if c <= 0x11046 => GBExtend
+      | let c: U32 if c <= 0x1106F => GBOther
+      | let c: U32 if c <= 0x11070 => GBExtend
+      | let c: U32 if c <= 0x11072 => GBOther
+      | let c: U32 if c <= 0x11074 => GBExtend
+      | let c: U32 if c <= 0x1107E => GBOther
+      | let c: U32 if c <= 0x11081 => GBExtend
+      | let c: U32 if c <= 0x11082 => GBSpacingMark
+      | let c: U32 if c <= 0x110AF => GBOther
+      | let c: U32 if c <= 0x110B2 => GBSpacingMark
+      | let c: U32 if c <= 0x110B6 => GBExtend
+      | let c: U32 if c <= 0x110B8 => GBSpacingMark
+      | let c: U32 if c <= 0x110BA => GBExtend
+      | let c: U32 if c <= 0x110BC => GBOther
+      | let c: U32 if c <= 0x110BD => GBPrepend
+      | let c: U32 if c <= 0x110C1 => GBOther
+      | let c: U32 if c <= 0x110C2 => GBExtend
+      | let c: U32 if c <= 0x110CC => GBOther
+      | let c: U32 if c <= 0x110CD => GBPrepend
+      | let c: U32 if c <= 0x110FF => GBOther
+      | let c: U32 if c <= 0x11102 => GBExtend
+      | let c: U32 if c <= 0x11126 => GBOther
+      | let c: U32 if c <= 0x1112B => GBExtend
+      | let c: U32 if c <= 0x1112C => GBSpacingMark
+      | let c: U32 if c <= 0x11134 => GBExtend
+      | let c: U32 if c <= 0x11144 => GBOther
+      | let c: U32 if c <= 0x11146 => GBSpacingMark
+      | let c: U32 if c <= 0x11172 => GBOther
+      | let c: U32 if c <= 0x11173 => GBExtend
+      | let c: U32 if c <= 0x1117F => GBOther
+      | let c: U32 if c <= 0x11181 => GBExtend
+      | let c: U32 if c <= 0x11182 => GBSpacingMark
+      | let c: U32 if c <= 0x111B2 => GBOther
+      | let c: U32 if c <= 0x111B5 => GBSpacingMark
+      | let c: U32 if c <= 0x111BE => GBExtend
+      | let c: U32 if c <= 0x111BF => GBSpacingMark
+      | let c: U32 if c <= 0x111C0 => GBExtend
+      | let c: U32 if c <= 0x111C1 => GBOther
+      | let c: U32 if c <= 0x111C3 => GBPrepend
+      | let c: U32 if c <= 0x111C8 => GBOther
+      | let c: U32 if c <= 0x111CC => GBExtend
+      | let c: U32 if c <= 0x111CD => GBOther
+      | let c: U32 if c <= 0x111CE => GBSpacingMark
+      | let c: U32 if c <= 0x111CF => GBExtend
+      | let c: U32 if c <= 0x1122B => GBOther
+      | let c: U32 if c <= 0x1122E => GBSpacingMark
+      | let c: U32 if c <= 0x11231 => GBExtend
+      | let c: U32 if c <= 0x11233 => GBSpacingMark
+      | let c: U32 if c <= 0x11237 => GBExtend
+      | let c: U32 if c <= 0x1123D => GBOther
+      | let c: U32 if c <= 0x1123E => GBExtend
+      | let c: U32 if c <= 0x11240 => GBOther
+      | let c: U32 if c <= 0x11241 => GBExtend
+      | let c: U32 if c <= 0x112DE => GBOther
+      | let c: U32 if c <= 0x112DF => GBExtend
+      | let c: U32 if c <= 0x112E2 => GBSpacingMark
+      | let c: U32 if c <= 0x112EA => GBExtend
+      | let c: U32 if c <= 0x112FF => GBOther
+      | let c: U32 if c <= 0x11301 => GBExtend
+      | let c: U32 if c <= 0x11303 => GBSpacingMark
+      | let c: U32 if c <= 0x1133A => GBOther
+      | let c: U32 if c <= 0x1133C => GBExtend
+      | let c: U32 if c <= 0x1133D => GBOther
+      | let c: U32 if c <= 0x1133E => GBExtend
+      | let c: U32 if c <= 0x1133F => GBSpacingMark
+      | let c: U32 if c <= 0x11340 => GBExtend
+      | let c: U32 if c <= 0x11344 => GBSpacingMark
+      | let c: U32 if c <= 0x11346 => GBOther
+      | let c: U32 if c <= 0x11348 => GBSpacingMark
+      | let c: U32 if c <= 0x1134A => GBOther
+      | let c: U32 if c <= 0x1134C => GBSpacingMark
+      | let c: U32 if c <= 0x1134D => GBExtend
+      | let c: U32 if c <= 0x11356 => GBOther
+      | let c: U32 if c <= 0x11357 => GBExtend
+      | let c: U32 if c <= 0x11361 => GBOther
+      | let c: U32 if c <= 0x11363 => GBSpacingMark
+      | let c: U32 if c <= 0x11365 => GBOther
+      | let c: U32 if c <= 0x1136C => GBExtend
+      | let c: U32 if c <= 0x1136F => GBOther
+      | let c: U32 if c <= 0x11374 => GBExtend
+      | let c: U32 if c <= 0x113B7 => GBOther
+      | let c: U32 if c <= 0x113B8 => GBExtend
+      | let c: U32 if c <= 0x113BA => GBSpacingMark
+      | let c: U32 if c <= 0x113C0 => GBExtend
+      | let c: U32 if c <= 0x113C1 => GBOther
+      | let c: U32 if c <= 0x113C2 => GBExtend
+      | let c: U32 if c <= 0x113C4 => GBOther
+      | let c: U32 if c <= 0x113C5 => GBExtend
+      | let c: U32 if c <= 0x113C6 => GBOther
+      | let c: U32 if c <= 0x113C9 => GBExtend
+      | let c: U32 if c <= 0x113CA => GBSpacingMark
+      | let c: U32 if c <= 0x113CB => GBOther
+      | let c: U32 if c <= 0x113CD => GBSpacingMark
+      | let c: U32 if c <= 0x113D0 => GBExtend
+      | let c: U32 if c <= 0x113D1 => GBPrepend
+      | let c: U32 if c <= 0x113D2 => GBExtend
+      | let c: U32 if c <= 0x113E0 => GBOther
+      | let c: U32 if c <= 0x113E2 => GBExtend
+      | let c: U32 if c <= 0x11434 => GBOther
+      | let c: U32 if c <= 0x11437 => GBSpacingMark
+      | let c: U32 if c <= 0x1143F => GBExtend
+      | let c: U32 if c <= 0x11441 => GBSpacingMark
+      | let c: U32 if c <= 0x11444 => GBExtend
+      | let c: U32 if c <= 0x11445 => GBSpacingMark
+      | let c: U32 if c <= 0x11446 => GBExtend
+      | let c: U32 if c <= 0x1145D => GBOther
+      | let c: U32 if c <= 0x1145E => GBExtend
+      | let c: U32 if c <= 0x114AF => GBOther
+      | let c: U32 if c <= 0x114B0 => GBExtend
+      | let c: U32 if c <= 0x114B2 => GBSpacingMark
+      | let c: U32 if c <= 0x114B8 => GBExtend
+      | let c: U32 if c <= 0x114B9 => GBSpacingMark
+      | let c: U32 if c <= 0x114BA => GBExtend
+      | let c: U32 if c <= 0x114BC => GBSpacingMark
+      | let c: U32 if c <= 0x114BD => GBExtend
+      | let c: U32 if c <= 0x114BE => GBSpacingMark
+      | let c: U32 if c <= 0x114C0 => GBExtend
+      | let c: U32 if c <= 0x114C1 => GBSpacingMark
+      | let c: U32 if c <= 0x114C3 => GBExtend
+      | let c: U32 if c <= 0x115AE => GBOther
+      | let c: U32 if c <= 0x115AF => GBExtend
+      | let c: U32 if c <= 0x115B1 => GBSpacingMark
+      | let c: U32 if c <= 0x115B5 => GBExtend
+      | let c: U32 if c <= 0x115B7 => GBOther
+      | let c: U32 if c <= 0x115BB => GBSpacingMark
+      | let c: U32 if c <= 0x115BD => GBExtend
+      | let c: U32 if c <= 0x115BE => GBSpacingMark
+      | let c: U32 if c <= 0x115C0 => GBExtend
+      | let c: U32 if c <= 0x115DB => GBOther
+      | let c: U32 if c <= 0x115DD => GBExtend
+      | let c: U32 if c <= 0x1162F => GBOther
+      | let c: U32 if c <= 0x11632 => GBSpacingMark
+      | let c: U32 if c <= 0x1163A => GBExtend
+      | let c: U32 if c <= 0x1163C => GBSpacingMark
+      | let c: U32 if c <= 0x1163D => GBExtend
+      | let c: U32 if c <= 0x1163E => GBSpacingMark
+      | let c: U32 if c <= 0x11640 => GBExtend
+      | let c: U32 if c <= 0x116AA => GBOther
+      | let c: U32 if c <= 0x116AB => GBExtend
+      | let c: U32 if c <= 0x116AC => GBSpacingMark
+      | let c: U32 if c <= 0x116AD => GBExtend
+      | let c: U32 if c <= 0x116AF => GBSpacingMark
+      | let c: U32 if c <= 0x116B7 => GBExtend
+      | let c: U32 if c <= 0x1171C => GBOther
+      | let c: U32 if c <= 0x1171D => GBExtend
+      | let c: U32 if c <= 0x1171E => GBSpacingMark
+      | let c: U32 if c <= 0x1171F => GBExtend
+      | let c: U32 if c <= 0x11721 => GBOther
+      | let c: U32 if c <= 0x11725 => GBExtend
+      | let c: U32 if c <= 0x11726 => GBSpacingMark
+      | let c: U32 if c <= 0x1172B => GBExtend
+      | let c: U32 if c <= 0x1182B => GBOther
+      | let c: U32 if c <= 0x1182E => GBSpacingMark
+      | let c: U32 if c <= 0x11837 => GBExtend
+      | let c: U32 if c <= 0x11838 => GBSpacingMark
+      | let c: U32 if c <= 0x1183A => GBExtend
+      | let c: U32 if c <= 0x1192F => GBOther
+      | let c: U32 if c <= 0x11930 => GBExtend
+      | let c: U32 if c <= 0x11935 => GBSpacingMark
+      | let c: U32 if c <= 0x11936 => GBOther
+      | let c: U32 if c <= 0x11938 => GBSpacingMark
+      | let c: U32 if c <= 0x1193A => GBOther
+      | let c: U32 if c <= 0x1193E => GBExtend
+      | let c: U32 if c <= 0x1193F => GBPrepend
+      | let c: U32 if c <= 0x11940 => GBSpacingMark
+      | let c: U32 if c <= 0x11941 => GBPrepend
+      | let c: U32 if c <= 0x11942 => GBSpacingMark
+      | let c: U32 if c <= 0x11943 => GBExtend
+      | let c: U32 if c <= 0x119D0 => GBOther
+      | let c: U32 if c <= 0x119D3 => GBSpacingMark
+      | let c: U32 if c <= 0x119D7 => GBExtend
+      | let c: U32 if c <= 0x119D9 => GBOther
+      | let c: U32 if c <= 0x119DB => GBExtend
+      | let c: U32 if c <= 0x119DF => GBSpacingMark
+      | let c: U32 if c <= 0x119E0 => GBExtend
+      | let c: U32 if c <= 0x119E3 => GBOther
+      | let c: U32 if c <= 0x119E4 => GBSpacingMark
+      | let c: U32 if c <= 0x11A00 => GBOther
+      | let c: U32 if c <= 0x11A0A => GBExtend
+      | let c: U32 if c <= 0x11A32 => GBOther
+      | let c: U32 if c <= 0x11A38 => GBExtend
+      | let c: U32 if c <= 0x11A39 => GBSpacingMark
+      | let c: U32 if c <= 0x11A3A => GBPrepend
+      | let c: U32 if c <= 0x11A3E => GBExtend
+      | let c: U32 if c <= 0x11A46 => GBOther
+      | let c: U32 if c <= 0x11A47 => GBExtend
+      | let c: U32 if c <= 0x11A50 => GBOther
+      | let c: U32 if c <= 0x11A56 => GBExtend
+      | let c: U32 if c <= 0x11A58 => GBSpacingMark
+      | let c: U32 if c <= 0x11A5B => GBExtend
+      | let c: U32 if c <= 0x11A83 => GBOther
+      | let c: U32 if c <= 0x11A89 => GBPrepend
+      | let c: U32 if c <= 0x11A96 => GBExtend
+      | let c: U32 if c <= 0x11A97 => GBSpacingMark
+      | let c: U32 if c <= 0x11A99 => GBExtend
+      | let c: U32 if c <= 0x11C2E => GBOther
+      | let c: U32 if c <= 0x11C2F => GBSpacingMark
+      | let c: U32 if c <= 0x11C36 => GBExtend
+      | let c: U32 if c <= 0x11C37 => GBOther
+      | let c: U32 if c <= 0x11C3D => GBExtend
+      | let c: U32 if c <= 0x11C3E => GBSpacingMark
+      | let c: U32 if c <= 0x11C3F => GBExtend
+      | let c: U32 if c <= 0x11C91 => GBOther
+      | let c: U32 if c <= 0x11CA7 => GBExtend
+      | let c: U32 if c <= 0x11CA8 => GBOther
+      | let c: U32 if c <= 0x11CA9 => GBSpacingMark
+      | let c: U32 if c <= 0x11CB0 => GBExtend
+      | let c: U32 if c <= 0x11CB1 => GBSpacingMark
+      | let c: U32 if c <= 0x11CB3 => GBExtend
+      | let c: U32 if c <= 0x11CB4 => GBSpacingMark
+      | let c: U32 if c <= 0x11CB6 => GBExtend
+      | let c: U32 if c <= 0x11D30 => GBOther
+      | let c: U32 if c <= 0x11D36 => GBExtend
+      | let c: U32 if c <= 0x11D39 => GBOther
+      | let c: U32 if c <= 0x11D3A => GBExtend
+      | let c: U32 if c <= 0x11D3B => GBOther
+      | let c: U32 if c <= 0x11D3D => GBExtend
+      | let c: U32 if c <= 0x11D3E => GBOther
+      | let c: U32 if c <= 0x11D45 => GBExtend
+      | let c: U32 if c <= 0x11D46 => GBPrepend
+      | let c: U32 if c <= 0x11D47 => GBExtend
+      | let c: U32 if c <= 0x11D89 => GBOther
+      | let c: U32 if c <= 0x11D8E => GBSpacingMark
+      | let c: U32 if c <= 0x11D8F => GBOther
+      | let c: U32 if c <= 0x11D91 => GBExtend
+      | let c: U32 if c <= 0x11D92 => GBOther
+      | let c: U32 if c <= 0x11D94 => GBSpacingMark
+      | let c: U32 if c <= 0x11D95 => GBExtend
+      | let c: U32 if c <= 0x11D96 => GBSpacingMark
+      | let c: U32 if c <= 0x11D97 => GBExtend
+      | let c: U32 if c <= 0x11EF2 => GBOther
+      | let c: U32 if c <= 0x11EF4 => GBExtend
+      | let c: U32 if c <= 0x11EF6 => GBSpacingMark
+      | let c: U32 if c <= 0x11EFF => GBOther
+      | let c: U32 if c <= 0x11F01 => GBExtend
+      | let c: U32 if c <= 0x11F02 => GBPrepend
+      | let c: U32 if c <= 0x11F03 => GBSpacingMark
+      | let c: U32 if c <= 0x11F33 => GBOther
+      | let c: U32 if c <= 0x11F35 => GBSpacingMark
+      | let c: U32 if c <= 0x11F3A => GBExtend
+      | let c: U32 if c <= 0x11F3D => GBOther
+      | let c: U32 if c <= 0x11F3F => GBSpacingMark
+      | let c: U32 if c <= 0x11F42 => GBExtend
+      | let c: U32 if c <= 0x11F59 => GBOther
+      | let c: U32 if c <= 0x11F5A => GBExtend
+      else GBOther
+      end
+    | 0x0013 =>
+      match cp
+      | let c: U32 if c <= 0x1342F => GBOther
+      | let c: U32 if c <= 0x1343F => GBControl
+      | let c: U32 if c <= 0x13440 => GBExtend
+      | let c: U32 if c <= 0x13446 => GBOther
+      | let c: U32 if c <= 0x13455 => GBExtend
+      else GBOther
+      end
+    | 0x0016 =>
+      match cp
+      | let c: U32 if c <= 0x1611D => GBOther
+      | let c: U32 if c <= 0x16129 => GBExtend
+      | let c: U32 if c <= 0x1612C => GBSpacingMark
+      | let c: U32 if c <= 0x1612F => GBExtend
+      | let c: U32 if c <= 0x16AEF => GBOther
+      | let c: U32 if c <= 0x16AF4 => GBExtend
+      | let c: U32 if c <= 0x16B2F => GBOther
+      | let c: U32 if c <= 0x16B36 => GBExtend
+      | let c: U32 if c <= 0x16D62 => GBOther
+      | let c: U32 if c <= 0x16D63 => GBV
+      | let c: U32 if c <= 0x16D66 => GBOther
+      | let c: U32 if c <= 0x16D6A => GBV
+      | let c: U32 if c <= 0x16F4E => GBOther
+      | let c: U32 if c <= 0x16F4F => GBExtend
+      | let c: U32 if c <= 0x16F50 => GBOther
+      | let c: U32 if c <= 0x16F87 => GBSpacingMark
+      | let c: U32 if c <= 0x16F8E => GBOther
+      | let c: U32 if c <= 0x16F92 => GBExtend
+      | let c: U32 if c <= 0x16FE3 => GBOther
+      | let c: U32 if c <= 0x16FE4 => GBExtend
+      | let c: U32 if c <= 0x16FEF => GBOther
+      | let c: U32 if c <= 0x16FF1 => GBExtend
+      else GBOther
+      end
+    | 0x001B =>
+      match cp
+      | let c: U32 if c <= 0x1BC9C => GBOther
+      | let c: U32 if c <= 0x1BC9E => GBExtend
+      | let c: U32 if c <= 0x1BC9F => GBOther
+      | let c: U32 if c <= 0x1BCA3 => GBControl
+      else GBOther
+      end
+    | 0x001C =>
+      match cp
+      | let c: U32 if c <= 0x1CEFF => GBOther
+      | let c: U32 if c <= 0x1CF2D => GBExtend
+      | let c: U32 if c <= 0x1CF2F => GBOther
+      | let c: U32 if c <= 0x1CF46 => GBExtend
+      else GBOther
+      end
+    | 0x001D =>
+      match cp
+      | let c: U32 if c <= 0x1D164 => GBOther
+      | let c: U32 if c <= 0x1D169 => GBExtend
+      | let c: U32 if c <= 0x1D16C => GBOther
+      | let c: U32 if c <= 0x1D172 => GBExtend
+      | let c: U32 if c <= 0x1D17A => GBControl
+      | let c: U32 if c <= 0x1D182 => GBExtend
+      | let c: U32 if c <= 0x1D184 => GBOther
+      | let c: U32 if c <= 0x1D18B => GBExtend
+      | let c: U32 if c <= 0x1D1A9 => GBOther
+      | let c: U32 if c <= 0x1D1AD => GBExtend
+      | let c: U32 if c <= 0x1D241 => GBOther
+      | let c: U32 if c <= 0x1D244 => GBExtend
+      | let c: U32 if c <= 0x1D9FF => GBOther
+      | let c: U32 if c <= 0x1DA36 => GBExtend
+      | let c: U32 if c <= 0x1DA3A => GBOther
+      | let c: U32 if c <= 0x1DA6C => GBExtend
+      | let c: U32 if c <= 0x1DA74 => GBOther
+      | let c: U32 if c <= 0x1DA75 => GBExtend
+      | let c: U32 if c <= 0x1DA83 => GBOther
+      | let c: U32 if c <= 0x1DA84 => GBExtend
+      | let c: U32 if c <= 0x1DA9A => GBOther
+      | let c: U32 if c <= 0x1DA9F => GBExtend
+      | let c: U32 if c <= 0x1DAA0 => GBOther
+      | let c: U32 if c <= 0x1DAAF => GBExtend
+      else GBOther
+      end
+    | 0x001E =>
+      match cp
+      | let c: U32 if c <= 0x1E006 => GBExtend
+      | let c: U32 if c <= 0x1E007 => GBOther
+      | let c: U32 if c <= 0x1E018 => GBExtend
+      | let c: U32 if c <= 0x1E01A => GBOther
+      | let c: U32 if c <= 0x1E021 => GBExtend
+      | let c: U32 if c <= 0x1E022 => GBOther
+      | let c: U32 if c <= 0x1E024 => GBExtend
+      | let c: U32 if c <= 0x1E025 => GBOther
+      | let c: U32 if c <= 0x1E02A => GBExtend
+      | let c: U32 if c <= 0x1E08E => GBOther
+      | let c: U32 if c <= 0x1E08F => GBExtend
+      | let c: U32 if c <= 0x1E12F => GBOther
+      | let c: U32 if c <= 0x1E136 => GBExtend
+      | let c: U32 if c <= 0x1E2AD => GBOther
+      | let c: U32 if c <= 0x1E2AE => GBExtend
+      | let c: U32 if c <= 0x1E2EB => GBOther
+      | let c: U32 if c <= 0x1E2EF => GBExtend
+      | let c: U32 if c <= 0x1E4EB => GBOther
+      | let c: U32 if c <= 0x1E4EF => GBExtend
+      | let c: U32 if c <= 0x1E5ED => GBOther
+      | let c: U32 if c <= 0x1E5EF => GBExtend
+      | let c: U32 if c <= 0x1E8CF => GBOther
+      | let c: U32 if c <= 0x1E8D6 => GBExtend
+      | let c: U32 if c <= 0x1E943 => GBOther
+      | let c: U32 if c <= 0x1E94A => GBExtend
+      else GBOther
+      end
+    | 0x001F =>
+      match cp
+      | let c: U32 if c <= 0x1F0FF => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F10C => GBOther
+      | let c: U32 if c <= 0x1F10F => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F12E => GBOther
+      | let c: U32 if c <= 0x1F12F => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F16B => GBOther
+      | let c: U32 if c <= 0x1F171 => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F17D => GBOther
+      | let c: U32 if c <= 0x1F17F => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F18D => GBOther
+      | let c: U32 if c <= 0x1F18E => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F190 => GBOther
+      | let c: U32 if c <= 0x1F19A => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F1AC => GBOther
+      | let c: U32 if c <= 0x1F1E5 => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F1FF => GBRegionalIndicator
+      | let c: U32 if c <= 0x1F200 => GBOther
+      | let c: U32 if c <= 0x1F20F => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F219 => GBOther
+      | let c: U32 if c <= 0x1F21A => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F22E => GBOther
+      | let c: U32 if c <= 0x1F22F => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F231 => GBOther
+      | let c: U32 if c <= 0x1F23A => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F23B => GBOther
+      | let c: U32 if c <= 0x1F23F => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F248 => GBOther
+      | let c: U32 if c <= 0x1F3FA => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F3FF => GBExtend
+      | let c: U32 if c <= 0x1F53D => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F545 => GBOther
+      | let c: U32 if c <= 0x1F64F => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F67F => GBOther
+      | let c: U32 if c <= 0x1F6FF => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F773 => GBOther
+      | let c: U32 if c <= 0x1F77F => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F7D4 => GBOther
+      | let c: U32 if c <= 0x1F7FF => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F80B => GBOther
+      | let c: U32 if c <= 0x1F80F => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F847 => GBOther
+      | let c: U32 if c <= 0x1F84F => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F859 => GBOther
+      | let c: U32 if c <= 0x1F85F => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F887 => GBOther
+      | let c: U32 if c <= 0x1F88F => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F8AD => GBOther
+      | let c: U32 if c <= 0x1F8FF => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F90B => GBOther
+      | let c: U32 if c <= 0x1F93A => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F93B => GBOther
+      | let c: U32 if c <= 0x1F945 => GBExtendedPictographic
+      | let c: U32 if c <= 0x1F946 => GBOther
+      | let c: U32 if c <= 0x1FAFF => GBExtendedPictographic
+      | let c: U32 if c <= 0x1FBFF => GBOther
+      | let c: U32 if c <= 0x1FFFD => GBExtendedPictographic
+      else GBOther
+      end
+    | 0x00E0 =>
+      match cp
+      | let c: U32 if c <= 0xE001F => GBControl
+      | let c: U32 if c <= 0xE007F => GBExtend
+      | let c: U32 if c <= 0xE00FF => GBControl
+      | let c: U32 if c <= 0xE01EF => GBExtend
+      | let c: U32 if c <= 0xE0FFF => GBControl
+      else GBOther
+      end
     else
       GBOther
     end

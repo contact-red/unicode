@@ -38,20 +38,76 @@ primitive GraphemeBreakTableEmitter
 
       out.append("primitive _UcdGraphemeBreak\n")
       out.append("  fun of(cp: U32): GraphemeBreak =>\n")
-      out.append("    match cp\n")
-      for r in merged.values() do
-        out.append("    | let c: U32 if (c >= 0x")
-        _emit_hex_u32(out, r._1)
-        out.append(") and (c <= 0x")
+      // Two-level dispatch. Top-level: `match cp >> 12` picks a
+      // 4096-cp bucket (no guards — Pony / LLVM can emit a switch).
+      // Inner: a linear `c <= upper` chain over the (sub-)ranges
+      // inside that bucket. Ranges that span more than one bucket
+      // get split first so every emitted entry stays inside exactly
+      // one bucket.
+      let split = _split_at_buckets(merged)
+      out.append("    match cp >> 12\n")
+      var prev_bucket: U32 = 0xFFFFFFFF
+      var bucket_open: Bool = false
+      var prev_hi_plus_1: U32 = 0
+      for r in split.values() do
+        let bucket = r._1 >> 12
+        if bucket != prev_bucket then
+          if bucket_open then
+            out.append("      else GBOther\n")
+            out.append("      end\n")
+          end
+          out.append("    | 0x")
+          _emit_hex_u32(out, bucket)
+          out.append(" =>\n")
+          out.append("      match cp\n")
+          prev_hi_plus_1 = bucket << 12
+          bucket_open = true
+          prev_bucket = bucket
+        end
+        if r._1 > prev_hi_plus_1 then
+          out.append("      | let c: U32 if c <= 0x")
+          _emit_hex_u32(out, r._1 - 1)
+          out.append(" => GBOther\n")
+        end
+        out.append("      | let c: U32 if c <= 0x")
         _emit_hex_u32(out, r._2)
-        out.append(") => ")
+        out.append(" => ")
         out.append(_byte_to_variant(r._3))
         out.append("\n")
+        prev_hi_plus_1 = r._2 + 1
+      end
+      if bucket_open then
+        out.append("      else GBOther\n")
+        out.append("      end\n")
       end
       out.append("    else\n")
       out.append("      GBOther\n")
       out.append("    end\n")
 
+      out
+    end
+
+  fun _split_at_buckets(
+    merged: Array[(U32, U32, U8)] val): Array[(U32, U32, U8)] val
+  =>
+    """
+    Split every input range so each output sub-range stays inside one
+    4096-cp bucket (top 20 - 12 = 20 bits all the same after
+    `>> 12`). The split preserves the input ordering so the result is
+    still sorted by `range_lo`.
+    """
+    recover val
+      let out = Array[(U32, U32, U8)]
+      for r in merged.values() do
+        var lo = r._1
+        while lo <= r._2 do
+          let bucket = lo >> 12
+          let bucket_end = ((bucket + 1) << 12) - 1
+          let hi = if r._2 < bucket_end then r._2 else bucket_end end
+          out.push((lo, hi, r._3))
+          lo = hi + 1
+        end
+      end
       out
     end
 
