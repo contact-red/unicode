@@ -59,7 +59,91 @@ primitive BenchCodepoints
           DoNotOptimise[U8](Codepoints.combining_class(cp))
           DoNotOptimise.observe()
         }, cfg))
+      bench(_BenchU32("Codepoints.grapheme_break/" + lbl, cp,
+        {(cp: U32) =>
+          DoNotOptimise[GraphemeBreak](Codepoints.grapheme_break(cp))
+          DoNotOptimise.observe()
+        }, cfg))
+      bench(_BenchU32("Codepoints.canonical_decomposition/" + lbl, cp,
+        {(cp: U32) =>
+          DoNotOptimise[(Array[U32] val | None)](
+            Codepoints.canonical_decomposition(cp))
+          DoNotOptimise.observe()
+        }, cfg))
+      bench(_BenchU32("Codepoints.compat_decomposition/" + lbl, cp,
+        {(cp: U32) =>
+          DoNotOptimise[(Array[U32] val | None)](
+            Codepoints.compat_decomposition(cp))
+          DoNotOptimise.observe()
+        }, cfg))
+      bench(_BenchU32("Codepoints.simple_upper/" + lbl, cp,
+        {(cp: U32) =>
+          DoNotOptimise[U32](Codepoints.simple_upper(cp))
+          DoNotOptimise.observe()
+        }, cfg))
+      bench(_BenchU32("Codepoints.simple_lower/" + lbl, cp,
+        {(cp: U32) =>
+          DoNotOptimise[U32](Codepoints.simple_lower(cp))
+          DoNotOptimise.observe()
+        }, cfg))
+      bench(_BenchU32("Codepoints.simple_title/" + lbl, cp,
+        {(cp: U32) =>
+          DoNotOptimise[U32](Codepoints.simple_title(cp))
+          DoNotOptimise.observe()
+        }, cfg))
+      bench(_BenchU32("Codepoints.simple_casefold/" + lbl, cp,
+        {(cp: U32) =>
+          DoNotOptimise[U32](Codepoints.simple_casefold(cp))
+          DoNotOptimise.observe()
+        }, cfg))
+      bench(_BenchU32("Codepoints.full_upper/" + lbl, cp,
+        {(cp: U32) =>
+          DoNotOptimise[(Array[U32] val | None)](
+            Codepoints.full_upper(cp))
+          DoNotOptimise.observe()
+        }, cfg))
+      bench(_BenchU32("Codepoints.full_lower/" + lbl, cp,
+        {(cp: U32) =>
+          DoNotOptimise[(Array[U32] val | None)](
+            Codepoints.full_lower(cp))
+          DoNotOptimise.observe()
+        }, cfg))
+      bench(_BenchU32("Codepoints.full_title/" + lbl, cp,
+        {(cp: U32) =>
+          DoNotOptimise[(Array[U32] val | None)](
+            Codepoints.full_title(cp))
+          DoNotOptimise.observe()
+        }, cfg))
+      bench(_BenchU32("Codepoints.full_casefold/" + lbl, cp,
+        {(cp: U32) =>
+          DoNotOptimise[(Array[U32] val | None)](
+            Codepoints.full_casefold(cp))
+          DoNotOptimise.observe()
+        }, cfg))
+      bench(_BenchU32("Codepoints.is_full_composition_excluded/" + lbl,
+        cp,
+        {(cp: U32) =>
+          DoNotOptimise[Bool](
+            Codepoints.is_full_composition_excluded(cp))
+          DoNotOptimise.observe()
+        }, cfg))
     end
+
+    // Binary composition — `e` + combining acute → `é`. Bench the
+    // single-shot composition cost; covers the `_UcdCanonicalCompose`
+    // lookup path used by `Normalize.nfc`.
+    bench(_CtorBench("Codepoints.compose_canonical[hit]",
+      {() =>
+        DoNotOptimise[(U32 | None)](
+          Codepoints.compose_canonical(0x0065, 0x0301))
+        DoNotOptimise.observe()
+      }, cfg))
+    bench(_CtorBench("Codepoints.compose_canonical[miss]",
+      {() =>
+        DoNotOptimise[(U32 | None)](
+          Codepoints.compose_canonical(0x0041, 0x0042))
+        DoNotOptimise.observe()
+      }, cfg))
 
     // Reverse name lookup — linear scan; the slow path.
     bench(_CtorBench("Codepoints.from_name",
