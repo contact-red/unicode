@@ -133,6 +133,85 @@ class Text
     """
     Graphemes._ranges(_utf8)
 
+  fun val words(): Iterator[String val] =>
+    """
+    Iterate over UAX #29 word segments as zero-byte-copy `String val`
+    slices. UAX #29 defines *boundaries*, not "wordness" — punctuation
+    runs and whitespace runs each show up as their own segment. Use
+    `Codepoints.is_letter` / `is_digit` on the first cp of a segment
+    to filter to words-as-text yourself.
+    """
+    Words._iter(_utf8)
+
+  fun box word_ranges(): Iterator[(USize, USize)] =>
+    """
+    Iterate over word segments as `(start_byte, end_byte_exclusive)`
+    byte pairs. No per-yield allocation.
+    """
+    Words._ranges(_utf8)
+
+  fun val sentences(): Iterator[String val] =>
+    """
+    Iterate over UAX #29 sentence segments as zero-byte-copy
+    `String val` slices.
+    """
+    Sentences._iter(_utf8)
+
+  fun box sentence_ranges(): Iterator[(USize, USize)] =>
+    """
+    Iterate over sentence segments as `(start_byte, end_byte_exclusive)`
+    byte pairs.
+    """
+    Sentences._ranges(_utf8)
+
+  fun val lines(): Iterator[String val] =>
+    """
+    Iterate over UAX #14 line-break opportunities, yielding each line
+    as a zero-byte-copy `String val` slice. Each yielded slice ends
+    where a line break would occur (either a mandatory break — LF, CR,
+    NEL — or a soft opportunity).
+    """
+    Lines._iter(_utf8)
+
+  fun box line_ranges(): Iterator[(USize, USize)] =>
+    """
+    Iterate over line segments as `(start_byte, end_byte_exclusive)`
+    byte pairs.
+    """
+    Lines._ranges(_utf8)
+
+  fun box scripts(): ScriptSet val =>
+    """
+    The set of `script(cp)` values for every codepoint in this Text.
+    Includes `ScriptCommon` (digits, punctuation) and
+    `ScriptInherited` (combining marks) when present; call
+    `.resolved()` on the result to drop those.
+    """
+    Scripts.of(_utf8)
+
+  fun box dominant_script(): Script =>
+    """
+    The most-frequent non-Common, non-Inherited script in this Text.
+    Ties broken by first-seen. Returns `ScriptCommon` for an empty
+    or all-Common/Inherited Text.
+    """
+    Scripts.dominant(_utf8)
+
+  fun box contains_unassigned_codepoint(): Bool =>
+    """
+    True iff this Text contains at least one codepoint with
+    `General_Category` = `Cn` (unassigned). Useful as an
+    identifier-input filter: unassigned codepoints in user input are
+    usually a sign of bad data or an attempt to exploit Unicode
+    version skew.
+    """
+    for cp in _utf8.runes() do
+      match Codepoints.category(cp)
+      | Cn => return true
+      end
+    end
+    false
+
   fun box size_graphemes(): USize =>
     """
     Number of extended grapheme clusters in this Text. O(1) on an

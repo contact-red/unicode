@@ -129,6 +129,20 @@ actor \nodoc\ Main is TestList
     test(_TestScriptSetEmpty)
     test(_TestScriptSetResolveLatinNarrowing)
     test(_TestScriptSetResolveMixed)
+    test(_TestScriptSetValueOps)
+    test(_TestScriptSetResolvedFilter)
+    test(_TestScriptsOfSimple)
+    test(_TestScriptsOfMixed)
+    test(_TestScriptsDominantLatin)
+    test(_TestScriptsDominantCyrillicWins)
+    test(_TestScriptsDominantEmpty)
+    test(_TestScriptsRestrictToLatinAccepts)
+    test(_TestScriptsRestrictToLatinRejects)
+    test(_TestScriptsRestrictToWithCommon)
+    test(_TestTextWordsSentencesLines)
+    test(_TestTextScripts)
+    test(_TestTextDominantScript)
+    test(_TestTextContainsUnassigned)
     // M1.F: Binary properties
     test(_TestBinaryPropIDStart)
     test(_TestBinaryPropIDContinue)
@@ -2367,53 +2381,219 @@ class \nodoc\ iso _TestScriptExtensionsBopoLatn is UnitTest
 
 class \nodoc\ iso _TestScriptSetSingleLatin is UnitTest
   fun name(): String =>
-    "ScriptSet: pure Latin text is single-script"
+    "Scripts.is_single_script: pure Latin text"
 
   fun apply(h: TestHelper) =>
-    h.assert_true(ScriptSet.is_single_script("hello world"))
+    h.assert_true(Scripts.is_single_script("hello world"))
 
 class \nodoc\ iso _TestScriptSetMixedLatinCyrillic is UnitTest
   fun name(): String =>
-    "ScriptSet: Latin + Cyrillic letters is mixed-script"
+    "Scripts.is_single_script: Latin + Cyrillic is mixed"
 
   fun apply(h: TestHelper) =>
     // Latin 'A' (U+0041) + Cyrillic 'А' (U+0410) — homograph attack
-    // shape; ScriptSet should flag it as mixed.
-    h.assert_false(
-      ScriptSet.is_single_script("AА"))
+    // shape.
+    h.assert_false(Scripts.is_single_script("AА"))
 
 class \nodoc\ iso _TestScriptSetCommonOnly is UnitTest
   fun name(): String =>
-    "ScriptSet: punctuation-only string is single-script"
+    "Scripts.is_single_script: punctuation-only is single-script"
 
   fun apply(h: TestHelper) =>
-    // ASCII digits and punctuation are Script=Common; they don't
-    // constrain the script choice.
-    h.assert_true(ScriptSet.is_single_script("123 + 456 = 579"))
+    h.assert_true(Scripts.is_single_script("123 + 456 = 579"))
 
 class \nodoc\ iso _TestScriptSetEmpty is UnitTest
   fun name(): String =>
-    "ScriptSet: empty string is single-script"
+    "Scripts.is_single_script: empty string is single-script"
 
   fun apply(h: TestHelper) =>
-    h.assert_true(ScriptSet.is_single_script(""))
+    h.assert_true(Scripts.is_single_script(""))
 
 class \nodoc\ iso _TestScriptSetResolveLatinNarrowing is UnitTest
   fun name(): String =>
-    "ScriptSet.resolve narrows to {Latin} for Latin letters + digits"
+    "resolved_script_set narrows to {Latin} for Latin + digits"
 
   fun apply(h: TestHelper) =>
-    let r = ScriptSet.resolve("abc123")
+    let r = Scripts.resolved_script_set("abc123")
     h.assert_eq[USize](1, r.size())
-    try h.assert_true(r(0)? is ScriptLatin) end
+    h.assert_true(r.contains(ScriptLatin))
 
 class \nodoc\ iso _TestScriptSetResolveMixed is UnitTest
   fun name(): String =>
-    "ScriptSet.resolve returns empty for mixed Latin/Cyrillic"
+    "resolved_script_set is empty for mixed Latin/Cyrillic"
 
   fun apply(h: TestHelper) =>
-    let r = ScriptSet.resolve("AА")
+    let r = Scripts.resolved_script_set("AА")
     h.assert_eq[USize](0, r.size())
+
+class \nodoc\ iso _TestScriptSetValueOps is UnitTest
+  fun name(): String =>
+    "ScriptSet: create/size/contains/to_array round-trip"
+
+  fun apply(h: TestHelper) =>
+    let s = ScriptSet.create([
+      as Script: ScriptLatin; ScriptCyrillic; ScriptLatin
+    ])
+    h.assert_eq[USize](2, s.size())
+    h.assert_true(s.contains(ScriptLatin))
+    h.assert_true(s.contains(ScriptCyrillic))
+    h.assert_false(s.contains(ScriptGreek))
+    let a = s.to_array()
+    h.assert_eq[USize](2, a.size())
+
+class \nodoc\ iso _TestScriptSetResolvedFilter is UnitTest
+  fun name(): String =>
+    "ScriptSet.resolved drops Common and Inherited"
+
+  fun apply(h: TestHelper) =>
+    let s = ScriptSet.create([
+      as Script: ScriptLatin; ScriptCommon; ScriptInherited
+    ])
+    let r = s.resolved()
+    h.assert_eq[USize](1, r.size())
+    h.assert_true(r.contains(ScriptLatin))
+    h.assert_false(r.contains(ScriptCommon))
+    h.assert_false(r.contains(ScriptInherited))
+
+class \nodoc\ iso _TestScriptsOfSimple is UnitTest
+  fun name(): String => "Scripts.of: 'abc' is {Latin}"
+
+  fun apply(h: TestHelper) =>
+    let s = Scripts.of("abc")
+    h.assert_eq[USize](1, s.size())
+    h.assert_true(s.contains(ScriptLatin))
+
+class \nodoc\ iso _TestScriptsOfMixed is UnitTest
+  fun name(): String =>
+    "Scripts.of: 'abc123' contains Latin and Common"
+
+  fun apply(h: TestHelper) =>
+    let s = Scripts.of("abc123")
+    h.assert_eq[USize](2, s.size())
+    h.assert_true(s.contains(ScriptLatin))
+    h.assert_true(s.contains(ScriptCommon))
+    // resolved() drops the Common.
+    let r = s.resolved()
+    h.assert_eq[USize](1, r.size())
+    h.assert_true(r.contains(ScriptLatin))
+
+class \nodoc\ iso _TestScriptsDominantLatin is UnitTest
+  fun name(): String =>
+    "Scripts.dominant: 'hello world' is Latin"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Scripts.dominant("hello world") is ScriptLatin)
+    // Mixed with digits: digits are Common and skipped, so Latin
+    // still wins.
+    h.assert_true(Scripts.dominant("a1b2c3") is ScriptLatin)
+
+class \nodoc\ iso _TestScriptsDominantCyrillicWins is UnitTest
+  fun name(): String =>
+    "Scripts.dominant: count wins over tie-breaker"
+
+  fun apply(h: TestHelper) =>
+    // Three Cyrillic letters, one Latin → Cyrillic wins by count
+    // even though Latin appears first.
+    h.assert_true(Scripts.dominant("Aбвг") is ScriptCyrillic)
+
+class \nodoc\ iso _TestScriptsDominantEmpty is UnitTest
+  fun name(): String =>
+    "Scripts.dominant returns Common for empty/all-Common input"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Scripts.dominant("") is ScriptCommon)
+    h.assert_true(Scripts.dominant("12345") is ScriptCommon)
+
+class \nodoc\ iso _TestScriptsRestrictToLatinAccepts is UnitTest
+  fun name(): String =>
+    "Scripts.restrict_to: pure Latin passes Latin allowlist"
+
+  fun apply(h: TestHelper) =>
+    let latin_only = ScriptSet.create([as Script: ScriptLatin])
+    h.assert_true(Scripts.restrict_to("hello", latin_only))
+
+class \nodoc\ iso _TestScriptsRestrictToLatinRejects is UnitTest
+  fun name(): String =>
+    "Scripts.restrict_to: Cyrillic char fails Latin allowlist"
+
+  fun apply(h: TestHelper) =>
+    let latin_only = ScriptSet.create([as Script: ScriptLatin])
+    h.assert_false(Scripts.restrict_to("AА", latin_only))
+
+class \nodoc\ iso _TestScriptsRestrictToWithCommon is UnitTest
+  fun name(): String =>
+    "Scripts.restrict_to: digits and punctuation fit any allowlist"
+
+  fun apply(h: TestHelper) =>
+    let latin_only = ScriptSet.create([as Script: ScriptLatin])
+    h.assert_true(Scripts.restrict_to("hello, world!", latin_only))
+    h.assert_true(Scripts.restrict_to("abc123-456", latin_only))
+
+class \nodoc\ iso _TestTextWordsSentencesLines is UnitTest
+  fun name(): String =>
+    "Text exposes words / sentences / lines + _ranges variants"
+
+  fun apply(h: TestHelper) =>
+    try
+      let t = Text.from_string("Hi there. Bye now.")?
+      var words: USize = 0
+      for _ in t.words() do words = words + 1 end
+      h.assert_true(words > 0)
+      var sents: USize = 0
+      for _ in t.sentences() do sents = sents + 1 end
+      h.assert_eq[USize](2, sents)
+      var lines: USize = 0
+      for _ in t.lines() do lines = lines + 1 end
+      h.assert_true(lines > 0)
+      var word_rngs: USize = 0
+      for _ in t.word_ranges() do word_rngs = word_rngs + 1 end
+      h.assert_eq[USize](words, word_rngs)
+    else
+      h.fail("Text.from_string raised on valid UTF-8")
+    end
+
+class \nodoc\ iso _TestTextScripts is UnitTest
+  fun name(): String => "Text.scripts() returns Latin for 'abc'"
+
+  fun apply(h: TestHelper) =>
+    try
+      let t = Text.from_string("abc")?
+      let s = t.scripts().resolved()
+      h.assert_eq[USize](1, s.size())
+      h.assert_true(s.contains(ScriptLatin))
+    else
+      h.fail("Text.from_string raised on valid UTF-8")
+    end
+
+class \nodoc\ iso _TestTextDominantScript is UnitTest
+  fun name(): String =>
+    "Text.dominant_script: 'hello мир' is Latin (3 vs 3 + first-seen)"
+
+  fun apply(h: TestHelper) =>
+    try
+      // 'hello' = 5 Latin; 'мир' = 3 Cyrillic. Latin wins by count.
+      let t = Text.from_string("hello мир")?
+      h.assert_true(t.dominant_script() is ScriptLatin)
+    else
+      h.fail("Text.from_string raised on valid UTF-8")
+    end
+
+class \nodoc\ iso _TestTextContainsUnassigned is UnitTest
+  fun name(): String =>
+    "Text.contains_unassigned_codepoint: true for reserved cps"
+
+  fun apply(h: TestHelper) =>
+    try
+      let t1 = Text.from_string("hello")?
+      h.assert_false(t1.contains_unassigned_codepoint())
+      // U+50005 is unassigned (reserved) in Unicode 16.
+      let buf = recover trn String end
+      buf.push_utf32(0x50005)
+      let t2 = Text.from_string(consume buf)?
+      h.assert_true(t2.contains_unassigned_codepoint())
+    else
+      h.fail("Text.from_string raised on valid UTF-8")
+    end
 
 // ---- M1.D: Full + case folding mappings ----
 

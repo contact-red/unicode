@@ -27,7 +27,7 @@ primitive _UcdScript
         if cp < range_lo then hi = mid
         elseif cp > range_hi then lo = mid + 1
         else
-          return Scripts._from_byte(
+          return _ScriptCodec.from_byte(
             U8.from[U32](_UcdHex.byte(t, base + 16)?))
         end
       else return ScriptUnknown
