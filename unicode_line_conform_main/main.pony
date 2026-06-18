@@ -102,12 +102,7 @@ actor Main
     end
     env.out.print("line conformance: checked " + checked.string()
       + ", failed " + failed.string())
-    // Acceptance threshold for the line runner. Without an
-    // East_Asian_Width property table, LB19a / LB30 wide-vs-narrow
-    // tailoring details cannot be applied; ~45 known failures fall
-    // into this category. Tighten this when EAW lands.
-    let allowed: USize = 50
-    if failed > allowed then env.exitcode(1) end
+    if failed > 0 then env.exitcode(1) end
 
   fun _parse(body: String val)
     : (Array[U32] val, Array[USize] val) ?

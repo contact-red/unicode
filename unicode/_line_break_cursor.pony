@@ -17,12 +17,11 @@
 //
 // LB10 fallback: any remaining CM/ZWJ that wasn't absorbed becomes AL.
 //
-// Scope: this implementation covers LB2..LB31 with the exception of
-// East-Asian-Width-dependent details in LB19a and LB30. Those tailor
-// rules around CJK punctuation by ea=F/W/H/N; without an EAW property
-// table we apply the generic versions of LB19 and LB30. Conformance
-// on text containing wide/narrow boundary cases may differ from the
-// reference.
+// Scope: covers LB2..LB31 of UAX #14 (Unicode 16), including the
+// East-Asian-Width-dependent tailoring in LB19/19a, LB21a, and LB30
+// (excluded set $EastAsian = ea ∈ {F, W, H}), plus the Brahmic LB28a
+// orthographic-syllable rules including the dotted-circle (U+25CC)
+// placeholder, and LB30b's extended-pictographic ∩ Cn × EM clause.
 
 class ref _LineBreakCursor
   let _boundaries: Array[USize] val
@@ -243,8 +242,36 @@ primitive _LineBoundaries
     end
     // LB18: SP ÷
     if curr is LBSP then return true end
-    // LB19: × QU, QU ×
-    if (next is LBQU) or (curr is LBQU) then return false end
+    // LB19 (Unicode 16): × [QU-Pi], [QU-Pf] ×
+    // Plus LB19a: unless surrounded by East Asian, do not break either
+    // side of any QU. East-Asian set = ea ∈ {F, W, H}.
+    if next is LBQU then
+      // LB19 .01 — × [QU-Pi]: suppress break before any QU that is
+      // NOT Initial-Punctuation.
+      if not _is_pi_at(cps, i + 1) then return false end
+      // LB19a (Pi-QU branch). Suppress when prev cp is non-EA OR when
+      // the cp after QU is non-EA / eot.
+      if not _is_east_asian_eff_at(cps, absorbed, i) then return false end
+      if not _is_east_asian_eff_after(cps, absorbed, i + 2) then
+        return false
+      end
+      // Surrounded by East Asian — allow break (LB31 default).
+    end
+    if curr is LBQU then
+      // LB19 .02 — [QU-Pf] ×: suppress break after any QU that is
+      // NOT Final-Punctuation.
+      if not _is_pf_at(cps, i) then return false end
+      // LB19a (Pf-QU branch). Suppress when next cp is non-EA OR when
+      // the cp before QU is sot / non-EA.
+      if not _is_east_asian_eff_at(cps, absorbed, i + 1) then
+        return false
+      end
+      if (i == 0) or
+        not _is_east_asian_eff_before(cps, absorbed, i)
+      then
+        return false
+      end
+    end
     // LB20: ÷ CB, CB ÷
     if (next is LBCB) or (curr is LBCB) then return true end
     // LB20a: (sot | BK | CR | LF | NL | SP | ZW | CB | GL)
@@ -266,10 +293,15 @@ primitive _LineBoundaries
       return false
     end
     if curr is LBBB then return false end
-    // LB21a (Unicode 16): HL (HY | BA) × [^HL]
-    // No break after HL-HY/HL-BA, EXCEPT when the next class is
-    // another HL (then default break applies).
-    if ((curr is LBHY) or (curr is LBBA)) and (not (next is LBHL)) then
+    // LB21a (Unicode 16): HL (HY | [BA-$EastAsian]) × [^HL]
+    // No break after HL followed by HY or non-East-Asian BA. East
+    // Asian BA chars (e.g. CJK middle dot U+00B7 — wait, classified
+    // as AI) — we exclude them by EAW lookup on curr cp.
+    let curr_is_hy_or_baw =
+      (curr is LBHY) or
+      ((curr is LBBA)
+        and not _is_east_asian_eff_at(cps, absorbed, i))
+    if curr_is_hy_or_baw and (not (next is LBHL)) then
       if _is_hl_two_back(cls, absorbed, i) then return false end
     end
     // LB21b: SY × HL
@@ -305,9 +337,22 @@ primitive _LineBoundaries
     then
       return false
     end
-    // LB25: numeric clusters (PR|PO|OP|HY)? NU (NU|SY|IS)* (CL|CP)?
-    // (PR|PO)? — simplified: treat NU as part of an extended numeric
-    // chain.
+    // LB25 (Unicode 16): do not break numbers. Full pair list:
+    //   NU (SY|IS)* CL × PO
+    //   NU (SY|IS)* CP × PO
+    //   NU (SY|IS)* CL × PR
+    //   NU (SY|IS)* CP × PR
+    //   NU (SY|IS)*    × PO
+    //   NU (SY|IS)*    × PR
+    //   PO × OP NU
+    //   PO × OP IS NU
+    //   PO × NU
+    //   PR × OP NU
+    //   PR × OP IS NU
+    //   PR × NU
+    //   HY × NU
+    //   IS × NU
+    //   NU (SY|IS)*    × NU
     if _lb25_no_break(cls, absorbed, i) then return false end
     // LB26: JL × (JL | JV | H2 | H3)
     if curr is LBJL then
@@ -349,32 +394,56 @@ primitive _LineBoundaries
     //   (AK | ◌ | AS) × (VF | VI)
     //   (AK | ◌ | AS) VI × (AK | ◌)
     //   (AK | ◌ | AS) × (AK | ◌ | AS) VF
-    // (The Indic-script "◌" placeholder is the dotted circle U+25CC;
-    // for property purposes it's treated as AK/AS-equivalent. We
-    // approximate by AK/AS.)
-    if (curr is LBAP) and
-      ((next is LBAK) or (next is LBAS))
-    then
-      return false
-    end
-    if ((curr is LBAK) or (curr is LBAS))
+    // The Indic placeholder ◌ is U+25CC DOTTED CIRCLE. We detect it
+    // by codepoint and treat it as equivalent to AK for these rules.
+    let curr_is_ak_or_dc =
+      (curr is LBAK) or _is_dotted_circle_at(cps, absorbed, i)
+    let curr_is_aksas =
+      curr_is_ak_or_dc or (curr is LBAS)
+    let next_is_ak_or_dc =
+      (next is LBAK) or _is_dotted_circle_at(cps, absorbed, i + 1)
+    let next_is_aksas =
+      next_is_ak_or_dc or (next is LBAS)
+    if (curr is LBAP) and next_is_aksas then return false end
+    if curr_is_aksas
       and ((next is LBVF) or (next is LBVI))
     then
       return false
+    end
+    // Rule 3: ((AK|◌|AS) VI) × (AK|◌)
+    // curr is VI; need prev anchor class ∈ AK/AS/◌; next ∈ AK/◌.
+    if (curr is LBVI) and next_is_ak_or_dc then
+      if _lb28a_prev_is_aksas(cls, cps, absorbed, i) then
+        return false
+      end
+    end
+    // Rule 4: ((AK|◌|AS) × (AK|◌|AS) VF) — when curr and next are
+    // both AK/AS/◌ and the next-after-next is VF.
+    if curr_is_aksas and next_is_aksas then
+      if _lb28a_next_after_is_vf(cls, absorbed, i + 1) then
+        return false
+      end
     end
     // LB29: IS × (AL | HL)
     if (curr is LBIS) and ((next is LBAL) or (next is LBHL)) then
       return false
     end
-    // LB30: (AL | HL | NU) × OP, CP × (AL | HL | NU)
-    // (without EAW restriction — generic version)
+    // LB30 (Unicode 16):
+    //   (AL | HL | NU) × [OP - $EastAsian]
+    //   [CP - $EastAsian] × (AL | HL | NU)
+    // The excluded set ($EastAsian = ea ∈ {F, W, H}) refines the
+    // rule to allow a break before an East Asian OP or after an East
+    // Asian CP — e.g. between a Latin letter and a wide corner
+    // bracket.
     if ((curr is LBAL) or (curr is LBHL) or (curr is LBNU))
       and (next is LBOP)
+      and not _is_east_asian_eff_at(cps, absorbed, i + 1)
     then
       return false
     end
-    if (curr is LBCP) and
-      ((next is LBAL) or (next is LBHL) or (next is LBNU))
+    if (curr is LBCP)
+      and ((next is LBAL) or (next is LBHL) or (next is LBNU))
+      and not _is_east_asian_eff_at(cps, absorbed, i)
     then
       return false
     end
@@ -386,9 +455,11 @@ primitive _LineBoundaries
       let ri_count = _count_ri_back(cls, absorbed, i)
       if (ri_count % 2) == 1 then return false end
     end
-    // LB30b: EB × EM
+    // LB30b: EB × EM, [\p{Extended_Pictographic}&\p{Cn}] × EM
     if (curr is LBEB) and (next is LBEM) then return false end
-    // LB30b: extended pictographic + Cn × EM — approximation: skip.
+    if (next is LBEM) and _is_extpict_cn_eff_at(cps, absorbed, i) then
+      return false
+    end
     // LB31: ÷ Any (default — allow break)
     true
 
@@ -550,48 +621,67 @@ primitive _LineBoundaries
     : Bool
   =>
     """
-    LB25 (simplified): suppress break inside a numeric cluster.
-    The official rule covers (PR|PO|OP|HY)? NU (NU|SY|IS)*
-    (CL|CP)? (PR|PO)? — we treat anything around an NU run that
-    matches the pattern conservatively.
+    LB25 pair-table dispatch. Returns true to suppress break.
+    See the rule list in `_break_between`.
     """
     let curr = try cls(i)? else return false end
     let next = try cls(i + 1)? else return false end
-    let in_chain = _in_numeric_chain(cls, absorbed, i)
-    // NU × NU — always part of a chain.
-    if (curr is LBNU) and (next is LBNU) then return true end
-    // NU × (SY | IS | CL | CP | PR | PO) — chain continues.
-    if (curr is LBNU) and
-      ((next is LBSY) or (next is LBIS) or (next is LBCL)
-        or (next is LBCP) or (next is LBPR) or (next is LBPO))
+
+    // Direct pairs that don't require chain tracking:
+    //   (PR|PO) × NU
+    //   HY × NU
+    //   IS × NU
+    if ((curr is LBPR) or (curr is LBPO) or (curr is LBHY)
+      or (curr is LBIS)) and (next is LBNU)
     then
       return true
     end
-    // (PR | PO) × NU — chain prefix.
-    if ((curr is LBPR) or (curr is LBPO)) and (next is LBNU) then
+
+    // (PR|PO) × OP NU,  (PR|PO) × OP IS NU
+    if ((curr is LBPR) or (curr is LBPO)) and (next is LBOP) then
+      let j = _next_eff_index(absorbed, i + 2)
+      if j < absorbed.size() then
+        try
+          let after_op = cls(j)?
+          if after_op is LBNU then return true end
+          if after_op is LBIS then
+            let k = _next_eff_index(absorbed, j + 1)
+            if k < absorbed.size() then
+              if cls(k)? is LBNU then return true end
+            end
+          end
+        end
+      end
+    end
+
+    // NU (SY|IS)* × {NU, PO, PR}
+    // — chain anchored on a prior NU; (SY|IS)* skip.
+    // Same chain helper also covers NU × NU, NU × PO, NU × PR
+    // (because curr=NU IS in the chain).
+    let in_chain = _in_numeric_chain(cls, absorbed, i)
+    if in_chain
+      and ((next is LBNU) or (next is LBPO) or (next is LBPR))
+    then
       return true
     end
-    // (OP | HY) × NU — chain prefix.
-    if (curr is LBOP) and (next is LBNU) then return true end
-    if (curr is LBHY) and (next is LBNU) then return true end
-    // IS × NU — unconditional per LB25 pair list (SY × NU is NOT
-    // unconditional; only `NU SY* × NU` in chain context).
-    if (curr is LBIS) and (next is LBNU) then return true end
-    // (SY | IS | CL | CP) × ... — only when the chain anchor (an
-    // earlier NU) is still in play.
-    if in_chain then
-      if ((curr is LBSY) or (curr is LBIS))
-        and ((next is LBNU) or (next is LBSY) or (next is LBIS)
-          or (next is LBCL) or (next is LBCP))
-      then
-        return true
-      end
-      if ((curr is LBCL) or (curr is LBCP))
-        and ((next is LBPR) or (next is LBPO))
-      then
-        return true
+
+    // NU (SY|IS)* (CL|CP) × (PO|PR)
+    // — when curr is CL/CP and the preceding chain (skipping
+    //   SY|IS) ends in NU.
+    if ((curr is LBCL) or (curr is LBCP))
+      and ((next is LBPO) or (next is LBPR))
+    then
+      if i > 0 then
+        let p = _prev_eff_index(absorbed, i - 1)
+        if p >= 0 then
+          if _in_numeric_chain(cls, absorbed, USize.from[ISize](p))
+          then
+            return true
+          end
+        end
       end
     end
+
     false
 
   fun _in_numeric_chain(
@@ -799,6 +889,154 @@ primitive _LineBoundaries
     end
     // eot
     true
+
+  fun _next_eff_index(
+    absorbed: Array[Bool] box, start: USize): USize
+  =>
+    """
+    First non-absorbed index at or after `start`, or `absorbed.size()`
+    (eot sentinel) if none.
+    """
+    var k: USize = start
+    let n = absorbed.size()
+    while k < n do
+      try if not absorbed(k)? then return k end end
+      k = k + 1
+    end
+    n
+
+  fun _prev_eff_index(
+    absorbed: Array[Bool] box, start: USize): ISize
+  =>
+    """
+    Most recent non-absorbed index at or before `start`, or -1 (sot
+    sentinel).
+    """
+    var k: ISize = ISize.from[USize](start)
+    while k >= 0 do
+      try
+        if not absorbed(USize.from[ISize](k))? then return k end
+      end
+      k = k - 1
+    end
+    -1
+
+  fun _is_east_asian_cp(cp: U32): Bool =>
+    """East Asian if EAW ∈ {F, W, H} per UAX #11."""
+    match _UcdEastAsianWidth.of(cp)
+    | EAWF => true
+    | EAWW => true
+    | EAWH => true
+    else false
+    end
+
+  fun _is_east_asian_eff_at(
+    cps: Array[U32] box, absorbed: Array[Bool] box, i: USize): Bool
+  =>
+    """
+    East-Asian-Width of the anchor cp at position i (walks back
+    through absorbed CM/ZWJ to find the anchor). Returns false at
+    eot or sot.
+    """
+    let n = absorbed.size()
+    if i >= n then return false end
+    let idx = _prev_eff_index(absorbed, i)
+    if idx < 0 then return false end
+    try _is_east_asian_cp(cps(USize.from[ISize](idx))?) else false end
+
+  fun _is_east_asian_eff_after(
+    cps: Array[U32] box, absorbed: Array[Bool] box, start: USize): Bool
+  =>
+    """
+    East-Asian-Width of the next anchor cp at or after `start`.
+    Returns false at eot.
+    """
+    let n = absorbed.size()
+    let idx = _next_eff_index(absorbed, start)
+    if idx >= n then return false end
+    try _is_east_asian_cp(cps(idx)?) else false end
+
+  fun _is_east_asian_eff_before(
+    cps: Array[U32] box, absorbed: Array[Bool] box, i: USize): Bool
+  =>
+    """
+    East-Asian-Width of the anchor cp strictly before position i.
+    Returns false at sot.
+    """
+    if i == 0 then return false end
+    let idx = _prev_eff_index(absorbed, i - 1)
+    if idx < 0 then return false end
+    try _is_east_asian_cp(cps(USize.from[ISize](idx))?) else false end
+
+  fun _is_dotted_circle_at(
+    cps: Array[U32] box, absorbed: Array[Bool] box, i: USize): Bool
+  =>
+    """
+    True iff the cp at position i (after walking through absorbed CMs
+    to the anchor) is U+25CC DOTTED CIRCLE.
+    """
+    let n = absorbed.size()
+    if i >= n then return false end
+    let idx = _prev_eff_index(absorbed, i)
+    if idx < 0 then return false end
+    try cps(USize.from[ISize](idx))? == 0x25CC else false end
+
+  fun _lb28a_prev_is_aksas(
+    cls: Array[LineBreak] box,
+    cps: Array[U32] box,
+    absorbed: Array[Bool] box,
+    i: USize): Bool
+  =>
+    """
+    LB28a rule 3 lookback. Walks back to the VI anchor at or before
+    position i (curr may be an absorbed CM/ZWJ tagged with VI's
+    class), then verifies the next non-absorbed position before that
+    anchor is AK, AS, or U+25CC.
+    """
+    let vi_idx = _prev_eff_index(absorbed, i)
+    if vi_idx < 1 then return false end
+    let vi_anchor = USize.from[ISize](vi_idx)
+    let p = _prev_eff_index(absorbed, vi_anchor - 1)
+    if p < 0 then return false end
+    try
+      let c = cls(USize.from[ISize](p))?
+      if (c is LBAK) or (c is LBAS) then return true end
+      cps(USize.from[ISize](p))? == 0x25CC
+    else false
+    end
+
+  fun _lb28a_next_after_is_vf(
+    cls: Array[LineBreak] box,
+    absorbed: Array[Bool] box,
+    start: USize): Bool
+  =>
+    """
+    LB28a rule 4 lookahead: the next anchor class after `start` is VF.
+    """
+    let j = _next_eff_index(absorbed, start + 1)
+    if j >= absorbed.size() then return false end
+    try cls(j)? is LBVF else false end
+
+  fun _is_extpict_cn_eff_at(
+    cps: Array[U32] box, absorbed: Array[Bool] box, i: USize): Bool
+  =>
+    """
+    True iff the anchor cp at position i has both
+    Extended_Pictographic = Yes and General_Category = Cn (unassigned).
+    Used for LB30b's second form.
+    """
+    let n = absorbed.size()
+    if i >= n then return false end
+    let idx = _prev_eff_index(absorbed, i)
+    if idx < 0 then return false end
+    let cp = try cps(USize.from[ISize](idx))? else return false end
+    if not Codepoints.has_binary_property(cp, PropExtendedPictographic) then
+      return false
+    end
+    match Codepoints.category(cp)
+    | Cn => true
+    else false
+    end
 
   fun _decode(bytes: String box, offset: USize): (U32, USize) ? =>
     let b0 = bytes(offset)?

@@ -114,6 +114,11 @@ actor \nodoc\ Main is TestList
     test(_TestScriptUnassigned)
     test(_TestScriptCode)
     test(_TestScriptsFromIso)
+    test(_TestEastAsianWidthAscii)
+    test(_TestEastAsianWidthIdeograph)
+    test(_TestEastAsianWidthFullwidth)
+    test(_TestEastAsianWidthAmbiguous)
+    test(_TestEastAsianWidthsFromIso)
     // M1.F: Binary properties
     test(_TestBinaryPropIDStart)
     test(_TestBinaryPropIDContinue)
@@ -2235,6 +2240,53 @@ class \nodoc\ iso _TestScriptsFromIso is UnitTest
     match Scripts.from_iso("NotARealScript")
     | None => None
     | let _: Script => h.fail("expected None for fake script name")
+    end
+
+class \nodoc\ iso _TestEastAsianWidthAscii is UnitTest
+  fun name(): String => "east_asian_width: ASCII letters are EAWNa"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.east_asian_width(U32('A')) is EAWNa)
+    h.assert_true(Codepoints.east_asian_width(U32('0')) is EAWNa)
+
+class \nodoc\ iso _TestEastAsianWidthIdeograph is UnitTest
+  fun name(): String => "east_asian_width: CJK ideograph is EAWW"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.east_asian_width(0x4E2D) is EAWW)
+    // U+2329 LEFT-POINTING ANGLE BRACKET — explicitly Wide.
+    h.assert_true(Codepoints.east_asian_width(0x2329) is EAWW)
+
+class \nodoc\ iso _TestEastAsianWidthFullwidth is UnitTest
+  fun name(): String => "east_asian_width: fullwidth paren is EAWF"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.east_asian_width(0xFF08) is EAWF)
+    h.assert_true(Codepoints.east_asian_width(0xFF09) is EAWF)
+
+class \nodoc\ iso _TestEastAsianWidthAmbiguous is UnitTest
+  fun name(): String => "east_asian_width: section sign is EAWA"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(Codepoints.east_asian_width(0x00A7) is EAWA)
+
+class \nodoc\ iso _TestEastAsianWidthsFromIso is UnitTest
+  fun name(): String => "EastAsianWidths.from_iso round-trips name"
+
+  fun apply(h: TestHelper) =>
+    match EastAsianWidths.from_iso("W")
+    | let _: EAWW => None
+    | let _: EastAsianWidth => h.fail("expected EAWW")
+    | None => h.fail("from_iso(\"W\") returned None")
+    end
+    match EastAsianWidths.from_iso("Na")
+    | let _: EAWNa => None
+    | let _: EastAsianWidth => h.fail("expected EAWNa")
+    | None => h.fail("from_iso(\"Na\") returned None")
+    end
+    match EastAsianWidths.from_iso("XX")
+    | None => None
+    | let _: EastAsianWidth => h.fail("expected None for unknown name")
     end
 
 // ---- M1.D: Full + case folding mappings ----
