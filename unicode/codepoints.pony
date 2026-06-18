@@ -148,6 +148,18 @@ primitive Codepoints
     """
     _UcdScript.of(u)
 
+  fun script_extensions(u: U32): Array[Script] val =>
+    """
+    The Script_Extensions property of `u` per UAX #24. Returns the
+    set of scripts that use `u`, in the order they appear in
+    ScriptExtensions.txt. For codepoints not listed there (the vast
+    majority), the result is `[script(u)]`.
+    """
+    match _UcdScriptExtensions.of(u)
+    | let a: Array[Script] val => a
+    | None => [script(u)]
+    end
+
   fun east_asian_width(u: U32): EastAsianWidth =>
     """
     The East_Asian_Width property of `u` per UAX #11. Returns `EAWN`

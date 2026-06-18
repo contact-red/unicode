@@ -119,6 +119,16 @@ actor \nodoc\ Main is TestList
     test(_TestEastAsianWidthFullwidth)
     test(_TestEastAsianWidthAmbiguous)
     test(_TestEastAsianWidthsFromIso)
+    test(_TestScriptExtensionsFallback)
+    test(_TestScriptExtensionsArabicTatweel)
+    test(_TestScriptExtensionsMiddleDot)
+    test(_TestScriptExtensionsBopoLatn)
+    test(_TestScriptSetSingleLatin)
+    test(_TestScriptSetMixedLatinCyrillic)
+    test(_TestScriptSetCommonOnly)
+    test(_TestScriptSetEmpty)
+    test(_TestScriptSetResolveLatinNarrowing)
+    test(_TestScriptSetResolveMixed)
     // M1.F: Binary properties
     test(_TestBinaryPropIDStart)
     test(_TestBinaryPropIDContinue)
@@ -2288,6 +2298,122 @@ class \nodoc\ iso _TestEastAsianWidthsFromIso is UnitTest
     | None => None
     | let _: EastAsianWidth => h.fail("expected None for unknown name")
     end
+
+class \nodoc\ iso _TestScriptExtensionsFallback is UnitTest
+  fun name(): String =>
+    "script_extensions: falls back to [script(u)] when not listed"
+
+  fun apply(h: TestHelper) =>
+    // 'A' is Latin and has no Script_Extensions entry — should
+    // fall back to a one-element list containing ScriptLatin.
+    let exts = Codepoints.script_extensions(U32('A'))
+    h.assert_eq[USize](1, exts.size())
+    try h.assert_true(exts(0)? is ScriptLatin) end
+
+class \nodoc\ iso _TestScriptExtensionsArabicTatweel is UnitTest
+  fun name(): String =>
+    "script_extensions: U+0640 (ARABIC TATWEEL) has many scripts"
+
+  fun apply(h: TestHelper) =>
+    // U+0640 is shared across all Arabic-family scripts. The exact
+    // count varies by Unicode version; we just check that it's
+    // wide and includes Arabic.
+    let exts = Codepoints.script_extensions(0x0640)
+    h.assert_true(exts.size() > 5,
+      "expected > 5 script extensions for U+0640, got "
+        + exts.size().string())
+    var has_arabic: Bool = false
+    for s in exts.values() do
+      match s
+      | ScriptArabic => has_arabic = true
+      end
+    end
+    h.assert_true(has_arabic,
+      "expected ScriptArabic in U+0640 extensions")
+
+class \nodoc\ iso _TestScriptExtensionsMiddleDot is UnitTest
+  fun name(): String =>
+    "script_extensions: U+00B7 (MIDDLE DOT) lists multiple scripts"
+
+  fun apply(h: TestHelper) =>
+    let exts = Codepoints.script_extensions(0x00B7)
+    h.assert_true(exts.size() > 1)
+    var has_latin: Bool = false
+    for s in exts.values() do
+      match s
+      | ScriptLatin => has_latin = true
+      end
+    end
+    h.assert_true(has_latin,
+      "expected ScriptLatin in U+00B7 extensions")
+
+class \nodoc\ iso _TestScriptExtensionsBopoLatn is UnitTest
+  fun name(): String =>
+    "script_extensions: U+02C7 (CARON) is exactly {Bopomofo, Latin}"
+
+  fun apply(h: TestHelper) =>
+    let exts = Codepoints.script_extensions(0x02C7)
+    h.assert_eq[USize](2, exts.size())
+    var has_latin: Bool = false
+    var has_bopo: Bool = false
+    for s in exts.values() do
+      match s
+      | ScriptLatin => has_latin = true
+      | ScriptBopomofo => has_bopo = true
+      end
+    end
+    h.assert_true(has_latin)
+    h.assert_true(has_bopo)
+
+class \nodoc\ iso _TestScriptSetSingleLatin is UnitTest
+  fun name(): String =>
+    "ScriptSet: pure Latin text is single-script"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(ScriptSet.is_single_script("hello world"))
+
+class \nodoc\ iso _TestScriptSetMixedLatinCyrillic is UnitTest
+  fun name(): String =>
+    "ScriptSet: Latin + Cyrillic letters is mixed-script"
+
+  fun apply(h: TestHelper) =>
+    // Latin 'A' (U+0041) + Cyrillic 'А' (U+0410) — homograph attack
+    // shape; ScriptSet should flag it as mixed.
+    h.assert_false(
+      ScriptSet.is_single_script("AА"))
+
+class \nodoc\ iso _TestScriptSetCommonOnly is UnitTest
+  fun name(): String =>
+    "ScriptSet: punctuation-only string is single-script"
+
+  fun apply(h: TestHelper) =>
+    // ASCII digits and punctuation are Script=Common; they don't
+    // constrain the script choice.
+    h.assert_true(ScriptSet.is_single_script("123 + 456 = 579"))
+
+class \nodoc\ iso _TestScriptSetEmpty is UnitTest
+  fun name(): String =>
+    "ScriptSet: empty string is single-script"
+
+  fun apply(h: TestHelper) =>
+    h.assert_true(ScriptSet.is_single_script(""))
+
+class \nodoc\ iso _TestScriptSetResolveLatinNarrowing is UnitTest
+  fun name(): String =>
+    "ScriptSet.resolve narrows to {Latin} for Latin letters + digits"
+
+  fun apply(h: TestHelper) =>
+    let r = ScriptSet.resolve("abc123")
+    h.assert_eq[USize](1, r.size())
+    try h.assert_true(r(0)? is ScriptLatin) end
+
+class \nodoc\ iso _TestScriptSetResolveMixed is UnitTest
+  fun name(): String =>
+    "ScriptSet.resolve returns empty for mixed Latin/Cyrillic"
+
+  fun apply(h: TestHelper) =>
+    let r = ScriptSet.resolve("AА")
+    h.assert_eq[USize](0, r.size())
 
 // ---- M1.D: Full + case folding mappings ----
 
