@@ -42,40 +42,40 @@ primitive DecompTableEmitter
 
       out.append("primitive _UcdCombiningClass\n")
       out.append("  fun of(cp: U32): U8 =>\n")
-      out.append("    let t = _table()\n")
-      out.append("    var lo: USize = 0\n")
-      out.append("    var hi: USize = t.size() / 10\n")
-      out.append("    while lo < hi do\n")
-      out.append("      let mid = lo + ((hi - lo) / 2)\n")
-      out.append("      let base = mid * 10\n")
-      out.append("      try\n")
-      out.append("        let key: U32 =\n")
-      out.append("          _UcdHex.byte(t, base)?\n")
-      out.append("            or (_UcdHex.byte(t, base + 2)? << 8)\n")
-      out.append("            or (_UcdHex.byte(t, base + 4)? << 16)\n")
-      out.append("            or (_UcdHex.byte(t, base + 6)? << 24)\n")
-      out.append("        if cp < key then\n")
-      out.append("          hi = mid\n")
-      out.append("        elseif cp > key then\n")
-      out.append("          lo = mid + 1\n")
-      out.append("        else\n")
-      out.append("          return U8.from[U32](_UcdHex.byte(t, base + 8)?)\n")
-      out.append("        end\n")
-      out.append("      else\n")
-      out.append("        return 0\n")
-      out.append("      end\n")
-      out.append("    end\n")
-      out.append("    0\n\n")
+      let coalesced = _coalesce_ccc(ccc_entries)
+      let to_variant: {(U8): String val} val =
+        {(b: U8): String val => b.string() }
+      _RangeMatchEmitter.emit(out, coalesced, to_variant, "0")
+      out
+    end
 
-
-      out.append("  fun _table(): String val =>\n")
-      out.append("    \"")
-      for e in ccc_entries.values() do
-        _emit_le_u32(out, e._1)
-        _emit_byte(out, e._2)
+  fun _coalesce_ccc(
+    entries: Array[(U32, U8)] val): Array[(U32, U32, U8)] val
+  =>
+    """
+    Coalesce adjacent same-class entries into ranges. The source data
+    is already sorted by codepoint; many neighbouring codepoints share
+    a combining class (the U+0300..U+0314 above-marks all have class
+    230), so coalescing cuts the emitted arm count substantially.
+    """
+    recover val
+      let out = Array[(U32, U32, U8)]
+      var have: Bool = false
+      var cur_lo: U32 = 0
+      var cur_hi: U32 = 0
+      var cur_v:  U8 = 0
+      for e in entries.values() do
+        if have and (e._1 == (cur_hi + 1)) and (e._2 == cur_v) then
+          cur_hi = e._1
+        else
+          if have then out.push((cur_lo, cur_hi, cur_v)) end
+          cur_lo = e._1
+          cur_hi = e._1
+          cur_v = e._2
+          have = true
+        end
       end
-      out.append("\"\n")
-
+      if have then out.push((cur_lo, cur_hi, cur_v)) end
       out
     end
 
