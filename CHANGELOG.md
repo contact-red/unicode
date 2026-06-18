@@ -2,10 +2,7 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
-## [unreleased] - unreleased
-
-### Fixed
-
+## [0.2.0] - 2026-06-18
 
 ### Added
 
@@ -61,6 +58,4 @@ All notable changes to this project will be documented in this file. This projec
 - `make conform-grapheme`: UAX #29 GraphemeBreakTest.txt conformance (1,093 cases including GB9c)
 - 146 PonyCheck unit tests
 - GitHub Actions CI: pr workflow with lint, changelog verify, and full normalization + grapheme conformance
-
-### Changed
 
