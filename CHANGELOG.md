@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Added
 
+- `Codepoint` class methods: `script()`, `script_extensions()`, `has_property(p)`, `east_asian_width()` — symmetric with the existing `Codepoints.*` primitive accessors
 - Auto-generated `_UcdScriptExtensions` lookup table from `ScriptExtensions.txt` (UAX #24, codepoints used in more than one script). Resolved via `PropertyValueAliases.txt` so the short codes in ScriptExtensions.txt (`Latn`, `Bopo`, …) map to the same `Script` byte encoding as `_UcdScript`
 - `Codepoints.script_extensions(u): Array[Script] val` — falls back to `[script(u)]` for codepoints not listed in ScriptExtensions.txt
 - `ScriptSet` — value type (`class val`) wrapping a sorted, deduplicated set of `Script`s, with `create([scripts])` / `empty()` constructors and `size`, `contains`, `to_array`, `resolved` methods (`resolved` drops `Common` and `Inherited`)

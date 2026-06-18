@@ -6,23 +6,42 @@ Unicode-correct text processing for Pony — graphemes, normalization, case fold
 
 ## Status
 
-Pre-release (VERSION 0.0.0). Foundation milestones M0–M9 complete:
+0.2.0 "Segments and queries" — Unicode 16.0.0. Built on the 0.1.0 foundation, this release adds:
+
+- **UAX #29 word and sentence segmentation** — `Words.iter/ranges/count` and `Sentences.iter/ranges/count`; also surfaced as `Text.words` / `Text.sentences` (+ `*_ranges` variants)
+- **UAX #14 line-break iteration** — `Lines.iter/ranges/count` and `Text.lines`. Implements LB1..LB31 including the EAW-conditional rules in LB19/19a, LB21a, LB30 and the Brahmic LB28a sub-rules
+- **UAX #11 East_Asian_Width** — `Codepoints.east_asian_width(u)` and `Codepoint.east_asian_width()`; the `EastAsianWidth` closed union (A/F/H/N/Na/W)
+- **UAX #24 Script_Extensions** — `Codepoints.script_extensions(u)` and `Codepoint.script_extensions()`; the auto-generated table covers cps used in more than one script
+- **Mixed-script detection** — `Scripts.of`, `Scripts.dominant`, `Scripts.restrict_to`, `Scripts.is_single_script`, `Scripts.resolved_script_set` (UAX #39 §5.1); `ScriptSet` value type for identifier-allowlist policies
+- **`Text` extensions** — `Text.scripts`, `Text.dominant_script`, `Text.contains_unassigned_codepoint`
+
+### Conformance — all five suites at 100% on Unicode 16.0.0
+
+| Suite | Cases |
+|---|---|
+| NormalizationTest.txt Part 1 + Part 2 | 19,965 + 275,446 |
+| GraphemeBreakTest.txt | 1,093 |
+| WordBreakTest.txt | 1,826 |
+| SentenceBreakTest.txt | 512 |
+| LineBreakTest.txt | 16,672 |
+
+195 unit tests in addition to the conformance suites.
+
+### Inherited from 0.1.0 (foundation)
 
 - Validated UTF-8 `Text` with optional grapheme bitmap index
 - Phantom-typed `ByteIndex` / `CodepointIndex` / `GraphemeIndex`
 - UAX #29 extended grapheme cluster iteration
-- UAX #15 normalization (NFC / NFD / NFKC / NFKD) — **100% NormalizationTest.txt conformance** (18,992/18,992 test cases pass)
+- UAX #15 normalization (NFC / NFD / NFKC / NFKD)
 - Case operations (upper / lower / title / fold) with full multi-cp expansions
 - Comparison primitives (byte / canonical / compat / caseless / caseless-canonical per UAX #21 D146)
 - Search / Split / Trim / Replace on UTF-8
 - Full UCD-backed predicates: 30 General Categories, 163 Scripts, ~58 binary properties, ~30k Unicode names, case mappings, decomposition tables
 
-146 PonyCheck unit tests + the NormalizationTest conformance suite.
-
 ## Installation
 
 * Install [corral](https://github.com/ponylang/corral)
-* `corral add github.com/contact-red/unicode.git --version 0.1.0`
+* `corral add github.com/contact-red/unicode.git --version 0.2.0`
 * `corral fetch` to fetch dependencies
 * `use "unicode"` to include this package
 * `corral run -- ponyc` to compile your application
@@ -66,6 +85,24 @@ actor Main
         match Codepoints.script(U32('A'))
         | let _: ScriptLatin => "Latin"
         else "other"
+        end)
+
+      // Segmentation (0.2.0)
+      for w in t.words() do env.out.print("word: " + w) end
+      for line in t.lines() do env.out.print("line: " + line) end
+
+      // Mixed-script detection (0.2.0) — Latin + Cyrillic homograph
+      env.out.print(
+        if Scripts.is_single_script("AА") then "single-script"
+        else "MIXED-SCRIPT (homograph risk)"
+        end)
+
+      // Latin-only identifier policy
+      let latin_only = ScriptSet.create([as Script: ScriptLatin])
+      env.out.print(
+        if Scripts.restrict_to("hello, world!", latin_only)
+        then "ok: Latin-only"
+        else "rejected"
         end)
     else
       env.out.print("invalid UTF-8")

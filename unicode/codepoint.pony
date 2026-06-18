@@ -90,6 +90,36 @@ class val Codepoint
     """
     not (category() is Cn)
 
+  fun script(): Script =>
+    """
+    The Script property of this codepoint per Scripts.txt. Returns
+    `ScriptUnknown` for codepoints with no assigned script.
+    """
+    _UcdScript.of(_scalar)
+
+  fun script_extensions(): Array[Script] val =>
+    """
+    The Script_Extensions property per UAX #24. Returns the set of
+    scripts that use this codepoint; for codepoints not listed in
+    ScriptExtensions.txt the result is `[script()]`.
+    """
+    Codepoints.script_extensions(_scalar)
+
+  fun has_property(p: BinaryProperty): Bool =>
+    """
+    True iff this codepoint has the binary property `p` per
+    PropList.txt, DerivedCoreProperties.txt, or emoji-data.txt.
+    """
+    _UcdBinaryProps.has(_scalar, p)
+
+  fun east_asian_width(): EastAsianWidth =>
+    """
+    The East_Asian_Width property of this codepoint per UAX #11.
+    Returns `EAWN` (Neutral) for codepoints with no explicit
+    assignment.
+    """
+    _UcdEastAsianWidth.of(_scalar)
+
   fun eq(that: Codepoint box): Bool =>
     _scalar == that._scalar
 
