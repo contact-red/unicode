@@ -17,10 +17,13 @@ primitive BenchSizes
     [as USize: 1_600]
 
   fun label(size: USize): String =>
-    if size >= 1_048_576 then (size / 1_048_576).string() + "M"
-    elseif size >= 1_024 then (size / 1_024).string() + "K"
-    else size.string() + "B"
-    end
+    """
+    Exact byte count with a `B` suffix. We don't round to K/M
+    abbreviations because that loses precision — the 1_600-byte
+    bucket isn't 1 KiB, and `Text.from_string/emoji/152M` reads as
+    "152 × 1 MiB" when the actual size is 160_000_000.
+    """
+    size.string() + "B"
 
   fun samples(): USize => 20
   fun sample_ns(): U64 => 30_000_000
