@@ -10,6 +10,14 @@ All notable changes to this project will be documented in this file. This projec
 ### Added
 
 - `pony_bench`-based benchmark suite under `unicode_bench/` + `unicode_bench_main/` covering every 0.2.0 hot path: `Bytes` validation, `Text` construction (plain and indexed), `Codepoints` property lookups + counts, all four segmentation cursors (`Graphemes`/`Words`/`Sentences`/`Lines`), the four normal forms, case mappings, the five comparison flavours, `Search`/`Split`/`Trim`/`Replace`, and the `Scripts` ops. Seven canonical input corpora — ASCII, Latin precomposed, Latin decomposed, CJK, mixed, emoji, and a pathological combining-marks generator — let each topic exercise its representative shape. Per-size iteration caps keep the run tractable at 160M-byte inputs. New Makefile targets `bench-build` / `bench` (full release-mode run) / `bench-smoke` (single small bucket) / `bench-csv` (machine-readable for cross-run diffing). Not part of `ci`.
+
+### Changed
+
+
+## [0.2.0] - 2026-06-18
+
+### Added
+
 - `Codepoint` class methods: `script()`, `script_extensions()`, `has_property(p)`, `east_asian_width()` — symmetric with the existing `Codepoints.*` primitive accessors
 - Auto-generated `_UcdScriptExtensions` lookup table from `ScriptExtensions.txt` (UAX #24, codepoints used in more than one script). Resolved via `PropertyValueAliases.txt` so the short codes in ScriptExtensions.txt (`Latn`, `Bopo`, …) map to the same `Script` byte encoding as `_UcdScript`
 - `Codepoints.script_extensions(u): Array[Script] val` — falls back to `[script(u)]` for codepoints not listed in ScriptExtensions.txt
@@ -62,6 +70,4 @@ All notable changes to this project will be documented in this file. This projec
 - `make conform-grapheme`: UAX #29 GraphemeBreakTest.txt conformance (1,093 cases including GB9c)
 - 146 PonyCheck unit tests
 - GitHub Actions CI: pr workflow with lint, changelog verify, and full normalization + grapheme conformance
-
-### Changed
 
