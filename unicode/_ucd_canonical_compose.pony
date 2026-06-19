@@ -7,37 +7,2560 @@
 
 primitive _UcdCanonicalCompose
   fun of(lhs: U32, rhs: U32): (U32 | None) =>
-    let t = _table()
-    var lo: USize = 0
-    var hi: USize = t.size() / 24
-    while lo < hi do
-      let mid = lo + ((hi - lo) / 2)
-      let base = mid * 24
-      try
-        let l: U32 =
-          _UcdHex.byte(t, base)?
-            or (_UcdHex.byte(t, base + 2)? << 8)
-            or (_UcdHex.byte(t, base + 4)? << 16)
-            or (_UcdHex.byte(t, base + 6)? << 24)
-        let r: U32 =
-          _UcdHex.byte(t, base + 8)?
-            or (_UcdHex.byte(t, base + 10)? << 8)
-            or (_UcdHex.byte(t, base + 12)? << 16)
-            or (_UcdHex.byte(t, base + 14)? << 24)
-        if (lhs < l) or ((lhs == l) and (rhs < r)) then hi = mid
-        elseif (lhs > l) or ((lhs == l) and (rhs > r)) then lo = mid + 1
-        else
-          let result: U32 =
-            _UcdHex.byte(t, base + 16)?
-              or (_UcdHex.byte(t, base + 18)? << 8)
-              or (_UcdHex.byte(t, base + 20)? << 16)
-              or (_UcdHex.byte(t, base + 22)? << 24)
-          return result
+    match lhs >> 12
+    | 0x0000 =>
+      match lhs
+      | 0x003C =>
+        match rhs
+        | 0x0338 => 0x226E
+        else None
         end
-      else return None
+      | 0x003D =>
+        match rhs
+        | 0x0338 => 0x2260
+        else None
+        end
+      | 0x003E =>
+        match rhs
+        | 0x0338 => 0x226F
+        else None
+        end
+      | 0x0041 =>
+        match rhs
+        | 0x0300 => 0x00C0
+        | 0x0301 => 0x00C1
+        | 0x0302 => 0x00C2
+        | 0x0303 => 0x00C3
+        | 0x0304 => 0x0100
+        | 0x0306 => 0x0102
+        | 0x0307 => 0x0226
+        | 0x0308 => 0x00C4
+        | 0x0309 => 0x1EA2
+        | 0x030A => 0x00C5
+        | 0x030C => 0x01CD
+        | 0x030F => 0x0200
+        | 0x0311 => 0x0202
+        | 0x0323 => 0x1EA0
+        | 0x0325 => 0x1E00
+        | 0x0328 => 0x0104
+        else None
+        end
+      | 0x0042 =>
+        match rhs
+        | 0x0307 => 0x1E02
+        | 0x0323 => 0x1E04
+        | 0x0331 => 0x1E06
+        else None
+        end
+      | 0x0043 =>
+        match rhs
+        | 0x0301 => 0x0106
+        | 0x0302 => 0x0108
+        | 0x0307 => 0x010A
+        | 0x030C => 0x010C
+        | 0x0327 => 0x00C7
+        else None
+        end
+      | 0x0044 =>
+        match rhs
+        | 0x0307 => 0x1E0A
+        | 0x030C => 0x010E
+        | 0x0323 => 0x1E0C
+        | 0x0327 => 0x1E10
+        | 0x032D => 0x1E12
+        | 0x0331 => 0x1E0E
+        else None
+        end
+      | 0x0045 =>
+        match rhs
+        | 0x0300 => 0x00C8
+        | 0x0301 => 0x00C9
+        | 0x0302 => 0x00CA
+        | 0x0303 => 0x1EBC
+        | 0x0304 => 0x0112
+        | 0x0306 => 0x0114
+        | 0x0307 => 0x0116
+        | 0x0308 => 0x00CB
+        | 0x0309 => 0x1EBA
+        | 0x030C => 0x011A
+        | 0x030F => 0x0204
+        | 0x0311 => 0x0206
+        | 0x0323 => 0x1EB8
+        | 0x0327 => 0x0228
+        | 0x0328 => 0x0118
+        | 0x032D => 0x1E18
+        | 0x0330 => 0x1E1A
+        else None
+        end
+      | 0x0046 =>
+        match rhs
+        | 0x0307 => 0x1E1E
+        else None
+        end
+      | 0x0047 =>
+        match rhs
+        | 0x0301 => 0x01F4
+        | 0x0302 => 0x011C
+        | 0x0304 => 0x1E20
+        | 0x0306 => 0x011E
+        | 0x0307 => 0x0120
+        | 0x030C => 0x01E6
+        | 0x0327 => 0x0122
+        else None
+        end
+      | 0x0048 =>
+        match rhs
+        | 0x0302 => 0x0124
+        | 0x0307 => 0x1E22
+        | 0x0308 => 0x1E26
+        | 0x030C => 0x021E
+        | 0x0323 => 0x1E24
+        | 0x0327 => 0x1E28
+        | 0x032E => 0x1E2A
+        else None
+        end
+      | 0x0049 =>
+        match rhs
+        | 0x0300 => 0x00CC
+        | 0x0301 => 0x00CD
+        | 0x0302 => 0x00CE
+        | 0x0303 => 0x0128
+        | 0x0304 => 0x012A
+        | 0x0306 => 0x012C
+        | 0x0307 => 0x0130
+        | 0x0308 => 0x00CF
+        | 0x0309 => 0x1EC8
+        | 0x030C => 0x01CF
+        | 0x030F => 0x0208
+        | 0x0311 => 0x020A
+        | 0x0323 => 0x1ECA
+        | 0x0328 => 0x012E
+        | 0x0330 => 0x1E2C
+        else None
+        end
+      | 0x004A =>
+        match rhs
+        | 0x0302 => 0x0134
+        else None
+        end
+      | 0x004B =>
+        match rhs
+        | 0x0301 => 0x1E30
+        | 0x030C => 0x01E8
+        | 0x0323 => 0x1E32
+        | 0x0327 => 0x0136
+        | 0x0331 => 0x1E34
+        else None
+        end
+      | 0x004C =>
+        match rhs
+        | 0x0301 => 0x0139
+        | 0x030C => 0x013D
+        | 0x0323 => 0x1E36
+        | 0x0327 => 0x013B
+        | 0x032D => 0x1E3C
+        | 0x0331 => 0x1E3A
+        else None
+        end
+      | 0x004D =>
+        match rhs
+        | 0x0301 => 0x1E3E
+        | 0x0307 => 0x1E40
+        | 0x0323 => 0x1E42
+        else None
+        end
+      | 0x004E =>
+        match rhs
+        | 0x0300 => 0x01F8
+        | 0x0301 => 0x0143
+        | 0x0303 => 0x00D1
+        | 0x0307 => 0x1E44
+        | 0x030C => 0x0147
+        | 0x0323 => 0x1E46
+        | 0x0327 => 0x0145
+        | 0x032D => 0x1E4A
+        | 0x0331 => 0x1E48
+        else None
+        end
+      | 0x004F =>
+        match rhs
+        | 0x0300 => 0x00D2
+        | 0x0301 => 0x00D3
+        | 0x0302 => 0x00D4
+        | 0x0303 => 0x00D5
+        | 0x0304 => 0x014C
+        | 0x0306 => 0x014E
+        | 0x0307 => 0x022E
+        | 0x0308 => 0x00D6
+        | 0x0309 => 0x1ECE
+        | 0x030B => 0x0150
+        | 0x030C => 0x01D1
+        | 0x030F => 0x020C
+        | 0x0311 => 0x020E
+        | 0x031B => 0x01A0
+        | 0x0323 => 0x1ECC
+        | 0x0328 => 0x01EA
+        else None
+        end
+      | 0x0050 =>
+        match rhs
+        | 0x0301 => 0x1E54
+        | 0x0307 => 0x1E56
+        else None
+        end
+      | 0x0052 =>
+        match rhs
+        | 0x0301 => 0x0154
+        | 0x0307 => 0x1E58
+        | 0x030C => 0x0158
+        | 0x030F => 0x0210
+        | 0x0311 => 0x0212
+        | 0x0323 => 0x1E5A
+        | 0x0327 => 0x0156
+        | 0x0331 => 0x1E5E
+        else None
+        end
+      | 0x0053 =>
+        match rhs
+        | 0x0301 => 0x015A
+        | 0x0302 => 0x015C
+        | 0x0307 => 0x1E60
+        | 0x030C => 0x0160
+        | 0x0323 => 0x1E62
+        | 0x0326 => 0x0218
+        | 0x0327 => 0x015E
+        else None
+        end
+      | 0x0054 =>
+        match rhs
+        | 0x0307 => 0x1E6A
+        | 0x030C => 0x0164
+        | 0x0323 => 0x1E6C
+        | 0x0326 => 0x021A
+        | 0x0327 => 0x0162
+        | 0x032D => 0x1E70
+        | 0x0331 => 0x1E6E
+        else None
+        end
+      | 0x0055 =>
+        match rhs
+        | 0x0300 => 0x00D9
+        | 0x0301 => 0x00DA
+        | 0x0302 => 0x00DB
+        | 0x0303 => 0x0168
+        | 0x0304 => 0x016A
+        | 0x0306 => 0x016C
+        | 0x0308 => 0x00DC
+        | 0x0309 => 0x1EE6
+        | 0x030A => 0x016E
+        | 0x030B => 0x0170
+        | 0x030C => 0x01D3
+        | 0x030F => 0x0214
+        | 0x0311 => 0x0216
+        | 0x031B => 0x01AF
+        | 0x0323 => 0x1EE4
+        | 0x0324 => 0x1E72
+        | 0x0328 => 0x0172
+        | 0x032D => 0x1E76
+        | 0x0330 => 0x1E74
+        else None
+        end
+      | 0x0056 =>
+        match rhs
+        | 0x0303 => 0x1E7C
+        | 0x0323 => 0x1E7E
+        else None
+        end
+      | 0x0057 =>
+        match rhs
+        | 0x0300 => 0x1E80
+        | 0x0301 => 0x1E82
+        | 0x0302 => 0x0174
+        | 0x0307 => 0x1E86
+        | 0x0308 => 0x1E84
+        | 0x0323 => 0x1E88
+        else None
+        end
+      | 0x0058 =>
+        match rhs
+        | 0x0307 => 0x1E8A
+        | 0x0308 => 0x1E8C
+        else None
+        end
+      | 0x0059 =>
+        match rhs
+        | 0x0300 => 0x1EF2
+        | 0x0301 => 0x00DD
+        | 0x0302 => 0x0176
+        | 0x0303 => 0x1EF8
+        | 0x0304 => 0x0232
+        | 0x0307 => 0x1E8E
+        | 0x0308 => 0x0178
+        | 0x0309 => 0x1EF6
+        | 0x0323 => 0x1EF4
+        else None
+        end
+      | 0x005A =>
+        match rhs
+        | 0x0301 => 0x0179
+        | 0x0302 => 0x1E90
+        | 0x0307 => 0x017B
+        | 0x030C => 0x017D
+        | 0x0323 => 0x1E92
+        | 0x0331 => 0x1E94
+        else None
+        end
+      | 0x0061 =>
+        match rhs
+        | 0x0300 => 0x00E0
+        | 0x0301 => 0x00E1
+        | 0x0302 => 0x00E2
+        | 0x0303 => 0x00E3
+        | 0x0304 => 0x0101
+        | 0x0306 => 0x0103
+        | 0x0307 => 0x0227
+        | 0x0308 => 0x00E4
+        | 0x0309 => 0x1EA3
+        | 0x030A => 0x00E5
+        | 0x030C => 0x01CE
+        | 0x030F => 0x0201
+        | 0x0311 => 0x0203
+        | 0x0323 => 0x1EA1
+        | 0x0325 => 0x1E01
+        | 0x0328 => 0x0105
+        else None
+        end
+      | 0x0062 =>
+        match rhs
+        | 0x0307 => 0x1E03
+        | 0x0323 => 0x1E05
+        | 0x0331 => 0x1E07
+        else None
+        end
+      | 0x0063 =>
+        match rhs
+        | 0x0301 => 0x0107
+        | 0x0302 => 0x0109
+        | 0x0307 => 0x010B
+        | 0x030C => 0x010D
+        | 0x0327 => 0x00E7
+        else None
+        end
+      | 0x0064 =>
+        match rhs
+        | 0x0307 => 0x1E0B
+        | 0x030C => 0x010F
+        | 0x0323 => 0x1E0D
+        | 0x0327 => 0x1E11
+        | 0x032D => 0x1E13
+        | 0x0331 => 0x1E0F
+        else None
+        end
+      | 0x0065 =>
+        match rhs
+        | 0x0300 => 0x00E8
+        | 0x0301 => 0x00E9
+        | 0x0302 => 0x00EA
+        | 0x0303 => 0x1EBD
+        | 0x0304 => 0x0113
+        | 0x0306 => 0x0115
+        | 0x0307 => 0x0117
+        | 0x0308 => 0x00EB
+        | 0x0309 => 0x1EBB
+        | 0x030C => 0x011B
+        | 0x030F => 0x0205
+        | 0x0311 => 0x0207
+        | 0x0323 => 0x1EB9
+        | 0x0327 => 0x0229
+        | 0x0328 => 0x0119
+        | 0x032D => 0x1E19
+        | 0x0330 => 0x1E1B
+        else None
+        end
+      | 0x0066 =>
+        match rhs
+        | 0x0307 => 0x1E1F
+        else None
+        end
+      | 0x0067 =>
+        match rhs
+        | 0x0301 => 0x01F5
+        | 0x0302 => 0x011D
+        | 0x0304 => 0x1E21
+        | 0x0306 => 0x011F
+        | 0x0307 => 0x0121
+        | 0x030C => 0x01E7
+        | 0x0327 => 0x0123
+        else None
+        end
+      | 0x0068 =>
+        match rhs
+        | 0x0302 => 0x0125
+        | 0x0307 => 0x1E23
+        | 0x0308 => 0x1E27
+        | 0x030C => 0x021F
+        | 0x0323 => 0x1E25
+        | 0x0327 => 0x1E29
+        | 0x032E => 0x1E2B
+        | 0x0331 => 0x1E96
+        else None
+        end
+      | 0x0069 =>
+        match rhs
+        | 0x0300 => 0x00EC
+        | 0x0301 => 0x00ED
+        | 0x0302 => 0x00EE
+        | 0x0303 => 0x0129
+        | 0x0304 => 0x012B
+        | 0x0306 => 0x012D
+        | 0x0308 => 0x00EF
+        | 0x0309 => 0x1EC9
+        | 0x030C => 0x01D0
+        | 0x030F => 0x0209
+        | 0x0311 => 0x020B
+        | 0x0323 => 0x1ECB
+        | 0x0328 => 0x012F
+        | 0x0330 => 0x1E2D
+        else None
+        end
+      | 0x006A =>
+        match rhs
+        | 0x0302 => 0x0135
+        | 0x030C => 0x01F0
+        else None
+        end
+      | 0x006B =>
+        match rhs
+        | 0x0301 => 0x1E31
+        | 0x030C => 0x01E9
+        | 0x0323 => 0x1E33
+        | 0x0327 => 0x0137
+        | 0x0331 => 0x1E35
+        else None
+        end
+      | 0x006C =>
+        match rhs
+        | 0x0301 => 0x013A
+        | 0x030C => 0x013E
+        | 0x0323 => 0x1E37
+        | 0x0327 => 0x013C
+        | 0x032D => 0x1E3D
+        | 0x0331 => 0x1E3B
+        else None
+        end
+      | 0x006D =>
+        match rhs
+        | 0x0301 => 0x1E3F
+        | 0x0307 => 0x1E41
+        | 0x0323 => 0x1E43
+        else None
+        end
+      | 0x006E =>
+        match rhs
+        | 0x0300 => 0x01F9
+        | 0x0301 => 0x0144
+        | 0x0303 => 0x00F1
+        | 0x0307 => 0x1E45
+        | 0x030C => 0x0148
+        | 0x0323 => 0x1E47
+        | 0x0327 => 0x0146
+        | 0x032D => 0x1E4B
+        | 0x0331 => 0x1E49
+        else None
+        end
+      | 0x006F =>
+        match rhs
+        | 0x0300 => 0x00F2
+        | 0x0301 => 0x00F3
+        | 0x0302 => 0x00F4
+        | 0x0303 => 0x00F5
+        | 0x0304 => 0x014D
+        | 0x0306 => 0x014F
+        | 0x0307 => 0x022F
+        | 0x0308 => 0x00F6
+        | 0x0309 => 0x1ECF
+        | 0x030B => 0x0151
+        | 0x030C => 0x01D2
+        | 0x030F => 0x020D
+        | 0x0311 => 0x020F
+        | 0x031B => 0x01A1
+        | 0x0323 => 0x1ECD
+        | 0x0328 => 0x01EB
+        else None
+        end
+      | 0x0070 =>
+        match rhs
+        | 0x0301 => 0x1E55
+        | 0x0307 => 0x1E57
+        else None
+        end
+      | 0x0072 =>
+        match rhs
+        | 0x0301 => 0x0155
+        | 0x0307 => 0x1E59
+        | 0x030C => 0x0159
+        | 0x030F => 0x0211
+        | 0x0311 => 0x0213
+        | 0x0323 => 0x1E5B
+        | 0x0327 => 0x0157
+        | 0x0331 => 0x1E5F
+        else None
+        end
+      | 0x0073 =>
+        match rhs
+        | 0x0301 => 0x015B
+        | 0x0302 => 0x015D
+        | 0x0307 => 0x1E61
+        | 0x030C => 0x0161
+        | 0x0323 => 0x1E63
+        | 0x0326 => 0x0219
+        | 0x0327 => 0x015F
+        else None
+        end
+      | 0x0074 =>
+        match rhs
+        | 0x0307 => 0x1E6B
+        | 0x0308 => 0x1E97
+        | 0x030C => 0x0165
+        | 0x0323 => 0x1E6D
+        | 0x0326 => 0x021B
+        | 0x0327 => 0x0163
+        | 0x032D => 0x1E71
+        | 0x0331 => 0x1E6F
+        else None
+        end
+      | 0x0075 =>
+        match rhs
+        | 0x0300 => 0x00F9
+        | 0x0301 => 0x00FA
+        | 0x0302 => 0x00FB
+        | 0x0303 => 0x0169
+        | 0x0304 => 0x016B
+        | 0x0306 => 0x016D
+        | 0x0308 => 0x00FC
+        | 0x0309 => 0x1EE7
+        | 0x030A => 0x016F
+        | 0x030B => 0x0171
+        | 0x030C => 0x01D4
+        | 0x030F => 0x0215
+        | 0x0311 => 0x0217
+        | 0x031B => 0x01B0
+        | 0x0323 => 0x1EE5
+        | 0x0324 => 0x1E73
+        | 0x0328 => 0x0173
+        | 0x032D => 0x1E77
+        | 0x0330 => 0x1E75
+        else None
+        end
+      | 0x0076 =>
+        match rhs
+        | 0x0303 => 0x1E7D
+        | 0x0323 => 0x1E7F
+        else None
+        end
+      | 0x0077 =>
+        match rhs
+        | 0x0300 => 0x1E81
+        | 0x0301 => 0x1E83
+        | 0x0302 => 0x0175
+        | 0x0307 => 0x1E87
+        | 0x0308 => 0x1E85
+        | 0x030A => 0x1E98
+        | 0x0323 => 0x1E89
+        else None
+        end
+      | 0x0078 =>
+        match rhs
+        | 0x0307 => 0x1E8B
+        | 0x0308 => 0x1E8D
+        else None
+        end
+      | 0x0079 =>
+        match rhs
+        | 0x0300 => 0x1EF3
+        | 0x0301 => 0x00FD
+        | 0x0302 => 0x0177
+        | 0x0303 => 0x1EF9
+        | 0x0304 => 0x0233
+        | 0x0307 => 0x1E8F
+        | 0x0308 => 0x00FF
+        | 0x0309 => 0x1EF7
+        | 0x030A => 0x1E99
+        | 0x0323 => 0x1EF5
+        else None
+        end
+      | 0x007A =>
+        match rhs
+        | 0x0301 => 0x017A
+        | 0x0302 => 0x1E91
+        | 0x0307 => 0x017C
+        | 0x030C => 0x017E
+        | 0x0323 => 0x1E93
+        | 0x0331 => 0x1E95
+        else None
+        end
+      | 0x00A8 =>
+        match rhs
+        | 0x0300 => 0x1FED
+        | 0x0301 => 0x0385
+        | 0x0342 => 0x1FC1
+        else None
+        end
+      | 0x00C2 =>
+        match rhs
+        | 0x0300 => 0x1EA6
+        | 0x0301 => 0x1EA4
+        | 0x0303 => 0x1EAA
+        | 0x0309 => 0x1EA8
+        else None
+        end
+      | 0x00C4 =>
+        match rhs
+        | 0x0304 => 0x01DE
+        else None
+        end
+      | 0x00C5 =>
+        match rhs
+        | 0x0301 => 0x01FA
+        else None
+        end
+      | 0x00C6 =>
+        match rhs
+        | 0x0301 => 0x01FC
+        | 0x0304 => 0x01E2
+        else None
+        end
+      | 0x00C7 =>
+        match rhs
+        | 0x0301 => 0x1E08
+        else None
+        end
+      | 0x00CA =>
+        match rhs
+        | 0x0300 => 0x1EC0
+        | 0x0301 => 0x1EBE
+        | 0x0303 => 0x1EC4
+        | 0x0309 => 0x1EC2
+        else None
+        end
+      | 0x00CF =>
+        match rhs
+        | 0x0301 => 0x1E2E
+        else None
+        end
+      | 0x00D4 =>
+        match rhs
+        | 0x0300 => 0x1ED2
+        | 0x0301 => 0x1ED0
+        | 0x0303 => 0x1ED6
+        | 0x0309 => 0x1ED4
+        else None
+        end
+      | 0x00D5 =>
+        match rhs
+        | 0x0301 => 0x1E4C
+        | 0x0304 => 0x022C
+        | 0x0308 => 0x1E4E
+        else None
+        end
+      | 0x00D6 =>
+        match rhs
+        | 0x0304 => 0x022A
+        else None
+        end
+      | 0x00D8 =>
+        match rhs
+        | 0x0301 => 0x01FE
+        else None
+        end
+      | 0x00DC =>
+        match rhs
+        | 0x0300 => 0x01DB
+        | 0x0301 => 0x01D7
+        | 0x0304 => 0x01D5
+        | 0x030C => 0x01D9
+        else None
+        end
+      | 0x00E2 =>
+        match rhs
+        | 0x0300 => 0x1EA7
+        | 0x0301 => 0x1EA5
+        | 0x0303 => 0x1EAB
+        | 0x0309 => 0x1EA9
+        else None
+        end
+      | 0x00E4 =>
+        match rhs
+        | 0x0304 => 0x01DF
+        else None
+        end
+      | 0x00E5 =>
+        match rhs
+        | 0x0301 => 0x01FB
+        else None
+        end
+      | 0x00E6 =>
+        match rhs
+        | 0x0301 => 0x01FD
+        | 0x0304 => 0x01E3
+        else None
+        end
+      | 0x00E7 =>
+        match rhs
+        | 0x0301 => 0x1E09
+        else None
+        end
+      | 0x00EA =>
+        match rhs
+        | 0x0300 => 0x1EC1
+        | 0x0301 => 0x1EBF
+        | 0x0303 => 0x1EC5
+        | 0x0309 => 0x1EC3
+        else None
+        end
+      | 0x00EF =>
+        match rhs
+        | 0x0301 => 0x1E2F
+        else None
+        end
+      | 0x00F4 =>
+        match rhs
+        | 0x0300 => 0x1ED3
+        | 0x0301 => 0x1ED1
+        | 0x0303 => 0x1ED7
+        | 0x0309 => 0x1ED5
+        else None
+        end
+      | 0x00F5 =>
+        match rhs
+        | 0x0301 => 0x1E4D
+        | 0x0304 => 0x022D
+        | 0x0308 => 0x1E4F
+        else None
+        end
+      | 0x00F6 =>
+        match rhs
+        | 0x0304 => 0x022B
+        else None
+        end
+      | 0x00F8 =>
+        match rhs
+        | 0x0301 => 0x01FF
+        else None
+        end
+      | 0x00FC =>
+        match rhs
+        | 0x0300 => 0x01DC
+        | 0x0301 => 0x01D8
+        | 0x0304 => 0x01D6
+        | 0x030C => 0x01DA
+        else None
+        end
+      | 0x0102 =>
+        match rhs
+        | 0x0300 => 0x1EB0
+        | 0x0301 => 0x1EAE
+        | 0x0303 => 0x1EB4
+        | 0x0309 => 0x1EB2
+        else None
+        end
+      | 0x0103 =>
+        match rhs
+        | 0x0300 => 0x1EB1
+        | 0x0301 => 0x1EAF
+        | 0x0303 => 0x1EB5
+        | 0x0309 => 0x1EB3
+        else None
+        end
+      | 0x0112 =>
+        match rhs
+        | 0x0300 => 0x1E14
+        | 0x0301 => 0x1E16
+        else None
+        end
+      | 0x0113 =>
+        match rhs
+        | 0x0300 => 0x1E15
+        | 0x0301 => 0x1E17
+        else None
+        end
+      | 0x014C =>
+        match rhs
+        | 0x0300 => 0x1E50
+        | 0x0301 => 0x1E52
+        else None
+        end
+      | 0x014D =>
+        match rhs
+        | 0x0300 => 0x1E51
+        | 0x0301 => 0x1E53
+        else None
+        end
+      | 0x015A =>
+        match rhs
+        | 0x0307 => 0x1E64
+        else None
+        end
+      | 0x015B =>
+        match rhs
+        | 0x0307 => 0x1E65
+        else None
+        end
+      | 0x0160 =>
+        match rhs
+        | 0x0307 => 0x1E66
+        else None
+        end
+      | 0x0161 =>
+        match rhs
+        | 0x0307 => 0x1E67
+        else None
+        end
+      | 0x0168 =>
+        match rhs
+        | 0x0301 => 0x1E78
+        else None
+        end
+      | 0x0169 =>
+        match rhs
+        | 0x0301 => 0x1E79
+        else None
+        end
+      | 0x016A =>
+        match rhs
+        | 0x0308 => 0x1E7A
+        else None
+        end
+      | 0x016B =>
+        match rhs
+        | 0x0308 => 0x1E7B
+        else None
+        end
+      | 0x017F =>
+        match rhs
+        | 0x0307 => 0x1E9B
+        else None
+        end
+      | 0x01A0 =>
+        match rhs
+        | 0x0300 => 0x1EDC
+        | 0x0301 => 0x1EDA
+        | 0x0303 => 0x1EE0
+        | 0x0309 => 0x1EDE
+        | 0x0323 => 0x1EE2
+        else None
+        end
+      | 0x01A1 =>
+        match rhs
+        | 0x0300 => 0x1EDD
+        | 0x0301 => 0x1EDB
+        | 0x0303 => 0x1EE1
+        | 0x0309 => 0x1EDF
+        | 0x0323 => 0x1EE3
+        else None
+        end
+      | 0x01AF =>
+        match rhs
+        | 0x0300 => 0x1EEA
+        | 0x0301 => 0x1EE8
+        | 0x0303 => 0x1EEE
+        | 0x0309 => 0x1EEC
+        | 0x0323 => 0x1EF0
+        else None
+        end
+      | 0x01B0 =>
+        match rhs
+        | 0x0300 => 0x1EEB
+        | 0x0301 => 0x1EE9
+        | 0x0303 => 0x1EEF
+        | 0x0309 => 0x1EED
+        | 0x0323 => 0x1EF1
+        else None
+        end
+      | 0x01B7 =>
+        match rhs
+        | 0x030C => 0x01EE
+        else None
+        end
+      | 0x01EA =>
+        match rhs
+        | 0x0304 => 0x01EC
+        else None
+        end
+      | 0x01EB =>
+        match rhs
+        | 0x0304 => 0x01ED
+        else None
+        end
+      | 0x0226 =>
+        match rhs
+        | 0x0304 => 0x01E0
+        else None
+        end
+      | 0x0227 =>
+        match rhs
+        | 0x0304 => 0x01E1
+        else None
+        end
+      | 0x0228 =>
+        match rhs
+        | 0x0306 => 0x1E1C
+        else None
+        end
+      | 0x0229 =>
+        match rhs
+        | 0x0306 => 0x1E1D
+        else None
+        end
+      | 0x022E =>
+        match rhs
+        | 0x0304 => 0x0230
+        else None
+        end
+      | 0x022F =>
+        match rhs
+        | 0x0304 => 0x0231
+        else None
+        end
+      | 0x0292 =>
+        match rhs
+        | 0x030C => 0x01EF
+        else None
+        end
+      | 0x0391 =>
+        match rhs
+        | 0x0300 => 0x1FBA
+        | 0x0301 => 0x0386
+        | 0x0304 => 0x1FB9
+        | 0x0306 => 0x1FB8
+        | 0x0313 => 0x1F08
+        | 0x0314 => 0x1F09
+        | 0x0345 => 0x1FBC
+        else None
+        end
+      | 0x0395 =>
+        match rhs
+        | 0x0300 => 0x1FC8
+        | 0x0301 => 0x0388
+        | 0x0313 => 0x1F18
+        | 0x0314 => 0x1F19
+        else None
+        end
+      | 0x0397 =>
+        match rhs
+        | 0x0300 => 0x1FCA
+        | 0x0301 => 0x0389
+        | 0x0313 => 0x1F28
+        | 0x0314 => 0x1F29
+        | 0x0345 => 0x1FCC
+        else None
+        end
+      | 0x0399 =>
+        match rhs
+        | 0x0300 => 0x1FDA
+        | 0x0301 => 0x038A
+        | 0x0304 => 0x1FD9
+        | 0x0306 => 0x1FD8
+        | 0x0308 => 0x03AA
+        | 0x0313 => 0x1F38
+        | 0x0314 => 0x1F39
+        else None
+        end
+      | 0x039F =>
+        match rhs
+        | 0x0300 => 0x1FF8
+        | 0x0301 => 0x038C
+        | 0x0313 => 0x1F48
+        | 0x0314 => 0x1F49
+        else None
+        end
+      | 0x03A1 =>
+        match rhs
+        | 0x0314 => 0x1FEC
+        else None
+        end
+      | 0x03A5 =>
+        match rhs
+        | 0x0300 => 0x1FEA
+        | 0x0301 => 0x038E
+        | 0x0304 => 0x1FE9
+        | 0x0306 => 0x1FE8
+        | 0x0308 => 0x03AB
+        | 0x0314 => 0x1F59
+        else None
+        end
+      | 0x03A9 =>
+        match rhs
+        | 0x0300 => 0x1FFA
+        | 0x0301 => 0x038F
+        | 0x0313 => 0x1F68
+        | 0x0314 => 0x1F69
+        | 0x0345 => 0x1FFC
+        else None
+        end
+      | 0x03AC =>
+        match rhs
+        | 0x0345 => 0x1FB4
+        else None
+        end
+      | 0x03AE =>
+        match rhs
+        | 0x0345 => 0x1FC4
+        else None
+        end
+      | 0x03B1 =>
+        match rhs
+        | 0x0300 => 0x1F70
+        | 0x0301 => 0x03AC
+        | 0x0304 => 0x1FB1
+        | 0x0306 => 0x1FB0
+        | 0x0313 => 0x1F00
+        | 0x0314 => 0x1F01
+        | 0x0342 => 0x1FB6
+        | 0x0345 => 0x1FB3
+        else None
+        end
+      | 0x03B5 =>
+        match rhs
+        | 0x0300 => 0x1F72
+        | 0x0301 => 0x03AD
+        | 0x0313 => 0x1F10
+        | 0x0314 => 0x1F11
+        else None
+        end
+      | 0x03B7 =>
+        match rhs
+        | 0x0300 => 0x1F74
+        | 0x0301 => 0x03AE
+        | 0x0313 => 0x1F20
+        | 0x0314 => 0x1F21
+        | 0x0342 => 0x1FC6
+        | 0x0345 => 0x1FC3
+        else None
+        end
+      | 0x03B9 =>
+        match rhs
+        | 0x0300 => 0x1F76
+        | 0x0301 => 0x03AF
+        | 0x0304 => 0x1FD1
+        | 0x0306 => 0x1FD0
+        | 0x0308 => 0x03CA
+        | 0x0313 => 0x1F30
+        | 0x0314 => 0x1F31
+        | 0x0342 => 0x1FD6
+        else None
+        end
+      | 0x03BF =>
+        match rhs
+        | 0x0300 => 0x1F78
+        | 0x0301 => 0x03CC
+        | 0x0313 => 0x1F40
+        | 0x0314 => 0x1F41
+        else None
+        end
+      | 0x03C1 =>
+        match rhs
+        | 0x0313 => 0x1FE4
+        | 0x0314 => 0x1FE5
+        else None
+        end
+      | 0x03C5 =>
+        match rhs
+        | 0x0300 => 0x1F7A
+        | 0x0301 => 0x03CD
+        | 0x0304 => 0x1FE1
+        | 0x0306 => 0x1FE0
+        | 0x0308 => 0x03CB
+        | 0x0313 => 0x1F50
+        | 0x0314 => 0x1F51
+        | 0x0342 => 0x1FE6
+        else None
+        end
+      | 0x03C9 =>
+        match rhs
+        | 0x0300 => 0x1F7C
+        | 0x0301 => 0x03CE
+        | 0x0313 => 0x1F60
+        | 0x0314 => 0x1F61
+        | 0x0342 => 0x1FF6
+        | 0x0345 => 0x1FF3
+        else None
+        end
+      | 0x03CA =>
+        match rhs
+        | 0x0300 => 0x1FD2
+        | 0x0301 => 0x0390
+        | 0x0342 => 0x1FD7
+        else None
+        end
+      | 0x03CB =>
+        match rhs
+        | 0x0300 => 0x1FE2
+        | 0x0301 => 0x03B0
+        | 0x0342 => 0x1FE7
+        else None
+        end
+      | 0x03CE =>
+        match rhs
+        | 0x0345 => 0x1FF4
+        else None
+        end
+      | 0x03D2 =>
+        match rhs
+        | 0x0301 => 0x03D3
+        | 0x0308 => 0x03D4
+        else None
+        end
+      | 0x0406 =>
+        match rhs
+        | 0x0308 => 0x0407
+        else None
+        end
+      | 0x0410 =>
+        match rhs
+        | 0x0306 => 0x04D0
+        | 0x0308 => 0x04D2
+        else None
+        end
+      | 0x0413 =>
+        match rhs
+        | 0x0301 => 0x0403
+        else None
+        end
+      | 0x0415 =>
+        match rhs
+        | 0x0300 => 0x0400
+        | 0x0306 => 0x04D6
+        | 0x0308 => 0x0401
+        else None
+        end
+      | 0x0416 =>
+        match rhs
+        | 0x0306 => 0x04C1
+        | 0x0308 => 0x04DC
+        else None
+        end
+      | 0x0417 =>
+        match rhs
+        | 0x0308 => 0x04DE
+        else None
+        end
+      | 0x0418 =>
+        match rhs
+        | 0x0300 => 0x040D
+        | 0x0304 => 0x04E2
+        | 0x0306 => 0x0419
+        | 0x0308 => 0x04E4
+        else None
+        end
+      | 0x041A =>
+        match rhs
+        | 0x0301 => 0x040C
+        else None
+        end
+      | 0x041E =>
+        match rhs
+        | 0x0308 => 0x04E6
+        else None
+        end
+      | 0x0423 =>
+        match rhs
+        | 0x0304 => 0x04EE
+        | 0x0306 => 0x040E
+        | 0x0308 => 0x04F0
+        | 0x030B => 0x04F2
+        else None
+        end
+      | 0x0427 =>
+        match rhs
+        | 0x0308 => 0x04F4
+        else None
+        end
+      | 0x042B =>
+        match rhs
+        | 0x0308 => 0x04F8
+        else None
+        end
+      | 0x042D =>
+        match rhs
+        | 0x0308 => 0x04EC
+        else None
+        end
+      | 0x0430 =>
+        match rhs
+        | 0x0306 => 0x04D1
+        | 0x0308 => 0x04D3
+        else None
+        end
+      | 0x0433 =>
+        match rhs
+        | 0x0301 => 0x0453
+        else None
+        end
+      | 0x0435 =>
+        match rhs
+        | 0x0300 => 0x0450
+        | 0x0306 => 0x04D7
+        | 0x0308 => 0x0451
+        else None
+        end
+      | 0x0436 =>
+        match rhs
+        | 0x0306 => 0x04C2
+        | 0x0308 => 0x04DD
+        else None
+        end
+      | 0x0437 =>
+        match rhs
+        | 0x0308 => 0x04DF
+        else None
+        end
+      | 0x0438 =>
+        match rhs
+        | 0x0300 => 0x045D
+        | 0x0304 => 0x04E3
+        | 0x0306 => 0x0439
+        | 0x0308 => 0x04E5
+        else None
+        end
+      | 0x043A =>
+        match rhs
+        | 0x0301 => 0x045C
+        else None
+        end
+      | 0x043E =>
+        match rhs
+        | 0x0308 => 0x04E7
+        else None
+        end
+      | 0x0443 =>
+        match rhs
+        | 0x0304 => 0x04EF
+        | 0x0306 => 0x045E
+        | 0x0308 => 0x04F1
+        | 0x030B => 0x04F3
+        else None
+        end
+      | 0x0447 =>
+        match rhs
+        | 0x0308 => 0x04F5
+        else None
+        end
+      | 0x044B =>
+        match rhs
+        | 0x0308 => 0x04F9
+        else None
+        end
+      | 0x044D =>
+        match rhs
+        | 0x0308 => 0x04ED
+        else None
+        end
+      | 0x0456 =>
+        match rhs
+        | 0x0308 => 0x0457
+        else None
+        end
+      | 0x0474 =>
+        match rhs
+        | 0x030F => 0x0476
+        else None
+        end
+      | 0x0475 =>
+        match rhs
+        | 0x030F => 0x0477
+        else None
+        end
+      | 0x04D8 =>
+        match rhs
+        | 0x0308 => 0x04DA
+        else None
+        end
+      | 0x04D9 =>
+        match rhs
+        | 0x0308 => 0x04DB
+        else None
+        end
+      | 0x04E8 =>
+        match rhs
+        | 0x0308 => 0x04EA
+        else None
+        end
+      | 0x04E9 =>
+        match rhs
+        | 0x0308 => 0x04EB
+        else None
+        end
+      | 0x0627 =>
+        match rhs
+        | 0x0653 => 0x0622
+        | 0x0654 => 0x0623
+        | 0x0655 => 0x0625
+        else None
+        end
+      | 0x0648 =>
+        match rhs
+        | 0x0654 => 0x0624
+        else None
+        end
+      | 0x064A =>
+        match rhs
+        | 0x0654 => 0x0626
+        else None
+        end
+      | 0x06C1 =>
+        match rhs
+        | 0x0654 => 0x06C2
+        else None
+        end
+      | 0x06D2 =>
+        match rhs
+        | 0x0654 => 0x06D3
+        else None
+        end
+      | 0x06D5 =>
+        match rhs
+        | 0x0654 => 0x06C0
+        else None
+        end
+      | 0x0928 =>
+        match rhs
+        | 0x093C => 0x0929
+        else None
+        end
+      | 0x0930 =>
+        match rhs
+        | 0x093C => 0x0931
+        else None
+        end
+      | 0x0933 =>
+        match rhs
+        | 0x093C => 0x0934
+        else None
+        end
+      | 0x09C7 =>
+        match rhs
+        | 0x09BE => 0x09CB
+        | 0x09D7 => 0x09CC
+        else None
+        end
+      | 0x0B47 =>
+        match rhs
+        | 0x0B3E => 0x0B4B
+        | 0x0B56 => 0x0B48
+        | 0x0B57 => 0x0B4C
+        else None
+        end
+      | 0x0B92 =>
+        match rhs
+        | 0x0BD7 => 0x0B94
+        else None
+        end
+      | 0x0BC6 =>
+        match rhs
+        | 0x0BBE => 0x0BCA
+        | 0x0BD7 => 0x0BCC
+        else None
+        end
+      | 0x0BC7 =>
+        match rhs
+        | 0x0BBE => 0x0BCB
+        else None
+        end
+      | 0x0C46 =>
+        match rhs
+        | 0x0C56 => 0x0C48
+        else None
+        end
+      | 0x0CBF =>
+        match rhs
+        | 0x0CD5 => 0x0CC0
+        else None
+        end
+      | 0x0CC6 =>
+        match rhs
+        | 0x0CC2 => 0x0CCA
+        | 0x0CD5 => 0x0CC7
+        | 0x0CD6 => 0x0CC8
+        else None
+        end
+      | 0x0CCA =>
+        match rhs
+        | 0x0CD5 => 0x0CCB
+        else None
+        end
+      | 0x0D46 =>
+        match rhs
+        | 0x0D3E => 0x0D4A
+        | 0x0D57 => 0x0D4C
+        else None
+        end
+      | 0x0D47 =>
+        match rhs
+        | 0x0D3E => 0x0D4B
+        else None
+        end
+      | 0x0DD9 =>
+        match rhs
+        | 0x0DCA => 0x0DDA
+        | 0x0DCF => 0x0DDC
+        | 0x0DDF => 0x0DDE
+        else None
+        end
+      | 0x0DDC =>
+        match rhs
+        | 0x0DCA => 0x0DDD
+        else None
+        end
+      else None
       end
+    | 0x0001 =>
+      match lhs
+      | 0x1025 =>
+        match rhs
+        | 0x102E => 0x1026
+        else None
+        end
+      | 0x1B05 =>
+        match rhs
+        | 0x1B35 => 0x1B06
+        else None
+        end
+      | 0x1B07 =>
+        match rhs
+        | 0x1B35 => 0x1B08
+        else None
+        end
+      | 0x1B09 =>
+        match rhs
+        | 0x1B35 => 0x1B0A
+        else None
+        end
+      | 0x1B0B =>
+        match rhs
+        | 0x1B35 => 0x1B0C
+        else None
+        end
+      | 0x1B0D =>
+        match rhs
+        | 0x1B35 => 0x1B0E
+        else None
+        end
+      | 0x1B11 =>
+        match rhs
+        | 0x1B35 => 0x1B12
+        else None
+        end
+      | 0x1B3A =>
+        match rhs
+        | 0x1B35 => 0x1B3B
+        else None
+        end
+      | 0x1B3C =>
+        match rhs
+        | 0x1B35 => 0x1B3D
+        else None
+        end
+      | 0x1B3E =>
+        match rhs
+        | 0x1B35 => 0x1B40
+        else None
+        end
+      | 0x1B3F =>
+        match rhs
+        | 0x1B35 => 0x1B41
+        else None
+        end
+      | 0x1B42 =>
+        match rhs
+        | 0x1B35 => 0x1B43
+        else None
+        end
+      | 0x1E36 =>
+        match rhs
+        | 0x0304 => 0x1E38
+        else None
+        end
+      | 0x1E37 =>
+        match rhs
+        | 0x0304 => 0x1E39
+        else None
+        end
+      | 0x1E5A =>
+        match rhs
+        | 0x0304 => 0x1E5C
+        else None
+        end
+      | 0x1E5B =>
+        match rhs
+        | 0x0304 => 0x1E5D
+        else None
+        end
+      | 0x1E62 =>
+        match rhs
+        | 0x0307 => 0x1E68
+        else None
+        end
+      | 0x1E63 =>
+        match rhs
+        | 0x0307 => 0x1E69
+        else None
+        end
+      | 0x1EA0 =>
+        match rhs
+        | 0x0302 => 0x1EAC
+        | 0x0306 => 0x1EB6
+        else None
+        end
+      | 0x1EA1 =>
+        match rhs
+        | 0x0302 => 0x1EAD
+        | 0x0306 => 0x1EB7
+        else None
+        end
+      | 0x1EB8 =>
+        match rhs
+        | 0x0302 => 0x1EC6
+        else None
+        end
+      | 0x1EB9 =>
+        match rhs
+        | 0x0302 => 0x1EC7
+        else None
+        end
+      | 0x1ECC =>
+        match rhs
+        | 0x0302 => 0x1ED8
+        else None
+        end
+      | 0x1ECD =>
+        match rhs
+        | 0x0302 => 0x1ED9
+        else None
+        end
+      | 0x1F00 =>
+        match rhs
+        | 0x0300 => 0x1F02
+        | 0x0301 => 0x1F04
+        | 0x0342 => 0x1F06
+        | 0x0345 => 0x1F80
+        else None
+        end
+      | 0x1F01 =>
+        match rhs
+        | 0x0300 => 0x1F03
+        | 0x0301 => 0x1F05
+        | 0x0342 => 0x1F07
+        | 0x0345 => 0x1F81
+        else None
+        end
+      | 0x1F02 =>
+        match rhs
+        | 0x0345 => 0x1F82
+        else None
+        end
+      | 0x1F03 =>
+        match rhs
+        | 0x0345 => 0x1F83
+        else None
+        end
+      | 0x1F04 =>
+        match rhs
+        | 0x0345 => 0x1F84
+        else None
+        end
+      | 0x1F05 =>
+        match rhs
+        | 0x0345 => 0x1F85
+        else None
+        end
+      | 0x1F06 =>
+        match rhs
+        | 0x0345 => 0x1F86
+        else None
+        end
+      | 0x1F07 =>
+        match rhs
+        | 0x0345 => 0x1F87
+        else None
+        end
+      | 0x1F08 =>
+        match rhs
+        | 0x0300 => 0x1F0A
+        | 0x0301 => 0x1F0C
+        | 0x0342 => 0x1F0E
+        | 0x0345 => 0x1F88
+        else None
+        end
+      | 0x1F09 =>
+        match rhs
+        | 0x0300 => 0x1F0B
+        | 0x0301 => 0x1F0D
+        | 0x0342 => 0x1F0F
+        | 0x0345 => 0x1F89
+        else None
+        end
+      | 0x1F0A =>
+        match rhs
+        | 0x0345 => 0x1F8A
+        else None
+        end
+      | 0x1F0B =>
+        match rhs
+        | 0x0345 => 0x1F8B
+        else None
+        end
+      | 0x1F0C =>
+        match rhs
+        | 0x0345 => 0x1F8C
+        else None
+        end
+      | 0x1F0D =>
+        match rhs
+        | 0x0345 => 0x1F8D
+        else None
+        end
+      | 0x1F0E =>
+        match rhs
+        | 0x0345 => 0x1F8E
+        else None
+        end
+      | 0x1F0F =>
+        match rhs
+        | 0x0345 => 0x1F8F
+        else None
+        end
+      | 0x1F10 =>
+        match rhs
+        | 0x0300 => 0x1F12
+        | 0x0301 => 0x1F14
+        else None
+        end
+      | 0x1F11 =>
+        match rhs
+        | 0x0300 => 0x1F13
+        | 0x0301 => 0x1F15
+        else None
+        end
+      | 0x1F18 =>
+        match rhs
+        | 0x0300 => 0x1F1A
+        | 0x0301 => 0x1F1C
+        else None
+        end
+      | 0x1F19 =>
+        match rhs
+        | 0x0300 => 0x1F1B
+        | 0x0301 => 0x1F1D
+        else None
+        end
+      | 0x1F20 =>
+        match rhs
+        | 0x0300 => 0x1F22
+        | 0x0301 => 0x1F24
+        | 0x0342 => 0x1F26
+        | 0x0345 => 0x1F90
+        else None
+        end
+      | 0x1F21 =>
+        match rhs
+        | 0x0300 => 0x1F23
+        | 0x0301 => 0x1F25
+        | 0x0342 => 0x1F27
+        | 0x0345 => 0x1F91
+        else None
+        end
+      | 0x1F22 =>
+        match rhs
+        | 0x0345 => 0x1F92
+        else None
+        end
+      | 0x1F23 =>
+        match rhs
+        | 0x0345 => 0x1F93
+        else None
+        end
+      | 0x1F24 =>
+        match rhs
+        | 0x0345 => 0x1F94
+        else None
+        end
+      | 0x1F25 =>
+        match rhs
+        | 0x0345 => 0x1F95
+        else None
+        end
+      | 0x1F26 =>
+        match rhs
+        | 0x0345 => 0x1F96
+        else None
+        end
+      | 0x1F27 =>
+        match rhs
+        | 0x0345 => 0x1F97
+        else None
+        end
+      | 0x1F28 =>
+        match rhs
+        | 0x0300 => 0x1F2A
+        | 0x0301 => 0x1F2C
+        | 0x0342 => 0x1F2E
+        | 0x0345 => 0x1F98
+        else None
+        end
+      | 0x1F29 =>
+        match rhs
+        | 0x0300 => 0x1F2B
+        | 0x0301 => 0x1F2D
+        | 0x0342 => 0x1F2F
+        | 0x0345 => 0x1F99
+        else None
+        end
+      | 0x1F2A =>
+        match rhs
+        | 0x0345 => 0x1F9A
+        else None
+        end
+      | 0x1F2B =>
+        match rhs
+        | 0x0345 => 0x1F9B
+        else None
+        end
+      | 0x1F2C =>
+        match rhs
+        | 0x0345 => 0x1F9C
+        else None
+        end
+      | 0x1F2D =>
+        match rhs
+        | 0x0345 => 0x1F9D
+        else None
+        end
+      | 0x1F2E =>
+        match rhs
+        | 0x0345 => 0x1F9E
+        else None
+        end
+      | 0x1F2F =>
+        match rhs
+        | 0x0345 => 0x1F9F
+        else None
+        end
+      | 0x1F30 =>
+        match rhs
+        | 0x0300 => 0x1F32
+        | 0x0301 => 0x1F34
+        | 0x0342 => 0x1F36
+        else None
+        end
+      | 0x1F31 =>
+        match rhs
+        | 0x0300 => 0x1F33
+        | 0x0301 => 0x1F35
+        | 0x0342 => 0x1F37
+        else None
+        end
+      | 0x1F38 =>
+        match rhs
+        | 0x0300 => 0x1F3A
+        | 0x0301 => 0x1F3C
+        | 0x0342 => 0x1F3E
+        else None
+        end
+      | 0x1F39 =>
+        match rhs
+        | 0x0300 => 0x1F3B
+        | 0x0301 => 0x1F3D
+        | 0x0342 => 0x1F3F
+        else None
+        end
+      | 0x1F40 =>
+        match rhs
+        | 0x0300 => 0x1F42
+        | 0x0301 => 0x1F44
+        else None
+        end
+      | 0x1F41 =>
+        match rhs
+        | 0x0300 => 0x1F43
+        | 0x0301 => 0x1F45
+        else None
+        end
+      | 0x1F48 =>
+        match rhs
+        | 0x0300 => 0x1F4A
+        | 0x0301 => 0x1F4C
+        else None
+        end
+      | 0x1F49 =>
+        match rhs
+        | 0x0300 => 0x1F4B
+        | 0x0301 => 0x1F4D
+        else None
+        end
+      | 0x1F50 =>
+        match rhs
+        | 0x0300 => 0x1F52
+        | 0x0301 => 0x1F54
+        | 0x0342 => 0x1F56
+        else None
+        end
+      | 0x1F51 =>
+        match rhs
+        | 0x0300 => 0x1F53
+        | 0x0301 => 0x1F55
+        | 0x0342 => 0x1F57
+        else None
+        end
+      | 0x1F59 =>
+        match rhs
+        | 0x0300 => 0x1F5B
+        | 0x0301 => 0x1F5D
+        | 0x0342 => 0x1F5F
+        else None
+        end
+      | 0x1F60 =>
+        match rhs
+        | 0x0300 => 0x1F62
+        | 0x0301 => 0x1F64
+        | 0x0342 => 0x1F66
+        | 0x0345 => 0x1FA0
+        else None
+        end
+      | 0x1F61 =>
+        match rhs
+        | 0x0300 => 0x1F63
+        | 0x0301 => 0x1F65
+        | 0x0342 => 0x1F67
+        | 0x0345 => 0x1FA1
+        else None
+        end
+      | 0x1F62 =>
+        match rhs
+        | 0x0345 => 0x1FA2
+        else None
+        end
+      | 0x1F63 =>
+        match rhs
+        | 0x0345 => 0x1FA3
+        else None
+        end
+      | 0x1F64 =>
+        match rhs
+        | 0x0345 => 0x1FA4
+        else None
+        end
+      | 0x1F65 =>
+        match rhs
+        | 0x0345 => 0x1FA5
+        else None
+        end
+      | 0x1F66 =>
+        match rhs
+        | 0x0345 => 0x1FA6
+        else None
+        end
+      | 0x1F67 =>
+        match rhs
+        | 0x0345 => 0x1FA7
+        else None
+        end
+      | 0x1F68 =>
+        match rhs
+        | 0x0300 => 0x1F6A
+        | 0x0301 => 0x1F6C
+        | 0x0342 => 0x1F6E
+        | 0x0345 => 0x1FA8
+        else None
+        end
+      | 0x1F69 =>
+        match rhs
+        | 0x0300 => 0x1F6B
+        | 0x0301 => 0x1F6D
+        | 0x0342 => 0x1F6F
+        | 0x0345 => 0x1FA9
+        else None
+        end
+      | 0x1F6A =>
+        match rhs
+        | 0x0345 => 0x1FAA
+        else None
+        end
+      | 0x1F6B =>
+        match rhs
+        | 0x0345 => 0x1FAB
+        else None
+        end
+      | 0x1F6C =>
+        match rhs
+        | 0x0345 => 0x1FAC
+        else None
+        end
+      | 0x1F6D =>
+        match rhs
+        | 0x0345 => 0x1FAD
+        else None
+        end
+      | 0x1F6E =>
+        match rhs
+        | 0x0345 => 0x1FAE
+        else None
+        end
+      | 0x1F6F =>
+        match rhs
+        | 0x0345 => 0x1FAF
+        else None
+        end
+      | 0x1F70 =>
+        match rhs
+        | 0x0345 => 0x1FB2
+        else None
+        end
+      | 0x1F74 =>
+        match rhs
+        | 0x0345 => 0x1FC2
+        else None
+        end
+      | 0x1F7C =>
+        match rhs
+        | 0x0345 => 0x1FF2
+        else None
+        end
+      | 0x1FB6 =>
+        match rhs
+        | 0x0345 => 0x1FB7
+        else None
+        end
+      | 0x1FBF =>
+        match rhs
+        | 0x0300 => 0x1FCD
+        | 0x0301 => 0x1FCE
+        | 0x0342 => 0x1FCF
+        else None
+        end
+      | 0x1FC6 =>
+        match rhs
+        | 0x0345 => 0x1FC7
+        else None
+        end
+      | 0x1FF6 =>
+        match rhs
+        | 0x0345 => 0x1FF7
+        else None
+        end
+      | 0x1FFE =>
+        match rhs
+        | 0x0300 => 0x1FDD
+        | 0x0301 => 0x1FDE
+        | 0x0342 => 0x1FDF
+        else None
+        end
+      else None
+      end
+    | 0x0002 =>
+      match lhs
+      | 0x2190 =>
+        match rhs
+        | 0x0338 => 0x219A
+        else None
+        end
+      | 0x2192 =>
+        match rhs
+        | 0x0338 => 0x219B
+        else None
+        end
+      | 0x2194 =>
+        match rhs
+        | 0x0338 => 0x21AE
+        else None
+        end
+      | 0x21D0 =>
+        match rhs
+        | 0x0338 => 0x21CD
+        else None
+        end
+      | 0x21D2 =>
+        match rhs
+        | 0x0338 => 0x21CF
+        else None
+        end
+      | 0x21D4 =>
+        match rhs
+        | 0x0338 => 0x21CE
+        else None
+        end
+      | 0x2203 =>
+        match rhs
+        | 0x0338 => 0x2204
+        else None
+        end
+      | 0x2208 =>
+        match rhs
+        | 0x0338 => 0x2209
+        else None
+        end
+      | 0x220B =>
+        match rhs
+        | 0x0338 => 0x220C
+        else None
+        end
+      | 0x2223 =>
+        match rhs
+        | 0x0338 => 0x2224
+        else None
+        end
+      | 0x2225 =>
+        match rhs
+        | 0x0338 => 0x2226
+        else None
+        end
+      | 0x223C =>
+        match rhs
+        | 0x0338 => 0x2241
+        else None
+        end
+      | 0x2243 =>
+        match rhs
+        | 0x0338 => 0x2244
+        else None
+        end
+      | 0x2245 =>
+        match rhs
+        | 0x0338 => 0x2247
+        else None
+        end
+      | 0x2248 =>
+        match rhs
+        | 0x0338 => 0x2249
+        else None
+        end
+      | 0x224D =>
+        match rhs
+        | 0x0338 => 0x226D
+        else None
+        end
+      | 0x2261 =>
+        match rhs
+        | 0x0338 => 0x2262
+        else None
+        end
+      | 0x2264 =>
+        match rhs
+        | 0x0338 => 0x2270
+        else None
+        end
+      | 0x2265 =>
+        match rhs
+        | 0x0338 => 0x2271
+        else None
+        end
+      | 0x2272 =>
+        match rhs
+        | 0x0338 => 0x2274
+        else None
+        end
+      | 0x2273 =>
+        match rhs
+        | 0x0338 => 0x2275
+        else None
+        end
+      | 0x2276 =>
+        match rhs
+        | 0x0338 => 0x2278
+        else None
+        end
+      | 0x2277 =>
+        match rhs
+        | 0x0338 => 0x2279
+        else None
+        end
+      | 0x227A =>
+        match rhs
+        | 0x0338 => 0x2280
+        else None
+        end
+      | 0x227B =>
+        match rhs
+        | 0x0338 => 0x2281
+        else None
+        end
+      | 0x227C =>
+        match rhs
+        | 0x0338 => 0x22E0
+        else None
+        end
+      | 0x227D =>
+        match rhs
+        | 0x0338 => 0x22E1
+        else None
+        end
+      | 0x2282 =>
+        match rhs
+        | 0x0338 => 0x2284
+        else None
+        end
+      | 0x2283 =>
+        match rhs
+        | 0x0338 => 0x2285
+        else None
+        end
+      | 0x2286 =>
+        match rhs
+        | 0x0338 => 0x2288
+        else None
+        end
+      | 0x2287 =>
+        match rhs
+        | 0x0338 => 0x2289
+        else None
+        end
+      | 0x2291 =>
+        match rhs
+        | 0x0338 => 0x22E2
+        else None
+        end
+      | 0x2292 =>
+        match rhs
+        | 0x0338 => 0x22E3
+        else None
+        end
+      | 0x22A2 =>
+        match rhs
+        | 0x0338 => 0x22AC
+        else None
+        end
+      | 0x22A8 =>
+        match rhs
+        | 0x0338 => 0x22AD
+        else None
+        end
+      | 0x22A9 =>
+        match rhs
+        | 0x0338 => 0x22AE
+        else None
+        end
+      | 0x22AB =>
+        match rhs
+        | 0x0338 => 0x22AF
+        else None
+        end
+      | 0x22B2 =>
+        match rhs
+        | 0x0338 => 0x22EA
+        else None
+        end
+      | 0x22B3 =>
+        match rhs
+        | 0x0338 => 0x22EB
+        else None
+        end
+      | 0x22B4 =>
+        match rhs
+        | 0x0338 => 0x22EC
+        else None
+        end
+      | 0x22B5 =>
+        match rhs
+        | 0x0338 => 0x22ED
+        else None
+        end
+      else None
+      end
+    | 0x0003 =>
+      match lhs
+      | 0x3046 =>
+        match rhs
+        | 0x3099 => 0x3094
+        else None
+        end
+      | 0x304B =>
+        match rhs
+        | 0x3099 => 0x304C
+        else None
+        end
+      | 0x304D =>
+        match rhs
+        | 0x3099 => 0x304E
+        else None
+        end
+      | 0x304F =>
+        match rhs
+        | 0x3099 => 0x3050
+        else None
+        end
+      | 0x3051 =>
+        match rhs
+        | 0x3099 => 0x3052
+        else None
+        end
+      | 0x3053 =>
+        match rhs
+        | 0x3099 => 0x3054
+        else None
+        end
+      | 0x3055 =>
+        match rhs
+        | 0x3099 => 0x3056
+        else None
+        end
+      | 0x3057 =>
+        match rhs
+        | 0x3099 => 0x3058
+        else None
+        end
+      | 0x3059 =>
+        match rhs
+        | 0x3099 => 0x305A
+        else None
+        end
+      | 0x305B =>
+        match rhs
+        | 0x3099 => 0x305C
+        else None
+        end
+      | 0x305D =>
+        match rhs
+        | 0x3099 => 0x305E
+        else None
+        end
+      | 0x305F =>
+        match rhs
+        | 0x3099 => 0x3060
+        else None
+        end
+      | 0x3061 =>
+        match rhs
+        | 0x3099 => 0x3062
+        else None
+        end
+      | 0x3064 =>
+        match rhs
+        | 0x3099 => 0x3065
+        else None
+        end
+      | 0x3066 =>
+        match rhs
+        | 0x3099 => 0x3067
+        else None
+        end
+      | 0x3068 =>
+        match rhs
+        | 0x3099 => 0x3069
+        else None
+        end
+      | 0x306F =>
+        match rhs
+        | 0x3099 => 0x3070
+        | 0x309A => 0x3071
+        else None
+        end
+      | 0x3072 =>
+        match rhs
+        | 0x3099 => 0x3073
+        | 0x309A => 0x3074
+        else None
+        end
+      | 0x3075 =>
+        match rhs
+        | 0x3099 => 0x3076
+        | 0x309A => 0x3077
+        else None
+        end
+      | 0x3078 =>
+        match rhs
+        | 0x3099 => 0x3079
+        | 0x309A => 0x307A
+        else None
+        end
+      | 0x307B =>
+        match rhs
+        | 0x3099 => 0x307C
+        | 0x309A => 0x307D
+        else None
+        end
+      | 0x309D =>
+        match rhs
+        | 0x3099 => 0x309E
+        else None
+        end
+      | 0x30A6 =>
+        match rhs
+        | 0x3099 => 0x30F4
+        else None
+        end
+      | 0x30AB =>
+        match rhs
+        | 0x3099 => 0x30AC
+        else None
+        end
+      | 0x30AD =>
+        match rhs
+        | 0x3099 => 0x30AE
+        else None
+        end
+      | 0x30AF =>
+        match rhs
+        | 0x3099 => 0x30B0
+        else None
+        end
+      | 0x30B1 =>
+        match rhs
+        | 0x3099 => 0x30B2
+        else None
+        end
+      | 0x30B3 =>
+        match rhs
+        | 0x3099 => 0x30B4
+        else None
+        end
+      | 0x30B5 =>
+        match rhs
+        | 0x3099 => 0x30B6
+        else None
+        end
+      | 0x30B7 =>
+        match rhs
+        | 0x3099 => 0x30B8
+        else None
+        end
+      | 0x30B9 =>
+        match rhs
+        | 0x3099 => 0x30BA
+        else None
+        end
+      | 0x30BB =>
+        match rhs
+        | 0x3099 => 0x30BC
+        else None
+        end
+      | 0x30BD =>
+        match rhs
+        | 0x3099 => 0x30BE
+        else None
+        end
+      | 0x30BF =>
+        match rhs
+        | 0x3099 => 0x30C0
+        else None
+        end
+      | 0x30C1 =>
+        match rhs
+        | 0x3099 => 0x30C2
+        else None
+        end
+      | 0x30C4 =>
+        match rhs
+        | 0x3099 => 0x30C5
+        else None
+        end
+      | 0x30C6 =>
+        match rhs
+        | 0x3099 => 0x30C7
+        else None
+        end
+      | 0x30C8 =>
+        match rhs
+        | 0x3099 => 0x30C9
+        else None
+        end
+      | 0x30CF =>
+        match rhs
+        | 0x3099 => 0x30D0
+        | 0x309A => 0x30D1
+        else None
+        end
+      | 0x30D2 =>
+        match rhs
+        | 0x3099 => 0x30D3
+        | 0x309A => 0x30D4
+        else None
+        end
+      | 0x30D5 =>
+        match rhs
+        | 0x3099 => 0x30D6
+        | 0x309A => 0x30D7
+        else None
+        end
+      | 0x30D8 =>
+        match rhs
+        | 0x3099 => 0x30D9
+        | 0x309A => 0x30DA
+        else None
+        end
+      | 0x30DB =>
+        match rhs
+        | 0x3099 => 0x30DC
+        | 0x309A => 0x30DD
+        else None
+        end
+      | 0x30EF =>
+        match rhs
+        | 0x3099 => 0x30F7
+        else None
+        end
+      | 0x30F0 =>
+        match rhs
+        | 0x3099 => 0x30F8
+        else None
+        end
+      | 0x30F1 =>
+        match rhs
+        | 0x3099 => 0x30F9
+        else None
+        end
+      | 0x30F2 =>
+        match rhs
+        | 0x3099 => 0x30FA
+        else None
+        end
+      | 0x30FD =>
+        match rhs
+        | 0x3099 => 0x30FE
+        else None
+        end
+      else None
+      end
+    | 0x0010 =>
+      match lhs
+      | 0x105D2 =>
+        match rhs
+        | 0x0307 => 0x105C9
+        else None
+        end
+      | 0x105DA =>
+        match rhs
+        | 0x0307 => 0x105E4
+        else None
+        end
+      else None
+      end
+    | 0x0011 =>
+      match lhs
+      | 0x11099 =>
+        match rhs
+        | 0x110BA => 0x1109A
+        else None
+        end
+      | 0x1109B =>
+        match rhs
+        | 0x110BA => 0x1109C
+        else None
+        end
+      | 0x110A5 =>
+        match rhs
+        | 0x110BA => 0x110AB
+        else None
+        end
+      | 0x11131 =>
+        match rhs
+        | 0x11127 => 0x1112E
+        else None
+        end
+      | 0x11132 =>
+        match rhs
+        | 0x11127 => 0x1112F
+        else None
+        end
+      | 0x11347 =>
+        match rhs
+        | 0x1133E => 0x1134B
+        | 0x11357 => 0x1134C
+        else None
+        end
+      | 0x11382 =>
+        match rhs
+        | 0x113C9 => 0x11383
+        else None
+        end
+      | 0x11384 =>
+        match rhs
+        | 0x113BB => 0x11385
+        else None
+        end
+      | 0x1138B =>
+        match rhs
+        | 0x113C2 => 0x1138E
+        else None
+        end
+      | 0x11390 =>
+        match rhs
+        | 0x113C9 => 0x11391
+        else None
+        end
+      | 0x113C2 =>
+        match rhs
+        | 0x113B8 => 0x113C7
+        | 0x113C2 => 0x113C5
+        | 0x113C9 => 0x113C8
+        else None
+        end
+      | 0x114B9 =>
+        match rhs
+        | 0x114B0 => 0x114BC
+        | 0x114BA => 0x114BB
+        | 0x114BD => 0x114BE
+        else None
+        end
+      | 0x115B8 =>
+        match rhs
+        | 0x115AF => 0x115BA
+        else None
+        end
+      | 0x115B9 =>
+        match rhs
+        | 0x115AF => 0x115BB
+        else None
+        end
+      | 0x11935 =>
+        match rhs
+        | 0x11930 => 0x11938
+        else None
+        end
+      else None
+      end
+    | 0x0016 =>
+      match lhs
+      | 0x1611E =>
+        match rhs
+        | 0x1611E => 0x16121
+        | 0x1611F => 0x16123
+        | 0x16120 => 0x16125
+        | 0x16129 => 0x16122
+        else None
+        end
+      | 0x16121 =>
+        match rhs
+        | 0x1611F => 0x16126
+        | 0x16120 => 0x16128
+        else None
+        end
+      | 0x16122 =>
+        match rhs
+        | 0x1611F => 0x16127
+        else None
+        end
+      | 0x16129 =>
+        match rhs
+        | 0x1611F => 0x16124
+        else None
+        end
+      | 0x16D63 =>
+        match rhs
+        | 0x16D67 => 0x16D69
+        else None
+        end
+      | 0x16D67 =>
+        match rhs
+        | 0x16D67 => 0x16D68
+        else None
+        end
+      | 0x16D69 =>
+        match rhs
+        | 0x16D67 => 0x16D6A
+        else None
+        end
+      else None
+      end
+    else
+      None
     end
-    None
-
-  fun _table(): String val =>
-    "3C000000380300006E2200003D00000038030000602200003E000000380300006F2200004100000000030000C00000004100000001030000C10000004100000002030000C20000004100000003030000C30000004100000004030000000100004100000006030000020100004100000007030000260200004100000008030000C40000004100000009030000A21E0000410000000A030000C5000000410000000C030000CD010000410000000F030000000200004100000011030000020200004100000023030000A01E00004100000025030000001E00004100000028030000040100004200000007030000021E00004200000023030000041E00004200000031030000061E000043000000010300000601000043000000020300000801000043000000070300000A010000430000000C0300000C0100004300000027030000C700000044000000070300000A1E0000440000000C0300000E01000044000000230300000C1E00004400000027030000101E0000440000002D030000121E000044000000310300000E1E00004500000000030000C80000004500000001030000C90000004500000002030000CA0000004500000003030000BC1E00004500000004030000120100004500000006030000140100004500000007030000160100004500000008030000CB0000004500000009030000BA1E0000450000000C0300001A010000450000000F030000040200004500000011030000060200004500000023030000B81E0000450000002703000028020000450000002803000018010000450000002D030000181E000045000000300300001A1E000046000000070300001E1E00004700000001030000F401000047000000020300001C0100004700000004030000201E000047000000060300001E010000470000000703000020010000470000000C030000E60100004700000027030000220100004800000002030000240100004800000007030000221E00004800000008030000261E0000480000000C0300001E0200004800000023030000241E00004800000027030000281E0000480000002E0300002A1E00004900000000030000CC0000004900000001030000CD0000004900000002030000CE00000049000000030300002801000049000000040300002A01000049000000060300002C0100004900000007030000300100004900000008030000CF0000004900000009030000C81E0000490000000C030000CF010000490000000F0300000802000049000000110300000A0200004900000023030000CA1E000049000000280300002E01000049000000300300002C1E00004A00000002030000340100004B00000001030000301E00004B0000000C030000E80100004B00000023030000321E00004B00000027030000360100004B00000031030000341E00004C00000001030000390100004C0000000C0300003D0100004C00000023030000361E00004C000000270300003B0100004C0000002D0300003C1E00004C000000310300003A1E00004D000000010300003E1E00004D00000007030000401E00004D00000023030000421E00004E00000000030000F80100004E00000001030000430100004E00000003030000D10000004E00000007030000441E00004E0000000C030000470100004E00000023030000461E00004E00000027030000450100004E0000002D0300004A1E00004E00000031030000481E00004F00000000030000D20000004F00000001030000D30000004F00000002030000D40000004F00000003030000D50000004F000000040300004C0100004F000000060300004E0100004F000000070300002E0200004F00000008030000D60000004F00000009030000CE1E00004F0000000B030000500100004F0000000C030000D10100004F0000000F0300000C0200004F000000110300000E0200004F0000001B030000A00100004F00000023030000CC1E00004F00000028030000EA0100005000000001030000541E00005000000007030000561E00005200000001030000540100005200000007030000581E0000520000000C03000058010000520000000F0300001002000052000000110300001202000052000000230300005A1E000052000000270300005601000052000000310300005E1E000053000000010300005A01000053000000020300005C0100005300000007030000601E0000530000000C030000600100005300000023030000621E000053000000260300001802000053000000270300005E01000054000000070300006A1E0000540000000C0300006401000054000000230300006C1E000054000000260300001A020000540000002703000062010000540000002D030000701E000054000000310300006E1E00005500000000030000D90000005500000001030000DA0000005500000002030000DB00000055000000030300006801000055000000040300006A01000055000000060300006C0100005500000008030000DC0000005500000009030000E61E0000550000000A0300006E010000550000000B03000070010000550000000C030000D3010000550000000F03000014020000550000001103000016020000550000001B030000AF0100005500000023030000E41E00005500000024030000721E0000550000002803000072010000550000002D030000761E00005500000030030000741E000056000000030300007C1E000056000000230300007E1E00005700000000030000801E00005700000001030000821E00005700000002030000740100005700000007030000861E00005700000008030000841E00005700000023030000881E000058000000070300008A1E000058000000080300008C1E00005900000000030000F21E00005900000001030000DD0000005900000002030000760100005900000003030000F81E000059000000040300003202000059000000070300008E1E00005900000008030000780100005900000009030000F61E00005900000023030000F41E00005A00000001030000790100005A00000002030000901E00005A000000070300007B0100005A0000000C0300007D0100005A00000023030000921E00005A00000031030000941E00006100000000030000E00000006100000001030000E10000006100000002030000E20000006100000003030000E30000006100000004030000010100006100000006030000030100006100000007030000270200006100000008030000E40000006100000009030000A31E0000610000000A030000E5000000610000000C030000CE010000610000000F030000010200006100000011030000030200006100000023030000A11E00006100000025030000011E00006100000028030000050100006200000007030000031E00006200000023030000051E00006200000031030000071E000063000000010300000701000063000000020300000901000063000000070300000B010000630000000C0300000D0100006300000027030000E700000064000000070300000B1E0000640000000C0300000F01000064000000230300000D1E00006400000027030000111E0000640000002D030000131E000064000000310300000F1E00006500000000030000E80000006500000001030000E90000006500000002030000EA0000006500000003030000BD1E00006500000004030000130100006500000006030000150100006500000007030000170100006500000008030000EB0000006500000009030000BB1E0000650000000C0300001B010000650000000F030000050200006500000011030000070200006500000023030000B91E0000650000002703000029020000650000002803000019010000650000002D030000191E000065000000300300001B1E000066000000070300001F1E00006700000001030000F501000067000000020300001D0100006700000004030000211E000067000000060300001F010000670000000703000021010000670000000C030000E70100006700000027030000230100006800000002030000250100006800000007030000231E00006800000008030000271E0000680000000C0300001F0200006800000023030000251E00006800000027030000291E0000680000002E0300002B1E00006800000031030000961E00006900000000030000EC0000006900000001030000ED0000006900000002030000EE00000069000000030300002901000069000000040300002B01000069000000060300002D0100006900000008030000EF0000006900000009030000C91E0000690000000C030000D0010000690000000F0300000902000069000000110300000B0200006900000023030000CB1E000069000000280300002F01000069000000300300002D1E00006A00000002030000350100006A0000000C030000F00100006B00000001030000311E00006B0000000C030000E90100006B00000023030000331E00006B00000027030000370100006B00000031030000351E00006C000000010300003A0100006C0000000C0300003E0100006C00000023030000371E00006C000000270300003C0100006C0000002D0300003D1E00006C000000310300003B1E00006D000000010300003F1E00006D00000007030000411E00006D00000023030000431E00006E00000000030000F90100006E00000001030000440100006E00000003030000F10000006E00000007030000451E00006E0000000C030000480100006E00000023030000471E00006E00000027030000460100006E0000002D0300004B1E00006E00000031030000491E00006F00000000030000F20000006F00000001030000F30000006F00000002030000F40000006F00000003030000F50000006F000000040300004D0100006F000000060300004F0100006F000000070300002F0200006F00000008030000F60000006F00000009030000CF1E00006F0000000B030000510100006F0000000C030000D20100006F0000000F0300000D0200006F000000110300000F0200006F0000001B030000A10100006F00000023030000CD1E00006F00000028030000EB0100007000000001030000551E00007000000007030000571E00007200000001030000550100007200000007030000591E0000720000000C03000059010000720000000F0300001102000072000000110300001302000072000000230300005B1E000072000000270300005701000072000000310300005F1E000073000000010300005B01000073000000020300005D0100007300000007030000611E0000730000000C030000610100007300000023030000631E000073000000260300001902000073000000270300005F01000074000000070300006B1E00007400000008030000971E0000740000000C0300006501000074000000230300006D1E000074000000260300001B020000740000002703000063010000740000002D030000711E000074000000310300006F1E00007500000000030000F90000007500000001030000FA0000007500000002030000FB00000075000000030300006901000075000000040300006B01000075000000060300006D0100007500000008030000FC0000007500000009030000E71E0000750000000A0300006F010000750000000B03000071010000750000000C030000D4010000750000000F03000015020000750000001103000017020000750000001B030000B00100007500000023030000E51E00007500000024030000731E0000750000002803000073010000750000002D030000771E00007500000030030000751E000076000000030300007D1E000076000000230300007F1E00007700000000030000811E00007700000001030000831E00007700000002030000750100007700000007030000871E00007700000008030000851E0000770000000A030000981E00007700000023030000891E000078000000070300008B1E000078000000080300008D1E00007900000000030000F31E00007900000001030000FD0000007900000002030000770100007900000003030000F91E000079000000040300003302000079000000070300008F1E00007900000008030000FF0000007900000009030000F71E0000790000000A030000991E00007900000023030000F51E00007A000000010300007A0100007A00000002030000911E00007A000000070300007C0100007A0000000C0300007E0100007A00000023030000931E00007A00000031030000951E0000A800000000030000ED1F0000A80000000103000085030000A800000042030000C11F0000C200000000030000A61E0000C200000001030000A41E0000C200000003030000AA1E0000C200000009030000A81E0000C400000004030000DE010000C500000001030000FA010000C600000001030000FC010000C600000004030000E2010000C700000001030000081E0000CA00000000030000C01E0000CA00000001030000BE1E0000CA00000003030000C41E0000CA00000009030000C21E0000CF000000010300002E1E0000D400000000030000D21E0000D400000001030000D01E0000D400000003030000D61E0000D400000009030000D41E0000D5000000010300004C1E0000D5000000040300002C020000D5000000080300004E1E0000D6000000040300002A020000D800000001030000FE010000DC00000000030000DB010000DC00000001030000D7010000DC00000004030000D5010000DC0000000C030000D9010000E200000000030000A71E0000E200000001030000A51E0000E200000003030000AB1E0000E200000009030000A91E0000E400000004030000DF010000E500000001030000FB010000E600000001030000FD010000E600000004030000E3010000E700000001030000091E0000EA00000000030000C11E0000EA00000001030000BF1E0000EA00000003030000C51E0000EA00000009030000C31E0000EF000000010300002F1E0000F400000000030000D31E0000F400000001030000D11E0000F400000003030000D71E0000F400000009030000D51E0000F5000000010300004D1E0000F5000000040300002D020000F5000000080300004F1E0000F6000000040300002B020000F800000001030000FF010000FC00000000030000DC010000FC00000001030000D8010000FC00000004030000D6010000FC0000000C030000DA0100000201000000030000B01E00000201000001030000AE1E00000201000003030000B41E00000201000009030000B21E00000301000000030000B11E00000301000001030000AF1E00000301000003030000B51E00000301000009030000B31E00001201000000030000141E00001201000001030000161E00001301000000030000151E00001301000001030000171E00004C01000000030000501E00004C01000001030000521E00004D01000000030000511E00004D01000001030000531E00005A01000007030000641E00005B01000007030000651E00006001000007030000661E00006101000007030000671E00006801000001030000781E00006901000001030000791E00006A010000080300007A1E00006B010000080300007B1E00007F010000070300009B1E0000A001000000030000DC1E0000A001000001030000DA1E0000A001000003030000E01E0000A001000009030000DE1E0000A001000023030000E21E0000A101000000030000DD1E0000A101000001030000DB1E0000A101000003030000E11E0000A101000009030000DF1E0000A101000023030000E31E0000AF01000000030000EA1E0000AF01000001030000E81E0000AF01000003030000EE1E0000AF01000009030000EC1E0000AF01000023030000F01E0000B001000000030000EB1E0000B001000001030000E91E0000B001000003030000EF1E0000B001000009030000ED1E0000B001000023030000F11E0000B70100000C030000EE010000EA01000004030000EC010000EB01000004030000ED0100002602000004030000E00100002702000004030000E101000028020000060300001C1E000029020000060300001D1E00002E02000004030000300200002F0200000403000031020000920200000C030000EF0100009103000000030000BA1F00009103000001030000860300009103000004030000B91F00009103000006030000B81F00009103000013030000081F00009103000014030000091F00009103000045030000BC1F00009503000000030000C81F00009503000001030000880300009503000013030000181F00009503000014030000191F00009703000000030000CA1F00009703000001030000890300009703000013030000281F00009703000014030000291F00009703000045030000CC1F00009903000000030000DA1F000099030000010300008A0300009903000004030000D91F00009903000006030000D81F00009903000008030000AA0300009903000013030000381F00009903000014030000391F00009F03000000030000F81F00009F030000010300008C0300009F03000013030000481F00009F03000014030000491F0000A103000014030000EC1F0000A503000000030000EA1F0000A5030000010300008E030000A503000004030000E91F0000A503000006030000E81F0000A503000008030000AB030000A503000014030000591F0000A903000000030000FA1F0000A9030000010300008F030000A903000013030000681F0000A903000014030000691F0000A903000045030000FC1F0000AC03000045030000B41F0000AE03000045030000C41F0000B103000000030000701F0000B103000001030000AC030000B103000004030000B11F0000B103000006030000B01F0000B103000013030000001F0000B103000014030000011F0000B103000042030000B61F0000B103000045030000B31F0000B503000000030000721F0000B503000001030000AD030000B503000013030000101F0000B503000014030000111F0000B703000000030000741F0000B703000001030000AE030000B703000013030000201F0000B703000014030000211F0000B703000042030000C61F0000B703000045030000C31F0000B903000000030000761F0000B903000001030000AF030000B903000004030000D11F0000B903000006030000D01F0000B903000008030000CA030000B903000013030000301F0000B903000014030000311F0000B903000042030000D61F0000BF03000000030000781F0000BF03000001030000CC030000BF03000013030000401F0000BF03000014030000411F0000C103000013030000E41F0000C103000014030000E51F0000C5030000000300007A1F0000C503000001030000CD030000C503000004030000E11F0000C503000006030000E01F0000C503000008030000CB030000C503000013030000501F0000C503000014030000511F0000C503000042030000E61F0000C9030000000300007C1F0000C903000001030000CE030000C903000013030000601F0000C903000014030000611F0000C903000042030000F61F0000C903000045030000F31F0000CA03000000030000D21F0000CA0300000103000090030000CA03000042030000D71F0000CB03000000030000E21F0000CB03000001030000B0030000CB03000042030000E71F0000CE03000045030000F41F0000D203000001030000D3030000D203000008030000D40300000604000008030000070400001004000006030000D00400001004000008030000D20400001304000001030000030400001504000000030000000400001504000006030000D60400001504000008030000010400001604000006030000C10400001604000008030000DC0400001704000008030000DE04000018040000000300000D0400001804000004030000E20400001804000006030000190400001804000008030000E40400001A040000010300000C0400001E04000008030000E60400002304000004030000EE04000023040000060300000E0400002304000008030000F0040000230400000B030000F20400002704000008030000F40400002B04000008030000F80400002D04000008030000EC0400003004000006030000D10400003004000008030000D30400003304000001030000530400003504000000030000500400003504000006030000D70400003504000008030000510400003604000006030000C20400003604000008030000DD0400003704000008030000DF04000038040000000300005D0400003804000004030000E30400003804000006030000390400003804000008030000E50400003A040000010300005C0400003E04000008030000E70400004304000004030000EF04000043040000060300005E0400004304000008030000F1040000430400000B030000F30400004704000008030000F50400004B04000008030000F90400004D04000008030000ED040000560400000803000057040000740400000F03000076040000750400000F03000077040000D804000008030000DA040000D904000008030000DB040000E804000008030000EA040000E904000008030000EB0400002706000053060000220600002706000054060000230600002706000055060000250600004806000054060000240600004A0600005406000026060000C106000054060000C2060000D206000054060000D3060000D506000054060000C0060000280900003C09000029090000300900003C09000031090000330900003C09000034090000C7090000BE090000CB090000C7090000D7090000CC090000470B00003E0B00004B0B0000470B0000560B0000480B0000470B0000570B00004C0B0000920B0000D70B0000940B0000C60B0000BE0B0000CA0B0000C60B0000D70B0000CC0B0000C70B0000BE0B0000CB0B0000460C0000560C0000480C0000BF0C0000D50C0000C00C0000C60C0000C20C0000CA0C0000C60C0000D50C0000C70C0000C60C0000D60C0000C80C0000CA0C0000D50C0000CB0C0000460D00003E0D00004A0D0000460D0000570D00004C0D0000470D00003E0D00004B0D0000D90D0000CA0D0000DA0D0000D90D0000CF0D0000DC0D0000D90D0000DF0D0000DE0D0000DC0D0000CA0D0000DD0D0000251000002E10000026100000051B0000351B0000061B0000071B0000351B0000081B0000091B0000351B00000A1B00000B1B0000351B00000C1B00000D1B0000351B00000E1B0000111B0000351B0000121B00003A1B0000351B00003B1B00003C1B0000351B00003D1B00003E1B0000351B0000401B00003F1B0000351B0000411B0000421B0000351B0000431B0000361E000004030000381E0000371E000004030000391E00005A1E0000040300005C1E00005B1E0000040300005D1E0000621E000007030000681E0000631E000007030000691E0000A01E000002030000AC1E0000A01E000006030000B61E0000A11E000002030000AD1E0000A11E000006030000B71E0000B81E000002030000C61E0000B91E000002030000C71E0000CC1E000002030000D81E0000CD1E000002030000D91E0000001F000000030000021F0000001F000001030000041F0000001F000042030000061F0000001F000045030000801F0000011F000000030000031F0000011F000001030000051F0000011F000042030000071F0000011F000045030000811F0000021F000045030000821F0000031F000045030000831F0000041F000045030000841F0000051F000045030000851F0000061F000045030000861F0000071F000045030000871F0000081F0000000300000A1F0000081F0000010300000C1F0000081F0000420300000E1F0000081F000045030000881F0000091F0000000300000B1F0000091F0000010300000D1F0000091F0000420300000F1F0000091F000045030000891F00000A1F0000450300008A1F00000B1F0000450300008B1F00000C1F0000450300008C1F00000D1F0000450300008D1F00000E1F0000450300008E1F00000F1F0000450300008F1F0000101F000000030000121F0000101F000001030000141F0000111F000000030000131F0000111F000001030000151F0000181F0000000300001A1F0000181F0000010300001C1F0000191F0000000300001B1F0000191F0000010300001D1F0000201F000000030000221F0000201F000001030000241F0000201F000042030000261F0000201F000045030000901F0000211F000000030000231F0000211F000001030000251F0000211F000042030000271F0000211F000045030000911F0000221F000045030000921F0000231F000045030000931F0000241F000045030000941F0000251F000045030000951F0000261F000045030000961F0000271F000045030000971F0000281F0000000300002A1F0000281F0000010300002C1F0000281F0000420300002E1F0000281F000045030000981F0000291F0000000300002B1F0000291F0000010300002D1F0000291F0000420300002F1F0000291F000045030000991F00002A1F0000450300009A1F00002B1F0000450300009B1F00002C1F0000450300009C1F00002D1F0000450300009D1F00002E1F0000450300009E1F00002F1F0000450300009F1F0000301F000000030000321F0000301F000001030000341F0000301F000042030000361F0000311F000000030000331F0000311F000001030000351F0000311F000042030000371F0000381F0000000300003A1F0000381F0000010300003C1F0000381F0000420300003E1F0000391F0000000300003B1F0000391F0000010300003D1F0000391F0000420300003F1F0000401F000000030000421F0000401F000001030000441F0000411F000000030000431F0000411F000001030000451F0000481F0000000300004A1F0000481F0000010300004C1F0000491F0000000300004B1F0000491F0000010300004D1F0000501F000000030000521F0000501F000001030000541F0000501F000042030000561F0000511F000000030000531F0000511F000001030000551F0000511F000042030000571F0000591F0000000300005B1F0000591F0000010300005D1F0000591F0000420300005F1F0000601F000000030000621F0000601F000001030000641F0000601F000042030000661F0000601F000045030000A01F0000611F000000030000631F0000611F000001030000651F0000611F000042030000671F0000611F000045030000A11F0000621F000045030000A21F0000631F000045030000A31F0000641F000045030000A41F0000651F000045030000A51F0000661F000045030000A61F0000671F000045030000A71F0000681F0000000300006A1F0000681F0000010300006C1F0000681F0000420300006E1F0000681F000045030000A81F0000691F0000000300006B1F0000691F0000010300006D1F0000691F0000420300006F1F0000691F000045030000A91F00006A1F000045030000AA1F00006B1F000045030000AB1F00006C1F000045030000AC1F00006D1F000045030000AD1F00006E1F000045030000AE1F00006F1F000045030000AF1F0000701F000045030000B21F0000741F000045030000C21F00007C1F000045030000F21F0000B61F000045030000B71F0000BF1F000000030000CD1F0000BF1F000001030000CE1F0000BF1F000042030000CF1F0000C61F000045030000C71F0000F61F000045030000F71F0000FE1F000000030000DD1F0000FE1F000001030000DE1F0000FE1F000042030000DF1F000090210000380300009A21000092210000380300009B2100009421000038030000AE210000D021000038030000CD210000D221000038030000CF210000D421000038030000CE2100000322000038030000042200000822000038030000092200000B220000380300000C2200002322000038030000242200002522000038030000262200003C22000038030000412200004322000038030000442200004522000038030000472200004822000038030000492200004D220000380300006D2200006122000038030000622200006422000038030000702200006522000038030000712200007222000038030000742200007322000038030000752200007622000038030000782200007722000038030000792200007A22000038030000802200007B22000038030000812200007C22000038030000E02200007D22000038030000E12200008222000038030000842200008322000038030000852200008622000038030000882200008722000038030000892200009122000038030000E22200009222000038030000E3220000A222000038030000AC220000A822000038030000AD220000A922000038030000AE220000AB22000038030000AF220000B222000038030000EA220000B322000038030000EB220000B422000038030000EC220000B522000038030000ED2200004630000099300000943000004B300000993000004C3000004D300000993000004E3000004F300000993000005030000051300000993000005230000053300000993000005430000055300000993000005630000057300000993000005830000059300000993000005A3000005B300000993000005C3000005D300000993000005E3000005F30000099300000603000006130000099300000623000006430000099300000653000006630000099300000673000006830000099300000693000006F30000099300000703000006F3000009A30000071300000723000009930000073300000723000009A30000074300000753000009930000076300000753000009A30000077300000783000009930000079300000783000009A3000007A3000007B300000993000007C3000007B3000009A3000007D3000009D300000993000009E300000A630000099300000F4300000AB30000099300000AC300000AD30000099300000AE300000AF30000099300000B0300000B130000099300000B2300000B330000099300000B4300000B530000099300000B6300000B730000099300000B8300000B930000099300000BA300000BB30000099300000BC300000BD30000099300000BE300000BF30000099300000C0300000C130000099300000C2300000C430000099300000C5300000C630000099300000C7300000C830000099300000C9300000CF30000099300000D0300000CF3000009A300000D1300000D230000099300000D3300000D23000009A300000D4300000D530000099300000D6300000D53000009A300000D7300000D830000099300000D9300000D83000009A300000DA300000DB30000099300000DC300000DB3000009A300000DD300000EF30000099300000F7300000F030000099300000F8300000F130000099300000F9300000F230000099300000FA300000FD30000099300000FE300000D205010007030000C9050100DA05010007030000E405010099100100BA1001009A1001009B100100BA1001009C100100A5100100BA100100AB10010031110100271101002E11010032110100271101002F110100471301003E1301004B13010047130100571301004C13010082130100C91301008313010084130100BB130100851301008B130100C21301008E13010090130100C913010091130100C2130100B8130100C7130100C2130100C2130100C5130100C2130100C9130100C8130100B9140100B0140100BC140100B9140100BA140100BB140100B9140100BD140100BE140100B8150100AF150100BA150100B9150100AF150100BB1501003519010030190100381901001E6101001E610100216101001E6101001F610100236101001E61010020610100256101001E6101002961010022610100216101001F61010026610100216101002061010028610100226101001F61010027610100296101001F61010024610100636D0100676D0100696D0100676D0100676D0100686D0100696D0100676D01006A6D0100"

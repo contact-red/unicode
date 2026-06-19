@@ -95,48 +95,91 @@ primitive CompositionTableEmitter
 
       out.append("primitive _UcdCanonicalCompose\n")
       out.append("  fun of(lhs: U32, rhs: U32): (U32 | None) =>\n")
-      out.append("    let t = _table()\n")
-      out.append("    var lo: USize = 0\n")
-      out.append("    var hi: USize = t.size() / 24\n")
-      out.append("    while lo < hi do\n")
-      out.append("      let mid = lo + ((hi - lo) / 2)\n")
-      out.append("      let base = mid * 24\n")
-      out.append("      try\n")
-      out.append("        let l: U32 =\n")
-      out.append("          _UcdHex.byte(t, base)?\n")
-      out.append("            or (_UcdHex.byte(t, base + 2)? << 8)\n")
-      out.append("            or (_UcdHex.byte(t, base + 4)? << 16)\n")
-      out.append("            or (_UcdHex.byte(t, base + 6)? << 24)\n")
-      out.append("        let r: U32 =\n")
-      out.append("          _UcdHex.byte(t, base + 8)?\n")
-      out.append("            or (_UcdHex.byte(t, base + 10)? << 8)\n")
-      out.append("            or (_UcdHex.byte(t, base + 12)? << 16)\n")
-      out.append("            or (_UcdHex.byte(t, base + 14)? << 24)\n")
-      out.append("        if (lhs < l) or ((lhs == l) and (rhs < r)) then hi = mid\n")
-      out.append("        elseif (lhs > l) or ((lhs == l) and (rhs > r)) then lo = mid + 1\n")
-      out.append("        else\n")
-      out.append("          let result: U32 =\n")
-      out.append("            _UcdHex.byte(t, base + 16)?\n")
-      out.append("              or (_UcdHex.byte(t, base + 18)? << 8)\n")
-      out.append("              or (_UcdHex.byte(t, base + 20)? << 16)\n")
-      out.append("              or (_UcdHex.byte(t, base + 22)? << 24)\n")
-      out.append("          return result\n")
-      out.append("        end\n")
-      out.append("      else return None\n")
-      out.append("      end\n")
-      out.append("    end\n")
-      out.append("    None\n\n")
-
-      out.append("  fun _table(): String val =>\n")
-      out.append("    \"")
-      for e in compose_entries.values() do
-        _emit_le_u32(out, e._1)
-        _emit_le_u32(out, e._2)
-        _emit_le_u32(out, e._3)
-      end
-      out.append("\"\n")
+      _emit_compose_match(out, compose_entries)
       out
     end
+
+  fun _emit_compose_match(
+    out: String ref,
+    entries: Array[(U32, U32, U32)] val)
+  =>
+    """
+    Three-level dispatch for canonical composition. `entries` are
+    sorted by (lhs, rhs), so we stream once through:
+
+        match lhs >> 12          ← outer bucket
+        | 0xN =>
+          match lhs              ← exact lhs
+          | 0xLHS =>
+            match rhs            ← exact rhs
+            | 0xRHS => 0xRESULT
+            ...
+            else None
+            end
+          ...
+          else None
+          end
+        ...
+        else None
+        end
+
+    Pony / LLVM lower each level to a switch when arms are plain
+    integer literals (no guards) and dense enough.
+    """
+    out.append("    match lhs >> 12\n")
+    var prev_bucket: U32 = 0xFFFFFFFF
+    var bucket_open: Bool = false
+    var prev_lhs: U32 = 0xFFFFFFFF
+    var lhs_open: Bool = false
+    for e in entries.values() do
+      let bucket = e._1 >> 12
+      if bucket != prev_bucket then
+        if lhs_open then
+          out.append("        else None\n")
+          out.append("        end\n")
+          lhs_open = false
+        end
+        if bucket_open then
+          out.append("      else None\n")
+          out.append("      end\n")
+        end
+        out.append("    | 0x")
+        _RangeMatchEmitter.emit_hex_u32(out, bucket)
+        out.append(" =>\n")
+        out.append("      match lhs\n")
+        bucket_open = true
+        prev_bucket = bucket
+        prev_lhs = 0xFFFFFFFF
+      end
+      if e._1 != prev_lhs then
+        if lhs_open then
+          out.append("        else None\n")
+          out.append("        end\n")
+        end
+        out.append("      | 0x")
+        _RangeMatchEmitter.emit_hex_u32(out, e._1)
+        out.append(" =>\n")
+        out.append("        match rhs\n")
+        lhs_open = true
+        prev_lhs = e._1
+      end
+      out.append("        | 0x")
+      _RangeMatchEmitter.emit_hex_u32(out, e._2)
+      out.append(" => 0x")
+      _RangeMatchEmitter.emit_hex_u32(out, e._3)
+      out.append("\n")
+    end
+    if lhs_open then
+      out.append("        else None\n")
+      out.append("        end\n")
+    end
+    if bucket_open then
+      out.append("      else None\n")
+      out.append("      end\n")
+    end
+    out.append("    else\n")
+    out.append("      None\n")
+    out.append("    end\n")
 
   fun _collect_exclusions(
     lines: ReadSeq[String val] box)
