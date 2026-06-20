@@ -6,59 +6,94 @@
 
 primitive _UcdFullTitle
   fun of(cp: U32): (Array[U32] val | None) =>
-    let idx = _index()
-    var lo: USize = 0
-    var hi: USize = idx.size() / 18
-    while lo < hi do
-      let mid = lo + ((hi - lo) / 2)
-      let base = mid * 18
-      try
-        let key: U32 =
-          _UcdHex.byte(idx, base)?
-            or (_UcdHex.byte(idx, base + 2)? << 8)
-            or (_UcdHex.byte(idx, base + 4)? << 16)
-            or (_UcdHex.byte(idx, base + 6)? << 24)
-        if cp < key then hi = mid
-        elseif cp > key then lo = mid + 1
-        else
-          let offset: U32 =
-            _UcdHex.byte(idx, base + 8)?
-              or (_UcdHex.byte(idx, base + 10)? << 8)
-              or (_UcdHex.byte(idx, base + 12)? << 16)
-              or (_UcdHex.byte(idx, base + 14)? << 24)
-          let length = _UcdHex.byte(idx, base + 16)?
-          return _read(
-            USize.from[U32](offset),
-            USize.from[U32](length))
-        end
-      else return None
+    match cp >> 12
+    | 0x0000 =>
+      match cp
+      | 0x00DF => recover val [as U32: 0x0053; 0x0073] end
+      | 0x0149 => recover val [as U32: 0x02BC; 0x004E] end
+      | 0x01F0 => recover val [as U32: 0x004A; 0x030C] end
+      | 0x0390 => recover val [as U32: 0x0399; 0x0308; 0x0301] end
+      | 0x03B0 => recover val [as U32: 0x03A5; 0x0308; 0x0301] end
+      | 0x0587 => recover val [as U32: 0x0535; 0x0582] end
+      else None
       end
-    end
-    None
-
-  fun _read(offset_cps: USize, length: USize)
-    : (Array[U32] val | None)
-  =>
-    let data = _data()
-    let buf = recover trn Array[U32](length) end
-    var i: USize = 0
-    while i < length do
-      let base = (offset_cps + i) * 8
-      try
-        let cp: U32 =
-          _UcdHex.byte(data, base)?
-            or (_UcdHex.byte(data, base + 2)? << 8)
-            or (_UcdHex.byte(data, base + 4)? << 16)
-            or (_UcdHex.byte(data, base + 6)? << 24)
-        buf.push(cp)
-      else return None
+    | 0x0001 =>
+      match cp
+      | 0x1E96 => recover val [as U32: 0x0048; 0x0331] end
+      | 0x1E97 => recover val [as U32: 0x0054; 0x0308] end
+      | 0x1E98 => recover val [as U32: 0x0057; 0x030A] end
+      | 0x1E99 => recover val [as U32: 0x0059; 0x030A] end
+      | 0x1E9A => recover val [as U32: 0x0041; 0x02BE] end
+      | 0x1F50 => recover val [as U32: 0x03A5; 0x0313] end
+      | 0x1F52 => recover val [as U32: 0x03A5; 0x0313; 0x0300] end
+      | 0x1F54 => recover val [as U32: 0x03A5; 0x0313; 0x0301] end
+      | 0x1F56 => recover val [as U32: 0x03A5; 0x0313; 0x0342] end
+      | 0x1F80 => recover val [as U32: 0x1F88] end
+      | 0x1F81 => recover val [as U32: 0x1F89] end
+      | 0x1F82 => recover val [as U32: 0x1F8A] end
+      | 0x1F83 => recover val [as U32: 0x1F8B] end
+      | 0x1F84 => recover val [as U32: 0x1F8C] end
+      | 0x1F85 => recover val [as U32: 0x1F8D] end
+      | 0x1F86 => recover val [as U32: 0x1F8E] end
+      | 0x1F87 => recover val [as U32: 0x1F8F] end
+      | 0x1F90 => recover val [as U32: 0x1F98] end
+      | 0x1F91 => recover val [as U32: 0x1F99] end
+      | 0x1F92 => recover val [as U32: 0x1F9A] end
+      | 0x1F93 => recover val [as U32: 0x1F9B] end
+      | 0x1F94 => recover val [as U32: 0x1F9C] end
+      | 0x1F95 => recover val [as U32: 0x1F9D] end
+      | 0x1F96 => recover val [as U32: 0x1F9E] end
+      | 0x1F97 => recover val [as U32: 0x1F9F] end
+      | 0x1FA0 => recover val [as U32: 0x1FA8] end
+      | 0x1FA1 => recover val [as U32: 0x1FA9] end
+      | 0x1FA2 => recover val [as U32: 0x1FAA] end
+      | 0x1FA3 => recover val [as U32: 0x1FAB] end
+      | 0x1FA4 => recover val [as U32: 0x1FAC] end
+      | 0x1FA5 => recover val [as U32: 0x1FAD] end
+      | 0x1FA6 => recover val [as U32: 0x1FAE] end
+      | 0x1FA7 => recover val [as U32: 0x1FAF] end
+      | 0x1FB2 => recover val [as U32: 0x1FBA; 0x0345] end
+      | 0x1FB3 => recover val [as U32: 0x1FBC] end
+      | 0x1FB4 => recover val [as U32: 0x0386; 0x0345] end
+      | 0x1FB6 => recover val [as U32: 0x0391; 0x0342] end
+      | 0x1FB7 => recover val [as U32: 0x0391; 0x0342; 0x0345] end
+      | 0x1FC2 => recover val [as U32: 0x1FCA; 0x0345] end
+      | 0x1FC3 => recover val [as U32: 0x1FCC] end
+      | 0x1FC4 => recover val [as U32: 0x0389; 0x0345] end
+      | 0x1FC6 => recover val [as U32: 0x0397; 0x0342] end
+      | 0x1FC7 => recover val [as U32: 0x0397; 0x0342; 0x0345] end
+      | 0x1FD2 => recover val [as U32: 0x0399; 0x0308; 0x0300] end
+      | 0x1FD3 => recover val [as U32: 0x0399; 0x0308; 0x0301] end
+      | 0x1FD6 => recover val [as U32: 0x0399; 0x0342] end
+      | 0x1FD7 => recover val [as U32: 0x0399; 0x0308; 0x0342] end
+      | 0x1FE2 => recover val [as U32: 0x03A5; 0x0308; 0x0300] end
+      | 0x1FE3 => recover val [as U32: 0x03A5; 0x0308; 0x0301] end
+      | 0x1FE4 => recover val [as U32: 0x03A1; 0x0313] end
+      | 0x1FE6 => recover val [as U32: 0x03A5; 0x0342] end
+      | 0x1FE7 => recover val [as U32: 0x03A5; 0x0308; 0x0342] end
+      | 0x1FF2 => recover val [as U32: 0x1FFA; 0x0345] end
+      | 0x1FF3 => recover val [as U32: 0x1FFC] end
+      | 0x1FF4 => recover val [as U32: 0x038F; 0x0345] end
+      | 0x1FF6 => recover val [as U32: 0x03A9; 0x0342] end
+      | 0x1FF7 => recover val [as U32: 0x03A9; 0x0342; 0x0345] end
+      else None
       end
-      i = i + 1
+    | 0x000F =>
+      match cp
+      | 0xFB00 => recover val [as U32: 0x0046; 0x0066] end
+      | 0xFB01 => recover val [as U32: 0x0046; 0x0069] end
+      | 0xFB02 => recover val [as U32: 0x0046; 0x006C] end
+      | 0xFB03 => recover val [as U32: 0x0046; 0x0066; 0x0069] end
+      | 0xFB04 => recover val [as U32: 0x0046; 0x0066; 0x006C] end
+      | 0xFB05 => recover val [as U32: 0x0053; 0x0074] end
+      | 0xFB06 => recover val [as U32: 0x0053; 0x0074] end
+      | 0xFB13 => recover val [as U32: 0x0544; 0x0576] end
+      | 0xFB14 => recover val [as U32: 0x0544; 0x0565] end
+      | 0xFB15 => recover val [as U32: 0x0544; 0x056B] end
+      | 0xFB16 => recover val [as U32: 0x054E; 0x0576] end
+      | 0xFB17 => recover val [as U32: 0x0544; 0x056D] end
+      else None
+      end
+    else
+      None
     end
-    consume buf
-
-  fun _index(): String val =>
-    "DF0000000000000002490100000200000002F00100000400000002900300000600000003B00300000900000003870500000C00000002961E00000E00000002971E00001000000002981E00001200000002991E000014000000029A1E00001600000002501F00001800000002521F00001A00000003541F00001D00000003561F00002000000003801F00002300000001811F00002400000001821F00002500000001831F00002600000001841F00002700000001851F00002800000001861F00002900000001871F00002A00000001901F00002B00000001911F00002C00000001921F00002D00000001931F00002E00000001941F00002F00000001951F00003000000001961F00003100000001971F00003200000001A01F00003300000001A11F00003400000001A21F00003500000001A31F00003600000001A41F00003700000001A51F00003800000001A61F00003900000001A71F00003A00000001B21F00003B00000002B31F00003D00000001B41F00003E00000002B61F00004000000002B71F00004200000003C21F00004500000002C31F00004700000001C41F00004800000002C61F00004A00000002C71F00004C00000003D21F00004F00000003D31F00005200000003D61F00005500000002D71F00005700000003E21F00005A00000003E31F00005D00000003E41F00006000000002E61F00006200000002E71F00006400000003F21F00006700000002F31F00006900000001F41F00006A00000002F61F00006C00000002F71F00006E0000000300FB0000710000000201FB0000730000000202FB0000750000000203FB0000770000000304FB00007A0000000305FB00007D0000000206FB00007F0000000213FB0000810000000214FB0000830000000215FB0000850000000216FB0000870000000217FB00008900000002"
-
-  fun _data(): String val =>
-    "5300000073000000BC0200004E0000004A0000000C030000990300000803000001030000A50300000803000001030000350500008205000048000000310300005400000008030000570000000A030000590000000A03000041000000BE020000A503000013030000A50300001303000000030000A50300001303000001030000A50300001303000042030000881F0000891F00008A1F00008B1F00008C1F00008D1F00008E1F00008F1F0000981F0000991F00009A1F00009B1F00009C1F00009D1F00009E1F00009F1F0000A81F0000A91F0000AA1F0000AB1F0000AC1F0000AD1F0000AE1F0000AF1F0000BA1F000045030000BC1F000086030000450300009103000042030000910300004203000045030000CA1F000045030000CC1F0000890300004503000097030000420300009703000042030000450300009903000008030000000300009903000008030000010300009903000042030000990300000803000042030000A50300000803000000030000A50300000803000001030000A103000013030000A503000042030000A50300000803000042030000FA1F000045030000FC1F00008F03000045030000A903000042030000A9030000420300004503000046000000660000004600000069000000460000006C00000046000000660000006900000046000000660000006C0000005300000074000000530000007400000044050000760500004405000065050000440500006B0500004E05000076050000440500006D050000"

@@ -1,16 +1,14 @@
 // Shared emitter for variable-length cp → `Array[U32]` lookup tables.
 //
 // Used for:
-//   - _UcdCompatDecomp (via decomp_table.pony — pre-existing)
 //   - _UcdFullUpper / _UcdFullLower / _UcdFullTitle (SpecialCasing.txt)
 //   - _UcdFullCaseFold (CaseFolding.txt status C+F)
 //
-// Layout: two tables.
-//   _index : sorted records of (cp:U32, data_offset:U32, length:U8)
-//            9 bytes raw / 18 hex chars per entry.
-//   _data  : concatenated mapping cps (4 bytes / 8 hex chars each).
-// Binary-search _index on cp; if found, read `length` cps from _data
-// starting at `offset * 4` bytes.
+// Same two-level `match cp >> 12` pattern as `_emit_varlen_decomp_match`
+// in decomp_table.pony — outer match picks a 4096-cp bucket, inner
+// match selects the exact codepoint and emits its mapping as a
+// `recover val [as U32: 0xX; 0xY; ...] end` literal. The default arm
+// at every level returns `None`.
 
 primitive VarLenTableEmitter
   fun emit(
@@ -33,86 +31,54 @@ primitive VarLenTableEmitter
 
       out.append("primitive " + primitive_name + "\n")
       out.append("  fun of(cp: U32): (Array[U32] val | None) =>\n")
-      out.append("    let idx = _index()\n")
-      out.append("    var lo: USize = 0\n")
-      out.append("    var hi: USize = idx.size() / 18\n")
-      out.append("    while lo < hi do\n")
-      out.append("      let mid = lo + ((hi - lo) / 2)\n")
-      out.append("      let base = mid * 18\n")
-      out.append("      try\n")
-      out.append("        let key: U32 =\n")
-      out.append("          _UcdHex.byte(idx, base)?\n")
-      out.append("            or (_UcdHex.byte(idx, base + 2)? << 8)\n")
-      out.append("            or (_UcdHex.byte(idx, base + 4)? << 16)\n")
-      out.append("            or (_UcdHex.byte(idx, base + 6)? << 24)\n")
-      out.append("        if cp < key then hi = mid\n")
-      out.append("        elseif cp > key then lo = mid + 1\n")
-      out.append("        else\n")
-      out.append("          let offset: U32 =\n")
-      out.append("            _UcdHex.byte(idx, base + 8)?\n")
-      out.append("              or (_UcdHex.byte(idx, base + 10)? << 8)\n")
-      out.append("              or (_UcdHex.byte(idx, base + 12)? << 16)\n")
-      out.append("              or (_UcdHex.byte(idx, base + 14)? << 24)\n")
-      out.append("          let length = _UcdHex.byte(idx, base + 16)?\n")
-      out.append("          return _read(\n")
-      out.append("            USize.from[U32](offset),\n")
-      out.append("            USize.from[U32](length))\n")
-      out.append("        end\n")
-      out.append("      else return None\n")
-      out.append("      end\n")
-      out.append("    end\n")
-      out.append("    None\n\n")
-
-      out.append("  fun _read(offset_cps: USize, length: USize)\n")
-      out.append("    : (Array[U32] val | None)\n")
-      out.append("  =>\n")
-      out.append("    let data = _data()\n")
-      out.append("    let buf = recover trn Array[U32](length) end\n")
-      out.append("    var i: USize = 0\n")
-      out.append("    while i < length do\n")
-      out.append("      let base = (offset_cps + i) * 8\n")
-      out.append("      try\n")
-      out.append("        let cp: U32 =\n")
-      out.append("          _UcdHex.byte(data, base)?\n")
-      out.append("            or (_UcdHex.byte(data, base + 2)? << 8)\n")
-      out.append("            or (_UcdHex.byte(data, base + 4)? << 16)\n")
-      out.append("            or (_UcdHex.byte(data, base + 6)? << 24)\n")
-      out.append("        buf.push(cp)\n")
-      out.append("      else return None\n")
-      out.append("      end\n")
-      out.append("      i = i + 1\n")
-      out.append("    end\n")
-      out.append("    consume buf\n\n")
-
-      out.append("  fun _index(): String val =>\n")
-      out.append("    \"")
-      var offset: U32 = 0
-      for p in pairs.values() do
-        _emit_le_u32(out, p._1)
-        _emit_le_u32(out, offset)
-        _emit_byte(out, U8.from[USize](p._2.size()))
-        offset = offset + U32.from[USize](p._2.size())
-      end
-      out.append("\"\n\n")
-
-      out.append("  fun _data(): String val =>\n")
-      out.append("    \"")
-      for p in pairs.values() do
-        for cp in p._2.values() do
-          _emit_le_u32(out, cp)
-        end
-      end
-      out.append("\"\n")
+      _emit_varlen_match(out, pairs)
       out
     end
 
-  fun _emit_le_u32(out: String ref, value: U32) =>
-    _emit_byte(out, U8.from[U32](value and 0xFF))
-    _emit_byte(out, U8.from[U32]((value >> 8) and 0xFF))
-    _emit_byte(out, U8.from[U32]((value >> 16) and 0xFF))
-    _emit_byte(out, U8.from[U32]((value >> 24) and 0xFF))
-
-  fun _emit_byte(out: String ref, b: U8) =>
-    let digits = "0123456789ABCDEF"
-    try out.push(digits(USize.from[U8](b >> 4))?) end
-    try out.push(digits(USize.from[U8](b and 0xF))?) end
+  fun _emit_varlen_match(
+    out: String ref,
+    entries: Array[(U32, Array[U32] val)] val)
+  =>
+    """
+    Two-level dispatch for variable-length cp → Array[U32] tables.
+    Each arm emits a `recover val [as U32: …] end` literal containing
+    the full mapping (case mappings run up to 3 codepoints; this
+    pattern is identical to the one used for compat decomp, which
+    runs up to ~18 codepoints).
+    """
+    out.append("    match cp >> 12\n")
+    var prev_bucket: U32 = 0xFFFFFFFF
+    var bucket_open: Bool = false
+    for e in entries.values() do
+      let bucket = e._1 >> 12
+      if bucket != prev_bucket then
+        if bucket_open then
+          out.append("      else None\n")
+          out.append("      end\n")
+        end
+        out.append("    | 0x")
+        _RangeMatchEmitter.emit_hex_u32(out, bucket)
+        out.append(" =>\n")
+        out.append("      match cp\n")
+        bucket_open = true
+        prev_bucket = bucket
+      end
+      out.append("      | 0x")
+      _RangeMatchEmitter.emit_hex_u32(out, e._1)
+      out.append(" => recover val [as U32: ")
+      var first: Bool = true
+      for cp in e._2.values() do
+        if not first then out.append("; ") end
+        first = false
+        out.append("0x")
+        _RangeMatchEmitter.emit_hex_u32(out, cp)
+      end
+      out.append("] end\n")
+    end
+    if bucket_open then
+      out.append("      else None\n")
+      out.append("      end\n")
+    end
+    out.append("    else\n")
+    out.append("      None\n")
+    out.append("    end\n")
