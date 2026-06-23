@@ -81,6 +81,14 @@ primitive _ScriptSetUtils
     for s in scripts.values() do
       raw.push(_ScriptCodec.to_byte(s))
     end
+    sort_dedup_bytes(consume raw)
+
+  fun sort_dedup_bytes(raw: Array[U8] trn): Array[U8] val =>
+    """
+    Sort + dedup script bytes in place. Lets callers that already have
+    raw script bytes (e.g. `Scripts.of` via `_UcdScript.byte_of`) build a
+    set without the Script->byte round trip.
+    """
     let n = raw.size()
     var i: USize = 1
     while i < n do

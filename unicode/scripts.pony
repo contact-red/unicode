@@ -34,11 +34,11 @@ primitive Scripts
     marks contribute `ScriptInherited`. Use `.resolved()` on the
     result to drop those.
     """
-    let collected = recover trn Array[Script] end
+    let collected = recover trn Array[U8] end
     for cp in s.runes() do
-      collected.push(Codepoints.script(cp))
+      collected.push(_UcdScript.byte_of(cp))
     end
-    ScriptSet.create(consume collected)
+    ScriptSet._from_bytes(_ScriptSetUtils.sort_dedup_bytes(consume collected))
 
   fun dominant(s: String box): Script =>
     """
@@ -54,7 +54,7 @@ primitive Scripts
     let common = _ScriptCodec.to_byte(ScriptCommon)
     let inherited = _ScriptCodec.to_byte(ScriptInherited)
     for cp in s.runes() do
-      let b = _ScriptCodec.to_byte(Codepoints.script(cp))
+      let b = _UcdScript.byte_of(cp)
       if (b == common) or (b == inherited) then continue end
       let idx = USize.from[U8](b)
       try
@@ -101,7 +101,7 @@ primitive Scripts
     let inherited = _ScriptCodec.to_byte(ScriptInherited)
     let allowed_bytes = allowed.bytes()
     for cp in s.runes() do
-      let sc_byte = _ScriptCodec.to_byte(Codepoints.script(cp))
+      let sc_byte = _UcdScript.byte_of(cp)
       if (sc_byte == common) or (sc_byte == inherited) then
         continue
       end

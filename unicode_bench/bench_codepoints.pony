@@ -5,10 +5,37 @@ primitive BenchCodepoints
   fun register(bench: PonyBench, sizes: Array[USize] val) =>
     // Single-cp property lookups: size-independent — register once.
     _single_cp(bench)
+    _grapheme_break_depth(bench)
 
     // Whole-string count: size-sensitive.
     for size in sizes.values() do
       _count_size(bench, size)
+    end
+
+  fun _grapheme_break_depth(bench: PonyBench) =>
+    // Regression probe for `_UcdGraphemeBreak.of`. These code points were
+    // chosen to span the *match-dispatch* scan depth that the two-stage
+    // trie replaced: under the old `cp >> 12` + linear `c <= bound` scan
+    // they ranged from a top-level miss (no scan) to the deepest in-bucket
+    // arm (~295 comparisons, ~367ns). The trie is constant-time, so these
+    // should now all read flat (~single-digit ns) regardless of label —
+    // a divergence here flags a regression back toward depth-sensitivity.
+    let cfg = BenchSizes.default_cfg()
+    let probes: Array[(U32, String)] val =
+      [as (U32, String):
+        (0x4E2D, "else")       // CJK: was top-level else, no scan
+        (0x0009, "arm001")     // was block 0x000, arm 1/287
+        (0x0AE3, "arm144")     // was block 0x000, arm 144/287
+        (0x0F38, "arm272")     // was block 0x000, arm 272/287
+        (0xCFFF, "arm295")     // was block 0x00C, arm 295/295 — deepest
+      ]
+    for p in probes.values() do
+      (let cp, let lbl) = p
+      bench(_BenchU32("Codepoints.grapheme_break/depth/" + lbl, cp,
+        {(cp: U32) =>
+          DoNotOptimise[GraphemeBreak](Codepoints.grapheme_break(cp))
+          DoNotOptimise.observe()
+        }, cfg))
     end
 
   fun _single_cp(bench: PonyBench) =>

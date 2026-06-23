@@ -3,46 +3,17 @@
 //   make ucd-generate
 //
 // Source: SpecialCasing.txt Lowercase_Mapping (unconditional).
+use @ucd_fl_lookup[U32](cp: U32)
+use @ucd_fl_at[U32](i: U32)
 
 primitive _UcdFullLower
   fun of(cp: U32): (Array[U32] val | None) =>
-    match cp >> 12
-    | 0x0000 =>
-      match cp
-      | 0x0130 => recover val [as U32: 0x0069; 0x0307] end
-      else None
-      end
-    | 0x0001 =>
-      match cp
-      | 0x1F88 => recover val [as U32: 0x1F80] end
-      | 0x1F89 => recover val [as U32: 0x1F81] end
-      | 0x1F8A => recover val [as U32: 0x1F82] end
-      | 0x1F8B => recover val [as U32: 0x1F83] end
-      | 0x1F8C => recover val [as U32: 0x1F84] end
-      | 0x1F8D => recover val [as U32: 0x1F85] end
-      | 0x1F8E => recover val [as U32: 0x1F86] end
-      | 0x1F8F => recover val [as U32: 0x1F87] end
-      | 0x1F98 => recover val [as U32: 0x1F90] end
-      | 0x1F99 => recover val [as U32: 0x1F91] end
-      | 0x1F9A => recover val [as U32: 0x1F92] end
-      | 0x1F9B => recover val [as U32: 0x1F93] end
-      | 0x1F9C => recover val [as U32: 0x1F94] end
-      | 0x1F9D => recover val [as U32: 0x1F95] end
-      | 0x1F9E => recover val [as U32: 0x1F96] end
-      | 0x1F9F => recover val [as U32: 0x1F97] end
-      | 0x1FA8 => recover val [as U32: 0x1FA0] end
-      | 0x1FA9 => recover val [as U32: 0x1FA1] end
-      | 0x1FAA => recover val [as U32: 0x1FA2] end
-      | 0x1FAB => recover val [as U32: 0x1FA3] end
-      | 0x1FAC => recover val [as U32: 0x1FA4] end
-      | 0x1FAD => recover val [as U32: 0x1FA5] end
-      | 0x1FAE => recover val [as U32: 0x1FA6] end
-      | 0x1FAF => recover val [as U32: 0x1FA7] end
-      | 0x1FBC => recover val [as U32: 0x1FB3] end
-      | 0x1FCC => recover val [as U32: 0x1FC3] end
-      | 0x1FFC => recover val [as U32: 0x1FF3] end
-      else None
-      end
-    else
-      None
+    let off = @ucd_fl_lookup(cp)
+    if off == 0 then return None end
+    let n = @ucd_fl_at(off)
+    recover val
+      let a = Array[U32](n.usize())
+      var i: U32 = 1
+      while i <= n do a.push(@ucd_fl_at(off + i)); i = i + 1 end
+      a
     end

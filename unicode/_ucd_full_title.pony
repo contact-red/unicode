@@ -3,97 +3,17 @@
 //   make ucd-generate
 //
 // Source: SpecialCasing.txt Titlecase_Mapping (unconditional).
+use @ucd_ft_lookup[U32](cp: U32)
+use @ucd_ft_at[U32](i: U32)
 
 primitive _UcdFullTitle
   fun of(cp: U32): (Array[U32] val | None) =>
-    match cp >> 12
-    | 0x0000 =>
-      match cp
-      | 0x00DF => recover val [as U32: 0x0053; 0x0073] end
-      | 0x0149 => recover val [as U32: 0x02BC; 0x004E] end
-      | 0x01F0 => recover val [as U32: 0x004A; 0x030C] end
-      | 0x0390 => recover val [as U32: 0x0399; 0x0308; 0x0301] end
-      | 0x03B0 => recover val [as U32: 0x03A5; 0x0308; 0x0301] end
-      | 0x0587 => recover val [as U32: 0x0535; 0x0582] end
-      else None
-      end
-    | 0x0001 =>
-      match cp
-      | 0x1E96 => recover val [as U32: 0x0048; 0x0331] end
-      | 0x1E97 => recover val [as U32: 0x0054; 0x0308] end
-      | 0x1E98 => recover val [as U32: 0x0057; 0x030A] end
-      | 0x1E99 => recover val [as U32: 0x0059; 0x030A] end
-      | 0x1E9A => recover val [as U32: 0x0041; 0x02BE] end
-      | 0x1F50 => recover val [as U32: 0x03A5; 0x0313] end
-      | 0x1F52 => recover val [as U32: 0x03A5; 0x0313; 0x0300] end
-      | 0x1F54 => recover val [as U32: 0x03A5; 0x0313; 0x0301] end
-      | 0x1F56 => recover val [as U32: 0x03A5; 0x0313; 0x0342] end
-      | 0x1F80 => recover val [as U32: 0x1F88] end
-      | 0x1F81 => recover val [as U32: 0x1F89] end
-      | 0x1F82 => recover val [as U32: 0x1F8A] end
-      | 0x1F83 => recover val [as U32: 0x1F8B] end
-      | 0x1F84 => recover val [as U32: 0x1F8C] end
-      | 0x1F85 => recover val [as U32: 0x1F8D] end
-      | 0x1F86 => recover val [as U32: 0x1F8E] end
-      | 0x1F87 => recover val [as U32: 0x1F8F] end
-      | 0x1F90 => recover val [as U32: 0x1F98] end
-      | 0x1F91 => recover val [as U32: 0x1F99] end
-      | 0x1F92 => recover val [as U32: 0x1F9A] end
-      | 0x1F93 => recover val [as U32: 0x1F9B] end
-      | 0x1F94 => recover val [as U32: 0x1F9C] end
-      | 0x1F95 => recover val [as U32: 0x1F9D] end
-      | 0x1F96 => recover val [as U32: 0x1F9E] end
-      | 0x1F97 => recover val [as U32: 0x1F9F] end
-      | 0x1FA0 => recover val [as U32: 0x1FA8] end
-      | 0x1FA1 => recover val [as U32: 0x1FA9] end
-      | 0x1FA2 => recover val [as U32: 0x1FAA] end
-      | 0x1FA3 => recover val [as U32: 0x1FAB] end
-      | 0x1FA4 => recover val [as U32: 0x1FAC] end
-      | 0x1FA5 => recover val [as U32: 0x1FAD] end
-      | 0x1FA6 => recover val [as U32: 0x1FAE] end
-      | 0x1FA7 => recover val [as U32: 0x1FAF] end
-      | 0x1FB2 => recover val [as U32: 0x1FBA; 0x0345] end
-      | 0x1FB3 => recover val [as U32: 0x1FBC] end
-      | 0x1FB4 => recover val [as U32: 0x0386; 0x0345] end
-      | 0x1FB6 => recover val [as U32: 0x0391; 0x0342] end
-      | 0x1FB7 => recover val [as U32: 0x0391; 0x0342; 0x0345] end
-      | 0x1FC2 => recover val [as U32: 0x1FCA; 0x0345] end
-      | 0x1FC3 => recover val [as U32: 0x1FCC] end
-      | 0x1FC4 => recover val [as U32: 0x0389; 0x0345] end
-      | 0x1FC6 => recover val [as U32: 0x0397; 0x0342] end
-      | 0x1FC7 => recover val [as U32: 0x0397; 0x0342; 0x0345] end
-      | 0x1FD2 => recover val [as U32: 0x0399; 0x0308; 0x0300] end
-      | 0x1FD3 => recover val [as U32: 0x0399; 0x0308; 0x0301] end
-      | 0x1FD6 => recover val [as U32: 0x0399; 0x0342] end
-      | 0x1FD7 => recover val [as U32: 0x0399; 0x0308; 0x0342] end
-      | 0x1FE2 => recover val [as U32: 0x03A5; 0x0308; 0x0300] end
-      | 0x1FE3 => recover val [as U32: 0x03A5; 0x0308; 0x0301] end
-      | 0x1FE4 => recover val [as U32: 0x03A1; 0x0313] end
-      | 0x1FE6 => recover val [as U32: 0x03A5; 0x0342] end
-      | 0x1FE7 => recover val [as U32: 0x03A5; 0x0308; 0x0342] end
-      | 0x1FF2 => recover val [as U32: 0x1FFA; 0x0345] end
-      | 0x1FF3 => recover val [as U32: 0x1FFC] end
-      | 0x1FF4 => recover val [as U32: 0x038F; 0x0345] end
-      | 0x1FF6 => recover val [as U32: 0x03A9; 0x0342] end
-      | 0x1FF7 => recover val [as U32: 0x03A9; 0x0342; 0x0345] end
-      else None
-      end
-    | 0x000F =>
-      match cp
-      | 0xFB00 => recover val [as U32: 0x0046; 0x0066] end
-      | 0xFB01 => recover val [as U32: 0x0046; 0x0069] end
-      | 0xFB02 => recover val [as U32: 0x0046; 0x006C] end
-      | 0xFB03 => recover val [as U32: 0x0046; 0x0066; 0x0069] end
-      | 0xFB04 => recover val [as U32: 0x0046; 0x0066; 0x006C] end
-      | 0xFB05 => recover val [as U32: 0x0053; 0x0074] end
-      | 0xFB06 => recover val [as U32: 0x0053; 0x0074] end
-      | 0xFB13 => recover val [as U32: 0x0544; 0x0576] end
-      | 0xFB14 => recover val [as U32: 0x0544; 0x0565] end
-      | 0xFB15 => recover val [as U32: 0x0544; 0x056B] end
-      | 0xFB16 => recover val [as U32: 0x054E; 0x0576] end
-      | 0xFB17 => recover val [as U32: 0x0544; 0x056D] end
-      else None
-      end
-    else
-      None
+    let off = @ucd_ft_lookup(cp)
+    if off == 0 then return None end
+    let n = @ucd_ft_at(off)
+    recover val
+      let a = Array[U32](n.usize())
+      var i: U32 = 1
+      while i <= n do a.push(@ucd_ft_at(off + i)); i = i + 1 end
+      a
     end
