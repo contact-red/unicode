@@ -47,28 +47,31 @@ actor Main
     env.out.print("  parsed " + entries.size().string() + " UnicodeData entries")
 
     // Emit general category table
-    let cat_body = CategoryTableEmitter.emit(entries)
-    let cat_path: String val = out_dir + "/_ucd_general_category.pony"
-    _write_file(auth, cat_path, consume cat_body)?
-    env.out.print("  wrote " + cat_path)
+    (let cat_pony, let cat_c) = CategoryTableEmitter.emit(entries)
+    _write_file(auth, out_dir + "/_ucd_general_category.pony", consume cat_pony)?
+    _write_file(auth, out_dir + "/_ucd_general_category.c", consume cat_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_general_category.{pony,c}")
 
     // Emit combining-class table
-    let ccc_body = DecompTableEmitter.emit_combining_class(entries)
-    let ccc_path: String val = out_dir + "/_ucd_combining_class.pony"
-    _write_file(auth, ccc_path, consume ccc_body)?
-    env.out.print("  wrote " + ccc_path)
+    (let ccc_pony, let ccc_c) = DecompTableEmitter.emit_combining_class(entries)
+    _write_file(auth, out_dir + "/_ucd_combining_class.pony", consume ccc_pony)?
+    _write_file(auth, out_dir + "/_ucd_combining_class.c", consume ccc_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_combining_class.{pony,c}")
 
     // Emit canonical decomposition table
-    let decomp_body = DecompTableEmitter.emit_canonical_decomposition(entries)
-    let decomp_path: String val = out_dir + "/_ucd_canonical_decomp.pony"
-    _write_file(auth, decomp_path, consume decomp_body)?
-    env.out.print("  wrote " + decomp_path)
+    (let decomp_pony, let decomp_c) =
+      DecompTableEmitter.emit_canonical_decomposition(entries)
+    _write_file(auth, out_dir + "/_ucd_canonical_decomp.pony",
+      consume decomp_pony)?
+    _write_file(auth, out_dir + "/_ucd_canonical_decomp.c", consume decomp_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_canonical_decomp.{pony,c}")
 
     // Emit compatibility decomposition table
-    let compat_body = DecompTableEmitter.emit_compat_decomposition(entries)
-    let compat_path: String val = out_dir + "/_ucd_compat_decomp.pony"
-    _write_file(auth, compat_path, consume compat_body)?
-    env.out.print("  wrote " + compat_path)
+    (let compat_pony, let compat_c) =
+      DecompTableEmitter.emit_compat_decomposition(entries)
+    _write_file(auth, out_dir + "/_ucd_compat_decomp.pony", consume compat_pony)?
+    _write_file(auth, out_dir + "/_ucd_compat_decomp.c", consume compat_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_compat_decomp.{pony,c}")
 
     // Emit grapheme break property table
     let gbp_lines = _read_lines(auth,
@@ -78,51 +81,57 @@ actor Main
     env.out.print("  read " + gbp_lines.size().string()
       + " lines from GraphemeBreakProperty.txt + " + emoji_lines.size().string()
       + " from emoji-data.txt")
-    let gb_body = GraphemeBreakTableEmitter.emit(gbp_lines, emoji_lines)?
-    let gb_path: String val = out_dir + "/_ucd_grapheme_break.pony"
-    _write_file(auth, gb_path, consume gb_body)?
-    env.out.print("  wrote " + gb_path)
+    (let gb_pony, let gb_c) =
+      GraphemeBreakTableEmitter.emit(gbp_lines, emoji_lines)?
+    _write_file(auth, out_dir + "/_ucd_grapheme_break.pony", consume gb_pony)?
+    env.out.print("  wrote " + out_dir + "/_ucd_grapheme_break.pony")
+    _write_file(auth, out_dir + "/_ucd_grapheme_break.c", consume gb_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_grapheme_break.c")
 
     // Emit word break property table (UAX #29).
     let wbp_lines = _read_lines(auth,
       ucd_dir + "/auxiliary/WordBreakProperty.txt")?
     env.out.print("  read " + wbp_lines.size().string()
       + " lines from WordBreakProperty.txt")
-    let wb_body = WordBreakTableEmitter.emit(wbp_lines, emoji_lines)?
-    _write_file(auth, out_dir + "/_ucd_word_break.pony", consume wb_body)?
-    env.out.print("  wrote " + out_dir + "/_ucd_word_break.pony")
+    (let wb_pony, let wb_c) = WordBreakTableEmitter.emit(wbp_lines, emoji_lines)?
+    _write_file(auth, out_dir + "/_ucd_word_break.pony", consume wb_pony)?
+    _write_file(auth, out_dir + "/_ucd_word_break.c", consume wb_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_word_break.{pony,c}")
 
     // Emit sentence break property table (UAX #29).
     let sbp_lines = _read_lines(auth,
       ucd_dir + "/auxiliary/SentenceBreakProperty.txt")?
     env.out.print("  read " + sbp_lines.size().string()
       + " lines from SentenceBreakProperty.txt")
-    let sb_body = SentenceBreakTableEmitter.emit(sbp_lines)?
-    _write_file(auth, out_dir + "/_ucd_sentence_break.pony",
-      consume sb_body)?
-    env.out.print("  wrote " + out_dir + "/_ucd_sentence_break.pony")
+    (let sb_pony, let sb_c) = SentenceBreakTableEmitter.emit(sbp_lines)?
+    _write_file(auth, out_dir + "/_ucd_sentence_break.pony", consume sb_pony)?
+    _write_file(auth, out_dir + "/_ucd_sentence_break.c", consume sb_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_sentence_break.{pony,c}")
 
     // Emit line break property table + LineBreak type (UAX #14).
     let lb_lines = _read_lines(auth, ucd_dir + "/LineBreak.txt")?
     env.out.print("  read " + lb_lines.size().string()
       + " lines from LineBreak.txt")
-    (let lb_rt, let lb_tbl) = LineBreakTableEmitter.emit_both(lb_lines)?
+    (let lb_rt, let lb_pony, let lb_c) =
+      LineBreakTableEmitter.emit_both(lb_lines)?
     _write_file(auth, out_dir + "/line_break.pony", consume lb_rt)?
     env.out.print("  wrote " + out_dir + "/line_break.pony")
-    _write_file(auth, out_dir + "/_ucd_line_break.pony", consume lb_tbl)?
-    env.out.print("  wrote " + out_dir + "/_ucd_line_break.pony")
+    _write_file(auth, out_dir + "/_ucd_line_break.pony", consume lb_pony)?
+    _write_file(auth, out_dir + "/_ucd_line_break.c", consume lb_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_line_break.{pony,c}")
 
     // Emit East_Asian_Width type + cp-range table (UAX #11).
     let eaw_lines = _read_lines(auth, ucd_dir + "/EastAsianWidth.txt")?
     env.out.print("  read " + eaw_lines.size().string()
       + " lines from EastAsianWidth.txt")
-    (let eaw_rt, let eaw_tbl) = EastAsianWidthTableEmitter.emit_both(
-      eaw_lines)?
+    (let eaw_rt, let eaw_pony, let eaw_c) =
+      EastAsianWidthTableEmitter.emit_both(eaw_lines)?
     _write_file(auth, out_dir + "/east_asian_width.pony", consume eaw_rt)?
     env.out.print("  wrote " + out_dir + "/east_asian_width.pony")
     _write_file(auth, out_dir + "/_ucd_east_asian_width.pony",
-      consume eaw_tbl)?
-    env.out.print("  wrote " + out_dir + "/_ucd_east_asian_width.pony")
+      consume eaw_pony)?
+    _write_file(auth, out_dir + "/_ucd_east_asian_width.c", consume eaw_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_east_asian_width.{pony,c}")
 
     // Emit full case mappings from SpecialCasing.txt (unconditional only)
     let sc_lines = _read_lines(auth, ucd_dir + "/SpecialCasing.txt")?
@@ -132,29 +141,29 @@ actor Main
     env.out.print("  parsed " + sc_entries.size().string()
       + " SpecialCasing entries")
     let full_upper = _full_case_pairs(sc_entries, "upper")
-    let full_upper_body = VarLenTableEmitter.emit(
+    (let fu_pony, let fu_c) = VarLenTableEmitter.emit(
       "_UcdFullUpper",
       "SpecialCasing.txt Uppercase_Mapping (unconditional)",
-      full_upper)
-    _write_file(auth, out_dir + "/_ucd_full_upper.pony",
-      consume full_upper_body)?
-    env.out.print("  wrote " + out_dir + "/_ucd_full_upper.pony")
+      "ucd_fu", full_upper)
+    _write_file(auth, out_dir + "/_ucd_full_upper.pony", consume fu_pony)?
+    _write_file(auth, out_dir + "/_ucd_full_upper.c", consume fu_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_full_upper.{pony,c}")
     let full_lower = _full_case_pairs(sc_entries, "lower")
-    let full_lower_body = VarLenTableEmitter.emit(
+    (let fl_pony, let fl_c) = VarLenTableEmitter.emit(
       "_UcdFullLower",
       "SpecialCasing.txt Lowercase_Mapping (unconditional)",
-      full_lower)
-    _write_file(auth, out_dir + "/_ucd_full_lower.pony",
-      consume full_lower_body)?
-    env.out.print("  wrote " + out_dir + "/_ucd_full_lower.pony")
+      "ucd_fl", full_lower)
+    _write_file(auth, out_dir + "/_ucd_full_lower.pony", consume fl_pony)?
+    _write_file(auth, out_dir + "/_ucd_full_lower.c", consume fl_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_full_lower.{pony,c}")
     let full_title = _full_case_pairs(sc_entries, "title")
-    let full_title_body = VarLenTableEmitter.emit(
+    (let ft_pony, let ft_c) = VarLenTableEmitter.emit(
       "_UcdFullTitle",
       "SpecialCasing.txt Titlecase_Mapping (unconditional)",
-      full_title)
-    _write_file(auth, out_dir + "/_ucd_full_title.pony",
-      consume full_title_body)?
-    env.out.print("  wrote " + out_dir + "/_ucd_full_title.pony")
+      "ucd_ft", full_title)
+    _write_file(auth, out_dir + "/_ucd_full_title.pony", consume ft_pony)?
+    _write_file(auth, out_dir + "/_ucd_full_title.c", consume ft_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_full_title.{pony,c}")
 
     // Emit case folding tables from CaseFolding.txt
     let cf_lines = _read_lines(auth, ucd_dir + "/CaseFolding.txt")?
@@ -162,36 +171,37 @@ actor Main
       + " lines from CaseFolding.txt")
     let cf_entries = CaseFoldingParser.parse_all(cf_lines)?
     (let simple_fold, let full_fold) = _fold_pairs(cf_entries)
-    let simple_fold_body = SimpleCaseFoldEmitter.emit(simple_fold)
-    _write_file(auth, out_dir + "/_ucd_simple_casefold.pony",
-      consume simple_fold_body)?
-    env.out.print("  wrote " + out_dir + "/_ucd_simple_casefold.pony")
-    let full_fold_body = VarLenTableEmitter.emit(
+    (let scf_pony, let scf_c) = SimpleCaseFoldEmitter.emit(simple_fold)
+    _write_file(auth, out_dir + "/_ucd_simple_casefold.pony", consume scf_pony)?
+    _write_file(auth, out_dir + "/_ucd_simple_casefold.c", consume scf_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_simple_casefold.{pony,c}")
+    (let ff_pony, let ff_c) = VarLenTableEmitter.emit(
       "_UcdFullCaseFold",
       "CaseFolding.txt status C + F entries (default full folding)",
-      full_fold)
-    _write_file(auth, out_dir + "/_ucd_full_casefold.pony",
-      consume full_fold_body)?
-    env.out.print("  wrote " + out_dir + "/_ucd_full_casefold.pony")
+      "ucd_ff", full_fold)
+    _write_file(auth, out_dir + "/_ucd_full_casefold.pony", consume ff_pony)?
+    _write_file(auth, out_dir + "/_ucd_full_casefold.c", consume ff_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_full_casefold.{pony,c}")
 
     // Emit simple case mappings (UnicodeData.txt fields 12/13/14)
-    let upper_body = CaseTableEmitter.emit_simple_upper(entries)
-    let upper_path: String val = out_dir + "/_ucd_simple_upper.pony"
-    _write_file(auth, upper_path, consume upper_body)?
-    env.out.print("  wrote " + upper_path)
-    let lower_body = CaseTableEmitter.emit_simple_lower(entries)
-    let lower_path: String val = out_dir + "/_ucd_simple_lower.pony"
-    _write_file(auth, lower_path, consume lower_body)?
-    env.out.print("  wrote " + lower_path)
-    let title_body = CaseTableEmitter.emit_simple_title(entries)
-    let title_path: String val = out_dir + "/_ucd_simple_title.pony"
-    _write_file(auth, title_path, consume title_body)?
-    env.out.print("  wrote " + title_path)
+    (let su_pony, let su_c) = CaseTableEmitter.emit_simple_upper(entries)
+    _write_file(auth, out_dir + "/_ucd_simple_upper.pony", consume su_pony)?
+    _write_file(auth, out_dir + "/_ucd_simple_upper.c", consume su_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_simple_upper.{pony,c}")
+    (let sl_pony, let sl_c) = CaseTableEmitter.emit_simple_lower(entries)
+    _write_file(auth, out_dir + "/_ucd_simple_lower.pony", consume sl_pony)?
+    _write_file(auth, out_dir + "/_ucd_simple_lower.c", consume sl_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_simple_lower.{pony,c}")
+    (let st_pony, let st_c) = CaseTableEmitter.emit_simple_title(entries)
+    _write_file(auth, out_dir + "/_ucd_simple_title.pony", consume st_pony)?
+    _write_file(auth, out_dir + "/_ucd_simple_title.c", consume st_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_simple_title.{pony,c}")
 
     // Emit Codepoint name table.
-    let name_body = NameTableEmitter.emit(entries)
-    _write_file(auth, out_dir + "/_ucd_name.pony", consume name_body)?
-    env.out.print("  wrote " + out_dir + "/_ucd_name.pony")
+    (let name_pony, let name_c) = NameTableEmitter.emit(entries)
+    _write_file(auth, out_dir + "/_ucd_name.pony", consume name_pony)?
+    _write_file(auth, out_dir + "/_ucd_name.c", consume name_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_name.{pony,c}")
 
     // Read PropList + DerivedCoreProperties once; used by InCB and
     // BinaryProperty emitters below.
@@ -204,29 +214,33 @@ actor Main
     // Emit Indic_Conjunct_Break table (DerivedCoreProperties.txt InCB).
     // Hand-written runtime types live in unicode/indic_conjunct_break.pony;
     // here we just generate the lookup table.
-    let incb_body = IncbTableEmitter.emit(dcp_lines)
+    (let incb_pony, let incb_c) = IncbTableEmitter.emit(dcp_lines)
     _write_file(auth, out_dir + "/_ucd_indic_conjunct_break.pony",
-      consume incb_body)?
-    env.out.print("  wrote " + out_dir + "/_ucd_indic_conjunct_break.pony")
+      consume incb_pony)?
+    _write_file(auth, out_dir + "/_ucd_indic_conjunct_break.c", consume incb_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_indic_conjunct_break.{pony,c}")
 
     // Emit BinaryProperty type + per-property tables (PropList +
     // DerivedCoreProperties + emoji-data).
-    (let bp_rt, let bp_tbl) = BinaryPropsTableEmitter.emit_both(
+    (let bp_rt, let bp_pony, let bp_c) = BinaryPropsTableEmitter.emit_both(
       prop_lines, dcp_lines, emoji_lines)?
     _write_file(auth, out_dir + "/binary_property.pony", consume bp_rt)?
     env.out.print("  wrote " + out_dir + "/binary_property.pony")
-    _write_file(auth, out_dir + "/_ucd_binary_props.pony", consume bp_tbl)?
-    env.out.print("  wrote " + out_dir + "/_ucd_binary_props.pony")
+    _write_file(auth, out_dir + "/_ucd_binary_props.pony", consume bp_pony)?
+    _write_file(auth, out_dir + "/_ucd_binary_props.c", consume bp_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_binary_props.{pony,c}")
 
     // Emit Script type + cp-range table (Scripts.txt).
     let scripts_lines = _read_lines(auth, ucd_dir + "/Scripts.txt")?
     env.out.print("  read " + scripts_lines.size().string()
       + " lines from Scripts.txt")
-    (let script_rt, let script_tbl) = ScriptTableEmitter.emit_both(scripts_lines)?
+    (let script_rt, let script_pony, let script_c) =
+      ScriptTableEmitter.emit_both(scripts_lines)?
     _write_file(auth, out_dir + "/script.pony", consume script_rt)?
     env.out.print("  wrote " + out_dir + "/script.pony")
-    _write_file(auth, out_dir + "/_ucd_script.pony", consume script_tbl)?
-    env.out.print("  wrote " + out_dir + "/_ucd_script.pony")
+    _write_file(auth, out_dir + "/_ucd_script.pony", consume script_pony)?
+    _write_file(auth, out_dir + "/_ucd_script.c", consume script_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_script.{pony,c}")
 
     // Emit Script_Extensions cp → Array[Script] table (UAX #24).
     let scx_lines = _read_lines(auth,
@@ -239,26 +253,31 @@ actor Main
     let script_entries = PropertyFileParser.parse_all(scripts_lines)?
     let script_names = ScriptTableEmitter.collect_names(
       script_entries)
-    let scx_body = ScriptExtensionsTableEmitter.emit(
+    (let scx_pony, let scx_c) = ScriptExtensionsTableEmitter.emit(
       scx_lines, pva_lines, script_names)?
     _write_file(auth, out_dir + "/_ucd_script_extensions.pony",
-      consume scx_body)?
-    env.out.print("  wrote " + out_dir + "/_ucd_script_extensions.pony")
+      consume scx_pony)?
+    _write_file(auth, out_dir + "/_ucd_script_extensions.c", consume scx_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_script_extensions.{pony,c}")
 
     // Emit composition tables (Full_Composition_Exclusion + canonical compose).
     let dnp_lines = _read_lines(auth,
       ucd_dir + "/DerivedNormalizationProps.txt")?
     env.out.print("  read " + dnp_lines.size().string()
       + " lines from DerivedNormalizationProps.txt")
-    let excl_body = CompositionTableEmitter.emit_exclusion(dnp_lines)?
-    let excl_path: String val = out_dir + "/_ucd_composition_exclusion.pony"
-    _write_file(auth, excl_path, consume excl_body)?
-    env.out.print("  wrote " + excl_path)
-    let comp_body = CompositionTableEmitter.emit_canonical_compose(
+    (let excl_pony, let excl_c) = CompositionTableEmitter.emit_exclusion(
+      dnp_lines)?
+    _write_file(auth, out_dir + "/_ucd_composition_exclusion.pony",
+      consume excl_pony)?
+    _write_file(auth, out_dir + "/_ucd_composition_exclusion.c",
+      consume excl_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_composition_exclusion.{pony,c}")
+    (let comp_pony, let comp_c) = CompositionTableEmitter.emit_canonical_compose(
       entries, dnp_lines)?
-    let comp_path: String val = out_dir + "/_ucd_canonical_compose.pony"
-    _write_file(auth, comp_path, consume comp_body)?
-    env.out.print("  wrote " + comp_path)
+    _write_file(auth, out_dir + "/_ucd_canonical_compose.pony",
+      consume comp_pony)?
+    _write_file(auth, out_dir + "/_ucd_canonical_compose.c", consume comp_c)?
+    env.out.print("  wrote " + out_dir + "/_ucd_canonical_compose.{pony,c}")
 
     env.out.print("")
     env.out.print("Done.")

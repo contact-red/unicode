@@ -3,62 +3,17 @@
 //   make ucd-generate
 //
 // Source: SpecialCasing.txt Lowercase_Mapping (unconditional).
+use @ucd_fl_lookup[U32](cp: U32)
+use @ucd_fl_at[U32](i: U32)
 
 primitive _UcdFullLower
   fun of(cp: U32): (Array[U32] val | None) =>
-    let idx = _index()
-    var lo: USize = 0
-    var hi: USize = idx.size() / 18
-    while lo < hi do
-      let mid = lo + ((hi - lo) / 2)
-      let base = mid * 18
-      try
-        let key: U32 =
-          _UcdHex.byte(idx, base)?
-            or (_UcdHex.byte(idx, base + 2)? << 8)
-            or (_UcdHex.byte(idx, base + 4)? << 16)
-            or (_UcdHex.byte(idx, base + 6)? << 24)
-        if cp < key then hi = mid
-        elseif cp > key then lo = mid + 1
-        else
-          let offset: U32 =
-            _UcdHex.byte(idx, base + 8)?
-              or (_UcdHex.byte(idx, base + 10)? << 8)
-              or (_UcdHex.byte(idx, base + 12)? << 16)
-              or (_UcdHex.byte(idx, base + 14)? << 24)
-          let length = _UcdHex.byte(idx, base + 16)?
-          return _read(
-            USize.from[U32](offset),
-            USize.from[U32](length))
-        end
-      else return None
-      end
+    let off = @ucd_fl_lookup(cp)
+    if off == 0 then return None end
+    let n = @ucd_fl_at(off)
+    recover val
+      let a = Array[U32](n.usize())
+      var i: U32 = 1
+      while i <= n do a.push(@ucd_fl_at(off + i)); i = i + 1 end
+      a
     end
-    None
-
-  fun _read(offset_cps: USize, length: USize)
-    : (Array[U32] val | None)
-  =>
-    let data = _data()
-    let buf = recover trn Array[U32](length) end
-    var i: USize = 0
-    while i < length do
-      let base = (offset_cps + i) * 8
-      try
-        let cp: U32 =
-          _UcdHex.byte(data, base)?
-            or (_UcdHex.byte(data, base + 2)? << 8)
-            or (_UcdHex.byte(data, base + 4)? << 16)
-            or (_UcdHex.byte(data, base + 6)? << 24)
-        buf.push(cp)
-      else return None
-      end
-      i = i + 1
-    end
-    consume buf
-
-  fun _index(): String val =>
-    "300100000000000002881F00000200000001891F000003000000018A1F000004000000018B1F000005000000018C1F000006000000018D1F000007000000018E1F000008000000018F1F00000900000001981F00000A00000001991F00000B000000019A1F00000C000000019B1F00000D000000019C1F00000E000000019D1F00000F000000019E1F000010000000019F1F00001100000001A81F00001200000001A91F00001300000001AA1F00001400000001AB1F00001500000001AC1F00001600000001AD1F00001700000001AE1F00001800000001AF1F00001900000001BC1F00001A00000001CC1F00001B00000001FC1F00001C00000001"
-
-  fun _data(): String val =>
-    "6900000007030000801F0000811F0000821F0000831F0000841F0000851F0000861F0000871F0000901F0000911F0000921F0000931F0000941F0000951F0000961F0000971F0000A01F0000A11F0000A21F0000A31F0000A41F0000A51F0000A61F0000A71F0000B31F0000C31F0000F31F0000"
